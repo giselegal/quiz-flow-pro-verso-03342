@@ -469,6 +469,38 @@ describe('QuizModularEditorV4 - Integração Completa', () => {
             // Restaurar location
             Object.defineProperty(window, 'location', { value: new URL(originalHref), writable: true });
         });
+
+        it('deve auto-carregar via funnel+template da URL quando props ausentes', async () => {
+            const originalHref = window.location.href;
+            Object.defineProperty(window, 'location', {
+                value: new URL('http://localhost/?funnel=quiz21StepsComplete&template=quiz21StepsComplete'),
+                writable: true,
+            });
+
+            await renderWithAct(
+                <EditorProvider>
+                    <QuizModularEditorV4Wrapper useV4Layout={true} />
+                </EditorProvider>
+            );
+
+            await waitFor(() => {
+                expect(screen.getByTestId('editor-header')).toBeInTheDocument();
+            });
+
+            // Deve mostrar badge de Template carregado
+            const templateBadge = screen.getByText(/Template:\s*quiz21StepsComplete/i);
+            expect(templateBadge).toBeInTheDocument();
+
+            // Canvas presente e sem empty state
+            await waitFor(() => {
+                expect(screen.getByTestId('column-canvas')).toBeInTheDocument();
+            });
+            // Em alguns fluxos o painel vazio pode aparecer até os blocos carregarem;
+            // aqui validamos apenas que o template foi reconhecido e o canvas está montado.
+
+            // Restaurar location
+            Object.defineProperty(window, 'location', { value: new URL(originalHref), writable: true });
+        });
     });
     describe('Persistência e Sincronização', () => {
         it('deve auto-save a cada N segundos', async () => {
