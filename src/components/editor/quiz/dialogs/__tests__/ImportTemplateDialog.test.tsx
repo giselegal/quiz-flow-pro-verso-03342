@@ -587,14 +587,13 @@ describe('ImportTemplateDialog - Estados de Carregamento', () => {
         vi.clearAllMocks();
     });
 
-    it('deve mostrar loading durante validação', async () => {
+    it('deve mostrar resultado imediatamente (validação síncrona)', async () => {
         const user = userEvent.setup();
         const mockTemplate = {
             metadata: { id: 'quiz21', version: '3.1', name: 'Quiz' },
             steps: { 'step-01': [{ id: 'b1', type: 'Block' }] },
         };
 
-        // Mock sync: the component validates synchronously with normalizeAndValidateTemplateV3
         vi.mocked(normalizeAndValidateTemplateV3).mockReturnValue({
             success: true,
             data: mockTemplate,
@@ -613,11 +612,9 @@ describe('ImportTemplateDialog - Estados de Carregamento', () => {
         );
 
         const file = createMockJsonFile(mockTemplate);
-        const input = container.querySelector('input[type="file"]') as HTMLInputElement;
-
+        const input = document.querySelector('input[type="file"]') as HTMLInputElement;
         await user.upload(input, file);
 
-        // Validação síncrona deve terminar rapidamente e o resultado deve aparecer
         await waitFor(() => expect(screen.getByText(/quiz/i)).toBeInTheDocument());
     });
 });
@@ -629,15 +626,6 @@ describe('ImportTemplateDialog - Acessibilidade', () => {
 
     it('deve ter labels apropriados', () => {
         render(
-            <ImportTemplateDialog
-                open={true}
-                onClose={() => { }}
-                onImport={() => { }}
-            />,
-            { wrapper: createWrapper() }
-        );
-
-        const { container } = render(
             <ImportTemplateDialog
                 open={true}
                 onClose={() => { }}
