@@ -29,7 +29,7 @@ import {
   WifiOff,
 } from 'lucide-react';
 import { useUnifiedCollaboration } from '@/hooks/core/useUnifiedCollaboration';
-import type { CollaborationUser } from '@/services/canonical/CollaborationService';
+import type { CollaborationUser } from '@/services/CollaborationService';
 import type { ChatMessage } from '@/services/canonical/NotificationService';
 
 interface CollaborationPanelProps {
