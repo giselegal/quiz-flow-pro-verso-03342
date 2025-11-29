@@ -79,6 +79,7 @@ const PreviewPanel = React.lazy(() => import('./components/PreviewPanel'));
 import { StepErrorBoundary, ColumnErrorBoundary } from '@/components/error';
 import { appLogger } from '@/lib/utils/appLogger';
 import { EditorLoadingProgress } from '@/components/editor/EditorLoadingProgress';
+import indexedDBCache from '@/services/core/IndexedDBCache';
 
 // 🎨 Skeleton loaders otimizados
 import {
@@ -329,6 +330,22 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 
     // Local UI state - 🔥 MODO LIVE FIXO (preview de produção desativado)
     const previewMode = 'live' as const;
+
+    // 🔧 Bootstrap: registrar stores IndexedDB e diagnosticar query params
+    useEffect(() => {
+        try {
+            indexedDBCache.registerStores(['funnels', 'steps', 'blocks']).catch(() => { });
+        } catch { }
+        try {
+            const url = new URL(typeof window !== 'undefined' ? window.location.href : 'http://local');
+            const qp = {
+                funnel: url.searchParams.get('funnel'),
+                template: url.searchParams.get('template'),
+                step: url.searchParams.get('step')
+            };
+            appLogger.info('🔎 [Bootstrap] Query params', { data: [qp] });
+        } catch { }
+    }, []);
 
     // 🐛 DEBUG: Flag para usar painel de propriedades simples (stateless)
     const [useSimplePropertiesPanel, setUseSimplePropertiesPanel] = useState<boolean>(() => {
