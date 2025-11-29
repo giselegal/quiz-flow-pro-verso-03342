@@ -22,6 +22,8 @@
 
 import { appLogger } from '@/lib/utils/appLogger';
 import type { Block } from '@/types/editor';
+// Importes dentro do hook para evitar erros em ambientes sem providers
+// e permitir fallback transparente.
 
 /**
  * @deprecated Use useEditor() ou useLegacySuperUnified() para compatibilidade
@@ -50,8 +52,50 @@ export function useSuperUnified() {
       '📖 Veja: src/hooks/useLegacySuperUnified.ts\n'
     );
   }
-  
-  // Retorna stub vazio (não funcional)
+  // Tentar delegar para o editor moderno (core)
+  try {
+    // Import dinâmico para evitar dependências duras em ambientes sem core
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const coreEditor = require('@/core/contexts/EditorContext');
+    const useEditor = coreEditor?.useEditor as () => any;
+    if (typeof useEditor === 'function') {
+      const editor = useEditor();
+      return {
+        getStepBlocks: (step: number): Block[] => {
+          try { return editor.getStepBlocks(step) as Block[]; } catch { return []; }
+        },
+        setStepBlocks: (step: number, blocks: Block[]): void => {
+          try { editor.setStepBlocks(step, blocks); } catch (e) { appLogger.error('useSuperUnified.setStepBlocks falhou', { data: [e] }); }
+        },
+        updateBlock: (step: number, blockId: string, updates: Partial<Block>): void => {
+          try { editor.updateBlock(step, blockId, updates); } catch (e) { appLogger.error('useSuperUnified.updateBlock falhou', { data: [e] }); }
+        },
+      };
+    }
+  } catch { /* ignore */ }
+
+  // Fallback: tentar via useEditorContext (core hook unificado)
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const core = require('@/core/hooks/useEditorContext');
+    const useEditorContext = core?.useEditorContext as () => any;
+    if (typeof useEditorContext === 'function') {
+      const unified = useEditorContext();
+      return {
+        getStepBlocks: (step: number): Block[] => {
+          try { return unified.getStepBlocks(step) as Block[]; } catch { return []; }
+        },
+        setStepBlocks: (step: number, blocks: Block[]): void => {
+          try { unified.setStepBlocks(step, blocks); } catch (e) { appLogger.error('useSuperUnified.setStepBlocks (unified) falhou', { data: [e] }); }
+        },
+        updateBlock: (step: number, blockId: string, updates: Partial<Block>): void => {
+          try { unified.updateBlock(step, blockId, updates); } catch (e) { appLogger.error('useSuperUnified.updateBlock (unified) falhou', { data: [e] }); }
+        },
+      };
+    }
+  } catch { /* ignore */ }
+
+  // Último recurso: stub com logs (não funcional)
   return {
     getStepBlocks: (_step: number): Block[] => {
       appLogger.error('useSuperUnified.getStepBlocks() não implementado - use useEditor()');
