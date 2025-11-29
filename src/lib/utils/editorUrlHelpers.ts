@@ -15,11 +15,34 @@ export interface EditorUrlParams {
  * Constrói URL completa para o editor
  */
 export const buildEditorUrl = (baseUrl: string, params: EditorUrlParams = {}): string => {
-  const url = new URL(`${baseUrl}/editor`);
+  const url = new URL(`${baseUrl.replace(/\/$/, '')}/editor`);
 
-  if (params.funnelId) url.searchParams.set('funnel', params.funnelId);
-  if (params.template) url.searchParams.set('template', params.template);
-  if (params.stage) url.searchParams.set('stage', params.stage);
+  const sanitize = (value: any): string | undefined => {
+    if (!value) return undefined;
+    if (typeof value === 'string') {
+      if (value === '[object Object]') return undefined;
+      return value.trim();
+    }
+    if (typeof value === 'object') {
+      // Tentar extrair id comum
+      const idCandidate = (value as any).id || (value as any).slug || (value as any).name;
+      if (typeof idCandidate === 'string' && idCandidate.length > 0) return idCandidate.trim();
+      const coerced = String(value);
+      if (coerced === '[object Object]') return undefined;
+      return coerced;
+    }
+    const coerced = String(value);
+    if (coerced === '[object Object]') return undefined;
+    return coerced;
+  };
+
+  const funnelId = sanitize(params.funnelId);
+  const templateId = sanitize(params.template);
+  const stage = sanitize(params.stage);
+
+  if (funnelId) url.searchParams.set('funnel', funnelId);
+  if (templateId) url.searchParams.set('template', templateId);
+  if (stage) url.searchParams.set('stage', stage);
   if (params.preview) url.searchParams.set('preview', 'true');
   if (params.viewport) url.searchParams.set('viewport', params.viewport);
 
@@ -48,26 +71,48 @@ export const updateEditorUrl = (params: EditorUrlParams): void => {
   const currentUrl = new URL(window.location.href);
   let changed = false;
 
-  if (params.funnelId) {
+  const sanitize = (value: any): string | undefined => {
+    if (!value) return undefined;
+    if (typeof value === 'string') {
+      if (value === '[object Object]') return undefined;
+      return value.trim();
+    }
+    if (typeof value === 'object') {
+      const idCandidate = (value as any).id || (value as any).slug || (value as any).name;
+      if (typeof idCandidate === 'string' && idCandidate.length > 0) return idCandidate.trim();
+      const coerced = String(value);
+      if (coerced === '[object Object]') return undefined;
+      return coerced;
+    }
+    const coerced = String(value);
+    if (coerced === '[object Object]') return undefined;
+    return coerced;
+  };
+
+  const funnelId = sanitize(params.funnelId);
+  const templateId = sanitize(params.template);
+  const stage = sanitize(params.stage);
+
+  if (funnelId) {
     const prev = currentUrl.searchParams.get('funnel');
-    if (prev !== params.funnelId) {
-      currentUrl.searchParams.set('funnel', params.funnelId);
+    if (prev !== funnelId) {
+      currentUrl.searchParams.set('funnel', funnelId);
       changed = true;
     }
   }
 
-  if (params.template) {
+  if (templateId) {
     const prev = currentUrl.searchParams.get('template');
-    if (prev !== params.template) {
-      currentUrl.searchParams.set('template', params.template);
+    if (prev !== templateId) {
+      currentUrl.searchParams.set('template', templateId);
       changed = true;
     }
   }
 
-  if (params.stage) {
+  if (stage) {
     const prev = currentUrl.searchParams.get('stage');
-    if (prev !== params.stage) {
-      currentUrl.searchParams.set('stage', params.stage);
+    if (prev !== stage) {
+      currentUrl.searchParams.set('stage', stage);
       changed = true;
     }
   }
