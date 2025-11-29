@@ -32,13 +32,14 @@ export function useStepBlocksLoader({
     // ✅ CORREÇÃO: Setar loading ANTES da função async
     setStepLoading(true);
 
-    // 🔥 SAFETY: Timeout agressivo de 3s
+    // ⏱️ Safety: marcar lentidão sem resetar loading
+    // Evita interrupção indevida em redes lentas ou templates maiores
     const safetyTimeout = setTimeout(() => {
       if (!signal.aborted) {
-        console.error('⚠️ [useStepBlocksLoader] Loading > 3s, forçando reset');
-        setStepLoading(false);
+        appLogger.warn('⚠️ [useStepBlocksLoader] Loading lento (> 8s), mantendo estado de loading');
+        // Não chamamos setStepLoading(false) aqui para evitar reset prematuro.
       }
-    }, 3000);
+    }, 8000);
 
     async function loadStep() {
       try {
