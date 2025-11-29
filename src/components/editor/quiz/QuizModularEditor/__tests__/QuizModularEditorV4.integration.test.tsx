@@ -501,6 +501,35 @@ describe('QuizModularEditorV4 - Integração Completa', () => {
             // Restaurar location
             Object.defineProperty(window, 'location', { value: new URL(originalHref), writable: true });
         });
+
+        it('deve auto-carregar via somente template= da URL (fallback) quando props ausentes', async () => {
+            const originalHref = window.location.href;
+            Object.defineProperty(window, 'location', {
+                value: new URL('http://localhost/?template=quiz21StepsComplete'),
+                writable: true,
+            });
+
+            await renderWithAct(
+                <EditorProvider>
+                    <QuizModularEditorV4Wrapper useV4Layout={true} />
+                </EditorProvider>
+            );
+
+            await waitFor(() => {
+                expect(screen.getByTestId('editor-header')).toBeInTheDocument();
+            });
+
+            // Deve mostrar badge de Template carregado
+            const templateBadge = screen.getByText(/Template:\s*quiz21StepsComplete/i);
+            expect(templateBadge).toBeInTheDocument();
+
+            // Canvas presente
+            await waitFor(() => {
+                expect(screen.getByTestId('column-canvas')).toBeInTheDocument();
+            });
+
+            Object.defineProperty(window, 'location', { value: new URL(originalHref), writable: true });
+        });
     });
     describe('Persistência e Sincronização', () => {
         it('deve auto-save a cada N segundos', async () => {
