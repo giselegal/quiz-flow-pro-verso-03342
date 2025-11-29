@@ -1,4 +1,4 @@
-project_id = "your-supabase-project-ref"
+project_id = "dgpbqhjktlnjiatcqheh"
 
 [functions.ai-optimization-engine]
 verify_jwt = false

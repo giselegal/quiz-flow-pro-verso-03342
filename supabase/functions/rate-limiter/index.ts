@@ -6,7 +6,7 @@
 // @ts-ignore: Deno imports  
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 // @ts-ignore: JSR imports
-import { createClient } from 'jsr:@supabase/supabase-js@2';
+import { createClient } from '@supabase/supabase-js';
 import { 
   createCorsResponse, 
   createErrorResponse, 
@@ -16,13 +16,6 @@ import {
   type RateLimitConfig,
   type RateLimitInfo
 } from '../_shared/types.ts';
-
-// @ts-ignore: Deno global está disponível no runtime
-declare const Deno: {
-  env: {
-    get(key: string): string | undefined;
-  };
-};
 
 interface RateLimit {
   identifier: string; // IP, user_id, ou API key
