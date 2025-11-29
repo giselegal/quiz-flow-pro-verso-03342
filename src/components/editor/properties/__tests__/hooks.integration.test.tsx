@@ -36,11 +36,8 @@ describe('Hooks Integration Tests', () => {
             StorageService.safeSetString('quizUserName', 'Maria Silva');
 
             // Ensure storage was populated via StorageService
-            expect(StorageService.safeGetString('quizUserName')).toBe('Quiz User');
+            expect(StorageService.safeGetString('quizUserName')).toBe('Maria Silva');
             const { result } = renderHook(() => useUserName());
-            // DEBUG: inspect returned value
-            // eslint-disable-next-line no-console
-            console.log('useUserName result:', result.current);
 
             expect(result.current).toBe('Maria Silva');
         });
