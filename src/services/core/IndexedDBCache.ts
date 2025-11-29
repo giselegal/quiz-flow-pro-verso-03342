@@ -51,7 +51,7 @@ function tx(db: IDBDatabase, store: CacheStore, mode: IDBTransactionMode) {
 }
 
 export const indexedDBCache = {
-  async get<T>(store: CacheStore, key: string): Promise<T | null> {
+  async get<T>(store: CacheStore | string, key: string): Promise<T | null> {
     try {
       const db = await openDB();
       const storeObj = tx(db, store, 'readonly');
@@ -75,7 +75,7 @@ export const indexedDBCache = {
     }
   },
 
-  async set<T>(store: CacheStore, key: string, value: T, ttl?: number): Promise<void> {
+  async set<T>(store: CacheStore | string, key: string, value: T, ttl?: number): Promise<void> {
     try {
       const db = await openDB();
       const storeObj = tx(db, store, 'readwrite');
@@ -96,7 +96,7 @@ export const indexedDBCache = {
     }
   },
 
-  async delete(store: CacheStore, key: string): Promise<void> {
+  async delete(store: CacheStore | string, key: string): Promise<void> {
     try {
       const db = await openDB();
       const storeObj = tx(db, store, 'readwrite');
@@ -111,7 +111,7 @@ export const indexedDBCache = {
     }
   },
 
-  async clear(store?: CacheStore): Promise<void> {
+  async clear(store?: CacheStore | string): Promise<void> {
     try {
       const db = await openDB();
       if (store) {
