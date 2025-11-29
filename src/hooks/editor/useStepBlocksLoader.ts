@@ -74,10 +74,15 @@ export function useStepBlocksLoader({
         let loadSource = 'unknown';
         
         try {
+          // ✅ FIX: Passar templateOrFunnelId apenas como funnelId se parecer ser um UUID de funnel
+          // Isso evita passar templateId onde funnelId é esperado
+          const isFunnelId = templateOrFunnelId?.startsWith('funnel-') || 
+                             templateOrFunnelId?.includes('-') && templateOrFunnelId.length > 20;
+          
           const loadResult = await unifiedTemplateLoader.loadStep(stepId, { 
             useCache: true, 
             signal,
-            funnelId: templateOrFunnelId || undefined
+            funnelId: isFunnelId ? templateOrFunnelId : undefined
           });
           blocks = loadResult.data as Block[];
           loadSource = loadResult.source;

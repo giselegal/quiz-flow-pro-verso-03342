@@ -1049,10 +1049,15 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
             const unified = blocks;
             const current = wysiwyg.state.blocks;
             
-            // ✅ P6 FIX: Usar assinatura de IDs ao invés de comparação por índice
-            // Isso evita loops infinitos quando a referência do array muda sem mudar o conteúdo
-            const unifiedSignature = `${safeCurrentStep}|${unified.length}|${unified.map(b => b.id).join(',')}`;
-            const currentSignature = `${safeCurrentStep}|${current.length}|${current.map(b => b.id).join(',')}`;
+            // ✅ P6 FIX (OTIMIZADO): Usar assinatura leve com count + primeiro/último ID
+            // Evita join de todos os IDs que seria O(n) para muitos blocos
+            const unifiedFirst = unified[0]?.id || '';
+            const unifiedLast = unified[unified.length - 1]?.id || '';
+            const currentFirst = current[0]?.id || '';
+            const currentLast = current[current.length - 1]?.id || '';
+            
+            const unifiedSignature = `${safeCurrentStep}|${unified.length}|${unifiedFirst}|${unifiedLast}`;
+            const currentSignature = `${safeCurrentStep}|${current.length}|${currentFirst}|${currentLast}`;
             
             // Evitar reset se a assinatura não mudou desde o último sync
             if (unifiedSignature === lastSyncSignatureRef.current && unifiedSignature === currentSignature) {
