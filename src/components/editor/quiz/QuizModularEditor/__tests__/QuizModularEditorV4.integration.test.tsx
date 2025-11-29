@@ -40,6 +40,25 @@ async function renderWithAct(ui: React.ReactElement) {
     return utils;
 }
 
+// Helper para interações de usuário dentro de act
+async function actUser<T>(cb: (user: ReturnType<typeof userEvent.setup>) => Promise<T> | T): Promise<T> {
+    const user = userEvent.setup();
+    let result: T | undefined;
+    await act(async () => {
+        // @ts-expect-error result será atribuído dentro do act
+        result = await cb(user);
+    });
+    // @ts-expect-error result foi definido
+    return result;
+}
+
+// Helper para avançar timers dentro de act
+async function actAdvance(ms: number) {
+    await act(async () => {
+        vi.advanceTimersByTime(ms);
+    });
+}
+
 describe('QuizModularEditorV4 - Integração Completa', () => {
     const mockFunnelId = 'test-funnel-123';
 
@@ -67,7 +86,7 @@ describe('QuizModularEditorV4 - Integração Completa', () => {
 
     describe('Fluxo Completo: Carregar → Editar → Salvar', () => {
         it('deve carregar funnel, editar bloco e persistir mudanças', async () => {
-            const user = userEvent.setup();
+            // Interações futuras devem usar actUser(...)
             const onBlockV4Update = vi.fn();
 
             const { rerender } = await renderWithAct(
@@ -104,7 +123,7 @@ describe('QuizModularEditorV4 - Integração Completa', () => {
         });
 
         it('deve manter estado ao alternar entre steps', async () => {
-            const user = userEvent.setup();
+            // Interações futuras devem usar actUser(...)
 
             await renderWithAct(
                 <EditorProvider>
@@ -311,7 +330,7 @@ describe('QuizModularEditorV4 - Integração Completa', () => {
         });
 
         it('deve ser navegável por teclado', async () => {
-            const user = userEvent.setup();
+            // Interações futuras devem usar actUser(...)
 
             renderWithProviders(
                 <EditorProvider>
@@ -340,7 +359,8 @@ describe('QuizModularEditorV4 - Integração Completa', () => {
             );
 
             // TODO: Simular edição
-            // TODO: Avançar timer
+            // Exemplo de avanço de timer com act
+            await actAdvance(5000);
             // TODO: Verificar auto-save
 
             vi.useRealTimers();
