@@ -344,6 +344,13 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                 step: url.searchParams.get('step')
             };
             appLogger.info('🔎 [Bootstrap] Query params', { data: [qp] });
+
+            // ✅ Respeitar step da query ao inicializar
+            const n = qp.step ? parseInt(qp.step, 10) : NaN;
+            const hasUrlStep = !isNaN(n) && n >= 1 && n <= 21;
+            if (hasUrlStep) {
+                setCurrentStep(n);
+            }
         } catch { }
     }, []);
 
