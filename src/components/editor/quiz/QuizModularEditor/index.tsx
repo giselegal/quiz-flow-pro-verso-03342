@@ -57,7 +57,7 @@ import { EditorLoadingProvider, useEditorLoading } from '@/contexts/EditorLoadin
 import type { EditorResource } from '@/types/editor-resource';
 // Validação e normalização de templates
 import { validateAndNormalizeTemplate, formatValidationErrors } from '@/templates/validation/normalize';
-import { extractBlocksFromStepData as extractBlocksFromStepDataHelper } from './helpers/normalizeBlocks';
+import extractBlocksFromStepDataHelper from './helpers/normalizeBlocks';
 // Import Template Dialog
 import { ImportTemplateDialog } from '../dialogs/ImportTemplateDialog';
 // Autosave feedback visual
@@ -861,6 +861,11 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         return extractBlocksFromStepDataHelper(raw, stepId) as Block[];
     }, []);
 
+
+    /* conflict-resolved */
+    // >>>>>>> 0f2c2e730 (Implement critical fixes for /editor route and QuizModularEditorV4)
+
+
     // 🔄 Carregamento canônico de template: única fonte para lista de steps (sem injeção de blocos)
     const templateLoader = useTemplateLoader({
         templateId: props.templateId,
@@ -990,20 +995,34 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     // 2. Se blocos vazio → reset para [] (evita painel com dados obsoletos)
     // 3. Seleção inicial apenas se não houver seleção válida (somente em modo editável)
     // 4. Evita múltiplos efeitos paralelos (remove efeito antigo de auto-select)
+    // ✅ P6 FIX: Comparação robusta usando assinatura de IDs para evitar sync loops
+    const lastSyncSignatureRef = useRef<string>('');
     useEffect(() => {
         try {
             const unified = blocks;
             const current = wysiwyg.state.blocks;
-            const changedLength = unified.length !== current.length;
-            const changedIds = changedLength || unified.some((b, i) => current[i]?.id !== b.id);
 
-            if (changedIds) {
+            // ✅ P6 FIX: Usar assinatura de IDs ao invés de comparação por índice
+            // Isso evita loops infinitos quando a referência do array muda sem mudar o conteúdo
+            const unifiedSignature = `${safeCurrentStep}|${unified.length}|${unified.map(b => b.id).join(',')}`;
+            const currentSignature = `${safeCurrentStep}|${current.length}|${current.map(b => b.id).join(',')}`;
+
+            // Evitar reset se a assinatura não mudou desde o último sync
+            if (unifiedSignature === lastSyncSignatureRef.current && unifiedSignature === currentSignature) {
+                return;
+            }
+
+            const needsReset = unifiedSignature !== currentSignature;
+
+            if (needsReset) {
                 appLogger.debug('[Sync] Reset WYSIWYG ← unified.stepBlocks', {
                     step: safeCurrentStep,
                     unifiedCount: unified.length,
-                    prevCount: current.length
+                    prevCount: current.length,
+                    reason: 'signature_mismatch'
                 });
                 wysiwyg.actions.reset(unified);
+                lastSyncSignatureRef.current = unifiedSignature;
             }
 
             // Seleção inicial integrada (somente modo edição e se há blocos)

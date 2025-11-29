@@ -1,5 +1,5 @@
 // src/hooks/editor/useStepBlocksLoader.ts
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 // Substitui acesso direto ao templateService pelo loader unificado com validação/caching
 import { unifiedTemplateLoader } from '@/services/templates/UnifiedTemplateLoader';
 import type { Block } from '@/types/editor';
@@ -16,7 +16,8 @@ interface UseStepBlocksLoaderParams {
  * Hook unificado para carregamento de steps
  * ✅ ARQUITETURA: Substitui lógica fragmentada no useEffect principal
  * ✅ BENEFÍCIO: Separação de responsabilidades, testabilidade
- * ✅ CORREÇÕES: Safety timeout de 3s, validação de array vazio, normalização simplificada
+ * ✅ P10 FIX: Não gera placeholder silencioso - deixa canvas vazio com logging
+ * ✅ P11 FIX: Usa ref para controlar estado de loading após abort
  */
 export function useStepBlocksLoader({
   templateOrFunnelId,
@@ -24,12 +25,27 @@ export function useStepBlocksLoader({
   setStepBlocks,
   setStepLoading
 }: UseStepBlocksLoaderParams) {
+  // ✅ P11 FIX: Usar ref para evitar chamadas após unmount/abort
+  const isMountedRef = useRef(true);
+  const loadedStepRef = useRef<string | null>(null);
+
   useEffect(() => {
+    isMountedRef.current = true;
+    
     if (!templateOrFunnelId || !stepIndex) {
-      appLogger.warn('[useStepBlocksLoader] Early return: id ou step ausente', {
+      appLogger.debug('[useStepBlocksLoader] Early return: id ou step ausente', {
         templateOrFunnelId,
         stepIndex
       });
+      return;
+    }
+
+    const stepId = `step-${String(stepIndex).padStart(2, '0')}`;
+    
+    // ✅ Evitar re-carregamento desnecessário do mesmo step
+    const loadKey = `${templateOrFunnelId}:${stepId}`;
+    if (loadedStepRef.current === loadKey) {
+      appLogger.debug('[useStepBlocksLoader] Step já carregado, ignorando', { stepId });
       return;
     }
 
@@ -40,18 +56,14 @@ export function useStepBlocksLoader({
     setStepLoading(true);
 
     // ⏱️ Safety: marcar lentidão sem resetar loading
-    // Evita interrupção indevida em redes lentas ou templates maiores
     const safetyTimeout = setTimeout(() => {
-      if (!signal.aborted) {
-        appLogger.warn('⚠️ [useStepBlocksLoader] Loading lento (> 8s), mantendo estado de loading');
-        // Não chamamos setStepLoading(false) aqui para evitar reset prematuro.
+      if (!signal.aborted && isMountedRef.current) {
+        appLogger.warn('⚠️ [useStepBlocksLoader] Loading lento (> 8s)', { stepId, templateOrFunnelId });
       }
     }, 8000);
 
     async function loadStep() {
       try {
-        const stepId = `step-${String(stepIndex).padStart(2, '0')}`;
-
         appLogger.info('[useStepBlocksLoader] Carregando step', {
           stepId,
           templateOrFunnelId
@@ -59,42 +71,56 @@ export function useStepBlocksLoader({
 
         // Usar loader unificado (já faz cache, validação e hierarquia de fontes)
         let blocks: Block[] = [];
+        let loadSource = 'unknown';
+        
         try {
-          const loadResult = await unifiedTemplateLoader.loadStep(stepId, { useCache: true, signal });
+          const loadResult = await unifiedTemplateLoader.loadStep(stepId, { 
+            useCache: true, 
+            signal,
+            funnelId: templateOrFunnelId || undefined
+          });
           blocks = loadResult.data as Block[];
+          loadSource = loadResult.source;
+          
+          // ✅ P10 FIX: Não gerar placeholder silencioso
+          // Apenas logar e deixar array vazio - UX consistente
           if (!blocks || blocks.length === 0) {
-            appLogger.warn('[useStepBlocksLoader] Loader retornou vazio – gerando placeholder', { stepId, source: loadResult.source });
+            appLogger.warn('[useStepBlocksLoader] Step vazio retornado - verificar template', { 
+              stepId, 
+              source: loadSource,
+              templateOrFunnelId 
+            });
+            blocks = []; // Explicitamente vazio
           }
         } catch (loaderErr) {
-          appLogger.warn('[useStepBlocksLoader] Falha loader unificado, usando placeholder', { stepId, error: loaderErr });
+          // ✅ P10 FIX: Logar erro mas não criar placeholder
+          appLogger.error('[useStepBlocksLoader] Falha ao carregar step', { 
+            stepId, 
+            error: (loaderErr as Error)?.message,
+            templateOrFunnelId 
+          });
+          blocks = []; // Vazio em caso de erro
         }
 
-        if (!blocks || blocks.length === 0) {
-          blocks = [
-            {
-              id: `placeholder-${stepId}`,
-              type: 'text' as any, // alinhar com BlockType canônico
-              order: 0,
-              properties: { system: true, ephemeral: true },
-              content: { text: 'Bloco inicial automático – clique para editar.' },
-              ephemeral: true,
-            } as Block,
-          ];
-        }
-
-        if (!signal.aborted) {
+        // ✅ P11 FIX: Verificar mount status via ref
+        if (!signal.aborted && isMountedRef.current) {
           setStepBlocks(stepIndex, blocks);
+          loadedStepRef.current = loadKey;
           appLogger.info('[useStepBlocksLoader] Step carregado', { 
             stepId, 
-            count: blocks.length 
+            count: blocks.length,
+            source: loadSource
           });
         }
       } catch (error) {
-        if (!signal.aborted) {
-          appLogger.error('[useStepBlocksLoader] Erro ao carregar', { error });
+        if (!signal.aborted && isMountedRef.current) {
+          appLogger.error('[useStepBlocksLoader] Erro inesperado', { 
+            error: (error as Error)?.message 
+          });
         }
       } finally {
-        if (!signal.aborted) {
+        // ✅ P11 FIX: Verificar mount status antes de atualizar estado
+        if (!signal.aborted && isMountedRef.current) {
           clearTimeout(safetyTimeout);
           setStepLoading(false);
         }
@@ -104,9 +130,10 @@ export function useStepBlocksLoader({
     loadStep();
 
     return () => {
+      isMountedRef.current = false;
       controller.abort();
       clearTimeout(safetyTimeout);
-      setStepLoading(false);
+      // ✅ P11 FIX: Não chamar setStepLoading aqui - pode causar warning
     };
   }, [templateOrFunnelId, stepIndex, setStepBlocks, setStepLoading]);
 }
