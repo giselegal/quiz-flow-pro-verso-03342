@@ -941,6 +941,13 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         [currentStepKey, blocks]
     );
 
+    // 🆕 Empty State: quando não há template/funnel e não há blocos, mostrar canvas em branco e ações de criação/import
+    const showEmptyState = useMemo(() => {
+        const noResource = !props.templateId && !resourceId && !loadedTemplate;
+        const notLoading = !isLoadingTemplate && !isLoadingStep;
+        return noResource && notLoading && blocks.length === 0;
+    }, [props.templateId, resourceId, loadedTemplate, isLoadingTemplate, isLoadingStep, blocks.length]);
+
     // 🔧 CRITICAL FIX: Callback estável para quando o JSON do template for editado no painel
     const handleTemplateChange = React.useCallback(
         (template: { step?: string; blocks?: Block[] }) => {
