@@ -418,13 +418,25 @@ export class UnifiedTemplateLoader {
         ? this.combineAbortSignals(signal, controller.signal)
         : controller.signal;
 
-      const response = await fetch(url, { signal: combinedSignal });
+      const response: any = await fetch(url, { signal: combinedSignal });
+
+      // Guardar contra mocks quebrados que retornam undefined/null
+      if (!response) {
+        appLogger.error(`❌ [UnifiedLoader] Fetch retornou resposta vazia para ${url}`);
+        throw new Error('Empty fetch response (undefined/null)');
+      }
+
+      // Alguns ambientes de teste podem retornar objeto parcial sem .ok
+      if (typeof response.ok === 'undefined') {
+        appLogger.error(`❌ [UnifiedLoader] Resposta sem propriedade .ok para ${url}`);
+        throw new Error('Malformed fetch response (missing .ok)');
+      }
 
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
 
-      return response;
+      return response as Response;
     } finally {
       clearTimeout(timeoutId);
     }
