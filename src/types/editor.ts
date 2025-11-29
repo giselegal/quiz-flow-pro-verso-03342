@@ -565,6 +565,8 @@ export interface BaseBlock {
   order: number;
   properties?: Record<string, any>;
   parentId?: string; // ✅ FASE 3: Para blocos aninhados/hierárquicos
+  /** Indica bloco efêmero (não deve ser persistido). */
+  ephemeral?: boolean;
 }
 
 // Interface Block específica por tipo
