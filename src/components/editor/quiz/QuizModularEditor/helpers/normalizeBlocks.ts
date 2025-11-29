@@ -4,7 +4,7 @@ import { appLogger } from '@/lib/utils/appLogger';
  * Normaliza e extrai uma lista de blocks a partir de formatos de step variados.
  * Retorna sempre um array seguro para evitar crashes na UI.
  */
-export default function extractBlocksFromStepData(raw: any, stepId: string) {
+export function extractBlocksFromStepData(raw: any, stepId: string) {
   try {
     if (!raw) {
       appLogger.debug(`[extractBlocks] Dados nulos para ${stepId}`);
@@ -54,3 +54,5 @@ export default function extractBlocksFromStepData(raw: any, stepId: string) {
     return [] as any[];
   }
 }
+
+export default extractBlocksFromStepData;
