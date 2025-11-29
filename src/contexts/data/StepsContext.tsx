@@ -10,6 +10,7 @@
  */
 
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
+import { notify } from '@/lib/utils/notify';
 import { StorageService } from '@/services/core/StorageService';
 import { appLogger } from '@/lib/utils/appLogger';
 
@@ -300,8 +301,7 @@ export const StepsProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     (stepId: string) => {
       if (steps.length <= 1) {
         try {
-          // import dinâmico sem await para evitar tornar a função assíncrona
-          import('@/lib/utils/notify').then(mod => mod.notify('Não é possível excluir a última etapa', 'warning', 'Ação bloqueada')).catch(() => { });
+          notify('Não é possível excluir a última etapa', 'warning', 'Ação bloqueada');
         } catch { }
         return;
       }

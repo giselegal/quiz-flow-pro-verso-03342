@@ -35,7 +35,7 @@ export { SinglePropertiesPanel as OptimizedPropertiesPanel } from './SinglePrope
 export { SinglePropertiesPanel as UltraUnifiedPropertiesPanel } from './SinglePropertiesPanel';
 
 // Property editors
-export { HeaderPropertyEditor } from './editors/HeaderPropertyEditor';
+// Removido re-export estático de HeaderPropertyEditor para evitar import misto
 
 // UI components
 export { PropertyCheckbox } from './components/PropertyCheckbox';

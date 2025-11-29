@@ -1,4 +1,5 @@
 import { appLogger } from '@/lib/utils/appLogger';
+import { UNIFIED_TEMPLATE_REGISTRY } from '@/config/unifiedTemplatesRegistry';
 /**
  * 🔧 NORMALIZADOR DE FUNNEL ID
  * 
@@ -93,9 +94,8 @@ export const getTemplateInfo = async (funnelId: string) => {
   }
 
   try {
-    // Tentar carregar template do registro unificado
-    const registry = await import('@/config/unifiedTemplatesRegistry');
-    const template = registry.UNIFIED_TEMPLATE_REGISTRY[normalized.baseId];
+    // Tentar carregar template do registro unificado (import estático padronizado)
+    const template = UNIFIED_TEMPLATE_REGISTRY[normalized.baseId];
 
     if (template) {
       appLogger.info('✅ Template encontrado no registro unificado:', { data: [template] });
