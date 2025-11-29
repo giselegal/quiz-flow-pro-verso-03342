@@ -254,12 +254,15 @@ describe('ImportTemplateDialog - Preview de Template', () => {
             },
         };
 
-        vi.mocked(validateTemplate).mockReturnValue({
+        vi.mocked(normalizeAndValidateTemplateV3).mockReturnValue({
             success: true,
             data: mockTemplate,
+            warnings: [],
+            stats: { totalBlocks: 3, replacedIds: 0, steps: 3 },
         });
+        vi.mocked(isNormalizeSuccess).mockReturnValue(true);
 
-        render(
+        const { container } = render(
             <ImportTemplateDialog
                 open={true}
                 onClose={() => { }}
@@ -269,7 +272,7 @@ describe('ImportTemplateDialog - Preview de Template', () => {
         );
 
         const file = createMockJsonFile(mockTemplate);
-        const input = screen.getByLabelText(/upload/i) as HTMLInputElement;
+        const input = container.querySelector('input[type="file"]') as HTMLInputElement;
 
         await user.upload(input, file);
 
@@ -299,12 +302,15 @@ describe('ImportTemplateDialog - Preview de Template', () => {
             },
         };
 
-        vi.mocked(validateTemplate).mockReturnValue({
+        vi.mocked(normalizeAndValidateTemplateV3).mockReturnValue({
             success: true,
             data: mockTemplate,
+            warnings: [],
+            stats: { totalBlocks: 3, replacedIds: 0, steps: 3 },
         });
+        vi.mocked(isNormalizeSuccess).mockReturnValue(true);
 
-        render(
+        const { container } = render(
             <ImportTemplateDialog
                 open={true}
                 onClose={() => { }}
@@ -314,7 +320,7 @@ describe('ImportTemplateDialog - Preview de Template', () => {
         );
 
         const file = createMockJsonFile(mockTemplate);
-        const input = screen.getByLabelText(/upload/i) as HTMLInputElement;
+        const input = container.querySelector('input[type="file"]') as HTMLInputElement;
 
         await user.upload(input, file);
 
@@ -342,12 +348,15 @@ describe('ImportTemplateDialog - Preview de Template', () => {
             },
         };
 
-        vi.mocked(validateTemplate).mockReturnValue({
+        vi.mocked(normalizeAndValidateTemplateV3).mockReturnValue({
             success: true,
             data: mockTemplate,
+            warnings: [],
+            stats: { totalBlocks: 3, replacedIds: 0, steps: 1 },
         });
+        vi.mocked(isNormalizeSuccess).mockReturnValue(true);
 
-        render(
+        const { container } = render(
             <ImportTemplateDialog
                 open={true}
                 onClose={() => { }}
@@ -357,7 +366,7 @@ describe('ImportTemplateDialog - Preview de Template', () => {
         );
 
         const file = createMockJsonFile(mockTemplate);
-        const input = screen.getByLabelText(/upload/i) as HTMLInputElement;
+        const input = container.querySelector('input[type="file"]') as HTMLInputElement;
 
         await user.upload(input, file);
 
@@ -379,12 +388,15 @@ describe('ImportTemplateDialog - Confirmação de Importação', () => {
             steps: { 'step-01': [{ id: 'b1', type: 'Block' }] },
         };
 
-        vi.mocked(validateTemplate).mockReturnValue({
+        vi.mocked(normalizeAndValidateTemplateV3).mockReturnValue({
             success: true,
             data: mockTemplate,
+            warnings: [],
+            stats: { totalBlocks: 1, replacedIds: 0, steps: 1 },
         });
+        vi.mocked(isNormalizeSuccess).mockReturnValue(true);
 
-        render(
+        const { container } = render(
             <ImportTemplateDialog
                 open={true}
                 onClose={() => { }}
@@ -394,7 +406,7 @@ describe('ImportTemplateDialog - Confirmação de Importação', () => {
         );
 
         const file = createMockJsonFile(mockTemplate);
-        const input = screen.getByLabelText(/upload/i) as HTMLInputElement;
+        const input = container.querySelector('input[type="file"]') as HTMLInputElement;
 
         await user.upload(input, file);
 
@@ -412,12 +424,15 @@ describe('ImportTemplateDialog - Confirmação de Importação', () => {
             steps: { 'step-01': [{ id: 'b1', type: 'Block' }] },
         };
 
-        vi.mocked(validateTemplate).mockReturnValue({
+        vi.mocked(normalizeAndValidateTemplateV3).mockReturnValue({
             success: true,
             data: mockTemplate,
+            warnings: [],
+            stats: { totalBlocks: 1, replacedIds: 0, steps: 1 },
         });
+        vi.mocked(isNormalizeSuccess).mockReturnValue(true);
 
-        render(
+        const { container } = render(
             <ImportTemplateDialog
                 open={true}
                 onClose={() => { }}
@@ -427,7 +442,7 @@ describe('ImportTemplateDialog - Confirmação de Importação', () => {
         );
 
         const file = createMockJsonFile(mockTemplate);
-        const input = screen.getByLabelText(/upload/i) as HTMLInputElement;
+        const input = container.querySelector('input[type="file"]') as HTMLInputElement;
 
         await user.upload(input, file);
 
@@ -450,12 +465,15 @@ describe('ImportTemplateDialog - Confirmação de Importação', () => {
             steps: { 'step-01': [{ id: 'b1', type: 'Block' }] },
         };
 
-        vi.mocked(validateTemplate).mockReturnValue({
+        vi.mocked(normalizeAndValidateTemplateV3).mockReturnValue({
             success: true,
             data: mockTemplate,
+            warnings: [],
+            stats: { totalBlocks: 1, replacedIds: 0, steps: 1 },
         });
+        vi.mocked(isNormalizeSuccess).mockReturnValue(true);
 
-        render(
+        const { container } = render(
             <ImportTemplateDialog
                 open={true}
                 onClose={onClose}
@@ -465,7 +483,7 @@ describe('ImportTemplateDialog - Confirmação de Importação', () => {
         );
 
         const file = createMockJsonFile(mockTemplate);
-        const input = screen.getByLabelText(/upload/i) as HTMLInputElement;
+        const input = container.querySelector('input[type="file"]') as HTMLInputElement;
 
         await user.upload(input, file);
 
