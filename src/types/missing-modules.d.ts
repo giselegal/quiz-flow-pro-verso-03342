@@ -10,9 +10,6 @@ declare module '@/services/backup/BackupService' {
   export type RestorePoint = any;
 }
 
-declare module '../../services/NotificationService' {
-  export const NotificationService: any;
-}
 
 declare module './UnifiedTemplateService' {
   export const UnifiedTemplateService: any;
