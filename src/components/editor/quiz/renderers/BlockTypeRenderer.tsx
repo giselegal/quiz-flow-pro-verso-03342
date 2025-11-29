@@ -96,6 +96,9 @@ export const BlockTypeRenderer: React.FC<BlockRendererProps> = ({ block, ...rest
         const normalizedType = String(block.type).toLowerCase().trim();
 
         switch (normalizedType) {
+            case 'text':
+                // Renderização dedicada para blocos simples de texto (inclui placeholder inicial)
+                return <TextInlineAtomic block={block} {...rest} />;
             // ===== ALIASES DE TIPOS CRÍTICOS =====
             case 'hero-block':
             case 'hero':
