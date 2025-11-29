@@ -69,10 +69,18 @@ export function useStepBlocksLoader({
           blocks = res.data.steps[stepId].blocks.filter((b: any) => b && b.id && b.type);
         }
 
-        // ✅ CORREÇÃO: Validar array não-vazio
+        // ✅ CORREÇÃO: Se vazio, criar bloco placeholder para evitar canvas em branco silencioso
         if (blocks.length === 0) {
-          appLogger.warn('[useStepBlocksLoader] Step sem blocos válidos', { stepId });
-          return;
+          appLogger.warn('[useStepBlocksLoader] Step sem blocos válidos – gerando placeholder', { stepId });
+          blocks = [
+            {
+              id: `placeholder-${stepId}`,
+              type: 'text',
+              order: 0,
+              properties: {},
+              content: { text: 'Bloco inicial automático – clique para editar.' },
+            } as Block
+          ];
         }
 
         if (!signal.aborted) {
