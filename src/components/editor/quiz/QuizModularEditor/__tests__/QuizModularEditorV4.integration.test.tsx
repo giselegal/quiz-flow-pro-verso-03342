@@ -11,6 +11,7 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { act } from 'react';
 import { screen, waitFor } from '@testing-library/react';
 import { renderWithProviders } from '@/test-utils/renderWithProviders';
 import userEvent from '@testing-library/user-event';
@@ -28,6 +29,16 @@ vi.mock('@/lib/utils/appLogger', () => ({
         warn: vi.fn(),
     },
 }));
+
+// Helper para envolver renders/ações em act e mitigar warnings
+async function renderWithAct(ui: React.ReactElement) {
+    let utils: ReturnType<typeof renderWithProviders> | undefined;
+    await act(async () => {
+        utils = renderWithProviders(ui);
+    });
+    // @ts-expect-error utils sempre será definido após render
+    return utils;
+}
 
 describe('QuizModularEditorV4 - Integração Completa', () => {
     const mockFunnelId = 'test-funnel-123';
@@ -59,7 +70,7 @@ describe('QuizModularEditorV4 - Integração Completa', () => {
             const user = userEvent.setup();
             const onBlockV4Update = vi.fn();
 
-            const { rerender } = renderWithProviders(
+            const { rerender } = await renderWithAct(
                 <EditorProvider>
                     <QuizModularEditorV4Wrapper
                         useV4Layout={true}
@@ -95,7 +106,7 @@ describe('QuizModularEditorV4 - Integração Completa', () => {
         it('deve manter estado ao alternar entre steps', async () => {
             const user = userEvent.setup();
 
-            renderWithProviders(
+            await renderWithAct(
                 <EditorProvider>
                     <QuizModularEditorV4Wrapper
                         useV4Layout={true}
@@ -212,7 +223,7 @@ describe('QuizModularEditorV4 - Integração Completa', () => {
 
     describe('Multi-Step Editing', () => {
         it('deve gerenciar blocos independentes por step', async () => {
-            const { rerender } = renderWithProviders(
+            const { rerender } = await renderWithAct(
                 <EditorProvider>
                     <QuizModularEditorV4Wrapper
                         useV4Layout={true}
@@ -260,7 +271,7 @@ describe('QuizModularEditorV4 - Integração Completa', () => {
 
             const startTime = performance.now();
 
-            renderWithProviders(
+            await renderWithAct(
                 <EditorProvider>
                     <QuizModularEditorV4Wrapper
                         useV4Layout={true}
@@ -287,7 +298,7 @@ describe('QuizModularEditorV4 - Integração Completa', () => {
 
     describe('Acessibilidade', () => {
         it('deve ter roles ARIA corretos', async () => {
-            renderWithProviders(
+            await renderWithAct(
                 <EditorProvider>
                     <QuizModularEditorV4Wrapper
                         useV4Layout={true}
@@ -319,7 +330,7 @@ describe('QuizModularEditorV4 - Integração Completa', () => {
         it('deve auto-save a cada N segundos', async () => {
             vi.useFakeTimers();
 
-            const { rerender } = renderWithProviders(
+            const { rerender } = await renderWithAct(
                 <EditorProvider>
                     <QuizModularEditorV4Wrapper
                         useV4Layout={true}
