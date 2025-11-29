@@ -4,6 +4,7 @@ import { render } from '@testing-library/react';
 import { AuthStorageProvider } from '@/contexts/consolidated/AuthStorageProvider';
 import { RealTimeProvider } from '@/contexts/consolidated/RealTimeProvider';
 import { ValidationResultProvider } from '@/contexts/consolidated/ValidationResultProvider';
+import { EditorStateProvider } from '@/core/contexts/EditorContext/EditorStateProvider';
 import { UXProvider } from '@/contexts/consolidated/UXProvider';
 import { FunnelDataProvider } from '@/contexts/funnel/FunnelDataProvider';
 import { QuizStateProvider } from '@/contexts/quiz/QuizStateProvider';
@@ -30,9 +31,11 @@ export function renderWithProviders(ui: React.ReactElement) {
                         <FunnelDataProvider>
                             <VersioningProvider>
                                 <QuizStateProvider>
-                                    <ValidationResultProvider>
-                                        {ui}
-                                    </ValidationResultProvider>
+                                    <EditorStateProvider>
+                                        <ValidationResultProvider>
+                                            {ui}
+                                        </ValidationResultProvider>
+                                    </EditorStateProvider>
                                 </QuizStateProvider>
                             </VersioningProvider>
                         </FunnelDataProvider>
