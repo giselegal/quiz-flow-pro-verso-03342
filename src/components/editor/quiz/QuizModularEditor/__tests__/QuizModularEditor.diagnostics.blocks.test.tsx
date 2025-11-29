@@ -43,26 +43,7 @@ vi.mock('@/hooks/useFeatureFlags', () => ({
     useFeatureFlags: () => ({ enableAutoSave: false })
 }));
 
-// Unified editor devolve bloco via getStepBlocks após setStepBlocks
-const setStepBlocksSpy = vi.fn();
-vi.mock('@/hooks/useSuperUnified', () => ({
-    useSuperUnified: () => ({
-        state: {
-            editor: { currentStep: 1, selectedBlockId: null },
-            ui: { isLoading: false },
-        },
-        setCurrentStep: vi.fn(),
-        setStepBlocks: setStepBlocksSpy,
-        addBlock: vi.fn(),
-        removeBlock: vi.fn(),
-        reorderBlocks: vi.fn(),
-        updateBlock: vi.fn(),
-        setSelectedBlock: vi.fn(),
-        getStepBlocks: () => mockBlocks,
-        saveFunnel: vi.fn(),
-        showToast: vi.fn(),
-    }),
-}));
+// Nota: não mockamos useEditorContext; usamos providers reais via renderWithProviders.
 
 describe('Diagnóstico Editor - Renderização com blocos', () => {
     beforeEach(() => {
@@ -81,7 +62,6 @@ describe('Diagnóstico Editor - Renderização com blocos', () => {
         expect(screen.getByTestId('block-b2')).toBeInTheDocument();
         expect(screen.getByText(/Count:2/)).toBeInTheDocument();
 
-        // setStepBlocks deve ter sido chamado para injetar no unified
-        expect(setStepBlocksSpy).toHaveBeenCalled();
+        // Renderização baseada em carregamento real via hook
     });
 });
