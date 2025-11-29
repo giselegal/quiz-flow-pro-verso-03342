@@ -36,8 +36,7 @@ async function renderWithAct(ui: React.ReactElement) {
     await act(async () => {
         utils = renderWithProviders(ui);
     });
-    // @ts-expect-error utils sempre será definido após render
-    return utils;
+    return utils as ReturnType<typeof renderWithProviders>;
 }
 
 // Helper para interações de usuário dentro de act
@@ -45,11 +44,9 @@ async function actUser<T>(cb: (user: ReturnType<typeof userEvent.setup>) => Prom
     const user = userEvent.setup();
     let result: T | undefined;
     await act(async () => {
-        // @ts-expect-error result será atribuído dentro do act
         result = await cb(user);
     });
-    // @ts-expect-error result foi definido
-    return result;
+    return result as T;
 }
 
 // Helper para avançar timers dentro de act
