@@ -82,7 +82,8 @@ export function useStepBlocksLoader({
           const loadResult = await unifiedTemplateLoader.loadStep(stepId, { 
             useCache: true, 
             signal,
-            funnelId: isFunnelId ? templateOrFunnelId : undefined
+            // Garantir que funnelId seja string | undefined (não null)
+            funnelId: (isFunnelId && templateOrFunnelId) ? templateOrFunnelId : undefined
           });
           blocks = loadResult.data as Block[];
           loadSource = loadResult.source;
