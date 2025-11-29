@@ -41,7 +41,12 @@ export function useAccessibilityAudit() {
     setError(null);
 
     try {
-      // Importar axe-core dinamicamente
+      // Em produção, não disponibilizar auditoria para manter bundle enxuto
+      if (import.meta.env.PROD) {
+        throw new Error('Auditoria A11Y indisponível no ambiente de produção.');
+      }
+
+      // Importar axe-core dinamicamente apenas em dev
       const axe = await import('axe-core');
 
       // Configurar regras WCAG 2.1 AA
