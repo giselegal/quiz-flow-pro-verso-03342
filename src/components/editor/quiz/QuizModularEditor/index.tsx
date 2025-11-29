@@ -159,20 +159,11 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     } = unified;
 
     // Adapter híbrido de comandos (usando unified context)
-    const legacyCommands = useMemo(() => ({
-        addBlock: (stepId: any, block: any) => addBlock(stepId, block),
-        updateBlock: (stepId: any, blockId: string, patch: any) => updateBlock(stepId, blockId, patch),
-    }), [addBlock, updateBlock]);
-
-    const unifiedCommands = useMemo(() => {
-        // Usar unified context diretamente (já tem todas as actions necessárias)
-        return {
-            addBlock: async (stepId: any, block: any) => addBlock(stepId, block),
-            updateBlock: async (stepId: any, blockId: string, patch: any) => updateBlock(stepId, blockId, patch),
-        };
-    }, [addBlock, updateBlock]);
-
-    const commands = useMemo(() => createEditorCommandsAdapter(legacyCommands, unifiedCommands as any), [legacyCommands, unifiedCommands]);
+    // ✅ FASE 3: Adapter legado desativado — mutações ocorrem apenas em WYSIWYG; flush propaga
+    const commands = useMemo(() => ({
+        addBlock: (_stepId: any, block: any) => wysiwyg.actions.addBlock(block),
+        updateBlock: (_stepId: any, blockId: string, patch: any) => wysiwyg.actions.updateBlock(blockId, patch),
+    }), [wysiwyg.actions]);
 
     // Helper to adapt showToast signature (UXProvider expects: message, type, duration)
     const toast = useCallback((config: { type: string; title?: string; message: string; duration?: number }) => {
@@ -988,6 +979,23 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         }
     }, [blocks, safeCurrentStep, previewMode]);
 
+    // ✅ FASE 3: Flush WYSIWYG → unified (single source commit)
+    // Sempre que blocos do WYSIWYG mudarem em edição, comitar para editor.stepBlocks
+    useEffect(() => {
+        try {
+            // Evita flush em previewMode live se objetivo for somente visual (mantemos para consistência)
+            const currentUnified = getStepBlocks(safeCurrentStep) || [];
+            const wBlocks = wysiwyg.state.blocks;
+            const diverged = currentUnified.length !== wBlocks.length || currentUnified.some((b: any, i: number) => b.id !== wBlocks[i]?.id);
+            if (diverged) {
+                setStepBlocks(safeCurrentStep, wBlocks as any);
+                appLogger.debug('[Flush] Comitado WYSIWYG → unified.stepBlocks', { step: safeCurrentStep, count: wBlocks.length });
+            }
+        } catch (e) {
+            appLogger.warn('[Flush] Falha ao comitar blocos', { error: e });
+        }
+    }, [wysiwyg.state.blocks, safeCurrentStep]);
+
     // 🔧 CRITICAL FIX: Memo para o template completo usado no painel (hooks FORA do JSX)
     const fullTemplate = React.useMemo(
         () => ({
@@ -1009,20 +1017,15 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         (template: { step?: string; blocks?: Block[] }) => {
             console.group('🔧 [QuizModularEditor] onTemplateChange chamado');
             appLogger.info('template recebido:', { data: [template] });
-            appLogger.info('safeCurrentStep:', { data: [safeCurrentStep] });
-            appLogger.info('template.blocks:', { data: [template?.blocks] });
-            appLogger.info('isArray:', { data: [Array.isArray(template?.blocks)] });
-            appLogger.info('blocksCount:', { data: [template?.blocks?.length] });
             console.groupEnd();
-
-            if (template?.blocks && Array.isArray(template.blocks)) {
-                appLogger.info('✅ Chamando setStepBlocks com', { data: [template.blocks.length, 'blocos'] });
-                setStepBlocks(safeCurrentStep, template.blocks);
+            if (Array.isArray(template?.blocks)) {
+                wysiwyg.actions.reset(template.blocks);
+                appLogger.info('✅ WYSIWYG reset via template change', { count: template.blocks.length });
             } else {
                 appLogger.warn('❌ template.blocks inválido ou não é array');
             }
         },
-        [safeCurrentStep, setStepBlocks]
+        [wysiwyg.actions]
     );
 
     // 🔍 DEBUG: Desabilitado para reduzir poluição do console
@@ -1121,7 +1124,8 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 
                     // 🔄 G31 FIX: Rollback em falha de DnD
                     try {
-                        reorderBlocks(stepIndex, reordered);
+                        // ✅ FASE 3: apenas WYSIWYG; flush cuidará do commit
+                        wysiwyg.actions.reorderBlocks(fromIndex, toIndex);
 
                         appLogger.debug('[DnD] Reordenação aplicada com sucesso', {
                             fromIndex,
@@ -2069,14 +2073,12 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                                     selectedBlockId={previewMode === 'live' ? wysiwyg.state.selectedBlockId : selectedBlockId}
                                                     onRemoveBlock={previewMode === 'live' ? (id => {
                                                         wysiwyg.actions.removeBlock(id);
-                                                        removeBlock(safeCurrentStep, id);
                                                     }) : undefined}
                                                     onMoveBlock={previewMode === 'live' ? ((from, to) => {
                                                         wysiwyg.actions.reorderBlocks(from, to);
                                                     }) : undefined}
                                                     onUpdateBlock={previewMode === 'live' ? ((id, patch) => {
                                                         wysiwyg.actions.updateBlock(id, patch);
-                                                        updateBlock(safeCurrentStep, id, patch);
                                                     }) : undefined}
                                                     onBlockSelect={handleCanvasBlockSelect}
                                                     hasTemplate={Boolean(
@@ -2136,7 +2138,6 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 
                                                 // Aplicar update v3
                                                 wysiwyg.actions.updateBlock(blockId, v3Block);
-                                                updateBlock(safeCurrentStep, blockId, v3Block);
                                             } catch (error) {
                                                 appLogger.error('Erro ao aplicar update v4:', { error, blockId, updates });
                                             }
@@ -2144,7 +2145,6 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                         onClose={handleWYSIWYGClearSelection}
                                         onDelete={(blockId) => {
                                             wysiwyg.actions.removeBlock(blockId);
-                                            removeBlock(safeCurrentStep, blockId);
                                         }}
                                     />
                                 </div>
