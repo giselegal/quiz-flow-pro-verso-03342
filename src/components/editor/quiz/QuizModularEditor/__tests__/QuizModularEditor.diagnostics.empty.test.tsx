@@ -1,8 +1,8 @@
 import React from 'react';
 import { describe, it, vi, beforeEach, expect } from 'vitest';
 import { screen } from '@testing-library/react';
+import '@testing-library/jest-dom/vitest';
 import { renderWithProviders } from '@/test-utils/renderWithProviders';
-// Vitest já injeta expect; garantir extensão jest-dom via setup global ou usar assertions básicas.
 import QuizModularEditor from '../index';
 // Usamos renderWithProviders para injetar todos os providers (AuthStorage, QueryClient, etc.)
 
@@ -73,7 +73,7 @@ describe('Diagnóstico Editor - Canvas Vazio', () => {
         renderWithProviders(<QuizModularEditor />);
 
         // Coluna de steps deve existir
-        await screen.findByTestId('step-navigator');
+        await screen.findAllByTestId('step-navigator');
 
         // Sem resource/template → showEmptyState deve aparecer (string "Canvas em branco")
         await screen.findByText(/Canvas em branco/i);
@@ -83,7 +83,7 @@ describe('Diagnóstico Editor - Canvas Vazio', () => {
         // Fornecer templateId para disparar carregamento via hook
         renderWithProviders(<QuizModularEditor templateId="quiz21StepsComplete" />);
 
-        await screen.findByTestId('step-navigator');
+        await screen.findAllByTestId('step-navigator');
 
         // Canvas column deve aparecer
         await screen.findByTestId('canvas-column');
