@@ -1,6 +1,6 @@
 import React from 'react';
 import { describe, it, vi, beforeEach, expect } from 'vitest';
-import { screen, waitFor } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import { renderWithProviders } from '@/test-utils/renderWithProviders';
 // Removido import direto de jest-dom; usar matchers básicos.
 import QuizModularEditor from '../index';
@@ -70,8 +70,8 @@ describe('Diagnóstico Editor - Renderização com blocos', () => {
     it('renderiza blocos quando getStep retorna lista não vazia', async () => {
         renderWithProviders(<QuizModularEditor templateId="quiz21StepsComplete" />);
 
-        await waitFor(() => expect(screen.getByTestId('step-navigator')).toBeInTheDocument());
-        await waitFor(() => expect(screen.getByTestId('canvas-column')).toBeInTheDocument());
+        await screen.findByTestId('step-navigator');
+        await screen.findByTestId('canvas-column');
 
         // Deve mostrar blocos
         expect(screen.getByTestId('block-b1')).toBeInTheDocument();

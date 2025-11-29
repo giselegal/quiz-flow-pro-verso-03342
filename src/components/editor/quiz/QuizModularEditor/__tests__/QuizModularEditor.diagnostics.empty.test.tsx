@@ -1,6 +1,6 @@
 import React from 'react';
 import { describe, it, vi, beforeEach, expect } from 'vitest';
-import { screen, waitFor } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import { renderWithProviders } from '@/test-utils/renderWithProviders';
 // Vitest já injeta expect; garantir extensão jest-dom via setup global ou usar assertions básicas.
 import QuizModularEditor from '../index';
@@ -71,26 +71,22 @@ describe('Diagnóstico Editor - Canvas Vazio', () => {
         renderWithProviders(<QuizModularEditor />);
 
         // Coluna de steps deve existir
-        await waitFor(() => expect(screen.getByTestId('step-navigator')).toBeInTheDocument());
+        await screen.findByTestId('step-navigator');
 
         // Sem resource/template → showEmptyState deve aparecer (string "Canvas em branco")
-        await waitFor(() => {
-            expect(screen.getByText(/Canvas em branco/i)).toBeInTheDocument();
-        });
+        await screen.findByText(/Canvas em branco/i);
     });
 
     it('carrega step vazio e exibe placeholder (blocks length = 1) quando hook injeta bloco automático', async () => {
         // Fornecer templateId para disparar carregamento via hook
         renderWithProviders(<QuizModularEditor templateId="quiz21StepsComplete" />);
 
-        await waitFor(() => expect(screen.getByTestId('step-navigator')).toBeInTheDocument());
+        await screen.findByTestId('step-navigator');
 
         // Canvas column deve aparecer
-        await waitFor(() => expect(screen.getByTestId('canvas-column')).toBeInTheDocument());
+        await screen.findByTestId('canvas-column');
 
         // Como getStep retorna [], hook cria placeholder → blocks.length esperado = 1
-        await waitFor(() => {
-            expect(screen.getByTestId('canvas-column')).toHaveTextContent('Canvas Blocks: 1');
-        });
+        expect(screen.getByTestId('canvas-column')).toHaveTextContent('Canvas Blocks: 1');
     });
 });
