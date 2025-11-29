@@ -1,3 +1,11 @@
+import { useAppStore, selectors } from '@/state/store';
+// Exemplo de uso com subscrição seletiva para evitar re-render em cascata
+const useEditorSelectors = () => {
+    const currentStep = useAppStore(selectors.currentStep);
+    const selections = useAppStore(selectors.selections);
+    const theme = useAppStore(selectors.theme);
+    return { currentStep, selections, theme };
+};
 import React, { Suspense, useEffect, useState, useCallback, useMemo, useRef } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { stepKeys } from '@/services/api/steps/hooks';
