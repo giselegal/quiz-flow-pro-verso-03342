@@ -102,29 +102,14 @@ const lazyImports: Record<string, () => Promise<{ default: React.ComponentType<a
   'score-display': () => import('@/components/quiz/blocks/QuizScoreDisplay'),
 
   // Intro blocks - Step 1 (7 blocos)
-  'hero-block': () => import('@/components/editor/blocks/atomic/IntroLogoHeaderBlock'),
-  'intro-logo': () => import('@/components/editor/blocks/atomic/IntroLogoBlock'),
-  'intro-logo-header': () => import('@/components/editor/blocks/atomic/IntroLogoHeaderBlock'),
-  'intro-title': () => import('@/components/editor/blocks/atomic/IntroTitleBlock'),
-  'intro-image': () => import('@/components/editor/blocks/atomic/IntroImageBlock'),
-  'intro-description': () => import('@/components/editor/blocks/atomic/IntroDescriptionBlock'),
-  'intro-form': () => import('@/components/editor/blocks/atomic/IntroFormBlock'),
+  // (REMOVIDO: blocos intro atômicos já importados estaticamente em BlockTypeRenderer)
   'quiz-intro': () => import('@/components/editor/blocks/QuizIntroHeaderBlock'), // Alias
 
   // Decorative/UI (3 blocos)
-  'quiz-intro-header': () => import('@/components/editor/blocks/QuizIntroHeaderBlock'),
-  'decorative-bar': () => import('@/components/editor/blocks/DecorativeBarInlineBlock'),
-  'decorative-bar-inline': () => import('@/components/editor/blocks/DecorativeBarInlineBlock'),
-  'legal-notice': () => import('@/components/editor/blocks/LegalNoticeInlineBlock'),
-  'legal-notice-inline': () => import('@/components/editor/blocks/LegalNoticeInlineBlock'),
+  // (REMOVIDO: decorativos já resolvidos diretamente pelo renderer)
 
   // Transition blocks - Steps 12, 19 (6 blocos)
-  'quiz-transition-loader': () => import('@/components/editor/blocks/QuizTransitionLoaderBlock'),
-  'transition-title': () => import('@/components/editor/blocks/atomic/TransitionTitleBlock'),
-  'transition-loader': () => import('@/components/editor/blocks/atomic/TransitionLoaderBlock'),
-  'transition-text': () => import('@/components/editor/blocks/atomic/TransitionTextBlock'),
-  'transition-progress': () => import('@/components/editor/blocks/atomic/TransitionProgressBlock'),
-  'transition-message': () => import('@/components/editor/blocks/atomic/TransitionMessageBlock'),
+  // (REMOVIDO: blocos de transição atômicos já tratados em BlockTypeRenderer)
 
   // Quiz Components
   'quiz-logo': () => import('@/components/editor/blocks/QuizLogoBlock'),
@@ -136,12 +121,7 @@ const lazyImports: Record<string, () => Promise<{ default: React.ComponentType<a
   'offer-hero': () => import('@/components/editor/blocks/OfferHeroBlock'),
 
   // Question Components (Steps 02-11)
-  'question-progress': () => import('@/components/editor/blocks/atomic/QuestionProgressBlock'),
-  'question-number': () => import('@/components/editor/blocks/atomic/QuestionNumberBlock'),
-  'question-text': () => import('@/components/editor/blocks/atomic/QuestionTextBlock'),
-  'question-title': () => import('@/components/editor/blocks/atomic/QuestionTextBlock'), // Alias
-  'question-instructions': () => import('@/components/editor/blocks/atomic/QuestionInstructionsBlock'),
-  'question-navigation': () => import('@/components/editor/blocks/atomic/QuestionNavigationBlock'),
+  // (REMOVIDO: question atômicos já importados em BlockTypeRenderer)
 
   // Options & Interactive (REMOVIDOS duplicados: estes blocos são críticos e já importados estaticamente)
   // 'options-grid': () => import('@/components/editor/blocks/atomic/OptionsGridBlock'),
@@ -150,8 +130,7 @@ const lazyImports: Record<string, () => Promise<{ default: React.ComponentType<a
   // 'form-input': () => import('@/components/editor/blocks/FormInputBlock'),
 
   // CTA Buttons
-  'CTAButton': () => import('@/components/editor/blocks/atomic/CTAButtonBlock'),
-  'cta-button': () => import('@/components/editor/blocks/atomic/CTAButtonBlock'),
+  // (REMOVIDO: CTA atômico já importado)
 
   // Sections V3 - with universal PropNormalizer
   'question-hero': () => Promise.all([
@@ -215,25 +194,7 @@ const lazyImports: Record<string, () => Promise<{ default: React.ComponentType<a
   'progress-inline': () => import('@/components/editor/blocks/ProgressInlineBlock'),
 
   // Result Components (Step 20)
-  'result-header-inline': () => import('@/components/editor/blocks/ResultHeaderInlineBlock'),
-  'modular-result-header': () => import('@/components/editor/modules/ModularResultHeader'),
-  'quiz-result-style': () => import('@/components/editor/blocks/StyleCardInlineBlock'),
-  'secondary-styles': () => import('@/components/editor/blocks/SecondaryStylesInlineBlock'),
-  'quiz-result-secondary': () => import('@/components/editor/blocks/StyleCardsGridBlock'),
-  'result-card': () => import('@/components/editor/blocks/StyleCardInlineBlock'),
-  'result-congrats': () => import('@/components/editor/blocks/ResultCongratsBlock'),
-  'result-main': () => import('@/components/editor/blocks/atomic/ResultMainBlock'),
-  'result-style': () => import('@/components/editor/blocks/atomic/ResultStyleBlock'),
-  'result-image': () => import('@/components/editor/blocks/atomic/ResultImageBlock'),
-  'result-description': () => import('@/components/editor/blocks/atomic/ResultDescriptionBlock'),
-  'result-header': () => import('@/components/editor/blocks/atomic/ResultHeaderBlock'),
-  'result-characteristics': () => import('@/components/editor/blocks/atomic/ResultCharacteristicsBlock'),
-  'result-cta': () => import('@/components/editor/blocks/atomic/ResultCTABlock'),
-  'result-cta-primary': () => import('@/components/editor/blocks/atomic/ResultCTAPrimaryBlock'),
-  'result-cta-secondary': () => import('@/components/editor/blocks/atomic/ResultCTASecondaryBlock'),
-  'result-progress-bars': () => import('@/components/editor/blocks/ResultProgressBarsBlock'),
-  'result-secondary-styles': () => import('@/components/editor/blocks/atomic/ResultSecondaryStylesBlock'),
-  'result-share': () => import('@/components/editor/blocks/atomic/ResultShareBlock'),
+  // (REMOVIDO: result atômicos/relacionados já importados pelo renderer)
 
   // Step 20 Modular Blocks (MOVIDOS DE STATIC PARA LAZY)
   'step20-result-header': () => import('@/components/editor/blocks/Step20ModularBlocks').then(m => ({ default: m.Step20ResultHeaderBlock })),
@@ -253,32 +214,13 @@ const lazyImports: Record<string, () => Promise<{ default: React.ComponentType<a
   'image-display-inline': () => import('@/components/editor/blocks/inline/ImageDisplayInlineBlock'),
 
   // Offer Components (Step 21)
-  'urgency-timer-inline': () => import('@/components/editor/blocks/UrgencyTimerInlineBlock'),
-  'offer-pricing': () => import('@/components/editor/blocks/PricingInlineBlock'),
-  'offer-pricing-table': () => import('@/components/editor/blocks/PricingInlineBlock'),
-  'pricing-table': () => import('@/components/editor/blocks/PricingInlineBlock'),
-  'before-after-inline': () => import('@/components/editor/blocks/BeforeAfterInlineBlock'),
-  'bonus': () => import('@/components/editor/blocks/BonusBlock'),
-  'bonus-inline': () => import('@/components/editor/blocks/BonusInlineBlock'),
-  'secure-purchase': () => import('@/components/editor/blocks/SecurePurchaseBlock'),
-  'value-anchoring': () => import('@/components/editor/blocks/ValueAnchoringBlock'),
-  'mentor-section-inline': () => import('@/components/editor/blocks/MentorSectionInlineBlock'),
+  // (REMOVIDO: offer/result auxiliares já importados estaticamente)
 
   // Testimonials
-  'testimonial-card-inline': () => import('@/components/editor/blocks/TestimonialCardInlineBlock'),
-  'testimonials-carousel-inline': () => import('@/components/editor/blocks/TestimonialsCarouselInlineBlock'),
-  'testimonials': () => import('@/components/editor/blocks/TestimonialsBlock'),
-  'testimonials-grid': () => import('@/components/editor/blocks/TestimonialsBlock'),
+  // (REMOVIDO: testimonials atômicos)
 
   // Universal Components
-  'lead-form': () => import('@/components/editor/blocks/LeadFormBlock'),
-  'connected-lead-form': () => import('@/components/editor/blocks/ConnectedLeadFormBlock'),
-  'connected-template-wrapper': () => import('@/components/editor/blocks/ConnectedTemplateWrapperBlock'),
-  'quiz-navigation': () => import('@/components/editor/blocks/QuizNavigationBlock'),
-  'gradient-animation': () => import('@/components/editor/blocks/GradientAnimationBlock'),
-  'benefits': () => import('@/components/editor/blocks/BenefitsListBlock'),
-  'benefits-list': () => import('@/components/editor/blocks/BenefitsListBlock'),
-  'guarantee': () => import('@/components/editor/blocks/GuaranteeBlock'),
+  // (REMOVIDO: universais atômicos já presentes no renderer)
 
   // Accessibility
   'accessibility-skip-link': () => import('@/components/editor/blocks/AccessibilitySkipLinkBlock'),
