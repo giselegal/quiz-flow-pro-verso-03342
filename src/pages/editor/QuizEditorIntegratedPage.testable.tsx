@@ -1,7 +1,7 @@
 // Versão testável da página QuizEditorIntegrated para ambiente de testes Vitest.
 import React, { useState, useEffect } from 'react';
 import { useEditorPersistence } from '../../hooks/useEditorPersistence';
-import { useSuperUnified } from '../../hooks/useSuperUnified';
+import { useEditorContext } from '@/core/hooks/useEditorContext';
 
 const Card: React.FC<any> = ({ children, ...props }) => <div {...props}>{children}</div>;
 const CardHeader: React.FC<any> = ({ children }) => <div>{children}</div>;
@@ -28,7 +28,7 @@ const QuizEditorIntegratedPageTestable: React.FC<QuizEditorIntegratedPageTestabl
         totalSteps: 21,
     });
 
-    const { getStepBlocks } = useSuperUnified();
+    const { getStepBlocks } = useEditorContext();
     const currentStepBlocks = getStepBlocks(state.currentStep);
 
     const {
