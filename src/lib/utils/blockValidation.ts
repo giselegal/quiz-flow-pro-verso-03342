@@ -8,6 +8,7 @@
  */
 
 import { BlockType } from '@/types/editor';
+import { validateBlock as zodValidateBlock, validateBlocks as zodValidateBlocks } from '@/core/schemas/blockSchema';
 import { ValidationResult } from '@/types/core';
 
 /**
@@ -49,6 +50,19 @@ export function validateBlockProperties(
 
     const validator = getValidatorForBlockType(blockType);
     return validator(properties, options);
+}
+
+// =============================
+// RE-EXPORT CANÔNICO (Zod schemas)
+// =============================
+export const validateBlockZod = zodValidateBlock;
+export const validateBlocksZod = zodValidateBlocks;
+
+/**
+ * Filtra blocos efêmeros/system (não persistíveis)
+ */
+export function filterPersistableBlocks<T extends { properties?: any; ephemeral?: boolean }>(blocks: T[]): T[] {
+    return blocks.filter(b => !b.ephemeral && !b.properties?.ephemeral && !b.properties?.system);
 }
 
 /**

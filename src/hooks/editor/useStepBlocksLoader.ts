@@ -1,6 +1,7 @@
 // src/hooks/editor/useStepBlocksLoader.ts
 import { useEffect } from 'react';
-import { templateService } from '@/services/canonical/TemplateService';
+// Substitui acesso direto ao templateService pelo loader unificado com validação/caching
+import { unifiedTemplateLoader } from '@/services/templates/UnifiedTemplateLoader';
 import type { Block } from '@/types/editor';
 import { appLogger } from '@/lib/utils/appLogger';
 
@@ -56,82 +57,28 @@ export function useStepBlocksLoader({
           templateOrFunnelId
         });
 
-        const svc: any = templateService;
-        const res = await svc.getStep(stepId, templateOrFunnelId, { signal });
-
-        if (!res.success || !res.data) {
-          appLogger.warn('[useStepBlocksLoader] Step sem dados', { stepId });
-          return;
-        }
-
-        // ✅ Normalização expandida (suporta múltiplos formatos)
-        // Formatos aceitos:
-        //  A. Array direto de blocos
-        //  B. Objeto { blocks: [...] }
-        //  C. Objeto { steps: { [stepId]: { blocks: [...] } } }
-        //  D. Objeto { steps: { [stepId]: [ ...blocks ] } }
-        //  E. Objeto { steps: [ { id: step-01, blocks: [...] }, ... ] }
-        //  F. Variante sem zero à esquerda (step-1)
+        // Usar loader unificado (já faz cache, validação e hierarquia de fontes)
         let blocks: Block[] = [];
-        const data: any = res.data;
-        const stepIdNoPad = stepId.replace(/step-0(\d)/, 'step-$1');
-
         try {
-          if (Array.isArray(data)) {
-            blocks = data.filter((b: any) => b && b.id && b.type);
-          } else if (data.blocks && Array.isArray(data.blocks)) {
-            blocks = data.blocks.filter((b: any) => b && b.id && b.type);
-          } else if (data.steps) {
-            // C
-            if (data.steps[stepId]?.blocks && Array.isArray(data.steps[stepId].blocks)) {
-              blocks = data.steps[stepId].blocks.filter((b: any) => b && b.id && b.type);
-            }
-            // D
-            else if (Array.isArray(data.steps[stepId])) {
-              blocks = data.steps[stepId].filter((b: any) => b && b.id && b.type);
-            }
-            // F (sem zero à esquerda)
-            else if (data.steps[stepIdNoPad]?.blocks && Array.isArray(data.steps[stepIdNoPad].blocks)) {
-              blocks = data.steps[stepIdNoPad].blocks.filter((b: any) => b && b.id && b.type);
-            } else if (Array.isArray(data.steps[stepIdNoPad])) {
-              blocks = data.steps[stepIdNoPad].filter((b: any) => b && b.id && b.type);
-            }
-            // E (steps como array de objetos)
-            else if (Array.isArray(data.steps)) {
-              const found = data.steps.find((s: any) => s && (s.id === stepId || s.id === stepIdNoPad));
-              if (found) {
-                if (Array.isArray(found.blocks)) {
-                  blocks = found.blocks.filter((b: any) => b && b.id && b.type);
-                } else if (Array.isArray(found)) { // Caso degenerado onde o próprio step é array
-                  blocks = found.filter((b: any) => b && b.id && b.type);
-                }
-              }
-            }
+          const loadResult = await unifiedTemplateLoader.loadStep(stepId, { useCache: true, signal });
+          blocks = loadResult.data as Block[];
+          if (!blocks || blocks.length === 0) {
+            appLogger.warn('[useStepBlocksLoader] Loader retornou vazio – gerando placeholder', { stepId, source: loadResult.source });
           }
-        } catch (normErr) {
-          appLogger.warn('[useStepBlocksLoader] Falha na normalização de blocos', { error: normErr });
+        } catch (loaderErr) {
+          appLogger.warn('[useStepBlocksLoader] Falha loader unificado, usando placeholder', { stepId, error: loaderErr });
         }
 
-        if (blocks.length === 0) {
-          appLogger.warn('[useStepBlocksLoader] Nenhum formato reconhecido produziu blocos', {
-            stepId,
-            keys: Object.keys(data || {}),
-            hasSteps: Boolean(data?.steps),
-            stepsKeys: data?.steps && !Array.isArray(data.steps) ? Object.keys(data.steps).slice(0, 5) : 'array|none'
-          });
-        }
-
-        // ✅ CORREÇÃO: Se vazio, criar bloco placeholder para evitar canvas totalmente vazio
-        if (blocks.length === 0) {
-          appLogger.warn('[useStepBlocksLoader] Step sem blocos válidos – gerando placeholder', { stepId });
+        if (!blocks || blocks.length === 0) {
           blocks = [
             {
               id: `placeholder-${stepId}`,
-              type: 'TextBlock' as any,
+              type: 'text' as any, // alinhar com BlockType canônico
               order: 0,
-              properties: { system: true },
+              properties: { system: true, ephemeral: true },
               content: { text: 'Bloco inicial automático – clique para editar.' },
-            } as Block
+              ephemeral: true,
+            } as Block,
           ];
         }
 

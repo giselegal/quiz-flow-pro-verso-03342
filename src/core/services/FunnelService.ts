@@ -383,8 +383,16 @@ export class CanonicalFunnelService {
         throw new Error(`stepKey inválido: ${stepKey}`);
       }
 
+      // Filtrar blocos efêmeros / system antes de persistir
+      const persistable = blocks.filter(b => !b.ephemeral && !b.properties?.ephemeral && !b.properties?.system);
+
+      if (persistable.length === 0) {
+        appLogger.debug('[FunnelService] Nenhum bloco persistível (todos ephemeral/system)', { stepKey });
+        return true; // Nada para salvar, mas não é erro
+      }
+
       // Delegar sincronização ao serviço dedicado (com bulk insert e fallbacks)
-      await funnelComponentsService.syncStepComponents({ funnelId, stepNumber, blocks });
+      await funnelComponentsService.syncStepComponents({ funnelId, stepNumber, blocks: persistable });
 
       // Invalidar cache
       await this.cache.invalidate(`funnel:${funnelId}:components`, {
@@ -393,7 +401,7 @@ export class CanonicalFunnelService {
       });
 
       const elapsed = performance.now() - startTime;
-      appLogger.debug(`[FunnelService] saveStepBlocks sincronizado (${blocks.length} itens) em ${elapsed.toFixed(0)}ms`);
+      appLogger.debug(`[FunnelService] saveStepBlocks sincronizado (${persistable.length} itens de ${blocks.length}) em ${elapsed.toFixed(0)}ms`);
 
       return true;
     } catch (error) {
