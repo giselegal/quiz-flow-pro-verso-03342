@@ -96,7 +96,7 @@ export function useComponentConfiguration(
 
         // 🚀 VERIFICAR CACHE PRIMEIRO
         const cacheKey = `${componentId}-${funnelId || 'default'}`;
-        const cachedConfig = configurationCache.get<{properties: Record<string, any>, definition: ComponentDefinition}>(cacheKey);
+        const cachedConfig = await configurationCache.get<{properties: Record<string, any>, definition: ComponentDefinition}>(cacheKey);
         if (cachedConfig) {
             appLogger.info(`⚡ Cache hit para ${componentId}`);
             setProperties(cachedConfig.properties || {});
@@ -121,7 +121,7 @@ export function useComponentConfiguration(
                 setIsLoading(false);
                 
                 // Cachear para próximas vezes
-                configurationCache.set(cacheKey, { properties, definition }, 2 * 60 * 1000); // 2 min cache
+                await configurationCache.set(cacheKey, { properties, definition }, 2 * 60 * 1000); // 2 min cache
                 return;
             } catch (err) {
                 appLogger.warn(`⚠️ Fallback para ${componentId}:`, { data: [err] });

@@ -85,7 +85,7 @@ const PreviewMonitor: React.FC<PreviewMonitorProps> = ({
                 interceptorStats,
                 performanceMetrics: {
                     ...prev.performanceMetrics,
-                    cacheHits: cacheStats.size,
+                    cacheHits: cacheStats.items || 0,
                 },
             }));
         } catch (error) {
