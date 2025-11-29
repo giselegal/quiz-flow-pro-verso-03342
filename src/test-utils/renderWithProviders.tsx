@@ -4,6 +4,9 @@ import { render } from '@testing-library/react';
 import { AuthStorageProvider } from '@/contexts/consolidated/AuthStorageProvider';
 import { RealTimeProvider } from '@/contexts/consolidated/RealTimeProvider';
 import { ValidationResultProvider } from '@/contexts/consolidated/ValidationResultProvider';
+import { UXProvider } from '@/contexts/consolidated/UXProvider';
+import { FunnelDataProvider } from '@/contexts/funnel/FunnelDataProvider';
+import { QuizStateProvider } from '@/contexts/quiz/QuizStateProvider';
 
 // Cria um QueryClient isolado para cada render, evitando estados compartilhados entre testes
 function createTestQueryClient() {
@@ -27,9 +30,15 @@ export function renderWithProviders(ui: React.ReactElement) {
                     publish: () => { },
                     presence: { onlineUsers: 0 },
                 } as any}>
-                    <ValidationResultProvider>
-                        {ui}
-                    </ValidationResultProvider>
+                    <UXProvider>
+                        <FunnelDataProvider>
+                            <QuizStateProvider>
+                                <ValidationResultProvider>
+                                    {ui}
+                                </ValidationResultProvider>
+                            </QuizStateProvider>
+                        </FunnelDataProvider>
+                    </UXProvider>
                 </RealTimeProvider>
             </AuthStorageProvider>
         </QueryClientProvider>
