@@ -46,7 +46,7 @@ function openDB(): Promise<IDBDatabase> {
   });
 }
 
-function tx(db: IDBDatabase, store: CacheStore, mode: IDBTransactionMode) {
+function tx(db: IDBDatabase, store: CacheStore | string, mode: IDBTransactionMode) {
   return db.transaction(store, mode).objectStore(store);
 }
 
