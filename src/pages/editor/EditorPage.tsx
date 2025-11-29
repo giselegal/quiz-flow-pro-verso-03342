@@ -43,7 +43,23 @@ export default function EditorPage() {
 
     // Capturar query params
     const searchParams = new URLSearchParams(window.location.search);
-    const templateParam = searchParams.get('template');
+    // Sanitizar template param para evitar casos de objeto serializado implicitamente
+    const rawTemplateParam = searchParams.get('template');
+    const templateParam = (() => {
+        if (!rawTemplateParam) return undefined;
+        // Caso típico de erro: '?template=[object Object]' vindo de concatenação com objeto
+        if (rawTemplateParam === '[object Object]') {
+            appLogger.warn('⚠️ Parametro template inválido ([object Object]) ignorado');
+            return undefined;
+        }
+        // Evitar valores excessivamente longos ou contendo espaços suspeitos
+        const trimmed = rawTemplateParam.trim();
+        if (trimmed.length === 0 || trimmed.length > 150) {
+            appLogger.warn('⚠️ Parametro template vazio ou muito longo, ignorado', { value: trimmed });
+            return undefined;
+        }
+        return trimmed;
+    })();
     const funnelIdFromQuery = searchParams.get('funnelId') || searchParams.get('funnel') || undefined;
 
     // 🔄 PADRONIZAÇÃO: ?template= agora é tratado como ?funnel=
