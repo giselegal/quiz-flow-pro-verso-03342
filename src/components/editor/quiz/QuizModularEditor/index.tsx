@@ -2129,6 +2129,18 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                                 </div>
                                             </div>
                                         </div>
+                                    ) : showEmptyState ? (
+                                        <div className="h-full flex items-center justify-center">
+                                            <div className="text-center max-w-md p-6 border rounded-lg bg-white shadow-sm">
+                                                <h2 className="text-lg font-semibold mb-2">Canvas em branco</h2>
+                                                <p className="text-sm text-gray-600 mb-4">Crie um funil do zero, importe um modelo JSON ou carregue um template existente.</p>
+                                                <div className="flex items-center justify-center gap-2 flex-wrap">
+                                                    <Button size="sm" onClick={() => handleAddBlock('text')}>Adicionar bloco de texto</Button>
+                                                    <Button size="sm" variant="outline" onClick={() => setIsImportDialogOpen(true)}>Importar JSON</Button>
+                                                    <Button size="sm" variant="outline" onClick={handleLoadTemplate}>Carregar Template</Button>
+                                                </div>
+                                            </div>
+                                        </div>
                                     ) : (
                                         <StepErrorBoundary
                                             stepKey={currentStepKey || 'unknown'}
