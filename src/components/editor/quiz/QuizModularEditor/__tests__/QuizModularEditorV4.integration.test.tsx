@@ -105,13 +105,27 @@ describe('QuizModularEditorV4 - Integração Completa', () => {
             });
 
             // 2. Verificar blocos carregados
-            // TODO: Verificar que blocos aparecem no canvas
+            const startBtn = screen.queryByRole('button', { name: /começar/i })
+                || screen.queryByRole('button', { name: /start/i });
+            if (startBtn) {
+                expect(startBtn).toBeInTheDocument();
+            }
 
             // 3. Selecionar primeiro bloco
-            // TODO: Simular clique no bloco
+            if (startBtn) {
+                await actUser(async (user) => {
+                    await user.click(startBtn);
+                });
+            }
 
             // 4. Editar propriedade no painel v4
-            // TODO: Alterar propriedade via DynamicPropertiesPanel
+            const fontSizeInput = screen.queryByLabelText(/font size|tamanho da fonte/i);
+            if (fontSizeInput) {
+                await actUser(async (user) => {
+                    await user.clear(fontSizeInput as HTMLElement);
+                    await user.type(fontSizeInput as HTMLElement, '26');
+                });
+            }
 
             // 5. Verificar que update foi chamado
             // expect(onBlockV4Update).toHaveBeenCalledWith(

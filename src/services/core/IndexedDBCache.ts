@@ -47,7 +47,8 @@ function openDB(): Promise<IDBDatabase> {
 }
 
 function tx(db: IDBDatabase, store: CacheStore | string, mode: IDBTransactionMode) {
-  return db.transaction(store, mode).objectStore(store);
+  const target = db.objectStoreNames.contains(store as string) ? store : 'generic';
+  return db.transaction(target, mode).objectStore(target);
 }
 
 export const indexedDBCache = {
