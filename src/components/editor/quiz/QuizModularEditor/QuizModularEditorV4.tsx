@@ -24,6 +24,8 @@ import type { QuizBlock } from '@/schemas/quiz-schema.zod';
 import { appLogger } from '@/lib/utils/appLogger';
 import { Panel, PanelGroup } from 'react-resizable-panels';
 import { ResizableHandle } from '@/components/ui/resizable';
+// ✅ Import direto do templateService para evitar require() dinâmico
+import { templateService } from '@/services/canonical/TemplateService';
 
 // Lazy imports dos componentes do editor
 const StepNavigatorColumn = lazy(() => import('./components/StepNavigatorColumn'));
@@ -117,11 +119,9 @@ function EditorLayoutV4({
     const selectedBlockId = state.selectedBlockId;
     const blocks = actions.getStepBlocks(state.currentStep) || [];
 
-    // ✅ PV4-2 FIX: Obter steps do templateService
+    // ✅ PV4-2 FIX: Obter steps do templateService (importado no topo)
     const steps = useMemo(() => {
         try {
-            // Import dinâmico para evitar dependência circular
-            const { templateService } = require('@/services/canonical/TemplateService');
             const result = templateService.steps?.list?.();
             if (result?.success && Array.isArray(result.data)) {
                 return result.data.map((s: any) => ({
@@ -291,16 +291,28 @@ function EditorLayoutV4({
  * ✅ INTEGRAÇÃO: Sempre usa o editor original que já tem toda lógica de carregamento
  * ✅ V4: Substitui apenas o painel de propriedades por DynamicPropertiesPanelV4
  * ✅ COMPATIBILIDADE: Mantém 100% das features do editor antigo
+ * 
+ * ⚠️ NOTA SOBRE useV4Layout:
+ * O layout V4 puro (3 colunas) está desabilitado por padrão porque:
+ * 1. O loader de steps no EditorLayoutV4 não tem toda a infraestrutura do editor original
+ * 2. A sincronização WYSIWYG precisa ser portada
+ * 3. Auto-save e persistência ainda não estão integrados
+ * 
+ * ROADMAP para habilitar V4:
+ * - Fase 1: Migrar useTemplateLoader para EditorLayoutV4 ✓
+ * - Fase 2: Integrar useStepBlocksLoader ✓
+ * - Fase 3: Adicionar useAutoSave (pendente)
+ * - Fase 4: Testar e validar (pendente)
  */
 export function QuizModularEditorV4Wrapper({
-    useV4Layout = false, // ❌ DESABILITADO: V4 puro ainda não tem loader completo
+    useV4Layout = false, // Desabilitado até completar Fase 3-4 do roadmap acima
     onBlockV4Update,
     ...editorProps
 }: QuizModularEditorV4Props) {
     // Por enquanto, sempre usar editor original que tem toda infraestrutura
-    // TODO: Migrar lógica de carregamento para v4 layout quando estável
-    appLogger.info('QuizModularEditorV4 render (usando editor original)', {
-        useV4Layout: false, // Forçado para false
+    appLogger.debug('QuizModularEditorV4 render', {
+        useV4Layout,
+        useV4LayoutEffective: false, // Sempre false até completar roadmap
         hasResourceId: !!(editorProps.resourceId || editorProps.funnelId || editorProps.templateId)
     });
 
