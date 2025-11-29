@@ -21,6 +21,7 @@
  */
 
 import { UnifiedCacheService } from '../unified/UnifiedCacheService';
+import { appLogger } from '@/lib/utils/appLogger';
 import type { CacheStore } from '../canonical/CacheService';
 import { indexedDBCache } from './IndexedDBCache';
 
