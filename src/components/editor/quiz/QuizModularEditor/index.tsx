@@ -979,22 +979,53 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         }
     }, [blocks, safeCurrentStep, previewMode]);
 
-    // ✅ FASE 3: Flush WYSIWYG → unified (single source commit)
-    // Sempre que blocos do WYSIWYG mudarem em edição, comitar para editor.stepBlocks
+    // ✅ FASE 4: Flush debounced WYSIWYG → unified
+    // Objetivos:
+    // 1. Reduzir commits redundantes em edições rápidas
+    // 2. Preparar integração com autosave baseada em hash
+    // 3. Evitar flush se assinatura (IDs + length + step) não divergir
+    const flushTimerRef = useRef<any>(null);
+    const lastFlushedSignatureRef = useRef<string>('');
     useEffect(() => {
         try {
-            // Evita flush em previewMode live se objetivo for somente visual (mantemos para consistência)
-            const currentUnified = getStepBlocks(safeCurrentStep) || [];
-            const wBlocks = wysiwyg.state.blocks;
-            const diverged = currentUnified.length !== wBlocks.length || currentUnified.some((b: any, i: number) => b.id !== wBlocks[i]?.id);
-            if (diverged) {
-                setStepBlocks(safeCurrentStep, wBlocks as any);
-                appLogger.debug('[Flush] Comitado WYSIWYG → unified.stepBlocks', { step: safeCurrentStep, count: wBlocks.length });
+            if (flushTimerRef.current) {
+                clearTimeout(flushTimerRef.current);
             }
+
+            const wBlocks = wysiwyg.state.blocks;
+            const signature = `${safeCurrentStep}|${wBlocks.length}|${wBlocks.map(b => b.id).join(',')}`;
+
+            // Se nada mudou desde último flush, não agenda
+            if (signature === lastFlushedSignatureRef.current) {
+                return;
+            }
+
+            flushTimerRef.current = setTimeout(() => {
+                try {
+                    const currentUnified = getStepBlocks(safeCurrentStep) || [];
+                    const diverged = currentUnified.length !== wBlocks.length || currentUnified.some((b: any, i: number) => b.id !== wBlocks[i]?.id);
+                    if (diverged) {
+                        setStepBlocks(safeCurrentStep, wBlocks as any);
+                        lastFlushedSignatureRef.current = signature;
+                        appLogger.debug('[Flush:debounced] Comitado WYSIWYG → unified.stepBlocks', { step: safeCurrentStep, count: wBlocks.length });
+                    } else {
+                        // Mesmo sem divergência, atualizar assinatura para evitar agendamentos futuros inúteis
+                        lastFlushedSignatureRef.current = signature;
+                    }
+                } catch (err) {
+                    appLogger.warn('[Flush:debounced] Falha ao comitar blocos', { error: err });
+                }
+            }, 300); // 300ms debounce
         } catch (e) {
-            appLogger.warn('[Flush] Falha ao comitar blocos', { error: e });
+            appLogger.warn('[Flush:debounced] Erro ao agendar flush', { error: e });
         }
-    }, [wysiwyg.state.blocks, safeCurrentStep]);
+
+        return () => {
+            if (flushTimerRef.current) {
+                clearTimeout(flushTimerRef.current);
+            }
+        };
+    }, [wysiwyg.state.blocks, safeCurrentStep, getStepBlocks, setStepBlocks]);
 
     // 🔧 CRITICAL FIX: Memo para o template completo usado no painel (hooks FORA do JSX)
     const fullTemplate = React.useMemo(
@@ -1089,21 +1120,20 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                     order: list.length,
                 };
 
-                // 🔄 G31 FIX: Rollback em falha de adição de bloco via DnD
+                // ✅ FASE 4: Usar apenas WYSIWYG como superfície de mutação
                 try {
-                    addBlock(stepIndex, newBlock);
-                    appLogger.debug('[DnD] Bloco adicionado da biblioteca', {
+                    wysiwyg.actions.addBlock(newBlock);
+                    appLogger.debug('[DnD] Bloco adicionado (WYSIWYG) da biblioteca', {
                         blockType: draggedItem.libraryType,
                         blockId: newBlock.id,
                     });
                 } catch (error) {
-                    appLogger.error('[DnD] Falha ao adicionar bloco da biblioteca, executando rollback', {
+                    appLogger.error('[DnD] Falha ao adicionar bloco (WYSIWYG), rollback visual', {
                         error,
                         blockType: draggedItem.libraryType,
                     });
-
+                    // Undo ainda atua sobre histórico unificado; manter por segurança
                     undo();
-
                     toast({
                         type: 'error',
                         title: 'Erro ao adicionar bloco',
@@ -1152,7 +1182,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                 }
             }
         },
-        [dnd.handlers, blocks, safeCurrentStep, addBlock, reorderBlocks, undo, showToast]
+        [dnd.handlers, blocks, safeCurrentStep, wysiwyg.actions, undo, showToast]
     );
 
     // Manual save
