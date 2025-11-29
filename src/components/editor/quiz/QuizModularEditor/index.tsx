@@ -57,6 +57,7 @@ import { EditorLoadingProvider, useEditorLoading } from '@/contexts/EditorLoadin
 import type { EditorResource } from '@/types/editor-resource';
 // Validação e normalização de templates
 import { validateAndNormalizeTemplate, formatValidationErrors } from '@/templates/validation/normalize';
+import { extractBlocksFromStepData as extractBlocksFromStepDataHelper } from './helpers/normalizeBlocks';
 // Import Template Dialog
 import { ImportTemplateDialog } from '../dialogs/ImportTemplateDialog';
 // Autosave feedback visual
@@ -274,7 +275,8 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     useStepPrefetch({
         currentStepId: currentStepKey,
         funnelId: props.funnelId,
-        totalSteps: 21,
+        // Prefer totalSteps from resource metadata when available, fallback to 21
+        totalSteps: Number((props.editorResource as any)?.metadata?.totalSteps ?? 21),
         enabled: true,
         radius: 1, // Prefetch apenas step anterior e próximo (não N+2)
         debounceMs: 300, // Aumentado de 16ms para 300ms - evita prefetch em navegação rápida
@@ -342,8 +344,10 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         } catch { }
     }, [resourceMetadata, setTemplateLoading]);
 
-    // Local UI state - 🔥 MODO LIVE FIXO (preview de produção desativado)
-    const previewMode = 'live' as const;
+    // Local UI state - default para edição (evita bloqueio de autosave quando estava definido em 'live')
+    const previewMode = 'edit' as const;
+    // previewMode currently defaults to 'edit' and may be extended later.
+    const isEditableMode = previewMode === 'edit';
 
     // 🔧 Bootstrap: registrar stores IndexedDB e diagnosticar query params
     const pendingTidRef = useRef<string | null>(null);
@@ -458,23 +462,23 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 
     // Compatibilidade: badge para UI antiga
     const editorMode = useMemo(() => ({
-        isEditable: previewMode === 'live',
-        dataSource: previewMode === 'live' ? 'local' as const : 'production' as const,
-        showValidation: previewMode === 'live',
-        showDraftIndicator: previewMode === 'live',
-        badge: previewMode === 'live'
+        isEditable: isEditableMode,
+        dataSource: isEditableMode ? 'local' as const : 'production' as const,
+        showValidation: isEditableMode,
+        showDraftIndicator: isEditableMode,
+        badge: isEditableMode
             ? { icon: '📝', text: 'Editando', color: 'blue' as const }
             : { icon: '✅', text: 'Publicado', color: 'green' as const },
-        description: previewMode === 'live'
+        description: isEditableMode
             ? 'Edição ao vivo - mudanças aparecem instantaneamente'
             : 'Visualizando dados publicados (versão final)',
-    }), [previewMode]);
+    }), [isEditableMode]);
 
     // 💾 Snapshot System: Recuperação de drafts
     // ⚠️ IMPORTANTE: Desabilitar snapshot em modo preview para evitar loops
     const snapshot = useSnapshot({
         resourceId: resourceId || '',
-        enabled: enableAutoSave && !!resourceId && previewMode !== 'live',
+        enabled: enableAutoSave && !!resourceId && isEditableMode,
     });
 
     // 🎨 WYSIWYG Bridge: Sincronização instantânea entre propriedades e canvas
@@ -485,7 +489,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         },
         autoSaveDelay: Number((import.meta as any).env?.VITE_AUTO_SAVE_DELAY_MS ?? 2000),
         enableValidation: true,
-        mode: previewMode === 'live' ? 'preview-live' : 'preview-production',
+        mode: isEditableMode ? 'edit' : 'preview-production',
     });
 
     // ✅ FASE 4: Hash + controle de persistência
@@ -501,8 +505,8 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 
     // 💾 Enhanced save com persistenceService (retry automático + versionamento)
     const saveStepBlocksEnhanced = useCallback(async (stepNumber: number) => {
-        // Em preview mode, não permitir salvar para evitar loops
-        if (previewMode === 'live') {
+        // Em modo não-editável, não salvar.
+        if (!isEditableMode) {
             appLogger.debug('[saveStepBlocks] Ignorado em preview mode');
             return;
         }
@@ -553,14 +557,14 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
             // Usar método original
             await saveStepBlocks(stepNumber);
         }
-    }, [resourceId, previewMode, wysiwyg?.state?.blocks, saveStepBlocks]);
+    }, [resourceId, isEditableMode, wysiwyg?.state?.blocks, saveStepBlocks]);
 
     // 🎯 FASE 3.2: Auto-save reativado com estratégia estável baseada em resourceId
     // Guards importantes:
-    // - Nunca roda em previewMode === 'live' (evita loops de edição ao vivo)
+    // - Nunca roda em modo não-editável (evita loops de edição ao vivo)
     // - Só ativa se houver resourceId (ID canônico do recurso)
     // - Step atual é passado via saveStepBlocksEnhanced(stepNumber)
-    const autoSave = resourceId && previewMode !== 'live'
+    const autoSave = resourceId && isEditableMode
         ? useAutoSave({
             key: `editor-autosave:${resourceId}`,
             data: wysiwyg?.state?.blocks || [],
@@ -620,7 +624,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
             )) {
                 appLogger.info('[Snapshot] Recuperando draft...');
                 // Apenas resetar WYSIWYG em modo edit
-                if (previewMode !== 'live') {
+                if (isEditableMode) {
                     wysiwyg.actions.reset(recovered.blocks);
                 }
                 setViewport(recovered.viewport);
@@ -639,7 +643,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
             if (isMacOrWin && e.key === 's') {
                 e.preventDefault();
 
-                if (resourceId && previewMode !== 'live') {
+                if (resourceId && isEditableMode) {
                     autoSave.forceSave().then(() => {
                         toast({
                             type: 'success',
@@ -690,7 +694,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         };
         window.addEventListener('keydown', handler);
         return () => window.removeEventListener('keydown', handler);
-    }, [previewMode]);
+    }, [isEditableMode]);
 
     // ✅ WAVE 1 FIX: Selection chain corrigido com callback estável (sem selectedBlockId nas deps para evitar loop)
     const handleBlockSelect = useCallback((blockId: string | null) => {
@@ -752,11 +756,11 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 
     // 🔥 FIX: Callback memoizado para onBlockSelect do Canvas (evita re-renders)
     const handleCanvasBlockSelect = useCallback((id: string) => {
-        if (previewMode === 'live') {
+        if (isEditableMode) {
             wysiwyg.actions.selectBlock(id);
         }
         handleBlockSelect(id);
-    }, [previewMode, wysiwyg.actions, handleBlockSelect]);
+    }, [isEditableMode, wysiwyg.actions, handleBlockSelect]);
 
     // 🎯 FASE 3.1: Navegação de steps com hook refatorado
     const stepNavigation = useStepNavigation({
@@ -852,36 +856,9 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     // normalize order helper
     const normalizeOrder = useCallback((list: Block[]) => list.map((b, idx) => ({ ...b, order: idx })), []);
 
-    // 🧩 Helper: Normalização SIMPLIFICADA de payload de steps
-    // ✅ CORREÇÃO 1: Reduzido de 6 para 3 formatos principais + validação
+    // usar helper reutilizável (testável)
     const extractBlocksFromStepData = useCallback((raw: any, stepId: string): Block[] => {
-        try {
-            if (!raw) return [];
-
-            // Caso 1: Array direto (já normalizado)
-            if (Array.isArray(raw)) {
-                return raw.filter((b: any) => b && b.id && b.type) as Block[];
-            }
-
-            // Caso 2: Objeto com propriedade .blocks
-            if (raw.blocks && Array.isArray(raw.blocks)) {
-                return raw.blocks.filter((b: any) => b && b.id && b.type) as Block[];
-            }
-
-            // Caso 3: Estrutura aninhada { steps: { stepId: { blocks: [] } } }
-            if (raw.steps && raw.steps[stepId]?.blocks && Array.isArray(raw.steps[stepId].blocks)) {
-                return raw.steps[stepId].blocks.filter((b: any) => b && b.id && b.type) as Block[];
-            }
-
-            // ⚠️ Formato não reconhecido - log para debug
-            appLogger.warn('[extractBlocksFromStepData] Formato não reconhecido', {
-                data: [{ stepId, hasBlocks: !!raw.blocks, hasSteps: !!raw.steps, keys: Object.keys(raw) }]
-            });
-            return [];
-        } catch (err) {
-            appLogger.error('[extractBlocksFromStepData] Erro ao normalizar', { data: [err] });
-            return [];
-        }
+        return extractBlocksFromStepDataHelper(raw, stepId) as Block[];
     }, []);
 
     // 🔄 Carregamento canônico de template: única fonte para lista de steps (sem injeção de blocos)
@@ -1011,7 +988,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     // Regras:
     // 1. Sempre que array de blocos mudar em identidade (length ou IDs) → reset
     // 2. Se blocos vazio → reset para [] (evita painel com dados obsoletos)
-    // 3. Seleção inicial apenas se não houver seleção válida (previewMode !== 'live')
+    // 3. Seleção inicial apenas se não houver seleção válida (somente em modo editável)
     // 4. Evita múltiplos efeitos paralelos (remove efeito antigo de auto-select)
     useEffect(() => {
         try {
@@ -1030,7 +1007,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
             }
 
             // Seleção inicial integrada (somente modo edição e se há blocos)
-            if (previewMode !== 'live' && unified.length > 0) {
+            if (isEditableMode && unified.length > 0) {
                 const selId = wysiwyg.state.selectedBlockId;
                 const stillValid = selId && unified.some(b => b.id === selId);
                 if (!stillValid) {
@@ -1043,7 +1020,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         } catch (e) {
             appLogger.warn('[Sync] Falha ao sincronizar WYSIWYG', { error: e });
         }
-    }, [blocks, safeCurrentStep, previewMode]);
+    }, [blocks, safeCurrentStep, isEditableMode]);
 
     // ✅ FASE 4: Flush debounced WYSIWYG → unified
     // Objetivos:
@@ -1844,7 +1821,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                         const recovered = snapshot.recoverSnapshot();
                                         if (recovered) {
                                             // Apenas resetar WYSIWYG em modo edit
-                                            if (previewMode !== 'live') {
+                                            if (isEditableMode) {
                                                 wysiwyg.actions.reset(recovered.blocks);
                                             }
                                             setViewport(recovered.viewport);
@@ -2117,7 +2094,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                     viewport={viewport}
                                     showRuler={true}
                                     className="h-full overflow-auto"
-                                    data-testid={previewMode === 'live' ? 'canvas-edit-mode' : 'canvas-preview-mode'}
+                                    data-testid={isEditableMode ? 'canvas-edit-mode' : 'canvas-preview-mode'}
                                     data-step-id={currentStepKey || 'unknown'}
                                 >
                                     {isLoadingTemplate ? (
@@ -2163,17 +2140,17 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                             >
                                                 <CanvasColumn
                                                     currentStepKey={currentStepKey}
-                                                    blocks={previewMode === 'live'
+                                                    blocks={isEditableMode
                                                         ? (virtualization.isVirtualized ? virtualization.visibleBlocks : wysiwyg.state.blocks)
                                                         : blocks}
-                                                    selectedBlockId={previewMode === 'live' ? wysiwyg.state.selectedBlockId : selectedBlockId}
-                                                    onRemoveBlock={previewMode === 'live' ? (id => {
+                                                    selectedBlockId={isEditableMode ? wysiwyg.state.selectedBlockId : selectedBlockId}
+                                                    onRemoveBlock={isEditableMode ? (id => {
                                                         wysiwyg.actions.removeBlock(id);
                                                     }) : undefined}
-                                                    onMoveBlock={previewMode === 'live' ? ((from, to) => {
+                                                    onMoveBlock={isEditableMode ? ((from, to) => {
                                                         wysiwyg.actions.reorderBlocks(from, to);
                                                     }) : undefined}
-                                                    onUpdateBlock={previewMode === 'live' ? ((id, patch) => {
+                                                    onUpdateBlock={isEditableMode ? ((id, patch) => {
                                                         wysiwyg.actions.updateBlock(id, patch);
                                                     }) : undefined}
                                                     onBlockSelect={handleCanvasBlockSelect}
@@ -2183,7 +2160,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                                         resourceId
                                                     )}
                                                     onLoadTemplate={handleLoadTemplate}
-                                                    isEditable={previewMode === 'live'}
+                                                    isEditable={isEditableMode}
                                                 />
                                             </div>
                                         </StepErrorBoundary>
