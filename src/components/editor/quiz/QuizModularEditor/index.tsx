@@ -56,6 +56,8 @@ import ViewportSelector, { type ViewportSize } from '@/components/editor/quiz/Vi
 import { ViewportContainer } from '@/components/editor/quiz/ViewportSelector/ViewportContainer';
 import { useSnapshot } from '@/hooks/useSnapshot';
 import { useVirtualizedBlocks } from '@/hooks/useVirtualizedBlocks';
+// Hash util para controle de persistência (Fase 4)
+import { computeBlocksHash } from '@/core/editor/utils/computeBlocksHash';
 
 // ✨ V4: Dynamic Properties Panel com 7 tipos de controles
 import { DynamicPropertiesPanelV4 } from '@/components/editor/properties/DynamicPropertiesPanelV4';
@@ -158,12 +160,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         ux, // Access to UX methods (showToast)
     } = unified;
 
-    // Adapter híbrido de comandos (usando unified context)
-    // ✅ FASE 3: Adapter legado desativado — mutações ocorrem apenas em WYSIWYG; flush propaga
-    const commands = useMemo(() => ({
-        addBlock: (_stepId: any, block: any) => wysiwyg.actions.addBlock(block),
-        updateBlock: (_stepId: any, blockId: string, patch: any) => wysiwyg.actions.updateBlock(blockId, patch),
-    }), [wysiwyg.actions]);
+    // (commands movido para abaixo da criação do wysiwyg)
 
     // Helper to adapt showToast signature (UXProvider expects: message, type, duration)
     const toast = useCallback((config: { type: string; title?: string; message: string; duration?: number }) => {
@@ -469,15 +466,12 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     // - Garante que saves redundantes sejam ignorados
     // - Permite comparar estado WYSIWYG atual vs último persistido
     const lastPersistedHashRef = useRef<string>('');
-    const computeBlocksHash = React.useCallback((list: any[]): string => {
-        try {
-            // Import lazy para evitar custo em build inicial (arquivo pequeno)
-            const { computeBlocksHash } = require('../../../../core/editor/utils/computeBlocksHash');
-            return computeBlocksHash(list as any);
-        } catch (e) {
-            return '00000000';
-        }
-    }, []);
+
+    // Adapter híbrido de comandos (definido após wysiwyg para evitar uso antes da declaração)
+    const commands = useMemo(() => ({
+        addBlock: (_stepId: any, block: any) => wysiwyg.actions.addBlock(block),
+        updateBlock: (_stepId: any, blockId: string, patch: any) => wysiwyg.actions.updateBlock(blockId, patch),
+    }), [wysiwyg.actions]);
 
     // 💾 Enhanced save com persistenceService (retry automático + versionamento)
     const saveStepBlocksEnhanced = useCallback(async (stepNumber: number) => {
