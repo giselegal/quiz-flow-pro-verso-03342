@@ -476,13 +476,8 @@ const BLOCK_PRESET_GROUPS: Record<string, PresetGroup[]> = {
     ],
 };
 
-const BuilderDrivenPanel: React.FC<BuilderDrivenPanelProps> = ({
-    block,
-    schema,
-    onUpdate,
-    onDelete,
-    onDuplicate,
-}) => {
+const BuilderDrivenPanel: React.FC<BuilderDrivenPanelProps & { externalSaving?: boolean }> = (props) => {
+    const { block, schema, onUpdate, onDelete, onDuplicate, externalSaving } = props;
     const zodSchema = useMemo(() => {
         try {
             return buildZodSchemaFromBlockSchema(schema);
@@ -560,7 +555,12 @@ const BuilderDrivenPanel: React.FC<BuilderDrivenPanelProps> = ({
         getErrorWithSuggestion,
     } = draftHookResult;
 
-    const [isSaving, setIsSaving] = useState(false);
+    // Allow external control of saving status (useful in tests) via externalSaving prop
+    const [isSaving, setIsSaving] = useState<boolean>(Boolean(externalSaving ?? false));
+    useEffect(() => {
+        // Sync external saving status to internal state when provided
+        if (externalSaving !== undefined) setIsSaving(Boolean(externalSaving));
+    }, [externalSaving]);
     const hasErrors = Object.keys(errors).length > 0;
 
     const handleApply = useCallback(() => {
@@ -869,6 +869,8 @@ import type { ModernPropertiesPanelProps, PropertiesPanelProps } from '@/types/e
 export interface SinglePropertiesPanelProps extends Omit<ModernPropertiesPanelProps, 'selectedBlock'> {
     /** Bloco selecionado (UnifiedBlock ou null) */
     selectedBlock: UnifiedBlock | null;
+    /** Opcional: sinaliza que o painel está em estado de salvamento (útil em contextos externos / testes) */
+    isSaving?: boolean;
 }
 
 // Re-export canonical types for consumers
@@ -1262,6 +1264,7 @@ export const SinglePropertiesPanel: React.FC<SinglePropertiesPanelProps> = memo(
     onUpdate,
     onDelete,
     onDuplicate,
+    isSaving: externalSaving,
 }) => {
     // ID único para esta instância do painel
     const uniqueId = useId();
@@ -1316,6 +1319,7 @@ export const SinglePropertiesPanel: React.FC<SinglePropertiesPanelProps> = memo(
                 onUpdate={onUpdate}
                 onDelete={onDelete}
                 onDuplicate={onDuplicate}
+                externalSaving={externalSaving}
             />
         );
     }
