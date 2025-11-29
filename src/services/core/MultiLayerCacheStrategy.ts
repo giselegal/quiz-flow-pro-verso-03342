@@ -22,6 +22,8 @@
 
 import { UnifiedCacheService } from '../unified/UnifiedCacheService';
 import { appLogger } from '@/lib/utils/appLogger';
+// Fallback seguro caso appLogger não esteja disponível em runtime
+const safeLogger: any = (typeof appLogger !== 'undefined' && appLogger) ? appLogger : console;
 import type { CacheStore } from '../canonical/CacheService';
 import { indexedDBCache } from './IndexedDBCache';
 
@@ -66,7 +68,7 @@ class SessionStorageAdapter {
       this.evictIfNeeded();
       return true;
     } catch (error) {
-      appLogger.error('cache L2 set failed:', error);
+      safeLogger.error('cache L2 set failed:', error);
       return false;
     }
   }
@@ -88,7 +90,7 @@ class SessionStorageAdapter {
 
       return entry.value as T;
     } catch (error) {
-      appLogger.error('cache L2 get failed:', error);
+      safeLogger.error('cache L2 get failed:', error);
       return null;
     }
   }
@@ -124,7 +126,7 @@ class SessionStorageAdapter {
         }
       }
     } catch (error) {
-      logger.error('cache', 'L2 clear failed:', error);
+      safeLogger.error('cache L2 clear failed:', error);
     }
   }
 
@@ -146,7 +148,7 @@ class SessionStorageAdapter {
         }
       }
     } catch (error) {
-      appLogger.error('cache L2 eviction failed:', error);
+      safeLogger.error('cache L2 eviction failed:', error);
     }
   }
 
@@ -197,7 +199,7 @@ export class MultiLayerCacheStrategy {
     this.l1 = UnifiedCacheService.getInstance();
     this.l2 = new SessionStorageAdapter();
     
-    appLogger.info('🎯 MultiLayerCacheStrategy initialized (L1+L2+L3)');
+    safeLogger.info('🎯 MultiLayerCacheStrategy initialized (L1+L2+L3)');
   }
 
   static getInstance(): MultiLayerCacheStrategy {
@@ -215,7 +217,7 @@ export class MultiLayerCacheStrategy {
     const l1Value = this.l1.get<T>(store, key);
     if (typeof l1Value !== 'undefined' && l1Value !== null) {
       this.metrics.l1Hits++;
-      appLogger.debug('💾 [L1 HIT]', { store, key });
+      safeLogger.debug('💾 [L1 HIT]', { store, key });
       return l1Value as T;
     }
     this.metrics.l1Misses++;
@@ -224,7 +226,7 @@ export class MultiLayerCacheStrategy {
     const l2Value = this.l2.get<T>(store, key);
     if (l2Value !== null) {
       this.metrics.l2Hits++;
-      appLogger.debug('💾 [L2 HIT] Promoting to L1', { store, key });
+      safeLogger.debug('💾 [L2 HIT] Promoting to L1', { store, key });
       
       // Promover para L1
       this.l1.set(store, key, l2Value);
@@ -239,7 +241,7 @@ export class MultiLayerCacheStrategy {
       const l3Value = await (this.l3 as any).get(store, key) as T | null;
       if (typeof l3Value !== 'undefined' && l3Value !== null) {
         this.metrics.l3Hits++;
-        appLogger.debug('💾 [L3 HIT] Promoting to L1+L2', { store, key });
+        safeLogger.debug('💾 [L3 HIT] Promoting to L1+L2', { store, key });
         
         // Promover para L1 e L2
         this.l1.set(store, key, l3Value);
@@ -250,12 +252,12 @@ export class MultiLayerCacheStrategy {
       }
       this.metrics.l3Misses++;
     } catch (error) {
-      appLogger.error('cache L3 get failed:', error);
+      safeLogger.error('cache L3 get failed:', error);
       this.metrics.l3Misses++;
     }
 
     // MISS completo em todas as camadas
-    appLogger.debug('❌ [CACHE MISS]', { store, key });
+    safeLogger.debug('❌ [CACHE MISS]', { store, key });
     return null;
   }
 
@@ -278,10 +280,10 @@ export class MultiLayerCacheStrategy {
 
     // L3: IndexedDB (assíncrono em background)
     this.l3.set(store, key, value, ttl).catch((error: any) => {
-      appLogger.error('cache L3 background write failed:', error);
+      safeLogger.error('cache L3 background write failed:', error);
     });
 
-    appLogger.debug('💾 [SET] L1+L2+L3', { store, key });
+    safeLogger.debug('💾 [SET] L1+L2+L3', { store, key });
   }
 
   /**
@@ -292,7 +294,7 @@ export class MultiLayerCacheStrategy {
     this.l2.delete(store, key);
     await this.l3.delete(store, key);
     
-    appLogger.debug('🗑️ [DELETE] L1+L2+L3', { store, key });
+    safeLogger.debug('🗑️ [DELETE] L1+L2+L3', { store, key });
   }
 
   /**
@@ -303,7 +305,7 @@ export class MultiLayerCacheStrategy {
     this.l2.clear(store);
     await this.l3.clear(store);
     
-    appLogger.info('🧹 [CLEAR STORE]', { store });
+    safeLogger.info('🧹 [CLEAR STORE]', { store });
   }
 
   /**
@@ -316,7 +318,7 @@ export class MultiLayerCacheStrategy {
     const stores: CacheStore[] = ['templates', 'funnels', 'configs', 'blocks', 'validation', 'registry', 'generic'];
     await Promise.all(stores.map(s => this.l3.clear(s)));
     
-    appLogger.info('🧹 [CLEAR ALL] L1+L2+L3');
+    safeLogger.info('🧹 [CLEAR ALL] L1+L2+L3');
   }
 
   /**
@@ -328,7 +330,7 @@ export class MultiLayerCacheStrategy {
     // L2 e L3 não suportam invalidação por prefixo eficientemente
     // Então apenas limpar L1 já ajuda bastante
     
-    appLogger.debug('🗑️ [INVALIDATE PREFIX]', { store, prefix, count });
+    safeLogger.debug('🗑️ [INVALIDATE PREFIX]', { store, prefix, count });
     return count;
   }
 
@@ -387,7 +389,7 @@ Overall:
    * Log métricas no console
    */
   logMetrics(): void {
-    appLogger.info(String(this.generateReport()));
+    safeLogger.info(String(this.generateReport()));
   }
 
   /**
