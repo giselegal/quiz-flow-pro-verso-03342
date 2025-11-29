@@ -465,6 +465,20 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         mode: previewMode === 'live' ? 'preview-live' : 'preview-production',
     });
 
+    // ✅ FASE 4: Hash + controle de persistência
+    // - Garante que saves redundantes sejam ignorados
+    // - Permite comparar estado WYSIWYG atual vs último persistido
+    const lastPersistedHashRef = useRef<string>('');
+    const computeBlocksHash = React.useCallback((list: any[]): string => {
+        try {
+            // Import lazy para evitar custo em build inicial (arquivo pequeno)
+            const { computeBlocksHash } = require('../../../../core/editor/utils/computeBlocksHash');
+            return computeBlocksHash(list as any);
+        } catch (e) {
+            return '00000000';
+        }
+    }, []);
+
     // 💾 Enhanced save com persistenceService (retry automático + versionamento)
     const saveStepBlocksEnhanced = useCallback(async (stepNumber: number) => {
         // Em preview mode, não permitir salvar para evitar loops
@@ -532,7 +546,39 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
             data: wysiwyg?.state?.blocks || [],
             debounceMs: Number((import.meta as any).env?.VITE_AUTO_SAVE_DELAY_MS ?? 2000),
             onSave: async () => {
-                await saveStepBlocksEnhanced(safeCurrentStep);
+                try {
+                    // Forçar flush imediato se houver timer pendente
+                    if (flushTimerRef.current) {
+                        clearTimeout(flushTimerRef.current);
+                        flushTimerRef.current = null;
+                        try {
+                            const wBlocks = wysiwyg.state.blocks;
+                            const currentUnified = getStepBlocks(safeCurrentStep) || [];
+                            const diverged = currentUnified.length !== wBlocks.length || currentUnified.some((b: any, i: number) => b.id !== wBlocks[i]?.id);
+                            if (diverged) {
+                                setStepBlocks(safeCurrentStep, wBlocks as any);
+                                lastFlushedSignatureRef.current = `${safeCurrentStep}|${wBlocks.length}|${wBlocks.map(b => b.id).join(',')}`;
+                                appLogger.debug('[Flush:force] Comitado antes do autosave', { step: safeCurrentStep, count: wBlocks.length });
+                            }
+                        } catch (e) {
+                            appLogger.warn('[Flush:force] Falha ao flush antes do autosave', { error: e });
+                        }
+                    }
+
+                    // Calcular hash atual
+                    const currentBlocks = wysiwyg.state.blocks || [];
+                    const currentHash = computeBlocksHash(currentBlocks as any);
+                    if (currentHash === lastPersistedHashRef.current) {
+                        appLogger.debug('[AutoSave] Ignorado (hash inalterado)', { hash: currentHash });
+                        return;
+                    }
+
+                    await saveStepBlocksEnhanced(safeCurrentStep);
+                    lastPersistedHashRef.current = currentHash;
+                    appLogger.debug('[AutoSave] Persistido com novo hash', { hash: currentHash });
+                } catch (err) {
+                    appLogger.warn('[AutoSave] Erro ao salvar', { error: err });
+                }
             },
             enableRecovery: true,
         })
