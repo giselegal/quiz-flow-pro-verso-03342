@@ -29,11 +29,16 @@ export const AccessibilityAuditor: React.FC = () => {
 
   const runAudit = async () => {
     setIsRunning(true);
-    
+
     try {
-      // Importar axe-core dinamicamente
+      // Bloquear execução em produção para evitar incluir axe-core no bundle
+      if (import.meta.env.PROD) {
+        throw new Error('Auditoria A11Y indisponível no ambiente de produção.');
+      }
+
+      // Importar axe-core dinamicamente apenas em dev
       const axe = await import('axe-core');
-      
+
       // Configurar regras WCAG 2.1 AA
       const config = {
         runOnly: {
@@ -61,12 +66,14 @@ export const AccessibilityAuditor: React.FC = () => {
       // Executar análise no documento inteiro
       appLogger.info('🔍 Iniciando análise de acessibilidade...');
       const results = await axe.default.run(document, config);
-      
-      appLogger.info('📊 Análise completa:', { data: [{
-                violations: results.violations.length,
-                passes: results.passes.length,
-                incomplete: results.incomplete.length,
-              }] });
+
+      appLogger.info('📊 Análise completa:', {
+        data: [{
+          violations: results.violations.length,
+          passes: results.passes.length,
+          incomplete: results.incomplete.length,
+        }]
+      });
 
       // Processar violações
       const processedIssues: A11yIssue[] = results.violations.map((violation) => ({
@@ -91,16 +98,18 @@ export const AccessibilityAuditor: React.FC = () => {
       setLastRun(new Date());
 
       // Log resumo
-      appLogger.info('✅ Auditoria concluída:', { data: [{
-                total: processedIssues.length,
-                critical: processedIssues.filter(i => i.impact === 'critical').length,
-                serious: processedIssues.filter(i => i.impact === 'serious').length,
-                moderate: processedIssues.filter(i => i.impact === 'moderate').length,
-                minor: processedIssues.filter(i => i.impact === 'minor').length,
-              }] });
+      appLogger.info('✅ Auditoria concluída:', {
+        data: [{
+          total: processedIssues.length,
+          critical: processedIssues.filter(i => i.impact === 'critical').length,
+          serious: processedIssues.filter(i => i.impact === 'serious').length,
+          moderate: processedIssues.filter(i => i.impact === 'moderate').length,
+          minor: processedIssues.filter(i => i.impact === 'minor').length,
+        }]
+      });
     } catch (error) {
       appLogger.error('❌ Erro ao executar auditoria de acessibilidade:', { data: [error] });
-      
+
       // Exibir erro para o usuário
       const errorIssue: A11yIssue = {
         id: 'audit-error',
@@ -110,7 +119,7 @@ export const AccessibilityAuditor: React.FC = () => {
         helpUrl: 'https://github.com/dequelabs/axe-core',
         nodes: ['Erro na execução da auditoria'],
       };
-      
+
       setIssues([errorIssue]);
     } finally {
       setIsRunning(false);
@@ -245,7 +254,7 @@ console.table(results.violations.map(v => ({
             )}
           </CardDescription>
         </CardHeader>
-        
+
         <CardContent className="space-y-4">
           {/* Resumo */}
           <div className="grid grid-cols-4 gap-4">
