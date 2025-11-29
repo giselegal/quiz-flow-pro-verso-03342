@@ -17,6 +17,8 @@
  */
 
 import { unifiedCacheService } from '@/services/unified/UnifiedCacheService';
+import { multiLayerCache } from '@/services/core/MultiLayerCacheStrategy';
+import type { CacheStore } from '@/services/canonical/CacheService';
 
 export interface CacheStats {
   totalEntries: number;
@@ -34,49 +36,51 @@ export interface CacheConfig {
  * @deprecated Use UnifiedCacheService
  */
 export class UnifiedTemplateCache {
-  private cache = new Map<string, any>();
+  private store: CacheStore = 'templates';
   private hitCount = 0;
   private missCount = 0;
 
-  get<T = any>(key: string): T | undefined {
-    const value = this.cache.get(key);
-    if (value !== undefined) {
+  async get<T = any>(key: string): Promise<T | undefined> {
+    const value = await multiLayerCache.get<T>(this.store, key);
+    if (typeof value !== 'undefined' && value !== null) {
       this.hitCount++;
-    } else {
-      this.missCount++;
+      return value as T;
     }
-    return value;
+    this.missCount++;
+    return undefined;
   }
 
-  set<T = any>(key: string, value: T): void {
-    this.cache.set(key, value);
+  async set<T = any>(key: string, value: T): Promise<void> {
+    await multiLayerCache.set(this.store, key, value, 10 * 60 * 1000);
   }
 
-  has(key: string): boolean {
-    return this.cache.has(key);
+  async has(key: string): Promise<boolean> {
+    return (await multiLayerCache.get(this.store, key)) != null;
   }
 
-  delete(key: string): boolean {
-    return this.cache.delete(key);
+  async delete(key: string): Promise<boolean> {
+    await multiLayerCache.delete(this.store, key);
+    return true;
   }
 
-  clear(): void {
-    this.cache.clear();
+  async clear(): Promise<void> {
+    await multiLayerCache.clearStore(this.store);
   }
 
   keys(): string[] {
-    return Array.from(this.cache.keys());
+    // Não suportado diretamente; manter no-op para compat.
+    return [];
   }
 
   // Métodos compatíveis com API antiga
   async getStepTemplate(stepNumber: number, funnelId?: string): Promise<any[]> {
     const key = funnelId ? `${funnelId}:step-${stepNumber}` : `step-${stepNumber}`;
-    return this.get(key) ?? [];
+    return (await this.get(key)) ?? [];
   }
 
-  invalidateStep(stepNumber: number, funnelId?: string): void {
+  async invalidateStep(stepNumber: number, funnelId?: string): Promise<void> {
     const key = funnelId ? `${funnelId}:step-${stepNumber}` : `step-${stepNumber}`;
-    this.delete(key);
+    await this.delete(key);
   }
 
   async preloadFunnel(funnelId: string): Promise<void> {
@@ -88,17 +92,17 @@ export class UnifiedTemplateCache {
     keysToDelete.forEach(k => this.delete(k));
   }
 
-  clearFunnel(funnelId: string): void {
-    const keysToDelete = this.keys().filter(k => k.startsWith(`${funnelId}:`));
-    keysToDelete.forEach(k => this.delete(k));
+  async clearFunnel(funnelId: string): Promise<void> {
+    // Sem listagem de chaves; limpar store atende cenário geral
+    await this.clear();
   }
 
   async refreshCache(): Promise<void> {
     // No-op por enquanto
   }
 
-  clearCache(): void {
-    this.clear();
+  async clearCache(): Promise<void> {
+    await this.clear();
   }
 
   getStats(): CacheStats {
