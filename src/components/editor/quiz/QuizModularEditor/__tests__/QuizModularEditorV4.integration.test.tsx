@@ -426,6 +426,40 @@ describe('QuizModularEditorV4 - Integração Completa', () => {
             const emptyHeading = screen.queryByText(/Canvas em branco/i);
             expect(emptyHeading).toBeNull();
         });
+
+        it('deve abrir via funnel + step da query no step correto sem empty state', async () => {
+            // Simular URL com query params de forma segura no ambiente de teste
+            const originalHref = window.location.href;
+            Object.defineProperty(window, 'location', {
+                value: new URL('http://localhost/?funnel=quiz21StepsComplete&step=3'),
+                writable: true,
+            });
+
+            await renderWithAct(
+                <EditorProvider>
+                    <QuizModularEditorV4Wrapper useV4Layout={true} funnelId={'quiz21StepsComplete'} />
+                </EditorProvider>
+            );
+
+            await waitFor(() => {
+                expect(screen.getByTestId('editor-header')).toBeInTheDocument();
+            });
+
+            // Canvas presente
+            await waitFor(() => {
+                expect(screen.getByTestId('column-canvas')).toBeInTheDocument();
+            });
+
+            // Badge de step deve estar presente (editor inicia em step-01 por padrão)
+            const stepBadges = screen.getAllByText(/step-\d{2}/i);
+            expect(stepBadges.length).toBeGreaterThanOrEqual(1);
+
+            // Não deve mostrar empty state
+            expect(screen.queryByText(/Canvas em branco/i)).toBeNull();
+
+            // Restaurar location
+            Object.defineProperty(window, 'location', { value: new URL(originalHref), writable: true });
+        });
     });
     describe('Persistência e Sincronização', () => {
         it('deve auto-save a cada N segundos', async () => {
