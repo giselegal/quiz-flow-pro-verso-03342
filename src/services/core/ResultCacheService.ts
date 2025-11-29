@@ -5,8 +5,9 @@
  * dos resultados do quiz, resolvendo o gargalo de cálculos redundantes.
  */
 
-import { StorageService } from './StorageService';
 import { appLogger } from '@/lib/utils/appLogger';
+import { multiLayerCache } from './MultiLayerCacheStrategy';
+import type { CacheStore } from '../canonical/CacheService';
 
 interface CacheEntry {
   result: any;
@@ -21,33 +22,27 @@ interface CacheOptions {
 }
 
 class ResultCacheService {
-  private readonly CACHE_KEY = 'quizResultCache';
+  private readonly STORE: CacheStore = 'results';
   private readonly DEFAULT_TTL = 5 * 60 * 1000; // 5 minutos
-  private readonly DEFAULT_MAX_SIZE = 10;
 
   /**
    * Obtém resultado do cache se válido
    */
-  get(selectionsByQuestion: Record<string, string[]>, userName?: string): any | null {
+  async get(selectionsByQuestion: Record<string, string[]>, userName?: string): Promise<any | null> {
     try {
-      const cache = this.loadCache();
       const selectionsHash = this.generateHash(selectionsByQuestion);
       const cacheKey = this.generateCacheKey(selectionsHash, userName);
-      
-      const entry = cache[cacheKey];
+      const entry = await multiLayerCache.get<CacheEntry>(this.STORE, cacheKey);
       if (!entry) {
         appLogger.info('🔍 Cache miss - entrada não encontrada');
         return null;
       }
-
-      // Verificar TTL
       const now = Date.now();
       if (now - entry.timestamp > this.DEFAULT_TTL) {
         appLogger.info('🕐 Cache miss - entrada expirada');
-        this.remove(cacheKey);
+        await this.remove(cacheKey);
         return null;
       }
-
       appLogger.info('✅ Cache hit - resultado recuperado do cache');
       return entry.result;
     } catch (error) {
@@ -59,37 +54,24 @@ class ResultCacheService {
   /**
    * Armazena resultado no cache
    */
-  set(
+  async set(
     selectionsByQuestion: Record<string, string[]>, 
     result: any, 
     userName?: string,
     options: CacheOptions = {},
-  ): boolean {
+  ): Promise<boolean> {
     try {
-      const cache = this.loadCache();
       const selectionsHash = this.generateHash(selectionsByQuestion);
       const cacheKey = this.generateCacheKey(selectionsHash, userName);
-
       const entry: CacheEntry = {
         result,
         timestamp: Date.now(),
         selectionsHash,
         userName,
       };
-
-      cache[cacheKey] = entry;
-
-      // Limpar cache se exceder tamanho máximo
-      this.cleanupCache(cache, options.maxSize || this.DEFAULT_MAX_SIZE);
-
-      // Salvar cache atualizado
-      const success = StorageService.safeSetJSON(this.CACHE_KEY, cache);
-      
-      if (success) {
-        appLogger.info('💾 Resultado armazenado no cache');
-      }
-      
-      return success;
+      await multiLayerCache.set(this.STORE, cacheKey, entry, options.ttl ?? this.DEFAULT_TTL);
+      appLogger.info('💾 Resultado armazenado no cache (L1+L2+L3)');
+      return true;
     } catch (error) {
       appLogger.warn('⚠️ Erro ao armazenar no cache:', { data: [error] });
       return false;
@@ -99,11 +81,10 @@ class ResultCacheService {
   /**
    * Remove entrada específica do cache
    */
-  remove(cacheKey: string): boolean {
+  async remove(cacheKey: string): Promise<boolean> {
     try {
-      const cache = this.loadCache();
-      delete cache[cacheKey];
-      return StorageService.safeSetJSON(this.CACHE_KEY, cache);
+      await multiLayerCache.delete(this.STORE, cacheKey);
+      return true;
     } catch (error) {
       appLogger.warn('⚠️ Erro ao remover do cache:', { data: [error] });
       return false;
@@ -113,9 +94,10 @@ class ResultCacheService {
   /**
    * Limpa todo o cache
    */
-  clear(): boolean {
+  async clear(): Promise<boolean> {
     try {
-      return StorageService.safeRemove(this.CACHE_KEY);
+      await multiLayerCache.clearStore(this.STORE);
+      return true;
     } catch (error) {
       appLogger.warn('⚠️ Erro ao limpar cache:', { data: [error] });
       return false;
@@ -125,8 +107,8 @@ class ResultCacheService {
   /**
    * Verifica se existe entrada válida no cache
    */
-  has(selectionsByQuestion: Record<string, string[]>, userName?: string): boolean {
-    return this.get(selectionsByQuestion, userName) !== null;
+  async has(selectionsByQuestion: Record<string, string[]>, userName?: string): Promise<boolean> {
+    return (await this.get(selectionsByQuestion, userName)) !== null;
   }
 
   /**
@@ -169,9 +151,7 @@ class ResultCacheService {
 
   // ===== MÉTODOS PRIVADOS =====
 
-  private loadCache(): Record<string, CacheEntry> {
-    return StorageService.safeGetJSON<Record<string, CacheEntry>>(this.CACHE_KEY) || {};
-  }
+  // storage-based cache removido em favor do multiLayerCache
 
   private generateHash(data: Record<string, string[]>): string {
     // Criar hash simples baseado nas chaves e valores das seleções
