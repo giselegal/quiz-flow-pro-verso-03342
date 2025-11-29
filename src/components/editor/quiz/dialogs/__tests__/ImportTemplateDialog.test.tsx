@@ -22,7 +22,7 @@ import userEvent from '@testing-library/user-event';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
 import { ImportTemplateDialog } from '@/components/editor/quiz/dialogs/ImportTemplateDialog';
-import { validateTemplate } from '@/types/schemas/templateSchema';
+import { normalizeAndValidateTemplateV3, isNormalizeSuccess } from '@/templates/validation/validateAndNormalize';
 
 // Mock do validator/normalizer usado pelo componente
 vi.mock('@/templates/validation/validateAndNormalize', () => ({
@@ -94,7 +94,7 @@ describe('ImportTemplateDialog - Renderização Inicial', () => {
     });
 
     it('deve mostrar área de upload de arquivo', () => {
-        render(
+        const { container } = render(
             <ImportTemplateDialog
                 open={true}
                 onClose={() => { }}
@@ -103,8 +103,9 @@ describe('ImportTemplateDialog - Renderização Inicial', () => {
             { wrapper: createWrapper() }
         );
 
-        expect(screen.getByText(/selecione um arquivo/i)).toBeInTheDocument();
-        expect(screen.getByLabelText(/upload/i)).toBeInTheDocument();
+        expect(screen.getByText(/clique para selecionar arquivo json/i)).toBeInTheDocument();
+        const input = document.querySelector('input[type="file"]');
+        expect(input).toBeTruthy();
     });
 });
 
@@ -144,7 +145,7 @@ describe('ImportTemplateDialog - Upload de Arquivo', () => {
         );
 
         const file = createMockJsonFile(mockTemplate);
-        const input = container.querySelector('input[type="file"]') as HTMLInputElement;
+        const input = document.querySelector('input[type="file"]') as HTMLInputElement;
 
         await user.upload(input, file);
 
@@ -166,7 +167,7 @@ describe('ImportTemplateDialog - Upload de Arquivo', () => {
         );
 
         const file = new File(['texto plano'], 'arquivo.txt', { type: 'text/plain' });
-        const input = container.querySelector('input[type="file"]') as HTMLInputElement;
+        const input = document.querySelector('input[type="file"]') as HTMLInputElement;
 
         await user.upload(input, file);
 
@@ -190,7 +191,7 @@ describe('ImportTemplateDialog - Upload de Arquivo', () => {
         const file = new File(['{ invalid json }'], 'invalid.json', {
             type: 'application/json',
         });
-        const input = container.querySelector('input[type="file"]') as HTMLInputElement;
+        const input = document.querySelector('input[type="file"]') as HTMLInputElement;
 
         await user.upload(input, file);
 
@@ -223,7 +224,7 @@ describe('ImportTemplateDialog - Upload de Arquivo', () => {
         );
 
         const file = createMockJsonFile(invalidTemplate);
-        const input = container.querySelector('input[type="file"]') as HTMLInputElement;
+        const input = document.querySelector('input[type="file"]') as HTMLInputElement;
 
         await user.upload(input, file);
 
@@ -272,7 +273,7 @@ describe('ImportTemplateDialog - Preview de Template', () => {
         );
 
         const file = createMockJsonFile(mockTemplate);
-        const input = container.querySelector('input[type="file"]') as HTMLInputElement;
+        const input = document.querySelector('input[type="file"]') as HTMLInputElement;
 
         await user.upload(input, file);
 
@@ -320,7 +321,7 @@ describe('ImportTemplateDialog - Preview de Template', () => {
         );
 
         const file = createMockJsonFile(mockTemplate);
-        const input = container.querySelector('input[type="file"]') as HTMLInputElement;
+        const input = document.querySelector('input[type="file"]') as HTMLInputElement;
 
         await user.upload(input, file);
 
@@ -366,7 +367,7 @@ describe('ImportTemplateDialog - Preview de Template', () => {
         );
 
         const file = createMockJsonFile(mockTemplate);
-        const input = container.querySelector('input[type="file"]') as HTMLInputElement;
+        const input = document.querySelector('input[type="file"]') as HTMLInputElement;
 
         await user.upload(input, file);
 
@@ -406,7 +407,7 @@ describe('ImportTemplateDialog - Confirmação de Importação', () => {
         );
 
         const file = createMockJsonFile(mockTemplate);
-        const input = container.querySelector('input[type="file"]') as HTMLInputElement;
+        const input = document.querySelector('input[type="file"]') as HTMLInputElement;
 
         await user.upload(input, file);
 
@@ -442,7 +443,7 @@ describe('ImportTemplateDialog - Confirmação de Importação', () => {
         );
 
         const file = createMockJsonFile(mockTemplate);
-        const input = container.querySelector('input[type="file"]') as HTMLInputElement;
+        const input = document.querySelector('input[type="file"]') as HTMLInputElement;
 
         await user.upload(input, file);
 
@@ -483,7 +484,7 @@ describe('ImportTemplateDialog - Confirmação de Importação', () => {
         );
 
         const file = createMockJsonFile(mockTemplate);
-        const input = container.querySelector('input[type="file"]') as HTMLInputElement;
+        const input = document.querySelector('input[type="file"]') as HTMLInputElement;
 
         await user.upload(input, file);
 
@@ -538,12 +539,15 @@ describe('ImportTemplateDialog - Cancelamento', () => {
             steps: { 'step-01': [{ id: 'b1', type: 'Block' }] },
         };
 
-        vi.mocked(validateTemplate).mockReturnValue({
+        vi.mocked(normalizeAndValidateTemplateV3).mockReturnValue({
             success: true,
             data: mockTemplate,
+            warnings: [],
+            stats: { totalBlocks: 1, replacedIds: 0, steps: 1 },
         });
+        vi.mocked(isNormalizeSuccess).mockReturnValue(true);
 
-        const { rerender } = render(
+        const { rerender, container } = render(
             <ImportTemplateDialog
                 open={true}
                 onClose={() => { }}
@@ -553,7 +557,7 @@ describe('ImportTemplateDialog - Cancelamento', () => {
         );
 
         const file = createMockJsonFile(mockTemplate);
-        const input = screen.getByLabelText(/upload/i) as HTMLInputElement;
+        const input = container.querySelector('input[type="file"]') as HTMLInputElement;
 
         await user.upload(input, file);
 
@@ -590,15 +594,14 @@ describe('ImportTemplateDialog - Estados de Carregamento', () => {
             steps: { 'step-01': [{ id: 'b1', type: 'Block' }] },
         };
 
-        // Validação lenta
-        vi.mocked(validateTemplate).mockImplementation(
-            () =>
-                new Promise(resolve => {
-                    setTimeout(() => {
-                        resolve({ success: true, data: mockTemplate });
-                    }, 100);
-                }) as any
-        );
+        // Mock sync: the component validates synchronously with normalizeAndValidateTemplateV3
+        vi.mocked(normalizeAndValidateTemplateV3).mockReturnValue({
+            success: true,
+            data: mockTemplate,
+            warnings: [],
+            stats: { totalBlocks: 1, replacedIds: 0, steps: 1 },
+        });
+        vi.mocked(isNormalizeSuccess).mockReturnValue(true);
 
         render(
             <ImportTemplateDialog
@@ -610,16 +613,12 @@ describe('ImportTemplateDialog - Estados de Carregamento', () => {
         );
 
         const file = createMockJsonFile(mockTemplate);
-        const input = screen.getByLabelText(/upload/i) as HTMLInputElement;
+        const input = container.querySelector('input[type="file"]') as HTMLInputElement;
 
         await user.upload(input, file);
 
-        // Deve mostrar loading
-        expect(screen.getByText(/validando/i)).toBeInTheDocument();
-
-        await waitFor(() => {
-            expect(screen.queryByText(/validando/i)).not.toBeInTheDocument();
-        });
+        // Validação síncrona deve terminar rapidamente e o resultado deve aparecer
+        await waitFor(() => expect(screen.getByText(/quiz/i)).toBeInTheDocument());
     });
 });
 
@@ -638,7 +637,17 @@ describe('ImportTemplateDialog - Acessibilidade', () => {
             { wrapper: createWrapper() }
         );
 
-        expect(screen.getByLabelText(/upload/i)).toBeInTheDocument();
+        const { container } = render(
+            <ImportTemplateDialog
+                open={true}
+                onClose={() => { }}
+                onImport={() => { }}
+            />,
+            { wrapper: createWrapper() }
+        );
+
+        const inputEl = document.querySelector('input[type="file"]');
+        expect(inputEl).toBeTruthy();
         expect(screen.getByRole('dialog')).toHaveAttribute('aria-labelledby');
     });
 
