@@ -59,6 +59,30 @@ export default defineConfig({
             if (id.includes('sortable') || id.includes('dnd-kit')) {
               return 'vendor-dnd';
             }
+            // Estado / Store
+            if (id.includes('zustand')) {
+              return 'vendor-state';
+            }
+            // Query / Cache
+            if (id.includes('@tanstack/react-query')) {
+              return 'vendor-query';
+            }
+            // Schemas & validação
+            if (id.includes('zod')) {
+              return 'vendor-zod';
+            }
+            // Datas
+            if (id.includes('date-fns')) {
+              return 'vendor-date';
+            }
+            // IDs
+            if (id.includes('nanoid')) {
+              return 'vendor-id';
+            }
+            // Ícones
+            if (id.includes('lucide-react')) {
+              return 'vendor-icons';
+            }
             // Outros vendors
             return 'vendor-misc';
           }
@@ -94,11 +118,18 @@ export default defineConfig({
             return 'services-canonical';
           }
 
+          // Core registry / blocks (para reduzir impacto em app-editor)
+          if (id.includes('/src/core/registry/') || id.includes('/src/core/quiz/blocks/')) {
+            return 'core-registry';
+          }
+
           // Templates e Schemas
           if (id.includes('/src/config/schemas/') ||
             id.includes('/src/templates/')) {
             return 'templates-config';
           }
+
+          // Fallback: deixar Rollup decidir
         },
       },
     },
