@@ -11,6 +11,7 @@ import { DesignTokens } from '@/styles/design-tokens';
 import { useResponsive } from '@/hooks/useResponsive';
 import type { BaseSectionProps } from '@/types/section-types';
 import { appLogger } from '@/lib/utils/appLogger';
+import { useAppStore } from '@/state/store';
 
 export interface QuizOption {
     id: string;
@@ -71,6 +72,15 @@ export const OptionsGridSection: React.FC<OptionsGridSectionProps & { properties
 
     const { isMobile, isTablet } = useResponsive();
     const [localSelected, setLocalSelected] = useState<string[]>(selectedOptions);
+    // Leitura opcional da contagem global de seleções via Zustand (quizSlice)
+    const globalSelectionsCountRaw = useAppStore((s) => Array.isArray(s.quiz.selections)
+        ? s.quiz.selections
+        : (s.quiz.selections?.size ?? 0));
+    const globalSelectionsCount = typeof globalSelectionsCountRaw === 'number'
+        ? globalSelectionsCountRaw
+        : Array.isArray(globalSelectionsCountRaw)
+            ? globalSelectionsCountRaw.length
+            : 0;
     const autoAdvanceTimeoutRef = useRef<number | null>(null);
 
     const {
@@ -115,10 +125,12 @@ export const OptionsGridSection: React.FC<OptionsGridSectionProps & { properties
     const optionsArray = ensureArray<QuizOption>(options);
 
     if (import.meta?.env?.DEV && !Array.isArray(options)) {
-        appLogger.warn('⚠️ OptionsGridSection: content.options não é um array. Shape recebido:', { data: [{
-                    type: typeof options,
-                    keys: options && typeof options === 'object' ? Object.keys(options as any) : undefined,
-                }] });
+        appLogger.warn('⚠️ OptionsGridSection: content.options não é um array. Shape recebido:', {
+            data: [{
+                type: typeof options,
+                keys: options && typeof options === 'object' ? Object.keys(options as any) : undefined,
+            }]
+        });
     }
 
     // Sincronizar com prop externa
@@ -386,6 +398,7 @@ export const OptionsGridSection: React.FC<OptionsGridSectionProps & { properties
                     aria-live="polite"
                 >
                     {localSelected.length} de {maxSelections} selecionados
+                    {globalSelectionsCount > 0 ? ` • Global: ${globalSelectionsCount}` : ''}
                 </p>
             )}
         </SectionContainer>

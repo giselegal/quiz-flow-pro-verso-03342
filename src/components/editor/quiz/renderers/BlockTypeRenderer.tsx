@@ -7,6 +7,7 @@ import TextInlineAtomic from '@/components/editor/blocks/atomic/TextInlineBlock'
 import ImageInlineAtomic from '@/components/editor/blocks/atomic/ImageInlineBlock';
 // Preferir bloco atômico para grid de opções
 import OptionsGridAtomic from '@/components/editor/blocks/atomic/OptionsGridBlock';
+import QuizOptionsGridBlockConnected from '@/components/blocks/quiz/QuizOptionsGridBlockConnected';
 import CTAButtonAtomic from '@/components/editor/blocks/atomic/CTAButtonBlock';
 import TransitionHeroBlock from '@/components/editor/blocks/atomic/TransitionHeroBlock';
 // Formulário de boas-vindas (atômico)
@@ -248,8 +249,27 @@ export const BlockTypeRenderer: React.FC<BlockRendererProps> = ({ block, ...rest
                 return <CTAButtonAtomic block={block} {...rest} />;
             case 'quiz-options':
             case 'options-grid':
-                // Bloco atômico de grid de opções (usa contextData para seleção)
-                return <OptionsGridAtomic block={block} {...rest} contextData={rest.contextData} />;
+                // Preferir versão conectada que lê estado global (Zustand) e API
+                return (
+                    <SelectableBlock
+                        blockId={block.id}
+                        isSelected={!!rest.isSelected}
+                        isEditable={!!rest.isEditable}
+                        onSelect={() => rest.onSelect?.(block.id)}
+                        blockType="Opções do Quiz (Conectado)"
+                        onOpenProperties={() => rest.onOpenProperties?.(block.id)}
+                        isDraggable={true}
+                    >
+                        <QuizOptionsGridBlockConnected
+                            id={block.id}
+                            type={block.type as any}
+                            componentId="quiz-options-grid"
+                            editorMode={!!rest.isEditable}
+                            currentAnswers={(rest.contextData as any)?.currentAnswers || []}
+                            onAnswersChange={(answers) => (rest.contextData as any)?.onAnswersChange?.(answers)}
+                        />
+                    </SelectableBlock>
+                );
             case 'quiz-navigation':
             case 'navigation':
                 return <QuestionNavigationBlock block={block} {...rest} contextData={rest.contextData} />;

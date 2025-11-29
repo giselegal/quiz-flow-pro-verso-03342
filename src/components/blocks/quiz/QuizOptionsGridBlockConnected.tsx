@@ -11,6 +11,7 @@ import { useComponentConfiguration } from '@/hooks/useComponentConfiguration';
 import QuizQuestion from '@/components/funnel-blocks/QuizQuestion';
 import { QuizBlockProps } from './types';
 import { appLogger } from '@/lib/utils/appLogger';
+import { useAppStore } from '@/state/store';
 
 interface QuizOptionsGridBlockConnectedProps extends Omit<QuizBlockProps, 'properties'> {
     // Props mínimas - tudo vem da API
@@ -33,6 +34,15 @@ export default function QuizOptionsGridBlockConnected({
     onConfigUpdate,
     ...props
 }: QuizOptionsGridBlockConnectedProps) {
+    // Contagem global de seleções via Zustand (quizSlice)
+    const globalSelectionsCountRaw = useAppStore((s) => Array.isArray(s.quiz.selections)
+        ? s.quiz.selections
+        : (s.quiz.selections?.size ?? 0));
+    const globalSelectionsCount = typeof globalSelectionsCountRaw === 'number'
+        ? globalSelectionsCountRaw
+        : Array.isArray(globalSelectionsCountRaw)
+            ? globalSelectionsCountRaw.length
+            : 0;
 
     // ============================================================================
     // API CONNECTION - Busca configurações da API
@@ -286,7 +296,7 @@ export default function QuizOptionsGridBlockConnected({
             {/* Componente principal renderizado com configurações API */}
             <QuizQuestion
                 // Passar todas as configurações vindas da API
-                {...{...processedProperties, autoAdvance: typeof (processedProperties as any).autoAdvance === 'object' ? !!(processedProperties as any).autoAdvance?.enabled : (processedProperties as any).autoAdvance}}
+                {...{ ...processedProperties, autoAdvance: typeof (processedProperties as any).autoAdvance === 'object' ? !!(processedProperties as any).autoAdvance?.enabled : (processedProperties as any).autoAdvance }}
                 question={(properties as any)?.question || 'Qual opção você prefere?'}
                 options={(processedProperties.options as any) || []}
 
@@ -306,6 +316,13 @@ export default function QuizOptionsGridBlockConnected({
                 // Resto das props
                 {...props}
             />
+
+            {/* Contador global para depuração/consistência com estado global */}
+            {editorMode && (
+                <div className="mt-2 text-xs text-gray-600">
+                    {globalSelectionsCount > 0 ? `Global: ${globalSelectionsCount} selecionadas` : 'Global: 0'}
+                </div>
+            )}
 
             {/* Informações de debug no rodapé (apenas editor) */}
             {editorMode && componentDefinition && (
