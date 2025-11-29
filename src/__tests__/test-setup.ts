@@ -102,3 +102,57 @@ if (typeof window !== 'undefined') {
 } else {
     (globalThis as any).ResizeObserver = ResizeObserverMock;
 }
+
+// Mock rápido de fetch para assets de template JSON usados pelos serviços
+// Evita timeouts e falhas quando paths /templates/*.json não existem no ambiente de teste.
+if (!(globalThis as any).__TEMPLATE_FETCH_MOCK_INSTALLED) {
+    try {
+        const originalFetch: typeof fetch | undefined = (globalThis as any).fetch;
+        const mockMap: Record<string, any> = {
+            '/templates/quiz21-v4.json': {
+                steps: [
+                    { id: 'step-01', blocks: [ { id: 'b1', type: 'TextBlock', content: { text: 'Intro' } } ] },
+                    { id: 'step-02', blocks: [] }
+                ]
+            },
+            '/templates/quiz21-complete.json': {
+                steps: [
+                    { id: 'step-01', blocks: [ { id: 'b1', type: 'TextBlock', content: { text: 'Intro' } } ] },
+                    { id: 'step-02', blocks: [] }
+                ]
+            }
+        };
+
+        // Modular steps ex: /templates/step-01-v3.json
+        const getModular = (url: string) => {
+            const match = url.match(/\/templates\/(step-\d{2})-v3\.json/);
+            if (!match) return null;
+            const stepId = match[1];
+            if (stepId === 'step-01') {
+                return [ { id: 'b1', type: 'TextBlock', content: { text: 'Intro Modular' } } ];
+            }
+            return [];
+        };
+
+        if (originalFetch) {
+            (globalThis as any).fetch = async (input: any, init?: any) => {
+                const url = typeof input === 'string' ? input : input?.url;
+                if (typeof url === 'string') {
+                    if (mockMap[url]) {
+                        return new Response(JSON.stringify(mockMap[url]), { status: 200, headers: { 'Content-Type': 'application/json' } });
+                    }
+                    const modular = getModular(url);
+                    if (modular) {
+                        return new Response(JSON.stringify(modular), { status: 200, headers: { 'Content-Type': 'application/json' } });
+                    }
+                }
+                // fallback para fetch real
+                return originalFetch(input, init);
+            };
+            (globalThis as any).__TEMPLATE_FETCH_MOCK_INSTALLED = true;
+        }
+    } catch (err) {
+        // Silencioso: não falhar setup por mock
+        // console.warn('Fetch mock setup falhou', err);
+    }
+}
