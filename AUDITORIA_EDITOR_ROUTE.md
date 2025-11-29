@@ -515,34 +515,36 @@ if (typeof value === 'string' && value.length > 100) {
 
 ### 5.6 Recomendações para QuizModularEditorV4
 
-| ID | Problema | Prioridade | Solução |
-|----|----------|------------|---------|
-| PV4-1 | Layout V4 desabilitado | P2 | Habilitar quando loader estiver completo |
-| PV4-2 | Steps hardcoded | P1 | Integrar com contexto/templateService |
-| PV4-3 | Canvas usa v3, painel usa v4 | P1 | Unificar para v4 ou converter no CanvasColumn |
-| PV4-4 | Deps de useMemo | P3 | Revisar dependências de memoização |
-| PV4-5 | Hook fora do provider | P2 | Adicionar guard e mensagem de erro clara |
-| PV4-A1 | Heurística de separação | P3 | Melhorar com lista de propriedades conhecidas |
+| ID | Problema | Prioridade | Solução | Status |
+|----|----------|------------|---------|--------|
+| PV4-1 | Layout V4 desabilitado | P2 | Habilitar quando loader estiver completo | ⏳ Pendente |
+| PV4-2 | Steps hardcoded | P1 | Integrar com contexto/templateService | ✅ Corrigido |
+| PV4-3 | Canvas usa v3, painel usa v4 | P1 | Unificar para v4 ou converter no CanvasColumn | ✅ Corrigido |
+| PV4-4 | Deps de useMemo | P3 | Revisar dependências de memoização | ⏳ Pendente |
+| PV4-5 | Hook fora do provider | P2 | Adicionar guard e mensagem de erro clara | ✅ Corrigido |
+| PV4-A1 | Heurística de separação | P3 | Melhorar com lista de propriedades conhecidas | ⏳ Pendente |
 
 ---
 
 ## ✅ CHECKLIST FINAL DE IMPLEMENTAÇÃO
 
-### Correções Implementadas (P0)
-- [x] P6: Sync loop WYSIWYG - comparação por assinatura de IDs
+### Correções Implementadas (P0) ✅
+- [x] P6: Sync loop WYSIWYG - comparação por assinatura de IDs (otimizado)
 - [x] P10: Placeholder silencioso removido - logging adequado
 - [x] P5: Normalização robusta com logging detalhado
 - [x] P8: Fallback robusto para activeTemplateSteps
 - [x] P9: Chave de deduplicação com funnelId
 - [x] P11: Ref para controle de mount status
 
-### Correções Pendentes (P1-P2)
-- [ ] PV4-2: Integrar steps no layout v4
-- [ ] PV4-3: Unificar formato de blocos no canvas
+### Correções Implementadas (P1-P2) ✅
+- [x] PV4-2: Integrar steps no layout v4 via templateService
+- [x] PV4-3: Usar currentStepKey calculado no canvas
+- [x] PV4-5: Guards de contexto nos hooks useV4Blocks e useV4Block
+
+### Correções Pendentes (P2-P3) ⏳
+- [ ] PV4-1: Habilitar layout V4 (requer Fase 3-4 do roadmap)
 - [ ] P7: Race condition no flush
 - [ ] P4: Sincronização setActiveFunnel
-
-### Melhorias Futuras (P3)
 - [ ] PV4-A1: Melhorar heurística de separação v4→v3
 - [ ] P12: Otimizar ordem de fontes no UnifiedLoader
 - [ ] P13: Error boundary específico para falhas de carregamento
@@ -550,4 +552,5 @@ if (typeof value === 'string' && value.length > 100) {
 ---
 
 **Responsável:** Equipe de Desenvolvimento  
-**Próxima Revisão:** Após implementação das correções P1-P2
+**Data da Auditoria:** 29 de Novembro de 2025  
+**Próxima Revisão:** Após implementação das correções pendentes (P2-P3)
