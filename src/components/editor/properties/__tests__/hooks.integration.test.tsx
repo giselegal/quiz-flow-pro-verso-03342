@@ -8,6 +8,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, waitFor } from '@testing-library/react';
 import { useUserName } from '@/hooks/useUserName';
 import { useQuizResult } from '@/hooks/useQuizResult';
+import { StorageService } from '@/services/core/StorageService';
 
 // Mock do AuthContext
 const mockAuthContext = {
@@ -17,7 +18,8 @@ const mockAuthContext = {
     },
 };
 
-vi.mock('@/context/AuthContext', () => ({
+// NOTE: actual hook imports from '@/contexts/AuthContext' (plural) — tests used a singular path and failed.
+vi.mock('@/contexts/AuthContext', () => ({
     useAuth: () => mockAuthContext,
 }));
 
@@ -30,15 +32,21 @@ describe('Hooks Integration Tests', () => {
 
     describe('useUserName Hook', () => {
         it('deve retornar nome do localStorage.quizUserName quando disponível', () => {
-            localStorage.setItem('quizUserName', 'Maria Silva');
+            // Use StorageService so the canonical storage prefix is honored
+            StorageService.safeSetString('quizUserName', 'Maria Silva');
 
+            // Ensure storage was populated via StorageService
+            expect(StorageService.safeGetString('quizUserName')).toBe('Quiz User');
             const { result } = renderHook(() => useUserName());
+            // DEBUG: inspect returned value
+            // eslint-disable-next-line no-console
+            console.log('useUserName result:', result.current);
 
             expect(result.current).toBe('Maria Silva');
         });
 
         it('deve usar localStorage.userName como fallback', () => {
-            localStorage.setItem('userName', 'João Santos');
+            StorageService.safeSetString('userName', 'João Santos');
 
             const { result } = renderHook(() => useUserName());
 
@@ -68,17 +76,19 @@ describe('Hooks Integration Tests', () => {
             expect(result.current).toBe('Usuário');
         });
 
-        it('deve seguir ordem de prioridade correta', () => {
-            // Setup com todas as opções disponíveis
-            localStorage.setItem('quizUserName', 'Quiz User');
-            localStorage.setItem('userName', 'General User');
+        it('deve seguir ordem de prioridade correta', async () => {
+            // Setup com todas as opções disponíveis (use StorageService para prefixo correto)
+            StorageService.safeSetString('quizUserName', 'Quiz User');
+            StorageService.safeSetString('userName', 'General User');
             mockAuthContext.user.name = 'Auth User';
             mockAuthContext.user.email = 'email@test.com';
 
             const { result } = renderHook(() => useUserName());
 
-            // Deve usar a primeira opção (prioridade mais alta)
-            expect(result.current).toBe('Quiz User');
+            // Deve usar a primeira opção (prioridade mais alta) — aguarda o efeito aplicar o valor
+            await waitFor(() => {
+                expect(result.current).toBe('Quiz User');
+            });
         });
     });
 
@@ -122,7 +132,7 @@ describe('Hooks Integration Tests', () => {
     describe('Integration with Interpolation System', () => {
         it('deve fornecer dados válidos para sistema de interpolação', async () => {
             // Setup test data
-            localStorage.setItem('quizUserName', 'Test User');
+            StorageService.safeSetString('quizUserName', 'Test User');
 
             const userNameHook = renderHook(() => useUserName());
             const quizResultHook = renderHook(() => useQuizResult());
@@ -150,7 +160,7 @@ describe('Hooks Integration Tests', () => {
 
         it('deve simular cenário real de uso no NoCodePropertiesPanel', async () => {
             // Simula um usuário real com dados completos
-            localStorage.setItem('quizUserName', 'Maria da Silva');
+            StorageService.safeSetString('quizUserName', 'Maria da Silva');
 
             const userName = renderHook(() => useUserName()).result.current;
             const { result: quizResult } = renderHook(() => useQuizResult());
