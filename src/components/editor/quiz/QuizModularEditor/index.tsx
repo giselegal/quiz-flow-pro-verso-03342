@@ -1014,7 +1014,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         // ❌ IMPORTANTE: REMOVER setSelectedBlock das deps para evitar loop
     }, [blocks, selectedBlockId, previewMode]);
 
-    
+
     // ✅ ARQUITETURA: Carregamento de step via hook dedicado
     // (substituiu 150 linhas de lógica fragmentada)
     useStepBlocksLoader({
