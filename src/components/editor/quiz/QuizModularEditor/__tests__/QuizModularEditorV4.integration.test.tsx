@@ -380,6 +380,53 @@ describe('QuizModularEditorV4 - Integração Completa', () => {
         });
     });
 
+    describe('Carregamento de Modelos e Renderização', () => {
+        it('deve mostrar canvas em branco quando sem template/funnel e sem blocos', async () => {
+            await renderWithAct(
+                <EditorProvider>
+                    <QuizModularEditorV4Wrapper useV4Layout={true} />
+                </EditorProvider>
+            );
+
+            await waitFor(() => {
+                expect(screen.getByTestId('editor-header')).toBeInTheDocument();
+            });
+
+            // Empty state panel com ações
+            const emptyPanelHeading = screen.getByText(/Canvas em branco/i);
+            expect(emptyPanelHeading).toBeInTheDocument();
+            const emptyPanel = emptyPanelHeading.closest('div');
+            expect(emptyPanel).toBeTruthy();
+            const addTextBtn = screen.getByRole('button', { name: /Adicionar bloco de texto/i });
+            expect(addTextBtn).toBeInTheDocument();
+            const importBtns = screen.getAllByRole('button', { name: /Importar JSON/i });
+            expect(importBtns.length).toBeGreaterThanOrEqual(1);
+            const loadTemplateBtns = screen.getAllByRole('button', { name: /Carregar Template/i });
+            expect(loadTemplateBtns.length).toBeGreaterThanOrEqual(1);
+        });
+
+        it('deve carregar template pelo templateId e renderizar blocos no canvas', async () => {
+            await renderWithAct(
+                <EditorProvider>
+                    <QuizModularEditorV4Wrapper useV4Layout={true} templateId={'quiz21StepsComplete'} />
+                </EditorProvider>
+            );
+
+            // Aguarda header
+            await waitFor(() => {
+                expect(screen.getByTestId('editor-header')).toBeInTheDocument();
+            });
+
+            // Aguarda que o canvas esteja presente
+            await waitFor(() => {
+                expect(screen.getByTestId('column-canvas')).toBeInTheDocument();
+            });
+
+            // Não deve mostrar empty state se blocos foram carregados
+            const emptyHeading = screen.queryByText(/Canvas em branco/i);
+            expect(emptyHeading).toBeNull();
+        });
+    });
     describe('Persistência e Sincronização', () => {
         it('deve auto-save a cada N segundos', async () => {
             vi.useFakeTimers();
