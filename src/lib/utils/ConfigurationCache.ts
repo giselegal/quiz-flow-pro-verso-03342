@@ -10,82 +10,62 @@
 
 import { cacheService } from '@/services/canonical';
 import { appLogger } from '@/lib/utils/appLogger';
-
-interface CacheEntry<T> {
-    data: T;
-    timestamp: number;
-    ttl: number;
-}
+import { multiLayerCache } from '@/services/core/MultiLayerCacheStrategy';
+import type { CacheStore } from '@/services/canonical/CacheService';
+const STORE: CacheStore = 'configs';
 
 class ConfigurationCache {
-    private readonly DEFAULT_TTL = 5 * 60 * 1000; // 5 minutos
+    private ttl = 2 * 60 * 1000; // 2 minutos
+    private warnDeprecated = true;
 
     constructor() {
-        appLogger.warn('⚠️ ConfigurationCache is deprecated. Use UnifiedCacheService instead.');
-    }
-
-    /**
-     * @deprecated Use cacheService.get('configs', key)
-     */
-    get<T>(key: string): T | null {
-        const result = cacheService.get<T>(key, 'configs');
-        if (result && result.success) return result.data;
-        return null;
-    }
-
-    /**
-     * @deprecated Use cacheService.set('configs', key, data, ttl)
-     */
-    set<T>(key: string, data: T, ttl?: number): void {
-        cacheService.set(key, data, { store: 'configs', ttl: ttl || this.DEFAULT_TTL });
-    }
-
-    /**
-     * @deprecated Use cacheService.has('configs', key)
-     */
-    has(key: string): boolean {
-        return cacheService.has(key, 'configs');
-    }
-
-    /**
-     * @deprecated Use cacheService.delete('configs', key)
-     */
-    delete(key: string): void {
-        cacheService.delete(key, 'configs');
-    }
-
-    /**
-     * @deprecated Use cacheService.clearStore('configs')
-     */
-    clear(): void {
-        cacheService.clearStore('configs');
-    }
-
-    /**
-     * @deprecated Garbage collection agora é automático via LRU
-     */
-    cleanup(): void {
-        appLogger.warn('⚠️ cleanup() is deprecated. UnifiedCacheService uses automatic LRU eviction.');
-    }
-
-    /**
-     * @deprecated Use cacheService.getStoreStats('configs')
-     */
-    getStats() {
-        const res = cacheService.getStoreStats('configs');
-        if (res && res.success && res.data) {
-            const stats = res.data as any;
-            return {
-                size: stats.entriesCount ?? stats.size ?? 0,
-                keys: [], // LRU não expõe keys diretamente
-                memoryUsage: `${((stats.memoryUsage ?? 0) / 1024).toFixed(1)} KB`,
-            };
+        if (typeof window !== 'undefined' && this.warnDeprecated) {
+            appLogger.warn('⚠️ ConfigurationCache is deprecated. Use MultiLayerCacheStrategy (store: configs).');
         }
-        return { size: 0, keys: [], memoryUsage: '0.0 KB' };
+    }
+
+    async set<T>(key: string, value: T, ttl?: number) {
+        try {
+            await multiLayerCache.set(STORE, key, value, ttl ?? this.ttl);
+            return true;
+        } catch (e) {
+            appLogger.warn('ConfigurationCache.set failed', { data: [e] });
+            return false;
+        }
+    }
+
+    async get<T>(key: string): Promise<T | null> {
+        try {
+            const v = await multiLayerCache.get<T>(STORE, key);
+            return v ?? null;
+        } catch (e) {
+            appLogger.warn('ConfigurationCache.get failed', { data: [e] });
+            return null;
+        }
+    }
+
+    async delete(key: string) {
+        try {
+            await multiLayerCache.delete(STORE, key);
+            return true;
+        } catch (e) {
+            return false;
+        }
+    }
+
+    async clear() {
+        try {
+            await multiLayerCache.clearStore(STORE);
+            return true;
+        } catch (e) {
+            return false;
+        }
+    }
+
+    getStats() {
+        // Delegar para metrics do multiLayerCache L2
+        const m = multiLayerCache.getMetrics();
+        return { items: m.l2Items, estimatedSize: m.l2Size };
     }
 }
-
-// Singleton instance
-export const configurationCache = new ConfigurationCache();
-
 export default configurationCache;

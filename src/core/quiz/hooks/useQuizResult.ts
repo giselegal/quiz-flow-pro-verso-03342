@@ -47,7 +47,7 @@ export const useQuizResult = () => {
         // Verificar cache de resultados se houver dados
         if (unifiedData.selections && Object.keys(unifiedData.selections).length > 0) {
           const userName = unifiedData.formData?.userName || unifiedData.formData?.name;
-          const cachedResult = resultCacheService.get(unifiedData.selections, userName);
+          const cachedResult = await resultCacheService.get(unifiedData.selections, userName);
           
           if (cachedResult) {
             appLogger.info('✅ Resultado recuperado do cache no useQuizResult');
@@ -150,7 +150,7 @@ export const useQuizResult = () => {
         // 🎯 FASE 1: Armazenar no cache para futuras consultas
         if (unifiedData?.selections) {
           const userName = unifiedData.formData?.userName || unifiedData.formData?.name;
-          resultCacheService.set(unifiedData.selections, result, userName);
+          await resultCacheService.set(unifiedData.selections, result, userName);
         }
 
         // Atualizar cache global

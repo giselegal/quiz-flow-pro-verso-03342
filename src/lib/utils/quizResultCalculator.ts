@@ -27,7 +27,7 @@ export const calculateAndSaveQuizResult = async () => {
 
     // 🎯 FASE 1: Verificar cache primeiro para evitar recálculo desnecessário
     if (Object.keys(userSelections).length > 0) {
-      const cachedResult = resultCacheService.get(userSelections, userName);
+      const cachedResult = await resultCacheService.get(userSelections, userName);
       if (cachedResult) {
         appLogger.info('✅ Resultado recuperado do cache no quizResultCalculator');
         
@@ -106,7 +106,7 @@ export const calculateAndSaveQuizResult = async () => {
           }] });
 
     // 🎯 FASE 1: Armazenar no cache para futuras consultas
-    resultCacheService.set(userSelections, result.payload, userName);
+    await resultCacheService.set(userSelections, result.payload, userName);
 
     // 6. Salvar resultado
     // - StorageService legado para compatibilidade (usado em testes e alguns fluxos)
