@@ -13,7 +13,7 @@
  * @see useDraftProperties - Hook para gerenciamento de draft
  */
 
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, Suspense } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { FileJson, Settings, AlertCircle, CheckCircle2 } from 'lucide-react';
@@ -21,8 +21,8 @@ import { JsonTemplateEditor } from '@/components/editor/JsonEditor';
 import { safeParseJson } from '@/core/schema/propertyValidation';
 import type { Block } from '@/types/editor';
 
-// Import do componente original
-import PropertiesColumn from './index';
+// Import lazy do componente original para padronizar com o editor
+const PropertiesColumn = React.lazy(() => import('./index'));
 
 interface PropertiesColumnWithJsonProps {
   selectedBlock?: Block | undefined;
@@ -30,7 +30,7 @@ interface PropertiesColumnWithJsonProps {
   onClearSelection: () => void;
   blocks?: Block[] | null;
   onBlockSelect?: (blockId: string) => void;
-  
+
   // Props para o editor JSON
   fullTemplate?: any;
   onTemplateChange?: (template: any) => void;
@@ -48,11 +48,11 @@ export function PropertiesColumnWithJson({
   templateId
 }: PropertiesColumnWithJsonProps) {
   const [activeTab, setActiveTab] = useState<'properties' | 'json'>('properties');
-  
+
   // Estado local para separar textValue e parsedValue
   const [jsonError, setJsonError] = useState<string | null>(null);
   const [jsonIsValid, setJsonIsValid] = useState<boolean>(true);
-  
+
   // Callback para validar e aplicar mudanças de JSON
   const handleTemplateChangeWithValidation = useCallback((newTemplate: string | Record<string, unknown>) => {
     // Se já é um objeto (não string), aceita diretamente
@@ -62,12 +62,12 @@ export function PropertiesColumnWithJson({
       onTemplateChange?.(newTemplate);
       return;
     }
-    
+
     // Se é string, tenta parsear
     const { value, error, isValid } = safeParseJson(newTemplate);
-    
+
     setJsonIsValid(isValid);
-    
+
     if (isValid) {
       setJsonError(null);
       onTemplateChange?.(value);
@@ -76,7 +76,7 @@ export function PropertiesColumnWithJson({
       // Não faz commit se JSON é inválido
     }
   }, [onTemplateChange]);
-  
+
   return (
     <div className="h-full flex flex-col bg-background border-l">
       {/* Tabs Header */}
@@ -100,17 +100,19 @@ export function PropertiesColumnWithJson({
           </TabsList>
         </Tabs>
       </div>
-      
+
       {/* Tab Content */}
       <div className="flex-1 overflow-hidden">
         {activeTab === 'properties' ? (
-          <PropertiesColumn
-            selectedBlock={selectedBlock}
-            onBlockUpdate={onBlockUpdate}
-            onClearSelection={onClearSelection}
-            blocks={blocks}
-            onBlockSelect={onBlockSelect}
-          />
+          <Suspense fallback={<div className="p-4 text-xs text-muted-foreground">Carregando propriedades…</div>}>
+            <PropertiesColumn
+              selectedBlock={selectedBlock}
+              onBlockUpdate={onBlockUpdate}
+              onClearSelection={onClearSelection}
+              blocks={blocks}
+              onBlockSelect={onBlockSelect}
+            />
+          </Suspense>
         ) : (
           <div className="h-full overflow-y-auto">
             {/* Status bar para erros de JSON */}
@@ -126,7 +128,7 @@ export function PropertiesColumnWithJson({
                 <span className="text-xs text-green-600">JSON válido - alterações serão aplicadas</span>
               </div>
             )}
-            
+
             <div className="p-4">
               <JsonTemplateEditor
                 template={fullTemplate}

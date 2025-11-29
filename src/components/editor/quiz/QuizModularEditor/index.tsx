@@ -90,8 +90,8 @@ import { DynamicPropertiesPanelV4 } from '@/components/editor/properties/Dynamic
 import { ensureV4Block, BlockV4ToV3Adapter } from '@/core/quiz/blocks/adapters';
 import type { QuizBlock } from '@/schemas/quiz-schema.zod';
 
-// Static import: navigation column
-import StepNavigatorColumn from './components/StepNavigatorColumn';
+// Lazy import: navigation column (unificar modo de import)
+const StepNavigatorColumn = React.lazy(() => import('./components/StepNavigatorColumn'));
 
 // Lazy columns with graceful degradation
 // ✅ BEST PRACTICE: Usar Error Boundaries ao invés de catch no lazy import
