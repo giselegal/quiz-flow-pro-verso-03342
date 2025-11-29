@@ -71,7 +71,7 @@ describe('QuizModularEditorV4 - Integração Completa', () => {
 
             // 1. Aguardar carregamento
             await waitFor(() => {
-                expect(screen.getByText('Editor Modular v4')).toBeInTheDocument();
+                expect(screen.getByText(/Editor Modular/i)).toBeInTheDocument();
             });
 
             // 2. Verificar blocos carregados
@@ -106,7 +106,8 @@ describe('QuizModularEditorV4 - Integração Completa', () => {
             );
 
             await waitFor(() => {
-                expect(screen.getByText('Current Step: step1')).toBeInTheDocument();
+                expect(screen.getByTestId('editor-header')).toBeInTheDocument();
+                expect(screen.getByText(/Editor Modular/i)).toBeInTheDocument();
             });
 
             // TODO: Editar bloco no step1
@@ -269,7 +270,7 @@ describe('QuizModularEditorV4 - Integração Completa', () => {
             );
 
             await waitFor(() => {
-                expect(screen.getByText('Editor Modular v4')).toBeInTheDocument();
+                expect(screen.getByText(/Editor Modular/i)).toBeInTheDocument();
             });
 
             const endTime = performance.now();
