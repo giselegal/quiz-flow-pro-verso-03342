@@ -22,32 +22,34 @@ vi.mock('../components/PropertiesColumn', () => ({ default: () => <div data-test
 vi.mock('../components/PreviewPanel', () => ({ default: () => <div /> }));
 vi.mock('../components/StepNavigatorColumn', () => ({ default: () => <div data-testid="step-navigator" /> }));
 
-// Mock do TemplateService retornando blocos reais
+// Mock do unifiedTemplateLoader retornando blocos reais
 const mockBlocks = [
-    { id: 'b1', type: 'TextBlock', order: 0, properties: {}, content: { text: 'Olá' } },
-    { id: 'b2', type: 'ImageBlock', order: 1, properties: {}, content: { src: 'x.png' } },
+    { id: 'b1', type: 'text', order: 0, properties: {}, content: { text: 'Olá' } },
+    { id: 'b2', type: 'image', order: 1, properties: {}, content: { src: 'x.png' } },
 ];
 
-vi.mock('@/services/canonical/TemplateService', () => ({
-    templateService: {
-        prepareTemplate: vi.fn().mockResolvedValue(undefined),
-        steps: { list: () => ({ success: true, data: [{ id: 'step-01', name: 'Introdução', order: 1 }] }) },
-        getStep: vi.fn().mockImplementation((_stepId: string) => ({ success: true, data: mockBlocks })),
-        invalidateTemplate: vi.fn(),
-    }
+vi.mock('@/services/templates/UnifiedTemplateLoader', () => ({
+    unifiedTemplateLoader: {
+        loadStep: vi.fn().mockImplementation(async (_stepId: string) => ({
+            data: mockBlocks,
+            source: 'v4',
+            loadTime: 2,
+            fromCache: false,
+        })),
+    },
 }));
 
 vi.mock('@/hooks/useFeatureFlags', () => ({
     useFeatureFlags: () => ({ enableAutoSave: false })
 }));
 
-// Unified editor devolve vazio inicialmente; hook deve popular depois
+// Unified editor devolve bloco via getStepBlocks após setStepBlocks
 const setStepBlocksSpy = vi.fn();
 vi.mock('@/hooks/useSuperUnified', () => ({
     useSuperUnified: () => ({
         state: {
             editor: { currentStep: 1, selectedBlockId: null },
-            ui: { isLoading: false }
+            ui: { isLoading: false },
         },
         setCurrentStep: vi.fn(),
         setStepBlocks: setStepBlocksSpy,
@@ -56,10 +58,10 @@ vi.mock('@/hooks/useSuperUnified', () => ({
         reorderBlocks: vi.fn(),
         updateBlock: vi.fn(),
         setSelectedBlock: vi.fn(),
-        getStepBlocks: () => mockBlocks, // após reset esperado
+        getStepBlocks: () => mockBlocks,
         saveFunnel: vi.fn(),
         showToast: vi.fn(),
-    })
+    }),
 }));
 
 describe('Diagnóstico Editor - Renderização com blocos', () => {

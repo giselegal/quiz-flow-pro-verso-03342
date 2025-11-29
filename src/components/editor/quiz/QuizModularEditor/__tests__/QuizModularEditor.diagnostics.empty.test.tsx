@@ -26,15 +26,16 @@ vi.mock('../components/StepNavigatorColumn', () => ({
 }));
 
 // Mock do TemplateService retornando SEM blocos → força placeholder ou estado vazio
-vi.mock('@/services/canonical/TemplateService', () => ({
-    templateService: {
-        prepareTemplate: vi.fn().mockResolvedValue(undefined),
-        steps: {
-            list: () => ({ success: true, data: [{ id: 'step-01', name: 'Introdução', order: 1 }] })
-        },
-        getStep: vi.fn().mockResolvedValue({ success: true, data: [] }),
-        invalidateTemplate: vi.fn(),
-    }
+// Após refatoração o hook usa unifiedTemplateLoader em vez de templateService diretamente
+vi.mock('@/services/templates/UnifiedTemplateLoader', () => ({
+    unifiedTemplateLoader: {
+        loadStep: vi.fn().mockImplementation(async (_stepId: string) => ({
+            data: [], // força geração de placeholder
+            source: 'v4',
+            loadTime: 1,
+            fromCache: false,
+        })),
+    },
 }));
 
 // Mock de feature flags para evitar autosave interferindo
@@ -42,15 +43,16 @@ vi.mock('@/hooks/useFeatureFlags', () => ({
     useFeatureFlags: () => ({ enableAutoSave: false })
 }));
 
-// Mock de unified editor (simplificado) devolvendo vazio inicialmente
+// Mock de unified editor simplificado
+const setStepBlocksSpy = vi.fn();
 vi.mock('@/hooks/useSuperUnified', () => ({
     useSuperUnified: () => ({
         state: {
             editor: { currentStep: 1, selectedBlockId: null },
-            ui: { isLoading: false }
+            ui: { isLoading: false },
         },
         setCurrentStep: vi.fn(),
-        setStepBlocks: vi.fn(),
+        setStepBlocks: setStepBlocksSpy,
         addBlock: vi.fn(),
         removeBlock: vi.fn(),
         reorderBlocks: vi.fn(),
@@ -59,7 +61,7 @@ vi.mock('@/hooks/useSuperUnified', () => ({
         getStepBlocks: () => [],
         saveFunnel: vi.fn(),
         showToast: vi.fn(),
-    })
+    }),
 }));
 
 describe('Diagnóstico Editor - Canvas Vazio', () => {
