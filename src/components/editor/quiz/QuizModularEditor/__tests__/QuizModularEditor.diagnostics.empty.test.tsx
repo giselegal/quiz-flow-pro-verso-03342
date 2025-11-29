@@ -1,8 +1,10 @@
 import React from 'react';
 import { describe, it, vi, beforeEach, waitFor, expect } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
+import { renderWithProviders } from '@/test-utils/renderWithProviders';
 // Vitest já injeta expect; garantir extensão jest-dom via setup global ou usar assertions básicas.
 import QuizModularEditor from '../index';
+// Usamos renderWithProviders para injetar todos os providers (AuthStorage, QueryClient, etc.)
 
 // Canvas / Library / Properties simplificados para acelerar teste e isolar lógica de carregamento
 vi.mock('../components/CanvasColumn', () => ({
@@ -66,7 +68,7 @@ describe('Diagnóstico Editor - Canvas Vazio', () => {
     });
 
     it('renderiza estado vazio (sem templateId) e mostra canvas em branco', async () => {
-        render(<QuizModularEditor />);
+        renderWithProviders(<QuizModularEditor />);
 
         // Coluna de steps deve existir
         await waitFor(() => expect(screen.getByTestId('step-navigator')).toBeInTheDocument());
@@ -79,7 +81,7 @@ describe('Diagnóstico Editor - Canvas Vazio', () => {
 
     it('carrega step vazio e exibe placeholder (blocks length = 1) quando hook injeta bloco automático', async () => {
         // Fornecer templateId para disparar carregamento via hook
-        render(<QuizModularEditor templateId="quiz21StepsComplete" />);
+        renderWithProviders(<QuizModularEditor templateId="quiz21StepsComplete" />);
 
         await waitFor(() => expect(screen.getByTestId('step-navigator')).toBeInTheDocument());
 
