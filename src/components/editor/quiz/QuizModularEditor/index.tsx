@@ -950,22 +950,43 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     const rawBlocks = getStepBlocks(safeCurrentStep);
     const blocks: Block[] = Array.isArray(rawBlocks) ? rawBlocks : [];
 
-    // ✅ CORREÇÃO ARQUITETURAL: Sincronizar WYSIWYG sempre que blocks mudar
-    // Garante que painel de propriedades (que lê wysiwyg.state.blocks) receba os dados
+    // ✅ FASE 2: Sincronização determinística (único ponto) + auto-select integrada
+    // Regras:
+    // 1. Sempre que array de blocos mudar em identidade (length ou IDs) → reset
+    // 2. Se blocos vazio → reset para [] (evita painel com dados obsoletos)
+    // 3. Seleção inicial apenas se não houver seleção válida (previewMode !== 'live')
+    // 4. Evita múltiplos efeitos paralelos (remove efeito antigo de auto-select)
     useEffect(() => {
-        if (blocks.length > 0) {
-            const currentIds = wysiwyg.state.blocks.map(b => b.id).sort().join(',');
-            const newIds = blocks.map(b => b.id).sort().join(',');
+        try {
+            const unified = blocks;
+            const current = wysiwyg.state.blocks;
+            const changedLength = unified.length !== current.length;
+            const changedIds = changedLength || unified.some((b, i) => current[i]?.id !== b.id);
 
-            if (currentIds !== newIds) {
-                appLogger.debug('[QuizModularEditor] Sincronizando blocks unifiedState → WYSIWYG', {
+            if (changedIds) {
+                appLogger.debug('[Sync] Reset WYSIWYG ← unified.stepBlocks', {
                     step: safeCurrentStep,
-                    count: blocks.length
+                    unifiedCount: unified.length,
+                    prevCount: current.length
                 });
-                wysiwyg.actions.reset(blocks);
+                wysiwyg.actions.reset(unified);
             }
+
+            // Seleção inicial integrada (somente modo edição e se há blocos)
+            if (previewMode !== 'live' && unified.length > 0) {
+                const selId = wysiwyg.state.selectedBlockId;
+                const stillValid = selId && unified.some(b => b.id === selId);
+                if (!stillValid) {
+                    const first = unified[0];
+                    wysiwyg.actions.selectBlock(first.id);
+                    setSelectedBlock(first.id);
+                    appLogger.debug('[Sync] Auto-select primeiro bloco após reset', { blockId: first.id });
+                }
+            }
+        } catch (e) {
+            appLogger.warn('[Sync] Falha ao sincronizar WYSIWYG', { error: e });
         }
-    }, [blocks, safeCurrentStep]);
+    }, [blocks, safeCurrentStep, previewMode]);
 
     // 🔧 CRITICAL FIX: Memo para o template completo usado no painel (hooks FORA do JSX)
     const fullTemplate = React.useMemo(
@@ -1029,49 +1050,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     //     }
     // }, [selectedBlockId, blocks]);
 
-    // 🔥 HOTFIX 2: Auto-selecionar primeiro bloco com guards robustos para prevenir loop infinito
-    // PROBLEMA RESOLVIDO: Loop infinito em preview mode causando CPU 80-100%
-    const isSelectingBlockRef = useRef(false);
-
-    useEffect(() => {
-        // 🔥 GUARD 1: Nunca rodar em preview mode
-        if (previewMode === 'live') {
-            appLogger.debug('[G2] Auto-select BLOQUEADO em preview mode');
-            return;
-        }
-
-        // 🔥 GUARD 2: Prevenir re-entry
-        if (isSelectingBlockRef.current) {
-            appLogger.debug('[G2] Auto-select já em execução, ignorando');
-            return;
-        }
-
-        // 🔥 GUARD 3: Validar blocos antes de selecionar
-        if (!blocks || blocks.length === 0) {
-            appLogger.debug('[G2] Sem blocos disponíveis para selecionar');
-            return;
-        }
-
-        // 🔥 GUARD 4: Se já tem seleção válida, não mexer
-        if (selectedBlockId && blocks.find(b => b.id === selectedBlockId)) {
-            appLogger.debug('[G2] Seleção válida já existe:', selectedBlockId);
-            return;
-        }
-
-        // ✅ Auto-selecionar primeiro bloco
-        isSelectingBlockRef.current = true;
-
-        const first = blocks[0];
-        appLogger.debug(`[G2] Auto-selecionando primeiro bloco: ${first.id}`);
-        setSelectedBlock(first.id);
-
-        // Reset flag após delay
-        setTimeout(() => {
-            isSelectingBlockRef.current = false;
-        }, 100);
-
-        // ❌ IMPORTANTE: REMOVER setSelectedBlock das deps para evitar loop
-    }, [blocks, selectedBlockId, previewMode]);
+    // 🚫 FASE 2: Auto-select separado removido (integrado ao efeito de sync)
 
 
     // ✅ ARQUITETURA: Carregamento de step via hook dedicado
