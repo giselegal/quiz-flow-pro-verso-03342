@@ -24,7 +24,13 @@ export function useStepBlocksLoader({
   setStepLoading
 }: UseStepBlocksLoaderParams) {
   useEffect(() => {
-    if (!templateOrFunnelId || !stepIndex) return;
+    if (!templateOrFunnelId || !stepIndex) {
+      appLogger.warn('[useStepBlocksLoader] Early return: id ou step ausente', {
+        templateOrFunnelId,
+        stepIndex
+      });
+      return;
+    }
 
     const controller = new AbortController();
     const { signal } = controller;
@@ -58,26 +64,72 @@ export function useStepBlocksLoader({
           return;
         }
 
-        // ✅ Normalização simplificada (3 formatos)
+        // ✅ Normalização expandida (suporta múltiplos formatos)
+        // Formatos aceitos:
+        //  A. Array direto de blocos
+        //  B. Objeto { blocks: [...] }
+        //  C. Objeto { steps: { [stepId]: { blocks: [...] } } }
+        //  D. Objeto { steps: { [stepId]: [ ...blocks ] } }
+        //  E. Objeto { steps: [ { id: step-01, blocks: [...] }, ... ] }
+        //  F. Variante sem zero à esquerda (step-1)
         let blocks: Block[] = [];
-        
-        if (Array.isArray(res.data)) {
-          blocks = res.data.filter((b: any) => b && b.id && b.type);
-        } else if (res.data.blocks && Array.isArray(res.data.blocks)) {
-          blocks = res.data.blocks.filter((b: any) => b && b.id && b.type);
-        } else if (res.data.steps && res.data.steps[stepId]?.blocks) {
-          blocks = res.data.steps[stepId].blocks.filter((b: any) => b && b.id && b.type);
+        const data: any = res.data;
+        const stepIdNoPad = stepId.replace(/step-0(\d)/, 'step-$1');
+
+        try {
+          if (Array.isArray(data)) {
+            blocks = data.filter((b: any) => b && b.id && b.type);
+          } else if (data.blocks && Array.isArray(data.blocks)) {
+            blocks = data.blocks.filter((b: any) => b && b.id && b.type);
+          } else if (data.steps) {
+            // C
+            if (data.steps[stepId]?.blocks && Array.isArray(data.steps[stepId].blocks)) {
+              blocks = data.steps[stepId].blocks.filter((b: any) => b && b.id && b.type);
+            }
+            // D
+            else if (Array.isArray(data.steps[stepId])) {
+              blocks = data.steps[stepId].filter((b: any) => b && b.id && b.type);
+            }
+            // F (sem zero à esquerda)
+            else if (data.steps[stepIdNoPad]?.blocks && Array.isArray(data.steps[stepIdNoPad].blocks)) {
+              blocks = data.steps[stepIdNoPad].blocks.filter((b: any) => b && b.id && b.type);
+            } else if (Array.isArray(data.steps[stepIdNoPad])) {
+              blocks = data.steps[stepIdNoPad].filter((b: any) => b && b.id && b.type);
+            }
+            // E (steps como array de objetos)
+            else if (Array.isArray(data.steps)) {
+              const found = data.steps.find((s: any) => s && (s.id === stepId || s.id === stepIdNoPad));
+              if (found) {
+                if (Array.isArray(found.blocks)) {
+                  blocks = found.blocks.filter((b: any) => b && b.id && b.type);
+                } else if (Array.isArray(found)) { // Caso degenerado onde o próprio step é array
+                  blocks = found.filter((b: any) => b && b.id && b.type);
+                }
+              }
+            }
+          }
+        } catch (normErr) {
+          appLogger.warn('[useStepBlocksLoader] Falha na normalização de blocos', { error: normErr });
         }
 
-        // ✅ CORREÇÃO: Se vazio, criar bloco placeholder para evitar canvas em branco silencioso
+        if (blocks.length === 0) {
+          appLogger.warn('[useStepBlocksLoader] Nenhum formato reconhecido produziu blocos', {
+            stepId,
+            keys: Object.keys(data || {}),
+            hasSteps: Boolean(data?.steps),
+            stepsKeys: data?.steps && !Array.isArray(data.steps) ? Object.keys(data.steps).slice(0, 5) : 'array|none'
+          });
+        }
+
+        // ✅ CORREÇÃO: Se vazio, criar bloco placeholder para evitar canvas totalmente vazio
         if (blocks.length === 0) {
           appLogger.warn('[useStepBlocksLoader] Step sem blocos válidos – gerando placeholder', { stepId });
           blocks = [
             {
               id: `placeholder-${stepId}`,
-              type: 'text',
+              type: 'TextBlock' as any,
               order: 0,
-              properties: {},
+              properties: { system: true },
               content: { text: 'Bloco inicial automático – clique para editar.' },
             } as Block
           ];
