@@ -30,7 +30,8 @@ import {
 } from 'lucide-react';
 import { useUnifiedCollaboration } from '@/hooks/core/useUnifiedCollaboration';
 import type { CollaborationUser } from '@/services/CollaborationService';
-import type { ChatMessage } from '@/services/canonical/NotificationService';
+import { notificationService } from '@/core/services';
+import type { ChatMessage } from '@/core/services/NotificationService';
 
 interface CollaborationPanelProps {
   funnelId: string;
