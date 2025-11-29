@@ -143,11 +143,11 @@ const lazyImports: Record<string, () => Promise<{ default: React.ComponentType<a
   'question-instructions': () => import('@/components/editor/blocks/atomic/QuestionInstructionsBlock'),
   'question-navigation': () => import('@/components/editor/blocks/atomic/QuestionNavigationBlock'),
 
-  // Options & Interactive
-  'options-grid': () => import('@/components/editor/blocks/atomic/OptionsGridBlock'),
-  'quiz-options': () => import('@/components/editor/blocks/atomic/OptionsGridBlock'),
-  'quiz-options-grid-connected': () => import('@/components/editor/blocks/atomic/OptionsGridBlock'),
-  'form-input': () => import('@/components/editor/blocks/FormInputBlock'),
+  // Options & Interactive (REMOVIDOS duplicados: estes blocos são críticos e já importados estaticamente)
+  // 'options-grid': () => import('@/components/editor/blocks/atomic/OptionsGridBlock'),
+  // 'quiz-options': () => import('@/components/editor/blocks/atomic/OptionsGridBlock'),
+  // 'quiz-options-grid-connected': () => import('@/components/editor/blocks/atomic/OptionsGridBlock'),
+  // 'form-input': () => import('@/components/editor/blocks/FormInputBlock'),
 
   // CTA Buttons
   'CTAButton': () => import('@/components/editor/blocks/atomic/CTAButtonBlock'),
