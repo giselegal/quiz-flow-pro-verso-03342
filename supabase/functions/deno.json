@@ -7,7 +7,7 @@
     "allowSyntheticDefaultImports": true
   },
   "imports": {
-    "@supabase/supabase-js": "jsr:@supabase/supabase-js@2"
+    "@supabase/supabase-js": "npm:@supabase/supabase-js@2"
   },
   "lint": {
     "rules": {
