@@ -46,12 +46,51 @@ function openDB(): Promise<IDBDatabase> {
   });
 }
 
+// Abre o DB atual para ler a versão e depois reabre com versão incrementada
+async function upgradeDBWithStores(newStores: Array<CacheStore | string>): Promise<void> {
+  if (!isBrowser()) return;
+  // Abrir para obter versão atual
+  const current = await new Promise<IDBDatabase>((resolve, reject) => {
+    const r = indexedDB.open(DB_NAME);
+    r.onsuccess = () => resolve(r.result);
+    r.onerror = () => reject(r.error);
+  });
+  const nextVersion = (current as any).version + 1;
+  current.close();
+
+  await new Promise<void>((resolve, reject) => {
+    const req = indexedDB.open(DB_NAME, nextVersion);
+    req.onupgradeneeded = () => {
+      const db = req.result;
+      for (const storeName of newStores) {
+        const name = storeName as string;
+        if (!db.objectStoreNames.contains(name)) {
+          db.createObjectStore(name, { keyPath: 'key' });
+        }
+      }
+    };
+    req.onsuccess = () => {
+      req.result.close();
+      resolve();
+    };
+    req.onerror = () => reject(req.error);
+  });
+}
+
 function tx(db: IDBDatabase, store: CacheStore | string, mode: IDBTransactionMode) {
   const target = db.objectStoreNames.contains(store as string) ? store : 'generic';
   return db.transaction(target, mode).objectStore(target);
 }
 
 export const indexedDBCache = {
+  // API de migração: cria novos stores promovendo a versão do DB
+  async registerStores(stores: Array<CacheStore | string>): Promise<void> {
+    try {
+      await upgradeDBWithStores(stores);
+    } catch {
+      // no-op
+    }
+  },
   async get<T>(store: CacheStore | string, key: string): Promise<T | null> {
     try {
       const db = await openDB();
