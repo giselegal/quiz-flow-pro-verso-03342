@@ -1,3 +1,4 @@
+import { useAppStore, selectors } from '@/state/store';
 /**
  * 🎯 COMPONENTE UNIVERSAL DE QUIZ
  * 
@@ -57,6 +58,8 @@ const UniversalQuizStep: React.FC<UniversalQuizStepProps> = ({
         return <div>Erro ao carregar configuração do step</div>;
     }
 
+    const globalSelections = useAppStore(selectors.selections);
+    const globalCount = Object.keys(globalSelections || {}).length;
     return (
         <div className={`min-h-screen flex flex-col theme-${theme}`}>
             {/* Progress Bar Condicional */}
@@ -165,7 +168,7 @@ const UniversalQuizStep: React.FC<UniversalQuizStepProps> = ({
                             {/* Informação sobre seleções */}
                             <div className="text-sm text-gray-600 mt-4 text-center">
                                 {config.validation.requiredSelections && config.validation.maxSelections ? (
-                                    `Selecione ${config.validation.requiredSelections} opção${config.validation.requiredSelections > 1 ? 'ões' : ''} (${selectedOptions.length}/${config.validation.maxSelections})`
+                                    `Selecione ${config.validation.requiredSelections} opção${config.validation.requiredSelections > 1 ? 'ões' : ''} (${globalCount}/${config.validation.maxSelections})`
                                 ) : config.validation.requiredSelections ? (
                                     `Selecione pelo menos ${config.validation.requiredSelections} opção${config.validation.requiredSelections > 1 ? 'ões' : ''}`
                                 ) : (

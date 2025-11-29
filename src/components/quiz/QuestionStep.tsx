@@ -1,3 +1,4 @@
+import { useAppStore, selectors } from '@/state/store';
 import type { QuizStepV3 as QuizStep } from '@/types/quiz';
 import { appLogger } from '@/lib/utils/appLogger';
 
@@ -52,7 +53,9 @@ export default function QuestionStep({
         }
     };
 
-    const canProceed = safeCurrentAnswers.length === (data.requiredSelections || 1);
+    const selections = useAppStore(selectors.selections);
+    const currentCount = Object.keys(selections || {}).length;
+    const canProceed = currentCount >= (data.requiredSelections || 1);
     const selectionText = data.requiredSelections && data.requiredSelections > 1
         ? `Selecione ${data.requiredSelections} opções`
         : 'Selecione uma opção';
@@ -68,7 +71,7 @@ export default function QuestionStep({
             </p>
 
             <p className="text-sm text-gray-600 mb-8">
-                {selectionText} ({safeCurrentAnswers.length}/{data.requiredSelections || 1})
+                {selectionText} ({currentCount}/{data.requiredSelections || 1})
             </p>
 
             <div className={`grid ${gridClass} ${gapClass} mb-5 md:mb-8`}>

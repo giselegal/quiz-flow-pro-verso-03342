@@ -1,3 +1,4 @@
+import { useAppStore, selectors } from '@/state/store';
 import React, { useState } from 'react';
 import quizStyles from '@/styles/quiz.module.css';
 
@@ -32,6 +33,8 @@ const QuizOptions: React.FC<QuizOptionsProps> = ({
   className = '',
 }) => {
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
+  const globalSelections = useAppStore(selectors.selections);
+  const globalCount = Object.keys(globalSelections || {}).length;
 
   // Use aliases if provided, otherwise fallback to original props
   const effectiveShowImages = showImages !== undefined ? showImages : hasImages;
@@ -191,13 +194,13 @@ const QuizOptions: React.FC<QuizOptionsProps> = ({
             color: '#6b4f43',
           }}
         >
-          {selectedOptions.length < effectiveMaxSelections ? (
+          {(globalCount < effectiveMaxSelections) ? (
             <span>
-              💡 Selecione até {effectiveMaxSelections} opções ({selectedOptions.length}/{effectiveMaxSelections})
+              💡 Selecione até {effectiveMaxSelections} opções ({globalCount}/{effectiveMaxSelections})
             </span>
           ) : (
             <span style={{ color: '#059669' }}>
-              ✅ Máximo de seleções atingido ({selectedOptions.length}/{effectiveMaxSelections})
+              ✅ Máximo de seleções atingido ({globalCount}/{effectiveMaxSelections})
             </span>
           )}
         </div>

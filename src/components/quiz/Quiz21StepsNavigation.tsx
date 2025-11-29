@@ -101,11 +101,12 @@ export const Quiz21StepsNavigation: React.FC<Quiz21StepsNavigationProps> = ({
   // Determinar fase atual
   const getCurrentPhase = () => {
     if (currentStep === 1) return 'inicio';
-    if (currentStep >= 2 && currentStep <= 11) return 'quiz';
+    // 🔗 Zustand: usar seleções globais
+    const selections = useAppStore(selectors.selections);
+    const selectionsCount = Object.keys(selections || {}).length;
     if (currentStep === 12) return 'transicao1';
     if (currentStep >= 13 && currentStep <= 18) return 'estrategicas';
     if (currentStep === 19) return 'transicao2';
-    if (currentStep === 20) return 'resultado';
     if (currentStep === 21) return 'oferta';
     return 'desconhecida';
   };
@@ -160,8 +161,8 @@ export const Quiz21StepsNavigation: React.FC<Quiz21StepsNavigationProps> = ({
                   {getSelectionInfo() && (
                     <span
                       className={`text-xs px-2 py-1 rounded ${isCurrentStepComplete
-                          ? 'bg-green-100 text-green-700'
-                          : 'bg-orange-100 text-orange-700'
+                        ? 'bg-green-100 text-green-700'
+                        : 'bg-orange-100 text-orange-700'
                         }`}
                     >
                       {getSelectionInfo()}
@@ -219,8 +220,8 @@ export const Quiz21StepsNavigation: React.FC<Quiz21StepsNavigationProps> = ({
                 variant={nextButtonActive ? 'default' : 'outline'}
                 size="sm"
                 className={`h-9 px-3 ${nextButtonActive
-                    ? 'bg-gradient-to-r from-blue-500 to-green-500 text-white shadow-lg animate-pulse'
-                    : ''
+                  ? 'bg-gradient-to-r from-blue-500 to-green-500 text-white shadow-lg animate-pulse'
+                  : ''
                   }`}
               >
                 {autoAdvanceEnabled &&

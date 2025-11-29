@@ -1,3 +1,4 @@
+import { useAppStore, selectors } from '@/state/store';
 import React, { useEffect, useState } from 'react';
 import { StorageService } from '@/services/core/StorageService';
 import { useUnifiedQuizState } from '@/hooks/useUnifiedQuizState';
@@ -40,11 +41,11 @@ export const DevResultDebug: React.FC = () => {
     }, [getDataStats]);
 
     const renderSelectionsSummary = () => {
-        const selections = data.selections;
+        const selections = useAppStore(selectors.selections);
         const count = Object.keys(selections).length;
-        
+
         if (count === 0) return 'Nenhuma seleção';
-        
+
         return (
             <div className="text-xs">
                 <div>{count} perguntas respondidas</div>
@@ -65,9 +66,9 @@ export const DevResultDebug: React.FC = () => {
     const renderFormDataSummary = () => {
         const formData = data.formData;
         const count = Object.keys(formData).length;
-        
+
         if (count === 0) return 'Nenhum dado';
-        
+
         return (
             <div className="text-xs">
                 <div>{count} campos preenchidos</div>
@@ -91,7 +92,7 @@ export const DevResultDebug: React.FC = () => {
         <div className="fixed bottom-4 left-4 bg-black/90 text-white p-3 rounded-lg shadow-lg text-xs font-mono max-w-sm z-50">
             <div className="flex items-center justify-between mb-2">
                 <div className="font-bold text-yellow-400">🔍 Quiz Debug</div>
-                <button 
+                <button
                     onClick={() => setIsExpanded(!isExpanded)}
                     className="text-gray-300 hover:text-white"
                 >
@@ -113,7 +114,7 @@ export const DevResultDebug: React.FC = () => {
                     <div className="text-blue-400 font-semibold">📊 Seleções:</div>
                     {renderSelectionsSummary()}
                 </div>
-                
+
                 <div>
                     <div className="text-green-400 font-semibold">📝 Formulários:</div>
                     {renderFormDataSummary()}

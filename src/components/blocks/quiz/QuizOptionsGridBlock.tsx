@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { QuizBlockProps } from './types';
 import { computeSelectionValidity } from '@/lib/quiz/selectionRules';
 import { StorageService } from '@/services/core/StorageService';
+import { useAppStore, selectors } from '@/state/store';
 import { appLogger } from '@/lib/utils/appLogger';
 
 /**
@@ -134,13 +135,15 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
 
   // 🔍 DEBUG DETALHADO - LOG DE TODAS AS PROPRIEDADES
-  appLogger.info('🔍 QuizOptionsGridBlock DEBUG COMPLETO:', { data: [{
-        id,
-        properties,
-        optionsFromProperties: properties?.options,
-        propertiesKeys: properties ? Object.keys(properties) : [],
-        allProps: { properties, id, onPropertyChange, ...props },
-      }] });
+  appLogger.info('🔍 QuizOptionsGridBlock DEBUG COMPLETO:', {
+    data: [{
+      id,
+      properties,
+      optionsFromProperties: properties?.options,
+      propertiesKeys: properties ? Object.keys(properties) : [],
+      allProps: { properties, id, onPropertyChange, ...props },
+    }]
+  });
 
   // Extrair as opções - pode ser array de objetos ou string
   const parseOptions = (options: any) => {
@@ -175,14 +178,16 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
   const options = parseOptions(properties?.options || []);
 
   // LOG DE DEBUG - vamos ver o que está acontecendo
-  appLogger.info('🔍 QuizOptionsGridBlock DEBUG:', { data: [{
-        id,
-        propertiesOptions: properties?.options,
-        optionsLength: options?.length,
-        firstOption: options?.[0],
-        properties: Object.keys(properties || {}),
-        fullOptions: options,
-      }] });
+  appLogger.info('🔍 QuizOptionsGridBlock DEBUG:', {
+    data: [{
+      id,
+      propertiesOptions: properties?.options,
+      optionsLength: options?.length,
+      firstOption: options?.[0],
+      properties: Object.keys(properties || {}),
+      fullOptions: options,
+    }]
+  });
 
   // Se não há opções, mostrar um placeholder de debug
   if (!options || options.length === 0) {
@@ -221,7 +226,7 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
       // 🔗 Persistência unificada (produção/runtime)
       try {
         // usar import dinâmico para evitar require no cliente
-         
+
         (async () => {
           try {
             const { unifiedQuizStorage } = await import('@/services/core/UnifiedQuizStorage');
@@ -230,11 +235,10 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
         })();
       } catch { /* noop */ }
 
-      // 🧰 Espelho legado para compatibilidade com validadores antigos
+      // 🔗 Zustand: refletir seleções globais no slice
       try {
-        const current = (StorageService.safeGetJSON<Record<string, string[]>>('userSelections') || {});
-        const next = { ...current, [String(questionId)]: selectedIds };
-        StorageService.safeSetJSON('userSelections', next);
+        const setSelections = useAppStore.getState().quiz.setSelections;
+        setSelections(String(questionId), selectedIds);
       } catch { /* noop */ }
 
       // 📢 Evento unificado para consumidores (wrapper, navegadores, etc.)
@@ -355,16 +359,18 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
     : `grid-cols-${finalColumns}`;
 
   // Log para debug da detecção automática
-  appLogger.info('🔍 Auto-detecção de colunas:', { data: [{
-        hasImages,
-        autoColumns,
-        finalColumns,
-        columnsConfig: columns,
-        gridColumnsClass,
-        optionsWithImages: options.filter(opt => opt.imageUrl).length,
-        totalOptions: options.length,
-        layout: hasImages ? '2 colunas (mobile + desktop)' : '1 coluna (todos dispositivos)',
-      }] });
+  appLogger.info('🔍 Auto-detecção de colunas:', {
+    data: [{
+      hasImages,
+      autoColumns,
+      finalColumns,
+      columnsConfig: columns,
+      gridColumnsClass,
+      optionsWithImages: options.filter(opt => opt.imageUrl).length,
+      totalOptions: options.length,
+      layout: hasImages ? '2 colunas (mobile + desktop)' : '1 coluna (todos dispositivos)',
+    }]
+  });
 
   // Calcular tamanho da imagem
   const finalImageWidth = imageWidth || imageSize;
