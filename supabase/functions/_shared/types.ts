@@ -4,17 +4,6 @@
  * Declarações de tipo para ambiente Deno e APIs das Edge Functions
  */
 
-// Declarações globais do Deno
-declare global {
-  const Deno: {
-    env: {
-      get(key: string): string | undefined;
-    };
-    args: string[];
-    exit(code?: number): never;
-  };
-}
-
 // Tipos para serve function (sem declaração de módulo para evitar erros)
 // A função serve será importada diretamente nas edge functions com @ts-ignore
 

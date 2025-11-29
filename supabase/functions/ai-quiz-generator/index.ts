@@ -8,13 +8,6 @@ import {
   handleCorsPreflightRequest
 } from '../_shared/types.ts';
 
-// @ts-ignore: Deno global está disponível no runtime
-declare const Deno: {
-  env: {
-    get(key: string): string | undefined;
-  };
-};
-
 serve(async (req: Request) => {
   if (req.method === 'OPTIONS') {
     return handleCorsPreflightRequest();
