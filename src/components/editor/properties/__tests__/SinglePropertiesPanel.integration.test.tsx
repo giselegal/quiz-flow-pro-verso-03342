@@ -226,8 +226,15 @@ describe('SinglePropertiesPanel - Indicadores de Estado', () => {
 
     // Verificar que botões estão desabilitados durante salvamento (se existirem)
     const saveButtons = screen.queryAllByRole('button');
-    // Alguns caminhos não mostram botões; se existirem, pelo menos um deve ter disabled
-    expect(saveButtons.length === 0 || saveButtons.some(b => b.hasAttribute('disabled'))).toBeTruthy();
+    // Se houver um botão de 'Aplicar', ele deve estar desabilitado durante salvamento externo.
+    const applyNodes = screen.queryAllByText(/Aplicar|Aplicando|Validando/i);
+    if (applyNodes.length > 0) {
+      const btn = applyNodes[0].closest('button');
+      expect(btn && btn.hasAttribute('disabled')).toBeTruthy();
+    } else {
+      // Caso não haja um botão 'Aplicar' visível, garanta que, se há botões, pelo menos um esteja desabilitado
+      expect(saveButtons.length === 0 || saveButtons.some(b => b.hasAttribute('disabled'))).toBeTruthy();
+    }
   });
 });
 
