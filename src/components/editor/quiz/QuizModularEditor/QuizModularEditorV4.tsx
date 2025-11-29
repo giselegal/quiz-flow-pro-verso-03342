@@ -124,11 +124,10 @@ function EditorLayoutV4({
         try {
             const result = templateService.steps?.list?.();
             if (result?.success && Array.isArray(result.data)) {
+                // Mapear para o shape esperado por StepNavigatorColumn: { key, title }
                 return result.data.map((s: any) => ({
                     key: s.id,
-                    label: s.name || s.id,
-                    type: s.type || 'custom',
-                    order: s.order
+                    title: s.name || s.id,
                 }));
             }
         } catch (error) {
