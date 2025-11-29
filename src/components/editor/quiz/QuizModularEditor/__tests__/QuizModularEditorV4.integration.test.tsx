@@ -382,6 +382,12 @@ describe('QuizModularEditorV4 - Integração Completa', () => {
 
     describe('Carregamento de Modelos e Renderização', () => {
         it('deve mostrar canvas em branco quando sem template/funnel e sem blocos', async () => {
+            // Garantir que não há query params que disparem auto-load
+            const originalHref = window.location.href;
+            Object.defineProperty(window, 'location', {
+                value: new URL('http://localhost/'),
+                writable: true,
+            });
             await renderWithAct(
                 <EditorProvider>
                     <QuizModularEditorV4Wrapper useV4Layout={true} />
@@ -403,6 +409,9 @@ describe('QuizModularEditorV4 - Integração Completa', () => {
             expect(importBtns.length).toBeGreaterThanOrEqual(1);
             const loadTemplateBtns = screen.getAllByRole('button', { name: /Carregar Template/i });
             expect(loadTemplateBtns.length).toBeGreaterThanOrEqual(1);
+
+            // Restaurar location para não afetar outros testes
+            Object.defineProperty(window, 'location', { value: new URL(originalHref), writable: true });
         });
 
         it('deve carregar template pelo templateId e renderizar blocos no canvas', async () => {

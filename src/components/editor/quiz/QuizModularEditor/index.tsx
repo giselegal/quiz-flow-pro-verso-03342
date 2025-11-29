@@ -332,6 +332,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     const previewMode = 'live' as const;
 
     // 🔧 Bootstrap: registrar stores IndexedDB e diagnosticar query params
+    const pendingTidRef = useRef<string | null>(null);
     useEffect(() => {
         try {
             indexedDBCache.registerStores(['funnels', 'steps', 'blocks']).catch(() => { });
@@ -350,6 +351,29 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
             const hasUrlStep = !isNaN(n) && n >= 1 && n <= 21;
             if (hasUrlStep) {
                 setCurrentStep(n);
+            }
+
+            // ✅ Definir funnel ativo e preparar carregamento quando props ausentes
+            const hasPropsId = Boolean(props.templateId || resourceId || props.funnelId);
+            const tidFromQuery = qp.funnel || qp.template || null;
+            if (!hasPropsId && tidFromQuery) {
+                try {
+                    templateService.setActiveFunnel?.(qp.funnel || null);
+                } catch { }
+                pendingTidRef.current = tidFromQuery;
+                // Disparar carregamento assíncrono suave
+                setTimeout(() => {
+                    if (pendingTidRef.current) {
+                        // Chamar loader com override id
+                        (async () => {
+                            try {
+                                await handleLoadTemplate(pendingTidRef.current!);
+                            } catch (e) {
+                                appLogger.warn('[Bootstrap] Falha no auto-load por query', { data: [e] });
+                            }
+                        })();
+                    }
+                }, 0);
             }
         } catch { }
     }, []);
@@ -1527,8 +1551,8 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     }, [publishFunnel, showToast, queryClient, loadedTemplate, props.templateId, resourceId, getStepBlocks, unifiedState.currentFunnel, unified]);
 
     // Load template via button (use imported templateService)
-    const handleLoadTemplate = useCallback(async () => {
-        const tid = props.templateId ?? resourceId;
+    const handleLoadTemplate = useCallback(async (overrideId?: string) => {
+        const tid = overrideId ?? props.templateId ?? resourceId;
 
         if (!tid) {
             appLogger.error('[QuizModularEditor] handleLoadTemplate chamado sem templateId/resourceId');
@@ -1573,14 +1597,23 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                 `✅ [QuizModularEditor] Template preparado (lazy): ${templateStepsResult.data.length} steps`
             );
 
-            const url = new URL(window.location.href);
-            url.searchParams.set('template', tid);
-            window.history.pushState({}, '', url);
+            try {
+                const url = new URL(window.location.href);
+                url.searchParams.set('template', tid);
+                if (qpSafe('funnel')) url.searchParams.set('funnel', qpSafe('funnel')!);
+                window.history.pushState({}, '', url);
+            } catch { }
         } catch (error) {
             appLogger.error('[QuizModularEditor] Erro ao carregar template:', error);
             setTemplateLoadError(true);
         } finally {
             setTemplateLoading(false);
+        }
+        function qpSafe(key: 'funnel' | 'template' | 'step') {
+            try {
+                const u = new URL(window.location.href);
+                return u.searchParams.get(key);
+            } catch { return null; }
         }
     }, [props.templateId, resourceId, setTemplateLoading, setTemplateLoadError, setCurrentStep, unifiedState.editor.currentStep, showToast]);
 
