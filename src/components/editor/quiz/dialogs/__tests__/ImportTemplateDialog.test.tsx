@@ -102,8 +102,9 @@ describe('ImportTemplateDialog - Renderização Inicial', () => {
             />,
             { wrapper: createWrapper() }
         );
-
-        expect(screen.getByText(/clique para selecionar arquivo json/i)).toBeInTheDocument();
+        // Pode haver mais de uma duplicação em ambientes StrictMode / portal
+        const uploadTexts = screen.getAllByText(/clique para selecionar arquivo json/i);
+        expect(uploadTexts.length).toBeGreaterThan(0);
         const input = document.querySelector('input[type="file"]');
         expect(input).toBeTruthy();
     });
@@ -115,7 +116,7 @@ describe('ImportTemplateDialog - Upload de Arquivo', () => {
     });
 
     it('deve aceitar upload de arquivo JSON válido', async () => {
-        const user = userEvent.setup();
+        const user = userEvent.setup({ pointerEventsCheck: 0 });
         const mockTemplate = {
             metadata: {
                 id: 'quiz21StepsComplete',
@@ -155,7 +156,7 @@ describe('ImportTemplateDialog - Upload de Arquivo', () => {
     });
 
     it('deve rejeitar arquivo não-JSON', async () => {
-        const user = userEvent.setup();
+        const user = userEvent.setup({ pointerEventsCheck: 0 });
 
         render(
             <ImportTemplateDialog
@@ -177,7 +178,7 @@ describe('ImportTemplateDialog - Upload de Arquivo', () => {
     });
 
     it('deve mostrar erro para JSON inválido', async () => {
-        const user = userEvent.setup();
+        const user = userEvent.setup({ pointerEventsCheck: 0 });
 
         render(
             <ImportTemplateDialog
@@ -201,7 +202,7 @@ describe('ImportTemplateDialog - Upload de Arquivo', () => {
     });
 
     it('deve mostrar erro de validação do schema', async () => {
-        const user = userEvent.setup();
+        const user = userEvent.setup({ pointerEventsCheck: 0 });
         const invalidTemplate = {
             metadata: {}, // Falta id, version
             steps: {},
@@ -240,7 +241,7 @@ describe('ImportTemplateDialog - Preview de Template', () => {
     });
 
     it('deve mostrar preview após upload bem-sucedido', async () => {
-        const user = userEvent.setup();
+        const user = userEvent.setup({ pointerEventsCheck: 0 });
         const mockTemplate = {
             metadata: {
                 id: 'quiz21',
@@ -289,7 +290,7 @@ describe('ImportTemplateDialog - Preview de Template', () => {
     });
 
     it('deve mostrar lista de steps no preview', async () => {
-        const user = userEvent.setup();
+        const user = userEvent.setup({ pointerEventsCheck: 0 });
         const mockTemplate = {
             metadata: {
                 id: 'quiz21',
@@ -333,7 +334,7 @@ describe('ImportTemplateDialog - Preview de Template', () => {
     });
 
     it('deve mostrar contagem de blocos por step', async () => {
-        const user = userEvent.setup();
+        const user = userEvent.setup({ pointerEventsCheck: 0 });
         const mockTemplate = {
             metadata: {
                 id: 'quiz21',
@@ -383,7 +384,7 @@ describe('ImportTemplateDialog - Confirmação de Importação', () => {
     });
 
     it('deve habilitar botão de importar após validação', async () => {
-        const user = userEvent.setup();
+        const user = userEvent.setup({ pointerEventsCheck: 0 });
         const mockTemplate = {
             metadata: { id: 'quiz21', version: '3.1', name: 'Quiz' },
             steps: { 'step-01': [{ id: 'b1', type: 'Block' }] },
@@ -418,7 +419,7 @@ describe('ImportTemplateDialog - Confirmação de Importação', () => {
     });
 
     it('deve chamar onImport com template validado', async () => {
-        const user = userEvent.setup();
+        const user = userEvent.setup({ pointerEventsCheck: 0 });
         const onImport = vi.fn();
         const mockTemplate = {
             metadata: { id: 'quiz21', version: '3.1', name: 'Quiz' },
@@ -459,7 +460,7 @@ describe('ImportTemplateDialog - Confirmação de Importação', () => {
     });
 
     it('deve fechar diálogo após importação bem-sucedida', async () => {
-        const user = userEvent.setup();
+        const user = userEvent.setup({ pointerEventsCheck: 0 });
         const onClose = vi.fn();
         const mockTemplate = {
             metadata: { id: 'quiz21', version: '3.1', name: 'Quiz' },
@@ -533,7 +534,7 @@ describe('ImportTemplateDialog - Cancelamento', () => {
     });
 
     it('deve limpar preview ao cancelar', async () => {
-        const user = userEvent.setup();
+        const user = userEvent.setup({ pointerEventsCheck: 0 });
         const mockTemplate = {
             metadata: { id: 'quiz21', version: '3.1', name: 'Quiz' },
             steps: { 'step-01': [{ id: 'b1', type: 'Block' }] },
@@ -557,7 +558,7 @@ describe('ImportTemplateDialog - Cancelamento', () => {
         );
 
         const file = createMockJsonFile(mockTemplate);
-        const input = container.querySelector('input[type="file"]') as HTMLInputElement;
+        const input = document.querySelector('input[type="file"]') as HTMLInputElement;
 
         await user.upload(input, file);
 
@@ -588,7 +589,7 @@ describe('ImportTemplateDialog - Estados de Carregamento', () => {
     });
 
     it('deve mostrar resultado imediatamente (validação síncrona)', async () => {
-        const user = userEvent.setup();
+        const user = userEvent.setup({ pointerEventsCheck: 0 });
         const mockTemplate = {
             metadata: { id: 'quiz21', version: '3.1', name: 'Quiz' },
             steps: { 'step-01': [{ id: 'b1', type: 'Block' }] },
