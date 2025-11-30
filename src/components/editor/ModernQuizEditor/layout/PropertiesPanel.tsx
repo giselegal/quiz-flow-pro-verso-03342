@@ -10,6 +10,7 @@
 import { useQuizStore } from '../store/quizStore';
 import { useEditorStore } from '../store/editorStore';
 import type { QuizBlock } from '@/schemas/quiz-schema.zod';
+import { getFieldsForType } from '../utils/propertyEditors';
 
 export function PropertiesPanel() {
     const quiz = useQuizStore((state) => state.quiz);
@@ -90,7 +91,7 @@ function BlockProperties({ block }: BlockPropertiesProps) {
                 </div>
             </div>
 
-            {/* Editor de propriedades (genérico) */}
+            {/* Editor de propriedades (com mapa mínimo por tipo) */}
             <div>
                 <h3 className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2">
                     Propriedades
@@ -99,14 +100,27 @@ function BlockProperties({ block }: BlockPropertiesProps) {
                     <p className="text-xs text-gray-500">Sem propriedades configuradas para este bloco.</p>
                 ) : (
                     <div className="space-y-3">
-                        {Object.entries(block.properties).map(([key, value]) => (
+                        {/* Priorizar campos mapeados pelo tipo */}
+                        {getFieldsForType(block.type).map((field) => (
                             <PropertyEditor
-                                key={key}
-                                label={key}
-                                value={value}
-                                onChange={(v) => handleChange(key, v)}
+                                key={field.key}
+                                label={field.label}
+                                value={(block.properties as any)[field.key]}
+                                onChange={(v) => handleChange(field.key, v)}
                             />
                         ))}
+
+                        {/* Exibir demais campos não mapeados */}
+                        {Object.entries(block.properties)
+                          .filter(([key]) => !getFieldsForType(block.type).some(f => f.key === key))
+                          .map(([key, value]) => (
+                            <PropertyEditor
+                              key={key}
+                              label={key}
+                              value={value}
+                              onChange={(v) => handleChange(key, v)}
+                            />
+                          ))}
                     </div>
                 )}
             </div>
