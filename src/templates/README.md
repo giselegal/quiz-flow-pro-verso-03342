@@ -1,7 +1,8 @@
 # 🎨 Sistema de Templates - Fonte Única de Verdade
 
 > **ATENÇÃO**: Esta estrutura foi REFATORADA em **26/11/2024** para eliminar duplicações e implementar lazy loading.  
-> **Backup dos arquivos antigos**: `.backup-templates-refactor-20251126/`
+> **Backup dos arquivos antigos**: `.backup-templates-refactor-20251126/`  
+> **ATUALIZAÇÃO**: Templates podem ser criados no banco SQLite para edição no `/editor` (30/11/2025)
 
 ## 📋 Visão Geral
 
@@ -12,6 +13,23 @@ Este diretório é a **ÚNICA fonte de verdade** para todos os templates de funi
 - ✅ **Type Safety**: Validação com Zod em todas as camadas
 - ✅ **Modularidade**: Blocos reutilizáveis entre funis
 - ✅ **Performance**: Tree-shaking e minificação automática
+- ✅ **Editável**: Templates podem ser criados no banco para edição visual
+
+---
+
+## 🚀 Quick Start - Criar Funis
+
+### Criar Funil no Banco de Dados
+
+```bash
+# Funil completo de 21 etapas (quiz de estilo pessoal)
+npm run create:funnel:quiz21
+
+# Funil simples de exemplo (4 etapas)
+npm run create:funnel:sample
+```
+
+Após criar, acesse no editor: `http://localhost:5173/editor?funnelId=<ID>`
 
 ---
 

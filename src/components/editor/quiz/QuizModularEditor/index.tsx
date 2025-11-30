@@ -2540,6 +2540,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                         onClose={() => setVersionConflict(null)}
                     />
                 )}
+qual funil é valido para essa estrutura???
             </div>
         </SafeDndContext >
     );

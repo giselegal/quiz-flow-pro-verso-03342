@@ -81,11 +81,30 @@ async function convertTemplateToFunnel(): Promise<{ funnel: FunnelData; pages: F
         settings: {
             category: 'quiz',
             templateId: 'quiz21StepsComplete',
-            theme: QUIZ_GLOBAL_CONFIG.branding,
-            seo: QUIZ_GLOBAL_CONFIG.seo,
-            analytics: QUIZ_GLOBAL_CONFIG.analytics,
-            utm: QUIZ_GLOBAL_CONFIG.utm,
-            branding: QUIZ_GLOBAL_CONFIG.branding,
+            theme: {
+                primaryColor: '#8B5CF6',
+                secondaryColor: '#EC4899',
+                fontFamily: 'Inter, sans-serif',
+                backgroundColor: '#FFFFFF'
+            },
+            seo: {
+                title: 'Quiz de Estilo Pessoal - 21 Etapas',
+                description: 'Descubra seu estilo pessoal único através de um quiz completo e personalizado',
+                keywords: ['quiz', 'estilo', 'personalidade', 'teste de personalidade']
+            },
+            analytics: {
+                enabled: true,
+                googleAnalyticsId: '',
+                facebookPixelId: ''
+            },
+            utm: {
+                tracking: true,
+                persist: true
+            },
+            branding: {
+                logoUrl: 'https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_70,w_132,h_55,c_fit/v1752430327/LOGO_DA_MARCA_GISELE_l78gin.png',
+                companyName: 'Gisele Galvão'
+            },
             quiz_config: {
                 totalQuestions: 10,
                 strategicQuestions: 6,
