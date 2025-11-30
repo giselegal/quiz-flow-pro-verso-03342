@@ -647,8 +647,18 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                     await saveStepBlocksEnhanced(safeCurrentStep);
                     lastPersistedHashRef.current = currentHash;
                     appLogger.debug('[AutoSave] Persistido com novo hash', { hash: currentHash });
-                } catch (err) {
-                    appLogger.warn('[AutoSave] Erro ao salvar', { error: err });
+                } catch (err: any) {
+                    // 🔒 P1: Detectar conflito de versão
+                    if (err?.conflict) {
+                        appLogger.warn('[AutoSave] Conflito de versão detectado', { conflict: err.conflict });
+                        setVersionConflict({
+                            stepId: err.conflict.stepId,
+                            conflict: err.conflict,
+                            blocks: currentBlocks,
+                        });
+                    } else {
+                        appLogger.warn('[AutoSave] Erro ao salvar', { error: err });
+                    }
                 }
             },
             enableRecovery: true,
