@@ -78,12 +78,15 @@ function StepNavigatorColumnImpl({
     // 🔧 FIX: PRIORIZAR prop "steps" sobre templateService
     // Props têm prioridade, templateService é fallback apenas quando steps não fornecido
     const canonicalSteps = useMemo(() => {
-        // Se steps prop foi fornecida, não chamar templateService
-        if (steps && steps.length > 0) {
+        // Se steps prop foi fornecida (mesmo vazia), não chamar templateService
+        if (steps !== undefined) {
+            appLogger.debug('[StepNavigatorColumn] Props steps fornecida, ignorando templateService', {
+                stepsCount: steps.length
+            });
             return { success: true, data: [] }; // Será ignorado, mas precisa retornar estrutura válida
         }
 
-        // Fallback: só chamar templateService se steps prop não fornecida
+        // Fallback: só chamar templateService se steps prop NÃO foi fornecida (undefined)
         try {
             if (templateService?.steps && typeof templateService.steps.list === 'function') {
                 const result = templateService.steps.list();
