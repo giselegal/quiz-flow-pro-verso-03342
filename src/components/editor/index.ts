@@ -76,7 +76,8 @@ export type {
 } from './modules';
 
 // Reexport helpers para uso lazy (ex: const ModularResultEditor = React.lazy(LazyModularResultEditor))
-export { LazyModularResultEditor, LazyResponsivePreview } from './modules';
+// REMOVIDO: LazyModularResultEditor, LazyResponsivePreview - use ModernQuizEditor
+// export { LazyModularResultEditor, LazyResponsivePreview } from './modules';
 
 // ============================================================================
 // CONFIGURAÇÕES E CONSTANTES
