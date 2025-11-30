@@ -11,7 +11,7 @@ import { QuizErrorBoundary } from '@/components/RouteErrorBoundary';
 import { LoadingFallback } from '@/components/ui/loading-fallback';
 import { UnifiedCRUDProvider } from '@/contexts';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
-const QuizModularEditor = React.lazy(() => import('@/components/editor/quiz/QuizModularEditor/QuizModularEditorV4').then(m => ({ default: m.default })));
+const QuizModularEditor = React.lazy(() => import('@/components/editor/quiz/QuizModularEditor'));
 
 interface QuizAIPageProps {
     previewMode?: boolean;
