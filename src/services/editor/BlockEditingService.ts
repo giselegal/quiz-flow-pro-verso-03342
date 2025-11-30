@@ -26,6 +26,8 @@ export async function persistBlocks(
       throw result.error || new Error('Falha ao salvar etapa');
     }
     appLogger.info('[BlockEditingService] Step salvo com sucesso', { data: [{ stepId, blocks: normalized.length }] });
+    // Invalida cache do step após persistência
+    templateService.invalidateStepCache(stepId);
   } catch (error) {
     appLogger.error('[BlockEditingService] Erro ao persistir blocos', { data: [error] });
     throw error;
