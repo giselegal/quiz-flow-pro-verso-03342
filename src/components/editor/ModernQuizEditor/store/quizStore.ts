@@ -316,23 +316,34 @@ export const useQuizStore = create<QuizStore>()(
     
     save: async () => {
       const state = get();
-      
-      if (!state.quiz || !state.isDirty) {
-        return;
-      }
-      
-      // TODO: Implementar integração com backend
+      if (!state.quiz || !state.isDirty) return;
       console.log('💾 Salvando quiz...', state.quiz);
-      
-      // Simular salvamento
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      set((state) => {
-        state.isDirty = false;
-        state.lastSaved = new Date();
-      });
-      
-      console.log('✅ Quiz salvo com sucesso');
+
+      try {
+        const res = await fetch('/api/quiz', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            quiz: state.quiz,
+            metadata: {
+              savedAt: new Date().toISOString(),
+              version: (state.quiz as any)?.version ?? 1,
+            },
+          }),
+        });
+        if (!res.ok) {
+          const msg = await res.text();
+          throw new Error(`Falha ao salvar: ${res.status} ${msg}`);
+        }
+        set((s) => {
+          s.isDirty = false;
+          s.lastSaved = new Date();
+        });
+        console.log('✅ Quiz salvo com sucesso');
+      } catch (err) {
+        console.error('❌ Erro ao salvar quiz', err);
+        set((s) => { s.error = (err as Error).message; });
+      }
     },
 
     scheduleAutoSave: () => {
