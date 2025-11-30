@@ -50,13 +50,8 @@ export interface StepTemplate {
   defaultProperties?: Record<string, any>;
 }
 
-export interface Block {
-  id: string;
-  type: BlockType;
-  order: number;
-  content: BlockContent;
-  properties: BlockProperties;
-}
+// Canonical Block import (remove definição duplicada)
+import type { Block } from './core/Block';
 
 export interface Step {
   id: string;

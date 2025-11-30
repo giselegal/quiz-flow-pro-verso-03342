@@ -560,41 +560,20 @@ export interface EditableContent {
 
 // ===== INTERFACE BLOCK COM TIPAGEM CONDICIONAL =====
 
+import type { BlockProperties } from './core/Block';
 export interface BaseBlock {
   id: string;
   order: number;
-  properties?: Record<string, any>;
+  properties: BlockProperties; // Normalizado para compatibilidade com Block canônico
   parentId?: string; // ✅ FASE 3: Para blocos aninhados/hierárquicos
   /** Indica bloco efêmero (não deve ser persistido). */
   ephemeral?: boolean;
 }
 
 // Interface Block específica por tipo
-export interface Block extends BaseBlock {
-  type: BlockType;
-  content: BlockContent;
-
-  // Validation properties
-  validation?: {
-    required?: boolean;
-    minLength?: number;
-    maxLength?: number;
-    pattern?: string;
-    custom?: (value: any) => boolean | string;
-    isValid?: boolean;
-    errors?: string[];
-    warnings?: string[];
-  };
-  position?: {
-    x?: number;
-    y?: number;
-    width?: number;
-    height?: number;
-  };
-  // Add missing properties
-  style?: Record<string, any>;
-  metadata?: Record<string, any>;
-}
+// Canonical Block (substitui definição duplicada)
+import type { Block } from './core/Block';
+export type { Block } from './core/Block';
 
 // Interfaces especializadas para tipos específicos
 export interface HeadlineBlock extends BaseBlock {
