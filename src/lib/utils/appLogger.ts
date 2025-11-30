@@ -159,10 +159,10 @@ class AppLogger {
 
   private async sendToRemote(entry: LogEntry): Promise<void> {
     // Only send in browser/node with fetch available
-    if (typeof fetch === 'undefined') return;
+    if (typeof window === 'undefined' || typeof window.fetch === 'undefined') return;
 
     try {
-      await fetch(this.options.remoteEndpoint, {
+      await window.fetch(this.options.remoteEndpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(entry),
