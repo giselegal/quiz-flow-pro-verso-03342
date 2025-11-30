@@ -1779,18 +1779,71 @@ export class TemplateService extends BaseCanonicalService {
   }
 
   /**
-   * Salvar blocos de um step
+   * Salvar blocos de um step com optimistic locking
+   * 
+   * @param stepId - ID do step
+   * @param blocks - Blocos a salvar
+   * @param options - Opções incluindo expectedVersion para conflict detection
    */
   async saveStep(
     stepId: string,
     blocks: Block[],
-    options?: ServiceOptions
+    options?: ServiceOptions & { 
+      expectedVersion?: number;
+      skipVersionCheck?: boolean;
+    }
   ): Promise<ServiceResult<void>> {
     try {
       // Validação Zod dos blocos do step
       const { QuizBlockSchemaZ } = await import('@/schemas/quiz-schema.zod');
       for (const block of blocks) {
         QuizBlockSchemaZ.parse(block);
+      }
+
+      // 🔒 P1: Optimistic Locking - validar versão antes de salvar
+      if (!options?.skipVersionCheck && options?.expectedVersion !== undefined) {
+        const { optimisticLockingService } = await import('@/services/optimistic-locking/OptimisticLockingService');
+        
+        const getCurrentVersion = async () => {
+          // Buscar versão atual do step
+          const funnelId = this.activeFunnelId;
+          if (!funnelId) return null;
+
+          try {
+            const { data, error } = await hierarchicalTemplateSource['supabase']
+              .from('funnel_steps')
+              .select('version, updated_at')
+              .eq('funnel_id', funnelId)
+              .eq('step_id', stepId)
+              .single();
+
+            if (error || !data) return null;
+
+            return {
+              stepId,
+              version: data.version || 1,
+              lastModified: data.updated_at || new Date().toISOString(),
+            };
+          } catch {
+            return null;
+          }
+        };
+
+        const validation = await optimisticLockingService.validateVersion(
+          stepId,
+          options.expectedVersion,
+          getCurrentVersion
+        );
+
+        if (!validation.valid) {
+          // Conflito detectado: lançar erro com detalhes
+          const conflict = validation.conflict!;
+          const error = new Error(
+            `Version conflict: expected ${conflict.expectedVersion}, got ${conflict.actualVersion}`
+          );
+          (error as any).conflict = conflict;
+          throw error;
+        }
       }
 
       // Usar HierarchicalTemplateSource para salvar (USER_EDIT priority)
