@@ -1,6 +1,11 @@
-// Acesso ao template gold standard do funil (quiz21-v4-gold.json)
-// Permite importar e reutilizar o funil gold em qualquer parte do sistema
+// Loader assíncrono para o JSON do template gold via public/
+// Em Vite, arquivos em public/ devem ser acessados via fetch em runtime
 
-import goldFunnel from '@/../public/templates/quiz21-v4-gold.json';
+export async function loadGoldFunnelJson(): Promise<any> {
+	const url = '/templates/quiz21-v4-gold.json';
+	const res = await fetch(url, { cache: 'no-cache' });
+	if (!res.ok) throw new Error(`Falha ao carregar ${url}: ${res.status}`);
+	return res.json();
+}
 
-export default goldFunnel;
+export default loadGoldFunnelJson;

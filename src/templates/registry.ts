@@ -45,10 +45,10 @@ export interface FullTemplate {
 
 // 🎯 REGISTRY DE TEMPLATES DISPONÍVEIS
 
-import goldFunnelTemplate from './goldFunnelTemplate';
+import buildGoldFunnelTemplate from './goldFunnelTemplate';
 
 const TEMPLATE_REGISTRY: Record<string, () => Promise<FullTemplate>> = {
-  'quiz21-v4-gold': async () => goldFunnelTemplate,
+  'quiz21-v4-gold': async () => buildGoldFunnelTemplate(),
   'quiz21StepsComplete': () => loadQuiz21StepsTemplate(),
   'testTemplate': () => loadTestTemplate(),
   'leadMagnetFashion': () => loadLeadMagnetTemplate(),
