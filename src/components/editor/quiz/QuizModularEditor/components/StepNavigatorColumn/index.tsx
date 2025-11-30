@@ -75,11 +75,22 @@ function StepNavigatorColumnImpl({
         })
     );
 
-    // Preferir fonte canônica de steps; aceitar override via prop "steps"
+    // 🔧 FIX: PRIORIZAR prop "steps" sobre templateService
+    // Props têm prioridade, templateService é fallback apenas quando steps não fornecido
     const canonicalSteps = useMemo(() => {
+        // Se steps prop foi fornecida, não chamar templateService
+        if (steps && steps.length > 0) {
+            return { success: true, data: [] }; // Será ignorado, mas precisa retornar estrutura válida
+        }
+
+        // Fallback: só chamar templateService se steps prop não fornecida
         try {
             if (templateService?.steps && typeof templateService.steps.list === 'function') {
-                return templateService.steps.list();
+                const result = templateService.steps.list();
+                appLogger.debug('[StepNavigatorColumn] Usando templateService.steps.list() como fallback', {
+                    stepsCount: result.data?.length || 0
+                });
+                return result;
             }
             appLogger.warn('[StepNavigatorColumn] templateService.steps.list não disponível, retornando lista vazia');
         } catch (e) {
@@ -87,20 +98,31 @@ function StepNavigatorColumnImpl({
         }
 
         return { success: true, data: [] };
-    }, [refreshKey]);
+    }, [steps, refreshKey]);
+
     const [localItems, setLocalItems] = useState<{ key: string; title: string }[]>([]);
 
-    // Sincronizar items com canonicalSteps
+    // Sincronizar items: SEMPRE priorizar prop "steps"
     useEffect(() => {
         if (steps) {
+            // ✅ Props têm prioridade máxima
+            appLogger.debug('[StepNavigatorColumn] Usando steps da prop', { count: steps.length });
             setLocalItems(steps);
-        } else if (canonicalSteps.success) {
+        } else if (canonicalSteps.success && canonicalSteps.data.length > 0) {
+            // Fallback para templateService apenas se prop não fornecida
+            appLogger.debug('[StepNavigatorColumn] Usando canonicalSteps como fallback', {
+                count: canonicalSteps.data.length
+            });
             setLocalItems(
                 canonicalSteps.data.map((s: { id: string; order: number; name: string }) => ({
                     key: s.id,
                     title: `${s.order.toString().padStart(2, '0')} - ${s.name}`,
                 }))
             );
+        } else {
+            // Sem steps de nenhuma fonte
+            appLogger.debug('[StepNavigatorColumn] Nenhum step disponível, lista vazia');
+            setLocalItems([]);
         }
     }, [canonicalSteps, steps, refreshKey]);
 
