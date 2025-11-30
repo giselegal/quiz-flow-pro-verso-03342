@@ -30,11 +30,11 @@ export const TERTIARY_ROUTES = {
  * Configura preload de rotas críticas
  */
 export const setupCriticalRoutes = () => {
-  // HIGH PRIORITY - Preload imediato em idle
+  // HIGH PRIORITY - Preload desabilitado para evitar erros de carregamento
   routePreloader.register(CRITICAL_ROUTES.editor, {
     component: () => import('@/components/editor/quiz/QuizModularEditor/index'),
     priority: 'high',
-    preloadOnIdle: true,
+    preloadOnIdle: false, // Desabilitado temporariamente
   });
 
   routePreloader.register(CRITICAL_ROUTES.admin, {
@@ -56,10 +56,10 @@ export const setupCriticalRoutes = () => {
     preloadOnIdle: false,
   });
 
-  // Preload rotas de alta prioridade automaticamente
-  setTimeout(() => {
-    routePreloader.preloadByPriority('high');
-  }, 1000);
+  // Preload automático desabilitado para evitar erros de inicialização
+  // setTimeout(() => {
+  //   routePreloader.preloadByPriority('high');
+  // }, 1000);
 };
 
 export default setupCriticalRoutes;
