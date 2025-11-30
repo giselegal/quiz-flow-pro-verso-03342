@@ -718,15 +718,28 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
   private recordMetric(stepId: string, source: DataSourcePriority, loadTime: number): void {
     if (!this.options.enableMetrics) return;
 
-    // TODO: Integrar com sistema de métricas existente
-    if (typeof window !== 'undefined') {
-      (window as any).__TEMPLATE_SOURCE_METRICS = (window as any).__TEMPLATE_SOURCE_METRICS || [];
-      (window as any).__TEMPLATE_SOURCE_METRICS.push({
-        stepId,
-        source: DataSourcePriority[source],
-        loadTime,
-        timestamp: Date.now(),
+    // ✅ Integrado com sistema central de métricas
+    try {
+      // Dynamic import para evitar dependência circular
+      import('@/lib/utils/editorMetrics').then(({ editorMetrics }) => {
+        editorMetrics.trackLoadTime(stepId, loadTime, {
+          source: DataSourcePriority[source],
+          fromCache: false,
+        });
+      }).catch(() => {
+        // Fallback para window se editorMetrics não disponível
+        if (typeof window !== 'undefined') {
+          (window as any).__TEMPLATE_SOURCE_METRICS = (window as any).__TEMPLATE_SOURCE_METRICS || [];
+          (window as any).__TEMPLATE_SOURCE_METRICS.push({
+            stepId,
+            source: DataSourcePriority[source],
+            loadTime,
+            timestamp: Date.now(),
+          });
+        }
       });
+    } catch {
+      // Silent fail - métricas são opcionais
     }
   }
 
