@@ -333,6 +333,10 @@ export type BlockLibraryItem = z.infer<typeof BlockLibraryItemZ>;
 export type BlockLibrary = z.infer<typeof BlockLibraryZ>;
 export type QuizSchema = z.infer<typeof QuizSchemaZ>;
 
+// 🔒 P1: Optimistic Locking - tipos derivados do schema
+export type QuizStep = z.infer<typeof QuizStepSchemaZ>;
+export type QuizMetadata = z.infer<typeof QuizMetadataZ>;
+
 // ============================================================================
 // VALIDATION HELPERS
 // ============================================================================
