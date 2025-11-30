@@ -316,8 +316,8 @@ async function runMigration(): Promise<void> {
             console.log(`🎯 Categoria: ${funnel.settings.category}`);
             console.log(`🔗 Template ID: ${funnel.settings.templateId}`);
             console.log('\n🌐 Acesse em:');
-            console.log(`• Editor: http://localhost:8080/editor-pro/${funnel.id}`);
-            console.log(`• Preview: http://localhost:8080/preview/${funnel.id}`);
+            console.log(`• Editor: http://localhost:5173/editor?funnelId=${funnel.id}`);
+            console.log(`• Preview: http://localhost:5173/preview/${funnel.id}`);
         } else {
             console.log('\n❌ FALHA NA MIGRAÇÃO');
             console.log('Verifique os logs de erro acima');
