@@ -97,6 +97,10 @@ test.describe('Gold Funnel Debug Tests', () => {
       console.log('   Step 1 blocks:', defaultJson.steps?.[0]?.blocks?.length);
     }
 
+    // Exportar logs completos para análise
+    console.log('\n📋 Todos os logs (últimos 50):');
+    consoleLogs.slice(-50).forEach(log => console.log(`   ${log}`));
+
     // Não fazer assertions, apenas coletar dados
     console.log('\n📸 Screenshot salvo para análise visual');
     await page.screenshot({ path: 'test-results/gold-funnel-debug.png', fullPage: true });
