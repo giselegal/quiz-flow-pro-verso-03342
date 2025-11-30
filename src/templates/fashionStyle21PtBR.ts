@@ -1,14 +1,24 @@
 /**
  * Template: Fashion Style 21 (PT-BR)
- * Gera um funil de 21 etapas compatível com o Editor Modular (EditableQuizStep[])
+ * 
+ * ⚠️ PRECISA REFATORAÇÃO para ModernQuizEditor
+ * 
+ * TODO: Atualizar para novo schema (QuizStepSchemaZ):
+ * - Usar navigation: { nextStep: string } ao invés de nextStep direto
+ * - IDs no formato step-XX (dois dígitos)
+ * - Adicionar title obrigatório
+ * - Usar tipos corretos do Zod
+ * 
  * Estrutura: 1 intro, 10 perguntas principais, 1 transição, 6 perguntas estratégicas, 1 transição-result, 1 resultado, 1 oferta
+ * 
+ * @deprecated Use templates JSON ou crie via ModernQuizEditor
  */
 
-import type { EditableQuizStep, BlockComponent } from '@/components/editor/quiz/types';
+import type { QuizStep, QuizBlock } from '@/schemas/quiz-schema.zod';
 
 // Pequena ajuda para criar blocos com ordenação
-function makeBlock(id: string, type: string, order: number, props: Record<string, any> = {}, content: Record<string, any> = {}, parentId?: string | null): BlockComponent {
-  return { id, type, order, parentId: parentId ?? null, properties: props, content } as BlockComponent;
+function makeBlock(id: string, type: string, order: number, props: Record<string, any> = {}, content: Record<string, any> = {}, parentId?: string | null): QuizBlock {
+  return { id, type, order, parentId: parentId ?? null, properties: props, content, metadata: { editable: true } } as QuizBlock;
 }
 
 function makeOptions(prefix: string, count: number, withImages = false) {
@@ -20,22 +30,23 @@ function makeOptions(prefix: string, count: number, withImages = false) {
   return arr;
 }
 
-export function buildFashionStyle21Steps(funnelId?: string): EditableQuizStep[] {
-  const steps: EditableQuizStep[] = [];
+export function buildFashionStyle21Steps(funnelId?: string): QuizStep[] {
+  const steps: QuizStep[] = [];
 
   // 1) Intro (coleta nome + CTA)
   steps.push({
-    id: 'step-1',
+    id: 'step-01',
     type: 'intro',
     order: 1,
-    nextStep: 'step-2',
+    title: 'Bem-vindo',
     blocks: [
       makeBlock('b1-1', 'heading', 1, { level: 1, textAlign: 'center', color: '#432818' }, { text: 'Descubra seu estilo pessoal em minutos' }),
       makeBlock('b1-2', 'text', 2, { textAlign: 'center', color: '#6B7280' }, { text: 'Responda algumas perguntas rápidas e receba um resultado personalizado com recomendações.' }),
       makeBlock('b1-3', 'form-input', 3, {}, { label: 'Como posso te chamar?', placeholder: 'Digite seu primeiro nome...' }),
       makeBlock('b1-4', 'button', 4, { action: 'next-step' }, { text: 'Começar' }),
     ],
-  });
+    navigation: { nextStep: 'step-02' },
+  } as QuizStep);
 
   // 2-11) 10 perguntas principais (multiSelect, 3 seleções obrigatórias)
   for (let i = 2; i <= 11; i++) {
