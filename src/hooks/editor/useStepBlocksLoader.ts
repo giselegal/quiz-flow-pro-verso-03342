@@ -42,10 +42,17 @@ export function useStepBlocksLoader({
 
     const stepId = `step-${String(stepIndex).padStart(2, '0')}`;
     
-    // ✅ Evitar re-carregamento desnecessário do mesmo step
-    const loadKey = `${templateOrFunnelId}:${stepId}`;
+    // ✅ P1: Cache key explícito com funnelId (previne mistura de dados entre funnels)
+    // Estrutura: "funnel:<funnelId>:step:<stepId>" ou "template:<templateId>:step:<stepId>"
+    const resourceType = templateOrFunnelId.startsWith('funnel-') ? 'funnel' : 'template';
+    const loadKey = `${resourceType}:${templateOrFunnelId}:step:${stepId}`;
+    
     if (loadedStepRef.current === loadKey) {
-      appLogger.debug('[useStepBlocksLoader] Step já carregado, ignorando', { stepId });
+      appLogger.debug('[useStepBlocksLoader] Step já carregado, ignorando', { 
+        stepId, 
+        resourceType,
+        loadKey 
+      });
       return;
     }
 

@@ -488,6 +488,46 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         mode: isEditableMode ? 'edit' : 'preview-production',
     });
 
+    // 🔐 P0: Token Refresh proativo a cada 45min (previne perda de dados em sessões longas)
+    useTokenRefresh({
+        onSessionExpired: () => {
+            // Save draft local antes da sessão expirar
+            try {
+                const currentBlocks = wysiwyg.state.blocks;
+                const funnelId = props.funnelId;
+                const stepId = currentStepKey;
+
+                if (funnelId && stepId && currentBlocks?.length) {
+                    const draftKey = `draft_${funnelId}_${stepId}`;
+                    localStorage.setItem(draftKey, JSON.stringify({
+                        blocks: currentBlocks,
+                        timestamp: Date.now(),
+                    }));
+                    toast({
+                        type: 'warning',
+                        title: 'Sessão Expirada',
+                        message: 'Suas alterações foram salvas localmente. Faça login novamente.',
+                        duration: 8000,
+                    });
+                }
+            } catch (err) {
+                console.error('[QuizModularEditor] Erro ao salvar draft:', err);
+            }
+        },
+        onRefreshSuccess: () => {
+            // Opcional: notificar usuário que sessão foi renovada
+            console.log('[QuizModularEditor] ✅ Sessão renovada automaticamente');
+        },
+        onRefreshError: (error) => {
+            toast({
+                type: 'error',
+                title: 'Erro de Autenticação',
+                message: 'Não foi possível renovar a sessão. Salve seu trabalho.',
+                duration: 5000,
+            });
+        },
+    });
+
     // ✅ FASE 4: Hash + controle de persistência
     // - Garante que saves redundantes sejam ignorados
     // - Permite comparar estado WYSIWYG atual vs último persistido
