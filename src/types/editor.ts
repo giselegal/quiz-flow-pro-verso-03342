@@ -560,11 +560,10 @@ export interface EditableContent {
 
 // ===== INTERFACE BLOCK COM TIPAGEM CONDICIONAL =====
 
-import type { BlockProperties } from './core/Block';
 export interface BaseBlock {
   id: string;
   order: number;
-  properties: BlockProperties; // Normalizado para compatibilidade com Block canônico
+  properties?: Record<string, any>; // Mantido flexível (transição)
   parentId?: string; // ✅ FASE 3: Para blocos aninhados/hierárquicos
   /** Indica bloco efêmero (não deve ser persistido). */
   ephemeral?: boolean;
