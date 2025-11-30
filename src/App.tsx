@@ -233,11 +233,9 @@ function AppCore() {
                                             {() => {
                                                 appLogger.info('🏠 Home route matched');
                                                 return (
-                                                    <SuperUnifiedProvider>
-                                                        <div data-testid="index-page">
-                                                            <Home />
-                                                        </div>
-                                                    </SuperUnifiedProvider>
+                                                    <div data-testid="index-page">
+                                                        <Home />
+                                                    </div>
                                                 );
                                             }}
                                         </Route>
@@ -309,15 +307,11 @@ function AppCore() {
                                             {(params) => (
                                                 <EditorErrorBoundary>
                                                     <Suspense fallback={<PageLoadingFallback message="Carregando Editor..." />}>
-                                                        <SuperUnifiedProviderV3>
-                                                            <SuperUnifiedProvider>
-                                                                <EditorProviderUnified>
-                                                                    <QuizModularEditor
-                                                                        funnelId={params.funnelId}
-                                                                    />
-                                                                </EditorProviderUnified>
-                                                            </SuperUnifiedProvider>
-                                                        </SuperUnifiedProviderV3>
+                                                        <EditorProviderUnified>
+                                                            <QuizModularEditor
+                                                                funnelId={params.funnelId}
+                                                            />
+                                                        </EditorProviderUnified>
                                                     </Suspense>
                                                 </EditorErrorBoundary>
                                             )}
