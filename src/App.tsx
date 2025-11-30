@@ -66,8 +66,8 @@ const TemplateDiagnosticPage = lazy(() => import('./pages/TemplateDiagnosticPage
 const PerformanceTestPage = lazy(() => import('./pages/PerformanceTestPage'));
 const AccessibilityAuditorPage = lazy(() => import('./components/a11y/AccessibilityAuditor'));
 
-// 🎯 EDITOR PRINCIPAL - QuizModularEditorV4 com suporte v3↔v4
-const QuizModularEditor = lazy(() => import('./components/editor/quiz/QuizModularEditor/QuizModularEditorV4'));
+// 🎯 EDITOR PRINCIPAL - Import direto (V4Wrapper removido para otimização)
+const QuizModularEditor = lazy(() => import('./components/editor/quiz/QuizModularEditor'));
 
 // 🧪 PÁGINAS DE QUIZ
 const QuizEstiloPessoalPage = lazy(() => import('./pages/QuizEstiloPessoalPage'));
@@ -289,14 +289,12 @@ function AppCore() {
                                                 return (
                                                     <EditorErrorBoundary>
                                                         <Suspense fallback={<PageLoadingFallback message="Carregando Editor..." />}>
-                                                            {/* SuperUnifiedProviderV3 já está no nível App, não duplicar */}
-                                                            <EditorProviderUnified>
-                                                                <QuizModularEditor
-                                                                    resourceId={resourceId}
-                                                                    templateId={templateParam}
-                                                                    funnelId={funnelId}
-                                                                />
-                                                            </EditorProviderUnified>
+                                                            {/* ✅ SuperUnifiedProviderV3 no root é suficiente - provider duplicado removido */}
+                                                            <QuizModularEditor
+                                                                resourceId={resourceId}
+                                                                templateId={templateParam}
+                                                                funnelId={funnelId}
+                                                            />
                                                         </Suspense>
                                                     </EditorErrorBoundary>
                                                 );
@@ -307,11 +305,10 @@ function AppCore() {
                                             {(params) => (
                                                 <EditorErrorBoundary>
                                                     <Suspense fallback={<PageLoadingFallback message="Carregando Editor..." />}>
-                                                        <EditorProviderUnified>
-                                                            <QuizModularEditor
-                                                                funnelId={params.funnelId}
-                                                            />
-                                                        </EditorProviderUnified>
+                                                        {/* ✅ SuperUnifiedProviderV3 no root é suficiente - provider duplicado removido */}
+                                                        <QuizModularEditor
+                                                            funnelId={params.funnelId}
+                                                        />
                                                     </Suspense>
                                                 </EditorErrorBoundary>
                                             )}
