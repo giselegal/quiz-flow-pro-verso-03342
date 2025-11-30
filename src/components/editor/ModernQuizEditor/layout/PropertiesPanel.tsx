@@ -170,6 +170,48 @@ interface PropertyEditorProps {
 function PropertyEditor({ label, value, kind, onChange }: PropertyEditorProps) {
     const type = typeof value;
 
+    // Editor específico para options
+    if (kind === 'options' && Array.isArray(value)) {
+        return (
+            <div className="space-y-2">
+                <label className="text-xs font-medium text-gray-700">{label}</label>
+                <div className="space-y-2">
+                    {value.map((opt: any, idx: number) => (
+                        <div key={idx} className="flex items-center gap-2">
+                            <input
+                                className="flex-1 px-2 py-1 border border-gray-200 rounded text-sm"
+                                value={opt.label || opt.text || ''}
+                                placeholder="Label"
+                                onChange={(e) => {
+                                    const next = [...value];
+                                    next[idx] = { ...opt, label: e.target.value };
+                                    onChange(next);
+                                }}
+                            />
+                            <button
+                                className="px-2 py-1 text-xs bg-red-100 hover:bg-red-200 text-red-700 rounded"
+                                onClick={() => {
+                                    const next = value.filter((_: any, i: number) => i !== idx);
+                                    onChange(next);
+                                }}
+                            >
+                                Remover
+                            </button>
+                        </div>
+                    ))}
+                    <div>
+                        <button
+                            className="px-2 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded"
+                            onClick={() => onChange([...(value || []), { label: 'Nova opção' }])}
+                        >
+                            Adicionar opção
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
     if (type === 'string') {
         return (
             <div className="space-y-1">

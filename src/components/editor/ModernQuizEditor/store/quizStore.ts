@@ -29,6 +29,7 @@ interface QuizStore {
   // Metadados
   isDirty: boolean;
   lastSaved: Date | null;
+  autoSaveTimer?: any;
   
   // ========================================================================
   // AÇÕES - CARREGAMENTO
@@ -100,6 +101,7 @@ interface QuizStore {
    * Salvar quiz (placeholder - implementar integração com backend)
    */
   save: () => Promise<void>;
+  scheduleAutoSave: () => void;
   
   /**
    * Marcar como salvo
@@ -168,6 +170,7 @@ export const useQuizStore = create<QuizStore>()(
       
       // Adicionar ao histórico após mudança
       get().addToHistory();
+      get().scheduleAutoSave();
     },
     
     addBlock: (stepId, blockType, order) => {
@@ -191,6 +194,7 @@ export const useQuizStore = create<QuizStore>()(
       });
       
       get().addToHistory();
+      get().scheduleAutoSave();
     },
 
     duplicateBlock: (stepId, blockId) => {
@@ -219,6 +223,7 @@ export const useQuizStore = create<QuizStore>()(
         state.isDirty = true;
       });
       get().addToHistory();
+      get().scheduleAutoSave();
     },
     
     deleteBlock: (stepId, blockId) => {
@@ -233,6 +238,7 @@ export const useQuizStore = create<QuizStore>()(
       });
       
       get().addToHistory();
+      get().scheduleAutoSave();
     },
     
     reorderBlocks: (stepId, fromIndex, toIndex) => {
@@ -326,6 +332,20 @@ export const useQuizStore = create<QuizStore>()(
       });
       
       console.log('✅ Quiz salvo com sucesso');
+    },
+
+    scheduleAutoSave: () => {
+      const state = get();
+      if (!state.isDirty) return;
+      // Limpar timer anterior
+      if (state.autoSaveTimer) {
+        clearTimeout(state.autoSaveTimer);
+      }
+      // Agendar para 1s
+      const timer = setTimeout(() => {
+        get().save();
+      }, 1000);
+      set((s) => { s.autoSaveTimer = timer; });
     },
     
     markAsSaved: () => {
