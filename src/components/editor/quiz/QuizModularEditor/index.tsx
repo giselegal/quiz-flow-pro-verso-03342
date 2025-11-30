@@ -974,6 +974,14 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 
     // 🚫 Removido: auto-injeção duplicada do step-01 (agora apenas useStepBlocksLoader cuida do carregamento)
 
+    // ✅ HOOK CRÍTICO: Carregar blocos do step atual
+    useStepBlocksLoader({
+        templateOrFunnelId: resourceId || null,
+        stepIndex: safeCurrentStep,
+        setStepBlocks,
+        setStepLoading,
+    });
+
     // 🔥 HOTFIX 3: Hook de validação com Web Worker (não-bloqueante)
     // PROBLEMA RESOLVIDO: Validação bloqueante de 2-5 segundos no main thread
     // - UI permanece 100% responsiva durante validação
