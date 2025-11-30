@@ -123,6 +123,7 @@ function BlockProperties({ block }: BlockPropertiesProps) {
                                 label={field.label}
                                 value={(block.properties as any)[field.key]}
                                 kind={field.kind}
+                                constraints={(block.properties as any)?.constraints?.[field.key]}
                                 onChange={(v) => handleChange(field.key, v)}
                             />
                         ))}
@@ -135,6 +136,7 @@ function BlockProperties({ block }: BlockPropertiesProps) {
                                     key={key}
                                     label={key}
                                     value={value}
+                                    constraints={(block.properties as any)?.constraints?.[key]}
                                     onChange={(v) => handleChange(key, v)}
                                 />
                             ))}
@@ -180,20 +182,27 @@ interface PropertyEditorProps {
     label: string;
     value: any;
     kind?: 'text' | 'number' | 'boolean' | 'json' | 'image' | 'options';
+    constraints?: { min?: number; max?: number; minLength?: number; maxLength?: number };
     onChange: (value: any) => void;
 }
 
-function PropertyEditor({ label, value, kind, onChange }: PropertyEditorProps) {
+function PropertyEditor({ label, value, kind, constraints, onChange }: PropertyEditorProps) {
     const type = typeof value;
     const schema = (() => {
         switch (kind) {
             case 'text':
-                return z.string().min(1, 'Texto obrigatório');
+                let textSchema = z.string().min(1, 'Texto obrigatório');
+                if (constraints?.minLength) textSchema = textSchema.min(constraints.minLength, `Mínimo de ${constraints.minLength} caracteres`);
+                if (constraints?.maxLength) textSchema = textSchema.max(constraints.maxLength, `Máximo de ${constraints.maxLength} caracteres`);
+                return textSchema;
             case 'number':
-                // números com limites padrão (opcional): >=0 e <= 1e6
-                return z.number({ invalid_type_error: 'Número inválido' })
+                // números com limites padrão (opcional): >=0 e <= 1e6, sobreponíveis por constraints
+                let numSchema = z.number({ invalid_type_error: 'Número inválido' })
                     .min(0, 'Valor mínimo é 0')
                     .max(1_000_000, 'Valor máximo é 1.000.000');
+                if (typeof constraints?.min === 'number') numSchema = numSchema.min(constraints.min, `Valor mínimo é ${constraints.min}`);
+                if (typeof constraints?.max === 'number') numSchema = numSchema.max(constraints.max, `Valor máximo é ${constraints.max}`);
+                return numSchema;
             case 'image':
                 return z.string().url('URL inválida');
             case 'boolean':
