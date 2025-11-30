@@ -257,10 +257,14 @@ export class UnifiedTemplateLoader {
     // Carregar v4 JSON
     try {
       const templatePath = this.resolveV4Path(templateId);
+      console.log(`[UnifiedLoader] 🔍 Loading full template`, { templateId, templatePath });
       appLogger.info(`🔍 [UnifiedLoader] Loading full template from: ${templatePath}`);
 
+      console.log('[UnifiedLoader] 📡 Fetching...', { templatePath, timeout });
       const response = await this.fetchWithTimeout(templatePath, timeout, signal);
+      console.log('[UnifiedLoader] ✅ Fetch OK, parsing JSON...');
       const data = await response.json();
+      console.log('[UnifiedLoader] ✅ JSON parsed, validating...', { stepsCount: data.steps?.length });
 
       // Validar com Zod
       const validationResult = validateQuizSchema(data);
@@ -352,15 +356,21 @@ export class UnifiedTemplateLoader {
   ): Promise<Block[] | null> {
     // Determinar qual arquivo v4 carregar (padrão ou gold) com base no funnelId
     const templateKey = options.funnelId || 'quiz21-v4';
+    console.log('[UnifiedLoader] 🔍 loadFromV4', { stepId, templateKey, funnelId: options.funnelId });
 
     // Tentar carregar template completo v4 correspondente
+    console.log('[UnifiedLoader] 📥 Chamando loadFullTemplate', { templateKey });
     const templateResult = await this.loadFullTemplate(templateKey, {
       useCache: true,
       timeout: options.timeout,
       signal: options.signal,
     });
+    console.log('[UnifiedLoader] ✅ loadFullTemplate retornou', { 
+      stepsCount: templateResult.data.steps?.length 
+    });
 
     const step = templateResult.data.steps.find(s => s.id === stepId);
+    console.log('[UnifiedLoader] 🎯 Step encontrado', { stepId, found: !!step, blocksCount: step?.blocks?.length });
     // Type cast: QuizBlock[] from Zod schema is compatible with Block[] from editor types
     return step ? (step.blocks as any as Block[]) : null;
   }
@@ -444,7 +454,10 @@ export class UnifiedTemplateLoader {
     signal?: AbortSignal
   ): Promise<Response> {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), timeout);
+    const timeoutId = setTimeout(() => {
+      console.warn(`[UnifiedLoader] ⏱️ Timeout ${timeout}ms atingido para ${url}`);
+      controller.abort();
+    }, timeout);
 
     try {
       // Combinar signals
@@ -452,7 +465,9 @@ export class UnifiedTemplateLoader {
         ? this.combineAbortSignals(signal, controller.signal)
         : controller.signal;
 
+      console.log(`[UnifiedLoader] 🌐 Iniciando fetch...`, { url, timeout });
       const response: any = await fetch(url, { signal: combinedSignal });
+      console.log(`[UnifiedLoader] 🌐 Fetch completou`, { url, ok: response?.ok, status: response?.status });
 
       // Guardar contra mocks quebrados que retornam undefined/null
       if (!response) {
@@ -467,6 +482,7 @@ export class UnifiedTemplateLoader {
       }
 
       if (!response.ok) {
+        console.error(`[UnifiedLoader] ❌ HTTP Error ${response.status} for ${url}`);
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
 

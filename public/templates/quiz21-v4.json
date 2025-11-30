@@ -7,7 +7,7 @@
     "name": "Quiz de Estilo Pessoal - 21 Etapas",
     "description": "Template completo v3.0 com todos os blocos e seções dos 21 steps",
     "author": "Sistema - Consolidador Automático",
-    "createdAt": "2025-01-13",
+    "createdAt": "2025-01-13T00:00:00.000Z",
     "updatedAt": "2025-11-23T23:06:50.482Z",
     "version": "4.0.0",
     "tags": [
@@ -20,7 +20,7 @@
   },
   "theme": {
     "colors": {
-      "primary": "{{theme.colors.primary}}",
+      "primary": "#B89B7A",
       "primaryHover": "#A68B6A",
       "primaryLight": "#F3E8D3",
       "secondary": "#432818",
@@ -85,7 +85,7 @@
           "type": "intro-logo-header",
           "order": 0,
           "properties": {
-            "logoUrl": "{{asset.logo}}",
+            "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/logo_euritmo.webp",
             "logoAlt": "Logo Gisele Galvão",
             "logoWidth": 132,
             "logoHeight": 55,
@@ -96,7 +96,7 @@
             "progressMax": 100,
             "progressHeight": 4,
             "progressStyle": "bar",
-            "progressColor": "{{theme.colors.primary}}",
+            "progressColor": "#B89B7A",
             "progressBackgroundColor": "#E5DDD5",
             "showBackButton": false,
             "backButtonStyle": "icon",
@@ -112,7 +112,8 @@
             "animationType": "fade",
             "animationDuration": 300
           },
-          "parentId": null
+          "parentId": null,
+          "content": {}
         },
         {
           "id": "intro-title",
@@ -129,7 +130,7 @@
             "fontWeight": "700"
           },
           "content": {
-            "title": "<span style=\"color: {{theme.colors.primary}}; font-weight: 700;\">Chega</span> de um guarda-roupa lotado e da sensação de que <span style=\"color: {{theme.colors.primary}}; font-weight: 700;\">nada combina com você</span>."
+            "title": "<span style=\"color: #B89B7A; font-weight: 700;\">Chega</span> de um guarda-roupa lotado e da sensação de que <span style=\"color: #B89B7A; font-weight: 700;\">nada combina com você</span>."
           },
           "parentId": null
         },
@@ -143,11 +144,11 @@
             "borderRadius": "8px"
           },
           "content": {
-            "src": "{{asset.logo}}",
+            "src": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/logo_euritmo.webp",
             "alt": "Descubra seu estilo predominante",
             "width": 300,
             "height": 204,
-            "imageUrl": "{{asset.logo}}"
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/logo_euritmo.webp"
           },
           "parentId": null
         },
@@ -162,7 +163,7 @@
             "textAlign": "center"
           },
           "content": {
-            "text": "Em poucos minutos, descubra seu <span class=\"font-semibold text-[{{theme.colors.primary}}]\">Estilo Predominante</span> — e aprenda a montar looks que realmente refletem sua <span class=\"font-semibold text-[#432818]\">essência</span>, com praticidade e <span class=\"font-semibold text-[#432818]\">confiança</span>."
+            "text": "Em poucos minutos, descubra seu <span class=\"font-semibold text-[#B89B7A]\">Estilo Predominante</span> — e aprenda a montar looks que realmente refletem sua <span class=\"font-semibold text-[#432818]\">essência</span>, com praticidade e <span class=\"font-semibold text-[#432818]\">confiança</span>."
           },
           "parentId": null
         },
@@ -192,14 +193,11 @@
         "conditions": []
       },
       "validation": {
-        "required": [
-          "selectedOptions"
-        ],
+        "required": true,
         "rules": {
           "selectedOptions": {
-            "minItems": 3,
-            "maxItems": 3,
-            "errorMessage": "Selecione exatamente 3 opções"
+            "minItems": 1,
+            "errorMessage": "selectedOptions é obrigatório"
           }
         }
       }
@@ -221,7 +219,7 @@
             "stepNumber": 2,
             "totalSteps": 21,
             "showPercentage": true,
-            "barColor": "{{theme.colors.primary}}",
+            "barColor": "#B89B7A",
             "backgroundColor": "#e5e7eb"
           },
           "parentId": null
@@ -332,14 +330,11 @@
         "conditions": []
       },
       "validation": {
-        "required": [
-          "selectedOptions"
-        ],
+        "required": true,
         "rules": {
           "selectedOptions": {
-            "minItems": 3,
-            "maxItems": 3,
-            "errorMessage": "Selecione exatamente 3 opções"
+            "minItems": 1,
+            "errorMessage": "selectedOptions é obrigatório"
           }
         }
       }
@@ -361,7 +356,7 @@
             "stepNumber": 3,
             "totalSteps": 21,
             "showPercentage": true,
-            "barColor": "{{theme.colors.primary}}",
+            "barColor": "#B89B7A",
             "backgroundColor": "#e5e7eb"
           },
           "parentId": null
@@ -476,14 +471,11 @@
         "conditions": []
       },
       "validation": {
-        "required": [
-          "selectedOptions"
-        ],
+        "required": true,
         "rules": {
           "selectedOptions": {
-            "minItems": 3,
-            "maxItems": 3,
-            "errorMessage": "Por favor, selecione exatamente 3 opções"
+            "minItems": 1,
+            "errorMessage": "selectedOptions é obrigatório"
           }
         }
       }
@@ -505,7 +497,7 @@
             "stepNumber": 4,
             "totalSteps": 21,
             "showPercentage": true,
-            "barColor": "{{theme.colors.primary}}",
+            "barColor": "#B89B7A",
             "backgroundColor": "#e5e7eb"
           },
           "parentId": null
@@ -651,14 +643,11 @@
         "conditions": []
       },
       "validation": {
-        "required": [
-          "selectedOptions"
-        ],
+        "required": true,
         "rules": {
           "selectedOptions": {
-            "minItems": 3,
-            "maxItems": 3,
-            "errorMessage": "Por favor, selecione exatamente 3 opções"
+            "minItems": 1,
+            "errorMessage": "selectedOptions é obrigatório"
           }
         }
       }
@@ -680,7 +669,7 @@
             "stepNumber": 5,
             "totalSteps": 21,
             "showPercentage": true,
-            "barColor": "{{theme.colors.primary}}",
+            "barColor": "#B89B7A",
             "backgroundColor": "#e5e7eb"
           },
           "parentId": null
@@ -813,14 +802,11 @@
         "conditions": []
       },
       "validation": {
-        "required": [
-          "selectedOptions"
-        ],
+        "required": true,
         "rules": {
           "selectedOptions": {
-            "minItems": 3,
-            "maxItems": 3,
-            "errorMessage": "Por favor, selecione exatamente 3 opções"
+            "minItems": 1,
+            "errorMessage": "selectedOptions é obrigatório"
           }
         }
       }
@@ -842,7 +828,7 @@
             "stepNumber": 6,
             "totalSteps": 21,
             "showPercentage": true,
-            "barColor": "{{theme.colors.primary}}",
+            "barColor": "#B89B7A",
             "backgroundColor": "#e5e7eb"
           },
           "parentId": null
@@ -983,14 +969,11 @@
         "conditions": []
       },
       "validation": {
-        "required": [
-          "selectedOptions"
-        ],
+        "required": true,
         "rules": {
           "selectedOptions": {
-            "minItems": 3,
-            "maxItems": 3,
-            "errorMessage": "Por favor, selecione exatamente 3 opções"
+            "minItems": 1,
+            "errorMessage": "selectedOptions é obrigatório"
           }
         }
       }
@@ -1012,7 +995,7 @@
             "stepNumber": 7,
             "totalSteps": 21,
             "showPercentage": true,
-            "barColor": "{{theme.colors.primary}}",
+            "barColor": "#B89B7A",
             "backgroundColor": "#e5e7eb"
           },
           "parentId": null
@@ -1153,14 +1136,11 @@
         "conditions": []
       },
       "validation": {
-        "required": [
-          "selectedOptions"
-        ],
+        "required": true,
         "rules": {
           "selectedOptions": {
-            "minItems": 3,
-            "maxItems": 3,
-            "errorMessage": "Por favor, selecione exatamente 3 opções"
+            "minItems": 1,
+            "errorMessage": "selectedOptions é obrigatório"
           }
         }
       }
@@ -1182,7 +1162,7 @@
             "stepNumber": 8,
             "totalSteps": 21,
             "showPercentage": true,
-            "barColor": "{{theme.colors.primary}}",
+            "barColor": "#B89B7A",
             "backgroundColor": "#e5e7eb"
           },
           "parentId": null
@@ -1323,14 +1303,11 @@
         "conditions": []
       },
       "validation": {
-        "required": [
-          "selectedOptions"
-        ],
+        "required": true,
         "rules": {
           "selectedOptions": {
-            "minItems": 3,
-            "maxItems": 3,
-            "errorMessage": "Por favor, selecione exatamente 3 opções"
+            "minItems": 1,
+            "errorMessage": "selectedOptions é obrigatório"
           }
         }
       }
@@ -1352,7 +1329,7 @@
             "stepNumber": 9,
             "totalSteps": 21,
             "showPercentage": true,
-            "barColor": "{{theme.colors.primary}}",
+            "barColor": "#B89B7A",
             "backgroundColor": "#e5e7eb"
           },
           "parentId": null
@@ -1493,14 +1470,11 @@
         "conditions": []
       },
       "validation": {
-        "required": [
-          "selectedOptions"
-        ],
+        "required": true,
         "rules": {
           "selectedOptions": {
-            "minItems": 3,
-            "maxItems": 3,
-            "errorMessage": "Por favor, selecione exatamente 3 opções"
+            "minItems": 1,
+            "errorMessage": "selectedOptions é obrigatório"
           }
         }
       }
@@ -1522,7 +1496,7 @@
             "stepNumber": 10,
             "totalSteps": 21,
             "showPercentage": true,
-            "barColor": "{{theme.colors.primary}}",
+            "barColor": "#B89B7A",
             "backgroundColor": "#e5e7eb"
           },
           "parentId": null
@@ -1663,14 +1637,11 @@
         "conditions": []
       },
       "validation": {
-        "required": [
-          "selectedOptions"
-        ],
+        "required": true,
         "rules": {
           "selectedOptions": {
-            "minItems": 3,
-            "maxItems": 3,
-            "errorMessage": "Por favor, selecione exatamente 3 opções"
+            "minItems": 1,
+            "errorMessage": "selectedOptions é obrigatório"
           }
         }
       }
@@ -1692,7 +1663,7 @@
             "stepNumber": 11,
             "totalSteps": 21,
             "showPercentage": true,
-            "barColor": "{{theme.colors.primary}}",
+            "barColor": "#B89B7A",
             "backgroundColor": "#e5e7eb"
           },
           "parentId": null
@@ -1825,14 +1796,11 @@
         "conditions": []
       },
       "validation": {
-        "required": [
-          "selectedOptions"
-        ],
+        "required": true,
         "rules": {
           "selectedOptions": {
-            "minItems": 3,
-            "maxItems": 3,
-            "errorMessage": "Por favor, selecione exatamente 3 opções"
+            "minItems": 1,
+            "errorMessage": "selectedOptions é obrigatório"
           }
         }
       }
@@ -1915,7 +1883,7 @@
             "stepNumber": 13,
             "totalSteps": 21,
             "showPercentage": true,
-            "barColor": "{{theme.colors.primary}}",
+            "barColor": "#B89B7A",
             "backgroundColor": "#e5e7eb"
           },
           "parentId": null
@@ -2026,14 +1994,11 @@
         "conditions": []
       },
       "validation": {
-        "required": [
-          "selectedOptions"
-        ],
+        "required": true,
         "rules": {
           "selectedOptions": {
             "minItems": 1,
-            "maxItems": 1,
-            "errorMessage": "Por favor, selecione uma opção"
+            "errorMessage": "selectedOptions é obrigatório"
           }
         }
       }
@@ -2055,7 +2020,7 @@
             "stepNumber": 14,
             "totalSteps": 21,
             "showPercentage": true,
-            "barColor": "{{theme.colors.primary}}",
+            "barColor": "#B89B7A",
             "backgroundColor": "#e5e7eb"
           },
           "parentId": null
@@ -2166,14 +2131,11 @@
         "conditions": []
       },
       "validation": {
-        "required": [
-          "selectedOptions"
-        ],
+        "required": true,
         "rules": {
           "selectedOptions": {
             "minItems": 1,
-            "maxItems": 1,
-            "errorMessage": "Por favor, selecione uma opção"
+            "errorMessage": "selectedOptions é obrigatório"
           }
         }
       }
@@ -2195,7 +2157,7 @@
             "stepNumber": 15,
             "totalSteps": 21,
             "showPercentage": true,
-            "barColor": "{{theme.colors.primary}}",
+            "barColor": "#B89B7A",
             "backgroundColor": "#e5e7eb"
           },
           "parentId": null
@@ -2306,14 +2268,11 @@
         "conditions": []
       },
       "validation": {
-        "required": [
-          "selectedOptions"
-        ],
+        "required": true,
         "rules": {
           "selectedOptions": {
             "minItems": 1,
-            "maxItems": 1,
-            "errorMessage": "Por favor, selecione uma opção"
+            "errorMessage": "selectedOptions é obrigatório"
           }
         }
       }
@@ -2335,7 +2294,7 @@
             "stepNumber": 16,
             "totalSteps": 21,
             "showPercentage": true,
-            "barColor": "{{theme.colors.primary}}",
+            "barColor": "#B89B7A",
             "backgroundColor": "#e5e7eb"
           },
           "parentId": null
@@ -2446,14 +2405,11 @@
         "conditions": []
       },
       "validation": {
-        "required": [
-          "selectedOptions"
-        ],
+        "required": true,
         "rules": {
           "selectedOptions": {
             "minItems": 1,
-            "maxItems": 1,
-            "errorMessage": "Por favor, selecione uma opção"
+            "errorMessage": "selectedOptions é obrigatório"
           }
         }
       }
@@ -2475,7 +2431,7 @@
             "stepNumber": 17,
             "totalSteps": 21,
             "showPercentage": true,
-            "barColor": "{{theme.colors.primary}}",
+            "barColor": "#B89B7A",
             "backgroundColor": "#e5e7eb"
           },
           "parentId": null
@@ -2586,14 +2542,11 @@
         "conditions": []
       },
       "validation": {
-        "required": [
-          "selectedOptions"
-        ],
+        "required": true,
         "rules": {
           "selectedOptions": {
             "minItems": 1,
-            "maxItems": 1,
-            "errorMessage": "Por favor, selecione uma opção"
+            "errorMessage": "selectedOptions é obrigatório"
           }
         }
       }
@@ -2615,7 +2568,7 @@
             "stepNumber": 18,
             "totalSteps": 21,
             "showPercentage": true,
-            "barColor": "{{theme.colors.primary}}",
+            "barColor": "#B89B7A",
             "backgroundColor": "#e5e7eb"
           },
           "parentId": null
@@ -2726,14 +2679,11 @@
         "conditions": []
       },
       "validation": {
-        "required": [
-          "selectedOptions"
-        ],
+        "required": true,
         "rules": {
           "selectedOptions": {
             "minItems": 1,
-            "maxItems": 1,
-            "errorMessage": "Por favor, selecione uma opção"
+            "errorMessage": "selectedOptions é obrigatório"
           }
         }
       }
@@ -2817,9 +2767,9 @@
               "styleNameDisplay": "{styleName}",
               "colors": {
                 "greeting": "#432818",
-                "greetingHighlight": "{{theme.colors.primary}}",
+                "greetingHighlight": "#B89B7A",
                 "title": "#432818",
-                "styleName": "{{theme.colors.primary}}"
+                "styleName": "#B89B7A"
               },
               "spacing": {
                 "padding": "3rem 1.5rem",
@@ -2846,7 +2796,7 @@
               "animateOnMount": true,
               "confettiEnabled": true,
               "theme": {
-                "primaryColor": "{{theme.colors.primary}}",
+                "primaryColor": "#B89B7A",
                 "secondaryColor": "#432818",
                 "accentColor": "#a08966",
                 "backgroundColor": "#fffaf7",
@@ -2882,7 +2832,7 @@
               "styleImage": {
                 "aspectRatio": "4/5",
                 "showDecorations": true,
-                "decorationColor": "{{theme.colors.primary}}",
+                "decorationColor": "#B89B7A",
                 "fallbackEnabled": true,
                 "showLabel": true
               },
@@ -2908,7 +2858,7 @@
               "percentageFormat": "{percentage}%",
               "animationDelay": 200,
               "colors": {
-                "primary": "{{theme.colors.primary}}",
+                "primary": "#B89B7A",
                 "secondary": "#a08966",
                 "tertiary": "#8c7757"
               },
@@ -2928,7 +2878,7 @@
             "props": {
               "showKeywords": true,
               "keywordsTitle": "Palavras que te definem:",
-              "tagColor": "{{theme.colors.primary}}",
+              "tagColor": "#B89B7A",
               "tagStyle": "rounded-full"
             }
           },
@@ -2987,7 +2937,7 @@
             "variant": "primary",
             "size": "large",
             "fullWidth": true,
-            "backgroundColor": "{{theme.colors.primary}}",
+            "backgroundColor": "#B89B7A",
             "textColor": "#ffffff",
             "hoverColor": "#a08966"
           },
@@ -3059,7 +3009,7 @@
             "variant": "primary",
             "size": "large",
             "fullWidth": true,
-            "backgroundColor": "{{theme.colors.primary}}",
+            "backgroundColor": "#B89B7A",
             "textColor": "#ffffff",
             "hoverColor": "#a08966"
           },
@@ -3142,7 +3092,7 @@
       },
       "defaultContent": {
         "showPercentage": true,
-        "barColor": "{{theme.colors.primary}}",
+        "barColor": "#B89B7A",
         "backgroundColor": "#E5E7EB"
       }
     },
@@ -3229,6 +3179,24 @@
       "defaultProps": {},
       "defaultContent": {
         "logoUrl": "",
+        "showProgress": false
+      }
+    },
+    "intro-logo-header": {
+      "component": "IntroLogoHeader",
+      "editable": true,
+      "reorderable": true,
+      "reusable": true,
+      "deletable": true,
+      "defaultProps": {
+        "logoWidth": 132,
+        "logoHeight": 55,
+        "progressHeight": 4
+      },
+      "defaultContent": {
+        "logoUrl": "",
+        "logoAlt": "",
+        "showLogo": true,
         "showProgress": false
       }
     }
