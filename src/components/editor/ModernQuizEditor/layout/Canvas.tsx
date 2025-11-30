@@ -119,7 +119,14 @@ function BlockPreview({ block, isSelected, onClick }: BlockPreviewProps) {
                 )}
             </div>
 
-            {/* Conteúdo do bloco (preview simplificado) */}
+            {/* Toolbar de ações quando selecionado */}
+            {isSelected && (
+                <div className="mb-3 flex items-center gap-2">
+                    <BlockActions block={block} />
+                </div>
+            )}
+
+            {/* Conteúdo do bloco (preview com suporte básico por tipo) */}
             <div className="space-y-2">
                 {/* Título */}
                 {block.properties?.title && (
@@ -158,6 +165,17 @@ function BlockPreview({ block, isSelected, onClick }: BlockPreviewProps) {
                     </div>
                 )}
 
+                {/* Imagem */}
+                {block.properties?.src && (
+                    <div className="mt-2">
+                        <img
+                            src={block.properties.src}
+                            alt={block.properties.alt || ''}
+                            className="max-w-full rounded"
+                        />
+                    </div>
+                )}
+
                 {/* Badge do tipo */}
                 <div className="pt-2 mt-2 border-t border-gray-100">
                     <span className="text-xs text-gray-400">
@@ -165,6 +183,35 @@ function BlockPreview({ block, isSelected, onClick }: BlockPreviewProps) {
                     </span>
                 </div>
             </div>
+        </div>
+    );
+}
+
+function BlockActions({ block }: { block: QuizBlock }) {
+    const { selectedStepId } = useEditorStore();
+    const deleteBlock = useQuizStore((s) => s.deleteBlock);
+    const addBlock = useQuizStore((s) => s.addBlock);
+    const reorderBlocks = useQuizStore((s) => s.reorderBlocks);
+
+    if (!selectedStepId) return null;
+
+    const duplicate = () => {
+        // Duplicar bloco com novo id
+        const newId = `${block.id}-copy-${Date.now()}`;
+        addBlock(selectedStepId, block.type as any, (block.order || 0) + 1);
+        // Nota: Fase 2 completa deve clonar properties e content
+    };
+
+    const remove = () => deleteBlock(selectedStepId, block.id);
+    const moveUp = () => reorderBlocks(selectedStepId, (block.order || 1) - 1, (block.order || 1) - 2);
+    const moveDown = () => reorderBlocks(selectedStepId, (block.order || 1) - 1, (block.order || 1));
+
+    return (
+        <div className="flex items-center gap-2">
+            <button className="px-2 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded" onClick={duplicate}>Duplicar</button>
+            <button className="px-2 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded" onClick={moveUp}>↑ Mover</button>
+            <button className="px-2 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded" onClick={moveDown}>↓ Mover</button>
+            <button className="px-2 py-1 text-xs bg-red-100 hover:bg-red-200 text-red-700 rounded" onClick={remove}>Excluir</button>
         </div>
     );
 }
