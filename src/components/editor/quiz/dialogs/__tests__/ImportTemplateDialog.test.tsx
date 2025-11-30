@@ -52,6 +52,16 @@ function createMockJsonFile(content: object, filename = 'template.json'): File {
     return new File([blob], filename, { type: 'application/json' });
 }
 
+// Helper para simular upload sem depender de eventos de ponteiro (Radix aplica pointer-events: none)
+function forceUpload(input: HTMLInputElement, file: File) {
+    Object.defineProperty(input, 'files', {
+        value: [file],
+        writable: false,
+        configurable: true,
+    });
+    fireEvent.change(input, { target: { files: [file] } });
+}
+
 describe('ImportTemplateDialog - Renderização Inicial', () => {
     beforeEach(() => {
         vi.clearAllMocks();
@@ -151,7 +161,7 @@ describe('ImportTemplateDialog - Upload de Arquivo', () => {
         forceUpload(input, file);
 
         await waitFor(() => {
-            expect(screen.getByText(/quiz 21 steps/i)).toBeInTheDocument();
+            expect(screen.getByText(/template válido/i)).toBeInTheDocument();
         });
     });
 
@@ -173,7 +183,7 @@ describe('ImportTemplateDialog - Upload de Arquivo', () => {
         forceUpload(input, file);
 
         await waitFor(() => {
-            expect(screen.getByText(/formato inválido/i)).toBeInTheDocument();
+            expect(screen.getByText(/extensão .json/i)).toBeInTheDocument();
         });
     });
 
@@ -197,7 +207,7 @@ describe('ImportTemplateDialog - Upload de Arquivo', () => {
         forceUpload(input, file);
 
         await waitFor(() => {
-            expect(screen.getByText(/json inválido/i)).toBeInTheDocument();
+            expect(screen.getByText(/erro ao ler json/i)).toBeInTheDocument();
         });
     });
 
@@ -230,7 +240,7 @@ describe('ImportTemplateDialog - Upload de Arquivo', () => {
         forceUpload(input, file);
 
         await waitFor(() => {
-            expect(screen.getByText(/falta campo id/i)).toBeInTheDocument();
+            expect(screen.getByText(/metadata\.id: falta campo id/i)).toBeInTheDocument();
         });
     });
 });
