@@ -1301,26 +1301,32 @@ export class TemplateService extends BaseCanonicalService {
       try {
         const steps: StepInfo[] = [];
 
-        // ✅ P8 FIX: Fallback robusto para garantir steps sempre disponíveis
+        // 🔧 FIX: Só retornar steps se template foi carregado
         let totalSteps = this.activeTemplateSteps;
 
-        // Se não configurado (0), usar 21 como padrão para templates conhecidos
+        // Se não configurado (0), verificar se há template/funnel ativo
         if (totalSteps === 0) {
-          // Detectar template padrão
+          // Se não há template nem funnel ativo, retornar lista vazia
+          if (!this.activeTemplateId && !this.activeFunnelId) {
+            appLogger.debug('[TemplateService.steps.list] Nenhum template/funnel ativo, retornando lista vazia');
+            return this.createResult([]);
+          }
+
+          // Detectar template padrão conhecido
           const isKnownTemplate = this.activeTemplateId === 'quiz21StepsComplete' ||
             this.activeTemplateId?.includes('quiz21') ||
             this.activeFunnelId?.includes('quiz21');
 
           if (isKnownTemplate) {
             totalSteps = 21;
-            appLogger.debug('[TemplateService.steps.list] Usando 21 steps para template quiz21');
+            appLogger.debug('[TemplateService.steps.list] Template quiz21 detectado, usando 21 steps');
           } else {
-            // Default seguro: 21 steps (quiz completo)
-            totalSteps = 21;
-            appLogger.warn('[TemplateService.steps.list] activeTemplateSteps=0, usando fallback de 21 steps', {
+            // Para templates desconhecidos SEM totalSteps configurado, retornar vazio
+            appLogger.warn('[TemplateService.steps.list] Template/funnel ativo mas sem totalSteps definido', {
               activeTemplateId: this.activeTemplateId,
               activeFunnelId: this.activeFunnelId
             });
+            return this.createResult([]);
           }
         }
 

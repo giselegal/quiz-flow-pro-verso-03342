@@ -99,14 +99,27 @@ export function useTemplateLoader(options: UseTemplateLoaderOptions): UseTemplat
 
                 if (signal.aborted) return;
 
-                // 2️⃣ Definir template ativo
+                // 2️⃣ Carregar template JSON para detectar número de steps
+                let totalSteps = 21; // Default para quiz21
+                try {
+                    const templateResult = await (templateService as any).templates?.get?.(tid);
+                    if (templateResult?.success && templateResult.data) {
+                        const stepsObj = templateResult.data.steps || {};
+                        totalSteps = Object.keys(stepsObj).length || 21;
+                        appLogger.info(`🔍 [useTemplateLoader] Template ${tid} tem ${totalSteps} steps`);
+                    }
+                } catch (err) {
+                    appLogger.warn(`[useTemplateLoader] Falha ao detectar steps do template, usando default: 21`);
+                }
+
+                // 3️⃣ Definir template ativo com número correto de steps
                 if (typeof (templateService as any).setActiveTemplate === 'function') {
-                    (templateService as any).setActiveTemplate(tid, 21);
+                    (templateService as any).setActiveTemplate(tid, totalSteps);
                 }
 
                 if (signal.aborted) return;
 
-                // 3️⃣ Carregar lista de steps
+                // 4️⃣ Carregar lista de steps
                 const result = (templateService as any).steps?.list?.() ?? { success: false, data: [] };
 
                 if (!result.success || !Array.isArray(result.data)) {
