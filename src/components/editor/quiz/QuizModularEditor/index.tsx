@@ -313,9 +313,9 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     useStepPrefetch({
         currentStepId: currentStepKey,
         funnelId: props.funnelId,
-        // Prefer totalSteps from resource metadata when available, fallback to 21
-        totalSteps: Number((props.editorResource as any)?.metadata?.totalSteps ?? 21),
-        enabled: true,
+        // Usar número de steps do template carregado, fallback para metadata ou 21
+        totalSteps: loadedTemplate?.steps?.length ?? Number((props.editorResource as any)?.metadata?.totalSteps ?? 21),
+        enabled: !!loadedTemplate, // Só fazer prefetch se template carregado
         radius: 1, // Prefetch apenas step anterior e próximo (não N+2)
         debounceMs: 300, // Aumentado de 16ms para 300ms - evita prefetch em navegação rápida
     });
@@ -865,6 +865,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     }, [unifiedState.editor.stepBlocks]);
 
     const navSteps = useMemo(() => {
+        // 1. Se template carregado, usar steps do template
         if (loadedTemplate?.steps?.length) {
             return loadedTemplate.steps.map((s: any) => ({
                 key: s.id,
@@ -872,23 +873,23 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
             }));
         }
 
+        // 2. Se há stepBlocks no estado, gerar navegação baseada neles
         const indexes = Object.keys(unifiedState.editor.stepBlocks || {})
             .map((k) => Number(k))
             .filter((n) => Number.isFinite(n) && n >= 1)
             .sort((a, b) => a - b);
 
-        if (indexes.length === 0) {
-            // 🔧 FIX: Gerar todos 21 steps ao invés de apenas 2
-            return Array.from({ length: 21 }, (_, i) => ({
-                key: `step-${String(i + 1).padStart(2, '0')}`,
-                title: `${String(i + 1).padStart(2, '0')} - Etapa ${i + 1}`,
+        if (indexes.length > 0) {
+            return indexes.map((i) => ({
+                key: `step-${String(i).padStart(2, '0')}`,
+                title: `${String(i).padStart(2, '0')} - Etapa ${i}`,
             }));
         }
 
-        return indexes.map((i) => ({
-            key: `step-${String(i).padStart(2, '0')}`,
-            title: `${String(i).padStart(2, '0')} - Etapa ${i}`,
-        }));
+        // 3. Se não há template nem stepBlocks, retornar array vazio
+        // (StepNavigatorColumn mostrará empty state)
+        appLogger.debug('[navSteps] Sem template ou stepBlocks, retornando lista vazia');
+        return [];
     }, [loadedTemplate, stepsVersion, unifiedState.editor.stepBlocks]);
 
     // Ensure initial step in free mode
