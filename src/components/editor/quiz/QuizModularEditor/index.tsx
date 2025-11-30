@@ -313,9 +313,9 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     useStepPrefetch({
         currentStepId: currentStepKey,
         funnelId: props.funnelId,
-        // Usar número de steps do template carregado, fallback para metadata ou 21
-        totalSteps: loadedTemplate?.steps?.length ?? Number((props.editorResource as any)?.metadata?.totalSteps ?? 21),
-        enabled: !!loadedTemplate, // Só fazer prefetch se template carregado
+        // Prefer totalSteps from resource metadata when available, fallback to 21
+        totalSteps: Number((props.editorResource as any)?.metadata?.totalSteps ?? 21),
+        enabled: true,
         radius: 1, // Prefetch apenas step anterior e próximo (não N+2)
         debounceMs: 300, // Aumentado de 16ms para 300ms - evita prefetch em navegação rápida
     });
