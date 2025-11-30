@@ -26,8 +26,10 @@ import { useRoute } from 'wouter';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 import { PageLoadingFallback } from '@/components/LoadingSpinner';
 import { appLogger } from '@/lib/utils/appLogger';
-import { templateService } from '@/services/canonical/TemplateService';
+import { TemplateService } from '@/services/canonical/TemplateService';
 import type { QuizSchema } from '@/schemas/quiz-schema.zod';
+
+const templateService = TemplateService.getInstance({ debug: false });
 
 // ✅ Novo editor moderno com arquitetura limpa
 const ModernQuizEditor = React.lazy(() =>
@@ -112,11 +114,16 @@ export default function EditorPage() {
 
             try {
                 appLogger.info('📂 Carregando quiz via ModernQuizEditor:', { funnelId });
-                const loadedQuiz = await templateService.load(funnelId);
-                setQuiz(loadedQuiz);
+                const result = await templateService.loadV4Template();
+
+                if (!result.success || !result.data) {
+                    throw new Error(result.error?.message || 'Falha ao carregar template v4');
+                }
+
+                setQuiz(result.data);
                 appLogger.info('✅ Quiz carregado no editor moderno:', {
-                    title: loadedQuiz.metadata.name,
-                    steps: loadedQuiz.steps?.length || 0
+                    title: result.data.metadata?.title || result.data.metadata?.name,
+                    steps: result.data.steps?.length || 0
                 });
             } catch (error) {
                 const message = error instanceof Error ? error.message : 'Erro desconhecido';
