@@ -66,6 +66,10 @@ export const BlockTypeZ = z.enum([
   'question-description',
   'options-grid',
   'form-input',
+  // Compat: heróis e CTA em uso nos JSONs
+  'question-hero',
+  'transition-hero',
+  'CTAButton',
   
   // Transition Blocks
   'transition-title',
@@ -177,7 +181,10 @@ export const StepTypeZ = z.enum([
   'transition',
   'loading',
   'result',
-  'offer'
+  'offer',
+  // Compat: aliases usados em templates existentes
+  'quiz-question',
+  'strategic-question'
 ]);
 
 export const QuizStepSchemaZ = z.object({
