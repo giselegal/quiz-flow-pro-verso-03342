@@ -11,7 +11,9 @@ import { QuizErrorBoundary } from '@/components/RouteErrorBoundary';
 import { LoadingFallback } from '@/components/ui/loading-fallback';
 import { UnifiedCRUDProvider } from '@/contexts';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
-const QuizModularEditor = React.lazy(() => import('@/components/editor/quiz/QuizModularEditor'));
+const ModernQuizEditor = React.lazy(() =>
+    import('@/components/editor/ModernQuizEditor').then(m => ({ default: m.ModernQuizEditor }))
+);
 
 interface QuizAIPageProps {
     previewMode?: boolean;
@@ -86,7 +88,7 @@ export const QuizAIPage: React.FC<QuizAIPageProps> = () => {
                 <Suspense fallback={<LoadingFallback />}>
                     <div data-testid="quiz-ai-editor">
                         <UnifiedCRUDProvider funnelId="quiz21StepsComplete" autoLoad={true} context={FunnelContext.EDITOR}>
-                            <QuizModularEditor />
+                            <ModernQuizEditor />
                         </UnifiedCRUDProvider>
                     </div>
                 </Suspense>

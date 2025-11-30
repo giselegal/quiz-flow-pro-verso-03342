@@ -12,18 +12,18 @@
 import { lazy } from 'react';
 
 // 🎯 EDITOR CANÔNICO (ÚNICO EDITOR DE PRODUÇÃO)
-export const QuizModularEditor = lazy(() => 
+export const ModernQuizEditor = lazy(() => 
   import(
     /* webpackChunkName: "editor-production" */
     /* webpackPreload: true */
-    '@/components/editor/quiz/QuizModularEditor'
-  ),
+    '@/components/editor/ModernQuizEditor'
+  ).then(m => ({ default: m.ModernQuizEditor })),
 );
 
-// ⚠️ EDITORES DEPRECADOS REMOVIDOS (cleanup 2025-10-29)
-// QuizModularEditor.tsx (4,345 linhas) → QuizModularEditor (502 linhas)
-// Redução: 86% código, 64% bundle size, 60% TTI
-// Use apenas QuizModularEditor acima
+// ⚠️ EDITORES DEPRECADOS REMOVIDOS (cleanup 2025-11-30)
+// QuizModularEditor (antigo) → ModernQuizEditor (novo)
+// Arquitetura moderna com Zustand, DnD-kit, validação Zod
+// Use apenas ModernQuizEditor acima
 
-export default QuizModularEditor;
+export default ModernQuizEditor;
 
