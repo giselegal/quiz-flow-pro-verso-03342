@@ -618,6 +618,9 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
             data: wysiwyg?.state?.blocks || [],
             debounceMs: Number((import.meta as any).env?.VITE_AUTO_SAVE_DELAY_MS ?? 2000),
             onSave: async () => {
+                // Definir currentBlocks no escopo externo para uso no catch
+                const currentBlocks = wysiwyg.state.blocks || [];
+
                 try {
                     // Forçar flush imediato se houver timer pendente
                     if (flushTimerRef.current) {
@@ -638,7 +641,6 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                     }
 
                     // Calcular hash atual
-                    const currentBlocks = wysiwyg.state.blocks || [];
                     const currentHash = computeBlocksHash(currentBlocks as any);
                     if (currentHash === lastPersistedHashRef.current) {
                         appLogger.debug('[AutoSave] Ignorado (hash inalterado)', { hash: currentHash });
@@ -1335,14 +1337,14 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 
                 // Recarregar step atual
                 const stepNumber = safeCurrentStep;
-                queryClient.invalidateQueries({ queryKey: stepKeys.blocks(resourceId!, stepNumber) });
+                queryClient.invalidateQueries({ queryKey: ['steps', 'blocks', resourceId!, String(stepNumber)] });
                 return;
             }
 
             if (strategy === 'overwrite') {
                 // Força sobrescrever com versão local (skipVersionCheck = true)
                 appLogger.info('[Conflict] Sobrescrevendo versão do servidor com versão local...');
-                await persistenceService.save(
+                await persistenceService.saveBlocks(
                     resourceId!,
                     localBlocks,
                     {
@@ -1361,7 +1363,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                 if (!mergedBlocks) {
                     throw new Error('Blocos mesclados não fornecidos');
                 }
-                await persistenceService.save(
+                await persistenceService.saveBlocks(
                     resourceId!,
                     mergedBlocks,
                     {
