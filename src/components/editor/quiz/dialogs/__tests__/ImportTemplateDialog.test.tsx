@@ -23,6 +23,12 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
 import { ImportTemplateDialog } from '@/components/editor/quiz/dialogs/ImportTemplateDialog';
 import { normalizeAndValidateTemplateV3, isNormalizeSuccess } from '@/templates/validation/validateAndNormalize';
+import {
+    createValidBlockMock,
+    createValidTemplateV3Mock,
+    createValidationSuccessMock,
+    createValidationErrorMock
+} from '@/test-utils/templateMocks';
 
 // Mock do validator/normalizer usado pelo componente
 vi.mock('@/templates/validation/validateAndNormalize', () => ({
@@ -127,7 +133,7 @@ describe('ImportTemplateDialog - Upload de Arquivo', () => {
 
     it('deve aceitar upload de arquivo JSON válido', async () => {
         const user = userEvent.setup({ pointerEventsCheck: 0 });
-        const mockTemplate = {
+        const mockTemplate = createValidTemplateV3Mock({
             metadata: {
                 id: 'quiz21StepsComplete',
                 version: '3.1',
@@ -135,17 +141,14 @@ describe('ImportTemplateDialog - Upload de Arquivo', () => {
             },
             steps: {
                 'step-01': [
-                    { id: 'b1', type: 'IntroLogo', order: 0, content: {}, properties: {} },
+                    createValidBlockMock({ id: 'b1', type: 'IntroLogo', order: 0 }),
                 ],
             },
-        };
-
-        vi.mocked(normalizeAndValidateTemplateV3).mockReturnValue({
-            success: true,
-            data: mockTemplate,
-            warnings: [],
-            stats: { totalBlocks: 1, replacedIds: 0, steps: 1 },
         });
+
+        vi.mocked(normalizeAndValidateTemplateV3).mockReturnValue(
+            createValidationSuccessMock(mockTemplate)
+        );
         vi.mocked(isNormalizeSuccess).mockReturnValue(true);
 
         const { container } = render(
@@ -220,11 +223,13 @@ describe('ImportTemplateDialog - Upload de Arquivo', () => {
             steps: {},
         };
 
-        vi.mocked(normalizeAndValidateTemplateV3).mockReturnValue({
-            success: false,
-            errors: [{ path: ['metadata', 'id'], message: 'falta campo id', code: 'schema' }],
-            rawData: invalidTemplate,
-        });
+        vi.mocked(normalizeAndValidateTemplateV3).mockReturnValue(
+            createValidationErrorMock([{
+                path: ['metadata', 'id'],
+                message: 'falta campo id',
+                code: 'schema'
+            }])
+        );
         vi.mocked(isNormalizeSuccess).mockReturnValue(false);
 
         render(
@@ -254,7 +259,7 @@ describe('ImportTemplateDialog - Preview de Template', () => {
 
     it('deve mostrar resumo após upload bem-sucedido', async () => {
         const user = userEvent.setup({ pointerEventsCheck: 0 });
-        const mockTemplate = {
+        const mockTemplate = createValidTemplateV3Mock({
             metadata: {
                 id: 'quiz21',
                 version: '3.1',
@@ -263,23 +268,20 @@ describe('ImportTemplateDialog - Preview de Template', () => {
             },
             steps: {
                 'step-01': [
-                    { id: 'b1', type: 'IntroLogo', order: 0, content: {}, properties: {} },
+                    createValidBlockMock({ id: 'b1', type: 'IntroLogo', order: 0 }),
                 ],
                 'step-02': [
-                    { id: 'b2', type: 'Question', order: 0, content: {}, properties: {} },
+                    createValidBlockMock({ id: 'b2', type: 'Question', order: 0 }),
                 ],
                 'step-03': [
-                    { id: 'b3', type: 'Result', order: 0, content: {}, properties: {} },
+                    createValidBlockMock({ id: 'b3', type: 'Result', order: 0 }),
                 ],
             },
-        };
-
-        vi.mocked(normalizeAndValidateTemplateV3).mockReturnValue({
-            success: true,
-            data: mockTemplate,
-            warnings: [],
-            stats: { totalBlocks: 3, replacedIds: 0, steps: 3 },
         });
+
+        vi.mocked(normalizeAndValidateTemplateV3).mockReturnValue(
+            createValidationSuccessMock(mockTemplate)
+        );
         vi.mocked(isNormalizeSuccess).mockReturnValue(true);
 
         const { container } = render(
@@ -307,7 +309,7 @@ describe('ImportTemplateDialog - Preview de Template', () => {
 
     it('deve mostrar campos de ID e versão', async () => {
         const user = userEvent.setup({ pointerEventsCheck: 0 });
-        const mockTemplate = {
+        const mockTemplate = createValidTemplateV3Mock({
             metadata: {
                 id: 'quiz21',
                 version: '3.1',
@@ -315,23 +317,20 @@ describe('ImportTemplateDialog - Preview de Template', () => {
             },
             steps: {
                 'step-01-intro': [
-                    { id: 'b1', type: 'IntroLogo', order: 0, content: {}, properties: {} },
+                    createValidBlockMock({ id: 'b1', type: 'IntroLogo', order: 0 }),
                 ],
                 'step-02-question': [
-                    { id: 'b2', type: 'Question', order: 0, content: {}, properties: {} },
+                    createValidBlockMock({ id: 'b2', type: 'Question', order: 0 }),
                 ],
                 'step-03-result': [
-                    { id: 'b3', type: 'Result', order: 0, content: {}, properties: {} },
+                    createValidBlockMock({ id: 'b3', type: 'Result', order: 0 }),
                 ],
             },
-        };
-
-        vi.mocked(normalizeAndValidateTemplateV3).mockReturnValue({
-            success: true,
-            data: mockTemplate,
-            warnings: [],
-            stats: { totalBlocks: 3, replacedIds: 0, steps: 3 },
         });
+
+        vi.mocked(normalizeAndValidateTemplateV3).mockReturnValue(
+            createValidationSuccessMock(mockTemplate)
+        );
         vi.mocked(isNormalizeSuccess).mockReturnValue(true);
 
         const { container } = render(
@@ -358,7 +357,7 @@ describe('ImportTemplateDialog - Preview de Template', () => {
 
     it('deve mostrar contagem de blocos ao selecionar modo step', async () => {
         const user = userEvent.setup({ pointerEventsCheck: 0 });
-        const mockTemplate = {
+        const mockTemplate = createValidTemplateV3Mock({
             metadata: {
                 id: 'quiz21',
                 version: '3.1',
@@ -366,19 +365,16 @@ describe('ImportTemplateDialog - Preview de Template', () => {
             },
             steps: {
                 'step-01': [
-                    { id: 'b1', type: 'IntroLogo', order: 0, content: {}, properties: {} },
-                    { id: 'b2', type: 'IntroTitle', order: 1, content: {}, properties: {} },
-                    { id: 'b3', type: 'IntroSubtitle', order: 2, content: {}, properties: {} },
+                    createValidBlockMock({ id: 'b1', type: 'IntroLogo', order: 0 }),
+                    createValidBlockMock({ id: 'b2', type: 'IntroTitle', order: 1 }),
+                    createValidBlockMock({ id: 'b3', type: 'IntroSubtitle', order: 2 }),
                 ],
             },
-        };
-
-        vi.mocked(normalizeAndValidateTemplateV3).mockReturnValue({
-            success: true,
-            data: mockTemplate,
-            warnings: [],
-            stats: { totalBlocks: 3, replacedIds: 0, steps: 1 },
         });
+
+        vi.mocked(normalizeAndValidateTemplateV3).mockReturnValue(
+            createValidationSuccessMock(mockTemplate)
+        );
         vi.mocked(isNormalizeSuccess).mockReturnValue(true);
 
         const { container } = render(
@@ -428,21 +424,18 @@ describe('ImportTemplateDialog - Confirmação de Importação', () => {
 
     it('deve habilitar botão de importar após validação', async () => {
         const user = userEvent.setup({ pointerEventsCheck: 0 });
-        const mockTemplate = {
+        const mockTemplate = createValidTemplateV3Mock({
             metadata: { id: 'quiz21', version: '3.1', name: 'Quiz' },
             steps: {
                 'step-01': [
-                    { id: 'b1', type: 'Block', order: 0, content: {}, properties: {} },
+                    createValidBlockMock({ id: 'b1', type: 'Block', order: 0 }),
                 ],
             },
-        };
-
-        vi.mocked(normalizeAndValidateTemplateV3).mockReturnValue({
-            success: true,
-            data: mockTemplate,
-            warnings: [],
-            stats: { totalBlocks: 1, replacedIds: 0, steps: 1 },
         });
+
+        vi.mocked(normalizeAndValidateTemplateV3).mockReturnValue(
+            createValidationSuccessMock(mockTemplate)
+        );
         vi.mocked(isNormalizeSuccess).mockReturnValue(true);
 
         const { container } = render(
@@ -473,21 +466,18 @@ describe('ImportTemplateDialog - Confirmação de Importação', () => {
     it('deve chamar onImport com template validado', async () => {
         const user = userEvent.setup({ pointerEventsCheck: 0 });
         const onImport = vi.fn();
-        const mockTemplate = {
+        const mockTemplate = createValidTemplateV3Mock({
             metadata: { id: 'quiz21', version: '3.1', name: 'Quiz' },
             steps: {
                 'step-01': [
-                    { id: 'b1', type: 'Block', order: 0, content: {}, properties: {} },
+                    createValidBlockMock({ id: 'b1', type: 'Block', order: 0 }),
                 ],
             },
-        };
-
-        vi.mocked(normalizeAndValidateTemplateV3).mockReturnValue({
-            success: true,
-            data: mockTemplate,
-            warnings: [],
-            stats: { totalBlocks: 1, replacedIds: 0, steps: 1 },
         });
+
+        vi.mocked(normalizeAndValidateTemplateV3).mockReturnValue(
+            createValidationSuccessMock(mockTemplate)
+        );
         vi.mocked(isNormalizeSuccess).mockReturnValue(true);
 
         const { container } = render(
@@ -519,21 +509,18 @@ describe('ImportTemplateDialog - Confirmação de Importação', () => {
     it('deve fechar diálogo após importação bem-sucedida', async () => {
         const user = userEvent.setup({ pointerEventsCheck: 0 });
         const onClose = vi.fn();
-        const mockTemplate = {
+        const mockTemplate = createValidTemplateV3Mock({
             metadata: { id: 'quiz21', version: '3.1', name: 'Quiz' },
             steps: {
                 'step-01': [
-                    { id: 'b1', type: 'Block', order: 0, content: {}, properties: {} },
+                    createValidBlockMock({ id: 'b1', type: 'Block', order: 0 }),
                 ],
             },
-        };
-
-        vi.mocked(normalizeAndValidateTemplateV3).mockReturnValue({
-            success: true,
-            data: mockTemplate,
-            warnings: [],
-            stats: { totalBlocks: 1, replacedIds: 0, steps: 1 },
         });
+
+        vi.mocked(normalizeAndValidateTemplateV3).mockReturnValue(
+            createValidationSuccessMock(mockTemplate)
+        );
         vi.mocked(isNormalizeSuccess).mockReturnValue(true);
 
         const { container } = render(
@@ -603,21 +590,18 @@ describe('ImportTemplateDialog - Cancelamento', () => {
 
     it('deve limpar preview ao cancelar', async () => {
         const user = userEvent.setup({ pointerEventsCheck: 0 });
-        const mockTemplate = {
+        const mockTemplate = createValidTemplateV3Mock({
             metadata: { id: 'quiz21', version: '3.1', name: 'Quiz' },
             steps: {
                 'step-01': [
-                    { id: 'b1', type: 'Block', order: 0, content: {}, properties: {} },
+                    createValidBlockMock({ id: 'b1', type: 'Block', order: 0 }),
                 ],
             },
-        };
-
-        vi.mocked(normalizeAndValidateTemplateV3).mockReturnValue({
-            success: true,
-            data: mockTemplate,
-            warnings: [],
-            stats: { totalBlocks: 1, replacedIds: 0, steps: 1 },
         });
+
+        vi.mocked(normalizeAndValidateTemplateV3).mockReturnValue(
+            createValidationSuccessMock(mockTemplate)
+        );
         vi.mocked(isNormalizeSuccess).mockReturnValue(true);
 
         const { rerender, container } = render(
@@ -657,21 +641,18 @@ describe('ImportTemplateDialog - Estados de Carregamento', () => {
 
     it('deve mostrar mensagem de sucesso após validação síncrona', async () => {
         const user = userEvent.setup({ pointerEventsCheck: 0 });
-        const mockTemplate = {
+        const mockTemplate = createValidTemplateV3Mock({
             metadata: { id: 'quiz21', version: '3.1', name: 'Quiz' },
             steps: {
                 'step-01': [
-                    { id: 'b1', type: 'Block', order: 0, content: {}, properties: {} },
+                    createValidBlockMock({ id: 'b1', type: 'Block', order: 0 }),
                 ],
             },
-        };
-
-        vi.mocked(normalizeAndValidateTemplateV3).mockReturnValue({
-            success: true,
-            data: mockTemplate,
-            warnings: [],
-            stats: { totalBlocks: 1, replacedIds: 0, steps: 1 },
         });
+
+        vi.mocked(normalizeAndValidateTemplateV3).mockReturnValue(
+            createValidationSuccessMock(mockTemplate)
+        );
         vi.mocked(isNormalizeSuccess).mockReturnValue(true);
 
         render(
