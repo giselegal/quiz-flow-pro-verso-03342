@@ -572,8 +572,32 @@ export interface BaseBlock {
 
 // Interface Block específica por tipo
 // Canonical Block (substitui definição duplicada)
-import type { Block } from './core/Block';
-export type { Block } from './core/Block';
+import type { Block as CanonicalBlock } from './core/Block';
+export type { Block as CanonicalBlock } from './core/Block';
+
+// Interface Block original (transição). Mantida para compatibilidade até migração total para CanonicalBlock.
+export interface Block extends BaseBlock {
+  type: BlockType;
+  content: BlockContent;
+  validation?: {
+    required?: boolean;
+    minLength?: number;
+    maxLength?: number;
+    pattern?: string;
+    custom?: (value: any) => boolean | string;
+    isValid?: boolean;
+    errors?: string[];
+    warnings?: string[];
+  };
+  position?: {
+    x?: number;
+    y?: number;
+    width?: number;
+    height?: number;
+  };
+  style?: Record<string, any>;
+  metadata?: Record<string, any>;
+}
 
 // Interfaces especializadas para tipos específicos
 export interface HeadlineBlock extends BaseBlock {
