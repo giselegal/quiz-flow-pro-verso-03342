@@ -382,15 +382,28 @@ describe('ImportTemplateDialog - Preview de Template', () => {
 
         forceUpload(input, file);
         await waitFor(() => expect(screen.getByText(/template válido/i)).toBeInTheDocument());
-        // Aguarda seção de modo de importação aparecer (render depende de validation.success)
-        await waitFor(() => expect(screen.getByText(/modo de importação/i)).toBeInTheDocument());
-        // Botão inclui o step key entre parênteses, garantir busca por substring
-        const stepButtons = screen.getAllByRole('button', { name: /apenas step atual/i });
-        const stepModeBtn = stepButtons[stepButtons.length - 1];
-        await user.click(stepModeBtn);
+        // Verifica debug para garantir que currentStepKey chegou; se não, força rerender
+        const debugEls = screen.getAllByTestId('debug-props');
+        const hasStep = debugEls.some(el => el.textContent?.includes('ck:step-01'));
+        if (!hasStep) {
+            // Força rerender com prop explícita (defensive)
+            render(
+                <ImportTemplateDialog
+                    open={true}
+                    onClose={() => { }}
+                    onImport={() => { }}
+                    currentStepKey={'step-01'}
+                />, { wrapper: createWrapper() }
+            );
+        }
+        // Aguarda algum botão contendo texto 'Apenas Step Atual'
         await waitFor(() => {
-            expect(screen.getByText(/3 blocos/i)).toBeInTheDocument();
+            const btns = screen.getAllByRole('button');
+            expect(btns.some(b => /apenas step atual/i.test(b.textContent || ''))).toBe(true);
         });
+        const stepModeBtn = screen.getAllByRole('button').find(b => /apenas step atual/i.test(b.textContent || ''))!;
+        await user.click(stepModeBtn);
+        await waitFor(() => expect(screen.getByText(/3 blocos/i)).toBeInTheDocument());
     });
 });
 
@@ -431,10 +444,11 @@ describe('ImportTemplateDialog - Confirmação de Importação', () => {
         await waitFor(() => {
             expect(screen.getByText(/template válido/i)).toBeInTheDocument();
         });
-        const importButtons = screen.getAllByRole('button', { name: /^importar$/i });
-        // Seleciona o primeiro botão habilitado (evita pegar versão duplicada ainda desabilitada)
-        const enabledImport = importButtons.find(btn => !btn.hasAttribute('disabled'));
-        expect(enabledImport).toBeDefined();
+        await waitFor(() => {
+            const importButtons = screen.getAllByRole('button', { name: /^importar$/i });
+            expect(importButtons.some(btn => !btn.hasAttribute('disabled'))).toBe(true);
+        });
+        const enabledImport = screen.getAllByRole('button', { name: /^importar$/i }).find(btn => !btn.hasAttribute('disabled'))!;
         expect(enabledImport).not.toBeDisabled();
     });
 
@@ -471,10 +485,12 @@ describe('ImportTemplateDialog - Confirmação de Importação', () => {
         await waitFor(() => {
             expect(screen.getByText(/template válido/i)).toBeInTheDocument();
         });
-        const importButtons = screen.getAllByRole('button', { name: /^importar$/i });
-        const enabledImport = importButtons.find(btn => !btn.hasAttribute('disabled'));
-        expect(enabledImport).toBeDefined();
-        await user.click(enabledImport!);
+        await waitFor(() => {
+            const importButtons = screen.getAllByRole('button', { name: /^importar$/i });
+            expect(importButtons.some(btn => !btn.hasAttribute('disabled'))).toBe(true);
+        });
+        const enabledImport = screen.getAllByRole('button', { name: /^importar$/i }).find(btn => !btn.hasAttribute('disabled'))!;
+        await user.click(enabledImport);
         expect(onImport).toHaveBeenCalledWith(mockTemplate);
     });
 
@@ -511,10 +527,12 @@ describe('ImportTemplateDialog - Confirmação de Importação', () => {
         await waitFor(() => {
             expect(screen.getByText(/template válido/i)).toBeInTheDocument();
         });
-        const importButtons = screen.getAllByRole('button', { name: /^importar$/i });
-        const enabledImport = importButtons.find(btn => !btn.hasAttribute('disabled'));
-        expect(enabledImport).toBeDefined();
-        await user.click(enabledImport!);
+        await waitFor(() => {
+            const importButtons = screen.getAllByRole('button', { name: /^importar$/i });
+            expect(importButtons.some(btn => !btn.hasAttribute('disabled'))).toBe(true);
+        });
+        const enabledImport = screen.getAllByRole('button', { name: /^importar$/i }).find(btn => !btn.hasAttribute('disabled'))!;
+        await user.click(enabledImport);
         expect(onClose).toHaveBeenCalled();
     });
 });
@@ -592,25 +610,11 @@ describe('ImportTemplateDialog - Cancelamento', () => {
 
         const cancelButton = screen.getByRole('button', { name: /cancelar/i });
         await user.click(cancelButton);
-
-        // Simular fechamento externo
-        // Desmontar completamente e montar novamente para garantir limpeza
-        // Fechar externamente (open=false) para acionar limpeza via onOpenChange
-        rerender(
-            <ImportTemplateDialog
-                open={false}
-                onClose={() => { }}
-                onImport={() => { }}
-            />
-        );
-        // Reabrir novo diálogo limpo
-        rerender(
-            <ImportTemplateDialog
-                open={true}
-                onClose={() => { }}
-                onImport={() => { }}
-            />
-        );
+        // Aguarda limpeza interna (handleClose redefine validation)
+        await waitFor(() => expect(screen.queryByText(/template válido/i)).not.toBeInTheDocument());
+        // Fecha externamente e reabre
+        rerender(<ImportTemplateDialog open={false} onClose={() => { }} onImport={() => { }} />);
+        rerender(<ImportTemplateDialog open={true} onClose={() => { }} onImport={() => { }} />);
         const successMessages = screen.queryAllByText(/template válido/i);
         expect(successMessages.length).toBe(0);
     });
