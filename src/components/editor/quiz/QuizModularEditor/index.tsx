@@ -386,6 +386,11 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                 // Guardar o ID para carregamento posterior (após handleLoadTemplate estar disponível)
                 pendingTidRef.current = tidFromQuery;
                 setActiveTemplateId(tidFromQuery);
+                appLogger.info('[Bootstrap] 🎯 Setando activeTemplateId from query', { 
+                    tidFromQuery,
+                    hasPropsId,
+                    qp
+                });
             }
         } catch { }
     }, []);
@@ -1120,8 +1125,20 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 
     // ✅ ARQUITETURA: Carregamento de step via hook dedicado
     // (substituiu 150 linhas de lógica fragmentada)
+    // 🔍 DEBUG: Verificar valor de templateOrFunnelId antes de passar ao loader
+    const templateOrFunnelIdValue = activeTemplateId ?? props.templateId ?? resourceId ?? null;
+    useEffect(() => {
+        appLogger.info('[QuizModularEditor] 🎯 Template ID para loader', {
+            templateOrFunnelIdValue,
+            activeTemplateId,
+            propsTemplateId: props.templateId,
+            resourceId,
+            safeCurrentStep,
+        });
+    }, [templateOrFunnelIdValue, activeTemplateId, props.templateId, resourceId, safeCurrentStep]);
+
     useStepBlocksLoader({
-        templateOrFunnelId: activeTemplateId ?? props.templateId ?? resourceId ?? null,
+        templateOrFunnelId: templateOrFunnelIdValue,
         stepIndex: safeCurrentStep,
         setStepBlocks,
         setStepLoading
