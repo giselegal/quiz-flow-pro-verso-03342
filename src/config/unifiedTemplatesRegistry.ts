@@ -195,6 +195,60 @@ export const UNIFIED_TEMPLATE_REGISTRY: Record<string, UnifiedTemplate> = {
         ],
     },
 
+    // 🔗 LEGACY ALIAS: quiz-estilo-completo → herda totalmente do principal
+    'quiz-estilo-completo': {
+        id: 'quiz-estilo-completo',
+        name: 'Quiz de Estilo Completo (Alias)',
+        description: 'Alias legado compatível do template principal de 21 etapas',
+        category: 'quiz-complete',
+        theme: 'fashion-premium',
+        stepCount: 21, // deve espelhar o pai
+        isOfficial: false,
+        usageCount: 0,
+        tags: ['legacy-alias', 'compatibilidade', '21-etapas'],
+        features: [
+            'Alias Legado',
+            'Compatibilidade de Rotas',
+            'Herança Completa',
+        ],
+        conversionRate: '94%', // espelha pai
+        image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+        createdAt: '2025-09-20T00:00:00.000Z',
+        updatedAt: '2025-09-20T00:00:00.000Z',
+        version: '2.1.0',
+        parentTemplateId: 'quiz21StepsComplete',
+        inheritanceType: 'extend',
+        overrides: [],
+        variants: [],
+    },
+
+    // 🔗 LEGACY ALIAS: quiz-estilo-21-steps → outro alias apontando para o mesmo pai
+    'quiz-estilo-21-steps': {
+        id: 'quiz-estilo-21-steps',
+        name: 'Quiz Estilo 21 Steps (Alias)',
+        description: 'Alias alternativo legado para o template principal de 21 etapas',
+        category: 'quiz-complete',
+        theme: 'fashion-premium',
+        stepCount: 21,
+        isOfficial: false,
+        usageCount: 0,
+        tags: ['legacy-alias', 'compatibilidade', '21-etapas'],
+        features: [
+            'Alias Legado',
+            'Compatibilidade SEO',
+            'Herança Completa',
+        ],
+        conversionRate: '94%',
+        image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+        createdAt: '2025-09-20T00:00:00.000Z',
+        updatedAt: '2025-09-20T00:00:00.000Z',
+        version: '2.1.0',
+        parentTemplateId: 'quiz21StepsComplete',
+        inheritanceType: 'extend',
+        overrides: [],
+        variants: [],
+    },
+
     // 🚀 TEMPLATE COM HERANÇA (versão express otimizada)
     'quiz-style-express': {
         id: 'quiz-style-express',
