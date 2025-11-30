@@ -32,7 +32,7 @@ export const TERTIARY_ROUTES = {
 export const setupCriticalRoutes = () => {
   // HIGH PRIORITY - Preload desabilitado para evitar erros de carregamento
   routePreloader.register(CRITICAL_ROUTES.editor, {
-    component: () => import('@/components/editor/quiz/QuizModularEditor/index'),
+    component: () => import('@/components/editor/ModernQuizEditor').then(m => ({ default: m.ModernQuizEditor })),
     priority: 'high',
     preloadOnIdle: false, // Desabilitado temporariamente
   });
