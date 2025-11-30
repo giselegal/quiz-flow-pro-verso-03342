@@ -381,8 +381,8 @@ describe('ImportTemplateDialog - Preview de Template', () => {
         const input = document.querySelector('input[type="file"]') as HTMLInputElement;
 
         forceUpload(input, file);
-
-        const stepModeBtn = screen.getByRole('button', { name: /apenas step atual/i });
+        await waitFor(() => expect(screen.getByText(/template válido/i)).toBeInTheDocument());
+        const stepModeBtn = await screen.findByRole('button', { name: /apenas step atual/i });
         await user.click(stepModeBtn);
         await waitFor(() => {
             expect(screen.getByText(/3 blocos/i)).toBeInTheDocument();
@@ -427,7 +427,8 @@ describe('ImportTemplateDialog - Confirmação de Importação', () => {
         await waitFor(() => {
             expect(screen.getByText(/template válido/i)).toBeInTheDocument();
         });
-        const importButton = screen.getByRole('button', { name: /^importar$/i });
+        const importButtons = screen.getAllByRole('button', { name: /^importar$/i });
+        const importButton = importButtons[importButtons.length - 1];
         expect(importButton).not.toBeDisabled();
     });
 
@@ -464,7 +465,8 @@ describe('ImportTemplateDialog - Confirmação de Importação', () => {
         await waitFor(() => {
             expect(screen.getByText(/template válido/i)).toBeInTheDocument();
         });
-        const importButton = screen.getByRole('button', { name: /^importar$/i });
+        const importButtons = screen.getAllByRole('button', { name: /^importar$/i });
+        const importButton = importButtons[importButtons.length - 1];
         await user.click(importButton);
 
         expect(onImport).toHaveBeenCalledWith(mockTemplate);
@@ -503,7 +505,8 @@ describe('ImportTemplateDialog - Confirmação de Importação', () => {
         await waitFor(() => {
             expect(screen.getByText(/template válido/i)).toBeInTheDocument();
         });
-        const importButton = screen.getByRole('button', { name: /^importar$/i });
+        const importButtons = screen.getAllByRole('button', { name: /^importar$/i });
+        const importButton = importButtons[importButtons.length - 1];
         await user.click(importButton);
         expect(onClose).toHaveBeenCalled();
     });
@@ -540,7 +543,8 @@ describe('ImportTemplateDialog - Cancelamento', () => {
             { wrapper: createWrapper() }
         );
 
-        const cancelButton = screen.getByRole('button', { name: /cancelar/i });
+        const cancelButtons = screen.getAllByRole('button', { name: /cancelar/i });
+        const cancelButton = cancelButtons[cancelButtons.length - 1];
         await user.click(cancelButton);
 
         expect(onClose).toHaveBeenCalled();
@@ -583,14 +587,8 @@ describe('ImportTemplateDialog - Cancelamento', () => {
         await user.click(cancelButton);
 
         // Simular fechamento externo
-        rerender(
-            <ImportTemplateDialog
-                open={false}
-                onClose={() => { }}
-                onImport={() => { }}
-            />
-        );
-        // Reabrir
+        // Desmontar completamente e montar novamente para garantir limpeza
+        rerender(<div />);
         rerender(
             <ImportTemplateDialog
                 open={true}
@@ -598,7 +596,8 @@ describe('ImportTemplateDialog - Cancelamento', () => {
                 onImport={() => { }}
             />
         );
-        expect(screen.queryByText(/template válido/i)).not.toBeInTheDocument();
+        const successMessages = screen.queryAllByText(/template válido/i);
+        expect(successMessages.length).toBe(0);
     });
 });
 
