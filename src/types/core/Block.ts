@@ -22,12 +22,12 @@ export interface BlockContent {
 export interface BlockProperties {
   backgroundColor?: string;
   textAlign?: 'left' | 'center' | 'right';
-  padding?: string;
-  margin?: string;
-  borderRadius?: string;
+  padding?: string | number;
+  margin?: string | number;
+  borderRadius?: string | number;
   boxShadow?: string;
-  fontSize?: string;
-  fontWeight?: string;
+  fontSize?: string | number;
+  fontWeight?: string | number;
   color?: string;
   showImages?: boolean;
   columns?: number;
@@ -49,7 +49,7 @@ export interface BlockProperties {
   gridGap?: number;
   responsiveColumns?: boolean;
   animation?: string;
-  animationDuration?: string;
+  animationDuration?: string | number;
   scoreValues?: Record<string, number>;
   [key: string]: any;
 }
@@ -86,7 +86,7 @@ export interface Block extends BlockMeta {
   type: BlockType;
   order: number;
   content: BlockContent;
-  properties: BlockProperties;
+  properties?: BlockProperties; // Tornado opcional para compatibilidade gradual
   validation?: BlockValidationMeta;
   position?: BlockPositionMeta;
 }
