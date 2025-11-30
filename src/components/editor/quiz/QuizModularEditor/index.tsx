@@ -64,6 +64,8 @@ import { ImportTemplateDialog } from '../dialogs/ImportTemplateDialog';
 import { AutosaveIndicator } from '@/components/editor/quiz/AutosaveIndicator';
 // Template Health Panel
 import { TemplateHealthPanel } from './components/TemplateHealthPanel';
+// 🔒 P1: Version Conflict Modal
+import { VersionConflictModal } from '../dialogs/VersionConflictModal';
 // 🎯 FASE 3.1: Novos hooks refatorados
 import { useStepNavigation } from './hooks/useStepNavigation';
 import { useAutoSave } from '@/core';
@@ -351,6 +353,15 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     const previewMode = 'edit' as const;
     // previewMode currently defaults to 'edit' and may be extended later.
     const isEditableMode = previewMode === 'edit';
+
+    // 🔒 P1: Optimistic Locking - state para modal de conflito
+    const [versionConflict, setVersionConflict] = useState<{
+        stepId: string;
+        conflict: any;
+        blocks: any[];
+        mergePreview?: any;
+    } | null>(null);
+    const [currentStepVersion, setCurrentStepVersion] = useState<number>(1);
 
     // 🔧 Bootstrap: registrar stores IndexedDB e diagnosticar query params
     const pendingTidRef = useRef<string | null>(null);
