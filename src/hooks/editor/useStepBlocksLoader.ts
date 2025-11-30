@@ -74,16 +74,11 @@ export function useStepBlocksLoader({
         let loadSource = 'unknown';
         
         try {
-          // ✅ FIX: Passar templateOrFunnelId apenas como funnelId se parecer ser um UUID de funnel
-          // Isso evita passar templateId onde funnelId é esperado
-          const isFunnelId = templateOrFunnelId?.startsWith('funnel-') || 
-                             templateOrFunnelId?.includes('-') && templateOrFunnelId.length > 20;
-          
+          // ✅ FIX: Encaminhar sempre o identificador como funnelId para permitir seleção de JSON v4 por chave (ex: 'quiz21-v4-gold')
           const loadResult = await unifiedTemplateLoader.loadStep(stepId, { 
             useCache: true, 
             signal,
-            // Garantir que funnelId seja string | undefined (não null)
-            funnelId: (isFunnelId && templateOrFunnelId) ? templateOrFunnelId : undefined
+            funnelId: templateOrFunnelId || undefined
           });
           blocks = loadResult.data as Block[];
           loadSource = loadResult.source;
