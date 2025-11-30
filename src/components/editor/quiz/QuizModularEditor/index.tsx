@@ -1041,6 +1041,14 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
             const changedLength = unified.length !== current.length;
             const changedIds = changedLength || unified.some((b, i) => current[i]?.id !== b.id);
 
+            console.log('🔄 [Sync] Verificando sincronização:', {
+                step: safeCurrentStep,
+                unifiedBlocks: unified?.length || 0,
+                currentWYSIWYG: current?.length || 0,
+                changedIds,
+                willReset: changedIds
+            });
+
             if (changedIds) {
                 appLogger.debug('[Sync] Reset WYSIWYG ← unified.stepBlocks', {
                     step: safeCurrentStep,
@@ -1048,6 +1056,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                     prevCount: current.length
                 });
                 wysiwyg.actions.reset(unified);
+                console.log('✅ [Sync] WYSIWYG resetado com', unified.length, 'blocos');
             }
 
             // Seleção inicial integrada (somente modo edição e se há blocos)
