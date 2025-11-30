@@ -579,6 +579,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                     {
                         maxRetries: 3,
                         validateBeforeSave: true,
+                        expectedVersion: currentStepVersion, // 🔒 P1: Optimistic Locking
                         metadata: {
                             stepNumber,
                         },
@@ -604,7 +605,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
             // Usar método original
             await saveStepBlocks(stepNumber);
         }
-    }, [resourceId, isEditableMode, wysiwyg?.state?.blocks, saveStepBlocks]);
+    }, [resourceId, isEditableMode, wysiwyg?.state?.blocks, saveStepBlocks, currentStepVersion]);
 
     // 🎯 FASE 3.2: Auto-save reativado com estratégia estável baseada em resourceId
     // Guards importantes:
@@ -2553,6 +2554,17 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                     onImport={handleImportTemplate}
                     currentStepKey={currentStepKey}
                 />
+
+                {/* 🔒 P1: Optimistic Locking - Version Conflict Modal */}
+                {versionConflict && (
+                    <VersionConflictModal
+                        isOpen={true}
+                        conflict={versionConflict.conflict}
+                        localBlocks={versionConflict.blocks}
+                        onResolve={handleConflictResolve}
+                        onClose={() => setVersionConflict(null)}
+                    />
+                )}
             </div>
         </SafeDndContext >
     );
