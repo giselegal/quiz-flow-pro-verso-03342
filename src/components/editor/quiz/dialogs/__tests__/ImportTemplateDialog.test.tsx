@@ -382,7 +382,11 @@ describe('ImportTemplateDialog - Preview de Template', () => {
 
         forceUpload(input, file);
         await waitFor(() => expect(screen.getByText(/template válido/i)).toBeInTheDocument());
-        const stepModeBtn = await screen.findByRole('button', { name: /apenas step atual/i });
+        // Aguarda seção de modo de importação aparecer (render depende de validation.success)
+        await waitFor(() => expect(screen.getByText(/modo de importação/i)).toBeInTheDocument());
+        // Botão inclui o step key entre parênteses, garantir busca por substring
+        const stepButtons = screen.getAllByRole('button', { name: /apenas step atual/i });
+        const stepModeBtn = stepButtons[stepButtons.length - 1];
         await user.click(stepModeBtn);
         await waitFor(() => {
             expect(screen.getByText(/3 blocos/i)).toBeInTheDocument();
@@ -428,8 +432,10 @@ describe('ImportTemplateDialog - Confirmação de Importação', () => {
             expect(screen.getByText(/template válido/i)).toBeInTheDocument();
         });
         const importButtons = screen.getAllByRole('button', { name: /^importar$/i });
-        const importButton = importButtons[importButtons.length - 1];
-        expect(importButton).not.toBeDisabled();
+        // Seleciona o primeiro botão habilitado (evita pegar versão duplicada ainda desabilitada)
+        const enabledImport = importButtons.find(btn => !btn.hasAttribute('disabled'));
+        expect(enabledImport).toBeDefined();
+        expect(enabledImport).not.toBeDisabled();
     });
 
     it('deve chamar onImport com template validado', async () => {
@@ -466,9 +472,9 @@ describe('ImportTemplateDialog - Confirmação de Importação', () => {
             expect(screen.getByText(/template válido/i)).toBeInTheDocument();
         });
         const importButtons = screen.getAllByRole('button', { name: /^importar$/i });
-        const importButton = importButtons[importButtons.length - 1];
-        await user.click(importButton);
-
+        const enabledImport = importButtons.find(btn => !btn.hasAttribute('disabled'));
+        expect(enabledImport).toBeDefined();
+        await user.click(enabledImport!);
         expect(onImport).toHaveBeenCalledWith(mockTemplate);
     });
 
@@ -506,8 +512,9 @@ describe('ImportTemplateDialog - Confirmação de Importação', () => {
             expect(screen.getByText(/template válido/i)).toBeInTheDocument();
         });
         const importButtons = screen.getAllByRole('button', { name: /^importar$/i });
-        const importButton = importButtons[importButtons.length - 1];
-        await user.click(importButton);
+        const enabledImport = importButtons.find(btn => !btn.hasAttribute('disabled'));
+        expect(enabledImport).toBeDefined();
+        await user.click(enabledImport!);
         expect(onClose).toHaveBeenCalled();
     });
 });
@@ -588,7 +595,15 @@ describe('ImportTemplateDialog - Cancelamento', () => {
 
         // Simular fechamento externo
         // Desmontar completamente e montar novamente para garantir limpeza
-        rerender(<div />);
+        // Fechar externamente (open=false) para acionar limpeza via onOpenChange
+        rerender(
+            <ImportTemplateDialog
+                open={false}
+                onClose={() => { }}
+                onImport={() => { }}
+            />
+        );
+        // Reabrir novo diálogo limpo
         rerender(
             <ImportTemplateDialog
                 open={true}

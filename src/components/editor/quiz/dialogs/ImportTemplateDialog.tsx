@@ -170,6 +170,11 @@ export function ImportTemplateDialog({
   return (
     <Dialog open={open} onOpenChange={(open) => !open && handleClose()}>
       <DialogContent className="max-w-2xl max-h-[80vh]">
+        {process.env.NODE_ENV === 'test' && (
+          <div data-testid="debug-props" style={{ display: 'none' }}>
+            {`ck:${currentStepKey ?? 'none'}|vs:${validation?.success ? '1' : '0'}|vd:${validation?.data ? '1' : '0'}|im:${importMode}`}
+          </div>
+        )}
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <FileJson className="w-5 h-5" />
