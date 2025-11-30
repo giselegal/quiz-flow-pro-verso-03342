@@ -106,6 +106,7 @@ function BlockProperties({ block }: BlockPropertiesProps) {
                                 key={field.key}
                                 label={field.label}
                                 value={(block.properties as any)[field.key]}
+                                kind={field.kind}
                                 onChange={(v) => handleChange(field.key, v)}
                             />
                         ))}
@@ -162,10 +163,11 @@ function formatPropertyValue(value: any): string {
 interface PropertyEditorProps {
     label: string;
     value: any;
+    kind?: 'text' | 'number' | 'boolean' | 'json' | 'image' | 'options';
     onChange: (value: any) => void;
 }
 
-function PropertyEditor({ label, value, onChange }: PropertyEditorProps) {
+function PropertyEditor({ label, value, kind, onChange }: PropertyEditorProps) {
     const type = typeof value;
 
     if (type === 'string') {
@@ -175,7 +177,14 @@ function PropertyEditor({ label, value, onChange }: PropertyEditorProps) {
                 <input
                     className="w-full px-3 py-2 border border-gray-200 rounded text-sm"
                     value={value}
-                    onChange={(e) => onChange(e.target.value)}
+                    onChange={(e) => {
+                        const v = e.target.value;
+                        // Validação leve para campos de imagem (URL)
+                        if (kind === 'image' && v) {
+                            try { new URL(v); } catch { return; }
+                        }
+                        onChange(v);
+                    }}
                 />
             </div>
         );
@@ -219,6 +228,10 @@ function PropertyEditor({ label, value, onChange }: PropertyEditorProps) {
                 onChange={(e) => {
                     try {
                         const parsed = JSON.parse(e.target.value);
+                        // Validação leve para options: garantir array
+                        if (kind === 'options' && !Array.isArray(parsed)) {
+                            return;
+                        }
                         onChange(parsed);
                     } catch {
                         // manter texto inválido até conserto

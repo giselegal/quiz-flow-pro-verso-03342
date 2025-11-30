@@ -201,8 +201,22 @@ function BlockActions({ block }: { block: QuizBlock }) {
     };
 
     const remove = () => deleteBlock(selectedStepId, block.id);
-    const moveUp = () => reorderBlocks(selectedStepId, (block.order || 1) - 1, (block.order || 1) - 2);
-    const moveDown = () => reorderBlocks(selectedStepId, (block.order || 1) - 1, (block.order || 1));
+    const moveUp = () => {
+        const quiz = useQuizStore.getState().quiz;
+        const step = quiz?.steps?.find((s: any) => s.id === selectedStepId);
+        if (!step) return;
+        const idx = step.blocks.findIndex((b: any) => b.id === block.id);
+        if (idx <= 0) return;
+        reorderBlocks(selectedStepId, idx, idx - 1);
+    };
+    const moveDown = () => {
+        const quiz = useQuizStore.getState().quiz;
+        const step = quiz?.steps?.find((s: any) => s.id === selectedStepId);
+        if (!step) return;
+        const idx = step.blocks.findIndex((b: any) => b.id === block.id);
+        if (idx === -1 || idx >= step.blocks.length - 1) return;
+        reorderBlocks(selectedStepId, idx, idx + 1);
+    };
 
     return (
         <div className="flex items-center gap-2">
