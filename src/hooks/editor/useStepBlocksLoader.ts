@@ -105,9 +105,19 @@ export function useStepBlocksLoader({
 
         // ✅ P11 FIX: Verificar mount status via ref
         if (!signal.aborted && isMountedRef.current) {
+          appLogger.info('[useStepBlocksLoader] 🎯 ANTES setStepBlocks', { 
+            stepId, 
+            stepIndex,
+            count: blocks.length,
+            source: loadSource,
+            templateOrFunnelId,
+            blocksSample: blocks.slice(0, 2).map(b => ({ id: b.id, type: b.type }))
+          });
+          
           setStepBlocks(stepIndex, blocks);
           loadedStepRef.current = loadKey;
-          appLogger.info('[useStepBlocksLoader] Step carregado', { 
+          
+          appLogger.info('[useStepBlocksLoader] ✅ DEPOIS setStepBlocks', { 
             stepId, 
             count: blocks.length,
             source: loadSource

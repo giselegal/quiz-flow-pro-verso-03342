@@ -34,11 +34,20 @@ test.describe('Gold Funnel Debug Tests', () => {
       }
     });
 
-    // Capturar logs do console
+    // Capturar TODOS os logs do console para debugging
+    const consoleLogs: string[] = [];
     page.on('console', msg => {
       const text = msg.text();
-      if (text.includes('UnifiedLoader') || text.includes('useStepBlocksLoader')) {
-        console.log(`🔊 Console: ${text}`);
+      consoleLogs.push(text);
+      // Mostrar logs relevantes em tempo real
+      if (
+        text.includes('UnifiedLoader') || 
+        text.includes('useStepBlocksLoader') ||
+        text.includes('setStepBlocks') ||
+        text.includes('QuizModularEditor') ||
+        text.includes('Bootstrap')
+      ) {
+        console.log(`🔊 ${text}`);
       }
     });
 
