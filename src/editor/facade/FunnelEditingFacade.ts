@@ -1,4 +1,5 @@
 import { appLogger } from '@/lib/utils/appLogger';
+import { normalizeStepId, generateBlockId } from '@/editor/utils/ids';
 // =============================================================
 // FunnelEditingFacade - Contrato principal (fase 1)
 // Objetivo: abstrair operações de edição de funis (inicialmente Quiz)
@@ -149,7 +150,7 @@ export class QuizFunnelEditingFacade implements IFunnelEditingFacade {
             // Atualizar updatedAt no state.meta ANTES de criar snapshot
             const newUpdatedAt = Date.now();
             this.state.meta = { ...this.state.meta, updatedAt: newUpdatedAt };
-            
+
             const snapshot: FunnelSnapshot = {
                 steps: this.state.steps.map(s => ({
                     id: s.id,
@@ -192,7 +193,12 @@ export class QuizFunnelEditingFacade implements IFunnelEditingFacade {
     // -------------- mutations steps --------------
     addStep(step: Omit<FunnelStep, 'order'> & Partial<Pick<FunnelStep, 'order'>>): FunnelStep {
         const order = typeof step.order === 'number' ? step.order : this.state.steps.length;
-        const newStep: FunnelStep = { ...step, order, blocks: step.blocks || [] } as FunnelStep;
+        const newStep: FunnelStep = {
+            ...step,
+            id: normalizeStepId(step.id),
+            order,
+            blocks: step.blocks || []
+        } as FunnelStep;
         this.state.steps.push(newStep);
         // normalizar ordem
         this.state.steps.sort((a, b) => a.order - b.order).forEach((s, i) => s.order = i);
@@ -222,6 +228,7 @@ export class QuizFunnelEditingFacade implements IFunnelEditingFacade {
         return true;
     }
     reorderSteps(newOrder: FunnelStepID[]): void {
+        // Não renomeia IDs; apenas reordena pela sequência fornecida
         const map = new Map(this.state.steps.map(s => [s.id, s] as const));
         const reordered: FunnelStep[] = [];
         newOrder.forEach(id => { const s = map.get(id); if (s) reordered.push(s); });
@@ -237,7 +244,7 @@ export class QuizFunnelEditingFacade implements IFunnelEditingFacade {
     addBlock(stepId: FunnelStepID, block: Omit<FunnelBlock, 'id'> & { id?: string }): FunnelBlock | undefined {
         const step = this.state.steps.find(s => s.id === stepId);
         if (!step) return undefined;
-        const newBlock: FunnelBlock = { id: block.id || `blk-${crypto.randomUUID?.() ?? Math.random().toString(36).slice(2, 6)}`, type: block.type, data: block.data || {} };
+        const newBlock: FunnelBlock = { id: block.id || generateBlockId(), type: block.type, data: block.data || {} };
         step.blocks.push(newBlock);
         this.setDirty(true);
         this.emit('blocks/changed', { stepId, blocks: step.blocks.slice(), reason: 'add' });
@@ -259,12 +266,12 @@ export class QuizFunnelEditingFacade implements IFunnelEditingFacade {
         this.emit('blocks/changed', { stepId, blocks: step.blocks.slice(), reason: 'remove' });
         return true;
     }
-    
+
     // Sobrecarga: aceita array de IDs OU índices (oldIndex, newIndex)
     reorderBlocks(stepId: FunnelStepID, newOrderOrOldIndex: FunnelBlockID[] | number, newIndex?: number): void {
-        const step = this.state.steps.find(s => s.id === stepId); 
+        const step = this.state.steps.find(s => s.id === stepId);
         if (!step) return;
-        
+
         // Caso 1: Array de IDs (implementação original)
         if (Array.isArray(newOrderOrOldIndex)) {
             const newOrder = newOrderOrOldIndex;
