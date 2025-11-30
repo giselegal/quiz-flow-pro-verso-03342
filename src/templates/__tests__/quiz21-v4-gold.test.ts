@@ -100,16 +100,19 @@ describe('Quiz V4 Gold Standard - Validação Zod', () => {
     
     if (!result.success) {
       console.error('❌ Erros de validação Zod:');
-      result.errors.forEach((error: any) => {
-        console.error(`   - ${error.path.join('.')}: ${error.message}`);
-      });
+      if (result.errors && Array.isArray(result.errors.issues)) {
+        result.errors.issues.forEach((issue: any) => {
+          console.error(`   - ${issue.path.join('.')}: ${issue.message}`);
+        });
+      }
     }
-    
     expect(result.success).toBe(true);
-    expect(result.data).toBeDefined();
-    
-    if (result.warnings && result.warnings.length > 0) {
-      console.warn('⚠️ Warnings:', result.warnings);
+    if (result.success) {
+      expect(result.data).toBeDefined();
+    }
+    // Se warnings existirem, logar (caso o schema retorne)
+    if ('warnings' in result && Array.isArray((result as any).warnings) && (result as any).warnings.length > 0) {
+      console.warn('⚠️ Warnings:', (result as any).warnings);
     }
   });
 
@@ -123,10 +126,11 @@ describe('Quiz V4 Gold Standard - Validação Zod', () => {
       'question-title',
       'options-grid'
     ];
+    const blockLib = goldTemplate.blockLibrary as Record<string, any>;
     
     essentialBlocks.forEach(blockType => {
-      expect(goldTemplate.blockLibrary[blockType]).toBeDefined();
-      expect(goldTemplate.blockLibrary[blockType].component).toBeTruthy();
+      expect(blockLib[blockType]).toBeDefined();
+      expect(blockLib[blockType].component).toBeTruthy();
     });
   });
 
