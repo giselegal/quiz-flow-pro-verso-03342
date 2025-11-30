@@ -7,6 +7,7 @@
  * - Validação em tempo real (Fase 2)
  */
 
+import React, { useState } from 'react';
 import { useQuizStore } from '../store/quizStore';
 import { useEditorStore } from '../store/editorStore';
 import type { QuizBlock } from '@/schemas/quiz-schema.zod';
@@ -24,6 +25,7 @@ import {
     useSortable,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import { DragOverlay } from '@dnd-kit/core';
 
 export function PropertiesPanel() {
     const quiz = useQuizStore((state) => state.quiz);
@@ -219,6 +221,7 @@ function PropertyEditor({ label, value, kind, onChange }: PropertyEditorProps) {
         };
 
         const sensors = useSensors(useSensor(PointerSensor));
+        const [activeId, setActiveId] = useState<number | null>(null);
 
         return (
             <div className="space-y-2">
@@ -233,13 +236,19 @@ function PropertyEditor({ label, value, kind, onChange }: PropertyEditorProps) {
                 <DndContext
                     sensors={sensors}
                     collisionDetection={closestCenter}
+                    onDragStart={(event) => {
+                        const { active } = event;
+                        setActiveId(Number(active.id));
+                    }}
                     onDragEnd={(event) => {
                         const { active, over } = event;
                         if (!over || active.id === over.id) return;
                         const from = Number(active.id);
                         const to = Number(over.id);
                         moveOption(from, to);
+                        setActiveId(null);
                     }}
+                    onDragCancel={() => setActiveId(null)}
                 >
                     <SortableContext items={options.map((_, i) => i)} strategy={verticalListSortingStrategy}>
                         <div className="space-y-2">
@@ -269,6 +278,14 @@ function PropertyEditor({ label, value, kind, onChange }: PropertyEditorProps) {
                             ))}
                         </div>
                     </SortableContext>
+                    <DragOverlay>
+                        {activeId !== null ? (
+                            <div className="flex items-center gap-2 px-2 py-1 bg-white border border-gray-200 rounded shadow-lg">
+                                <span className="text-xs text-gray-500">Reordenando:</span>
+                                <span className="text-xs font-medium">{(options[activeId]?.label ?? options[activeId]?.text ?? 'Opção')}</span>
+                            </div>
+                        ) : null}
+                    </DragOverlay>
                 </DndContext>
                 <div>
                     <button
@@ -365,10 +382,12 @@ function safeStringify(value: any): string {
 
 // Wrapper para itens sortáveis
 function SortableRow({ id, children }: { id: number; children: React.ReactNode }) {
-    const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id });
+    const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
     const style = {
         transform: CSS.Transform.toString(transform),
         transition,
+        boxShadow: isDragging ? '0 8px 24px rgba(0,0,0,0.12)' : undefined,
+        opacity: isDragging ? 0.95 : 1,
     } as React.CSSProperties;
     return (
         <div ref={setNodeRef} style={style} className="flex items-center gap-2">
