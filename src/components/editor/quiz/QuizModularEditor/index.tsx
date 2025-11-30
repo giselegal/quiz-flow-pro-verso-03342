@@ -386,11 +386,6 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                 // Guardar o ID para carregamento posterior (após handleLoadTemplate estar disponível)
                 pendingTidRef.current = tidFromQuery;
                 setActiveTemplateId(tidFromQuery);
-                console.log('[Bootstrap] 🎯 Setando activeTemplateId from query', { 
-                    tidFromQuery,
-                    hasPropsId,
-                    qp
-                });
                 appLogger.info('[Bootstrap] 🎯 Setando activeTemplateId from query', { 
                     tidFromQuery,
                     hasPropsId,
@@ -1130,17 +1125,8 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
 
     // ✅ ARQUITETURA: Carregamento de step via hook dedicado
     // (substituiu 150 linhas de lógica fragmentada)
-    // 🔍 DEBUG: Verificar valor de templateOrFunnelId antes de passar ao loader
+    // Preparar templateOrFunnelId para o loader
     const templateOrFunnelIdValue = activeTemplateId ?? props.templateId ?? resourceId ?? null;
-    useEffect(() => {
-        console.log('[QuizModularEditor] 🎯 Template ID para loader', {
-            templateOrFunnelIdValue,
-            activeTemplateId,
-            propsTemplateId: props.templateId,
-            resourceId,
-            safeCurrentStep,
-        });
-    }, [templateOrFunnelIdValue, activeTemplateId, props.templateId, resourceId, safeCurrentStep]);
 
     useStepBlocksLoader({
         templateOrFunnelId: templateOrFunnelIdValue,
