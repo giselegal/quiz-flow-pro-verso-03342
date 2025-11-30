@@ -8,6 +8,7 @@
     "create:funnel:quiz21": "tsx scripts/create-quiz21-complete-funnel-sqlite.ts",
     "test:funnel:loading": "playwright test tests/e2e/funnel-loading.spec.ts --headed",
     "test:funnel:loading:headless": "playwright test tests/e2e/funnel-loading.spec.ts",
+    "test:editor:quick": "playwright test tests/e2e/editor-funnel-loading-quick.spec.ts",
     "lint:json": "bash scripts/lint-json.sh",
     "audit:funnel": "node ./scripts/audit-funnel-types.mjs",
     "test:access": "bash scripts/test-access-simple.sh 8080",
