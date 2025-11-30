@@ -134,7 +134,9 @@ describe('ImportTemplateDialog - Upload de Arquivo', () => {
                 name: 'Quiz 21 Steps',
             },
             steps: {
-                'step-01': [{ id: 'b1', type: 'IntroLogo' }],
+                'step-01': [
+                    { id: 'b1', type: 'IntroLogo', order: 0, content: {}, properties: {} },
+                ],
             },
         };
 
@@ -260,9 +262,15 @@ describe('ImportTemplateDialog - Preview de Template', () => {
                 description: 'Template com 21 passos',
             },
             steps: {
-                'step-01': [{ id: 'b1', type: 'IntroLogo' }],
-                'step-02': [{ id: 'b2', type: 'Question' }],
-                'step-03': [{ id: 'b3', type: 'Result' }],
+                'step-01': [
+                    { id: 'b1', type: 'IntroLogo', order: 0, content: {}, properties: {} },
+                ],
+                'step-02': [
+                    { id: 'b2', type: 'Question', order: 0, content: {}, properties: {} },
+                ],
+                'step-03': [
+                    { id: 'b3', type: 'Result', order: 0, content: {}, properties: {} },
+                ],
             },
         };
 
@@ -306,9 +314,15 @@ describe('ImportTemplateDialog - Preview de Template', () => {
                 name: 'Quiz',
             },
             steps: {
-                'step-01-intro': [{ id: 'b1', type: 'IntroLogo' }],
-                'step-02-question': [{ id: 'b2', type: 'Question' }],
-                'step-03-result': [{ id: 'b3', type: 'Result' }],
+                'step-01-intro': [
+                    { id: 'b1', type: 'IntroLogo', order: 0, content: {}, properties: {} },
+                ],
+                'step-02-question': [
+                    { id: 'b2', type: 'Question', order: 0, content: {}, properties: {} },
+                ],
+                'step-03-result': [
+                    { id: 'b3', type: 'Result', order: 0, content: {}, properties: {} },
+                ],
             },
         };
 
@@ -352,9 +366,9 @@ describe('ImportTemplateDialog - Preview de Template', () => {
             },
             steps: {
                 'step-01': [
-                    { id: 'b1', type: 'IntroLogo' },
-                    { id: 'b2', type: 'IntroTitle' },
-                    { id: 'b3', type: 'IntroSubtitle' },
+                    { id: 'b1', type: 'IntroLogo', order: 0, content: {}, properties: {} },
+                    { id: 'b2', type: 'IntroTitle', order: 1, content: {}, properties: {} },
+                    { id: 'b3', type: 'IntroSubtitle', order: 2, content: {}, properties: {} },
                 ],
             },
         };
@@ -416,7 +430,11 @@ describe('ImportTemplateDialog - Confirmação de Importação', () => {
         const user = userEvent.setup({ pointerEventsCheck: 0 });
         const mockTemplate = {
             metadata: { id: 'quiz21', version: '3.1', name: 'Quiz' },
-            steps: { 'step-01': [{ id: 'b1', type: 'Block' }] },
+            steps: {
+                'step-01': [
+                    { id: 'b1', type: 'Block', order: 0, content: {}, properties: {} },
+                ],
+            },
         };
 
         vi.mocked(normalizeAndValidateTemplateV3).mockReturnValue({
@@ -457,7 +475,11 @@ describe('ImportTemplateDialog - Confirmação de Importação', () => {
         const onImport = vi.fn();
         const mockTemplate = {
             metadata: { id: 'quiz21', version: '3.1', name: 'Quiz' },
-            steps: { 'step-01': [{ id: 'b1', type: 'Block' }] },
+            steps: {
+                'step-01': [
+                    { id: 'b1', type: 'Block', order: 0, content: {}, properties: {} },
+                ],
+            },
         };
 
         vi.mocked(normalizeAndValidateTemplateV3).mockReturnValue({
@@ -499,7 +521,11 @@ describe('ImportTemplateDialog - Confirmação de Importação', () => {
         const onClose = vi.fn();
         const mockTemplate = {
             metadata: { id: 'quiz21', version: '3.1', name: 'Quiz' },
-            steps: { 'step-01': [{ id: 'b1', type: 'Block' }] },
+            steps: {
+                'step-01': [
+                    { id: 'b1', type: 'Block', order: 0, content: {}, properties: {} },
+                ],
+            },
         };
 
         vi.mocked(normalizeAndValidateTemplateV3).mockReturnValue({
