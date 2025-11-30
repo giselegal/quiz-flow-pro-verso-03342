@@ -8,6 +8,7 @@
  */
 
 import React, { useState } from 'react';
+import SavedSnapshotsPanel from '../components/SavedSnapshotsPanel';
 import { z } from 'zod';
 import { useQuizStore } from '../store/quizStore';
 import { useEditorStore } from '../store/editorStore';
@@ -53,12 +54,13 @@ export function PropertiesPanel() {
             </div>
 
             {/* Conteúdo */}
-            <div className="flex-1 overflow-y-auto">
+            <div className="flex-1 overflow-y-auto p-4 space-y-4">
                 {!selectedBlock ? (
                     <EmptyState />
                 ) : (
                     <BlockProperties block={selectedBlock} />
                 )}
+                <SavedSnapshotsPanel />
             </div>
         </div>
     );

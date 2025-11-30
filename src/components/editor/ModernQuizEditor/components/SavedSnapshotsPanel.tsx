@@ -1,0 +1,59 @@
+import React, { useEffect, useState } from 'react';
+
+type SavedItem = { name: string; path: string };
+
+export default function SavedSnapshotsPanel() {
+    const [items, setItems] = useState<SavedItem[]>([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+
+    const load = async () => {
+        setLoading(true);
+        setError(null);
+        try {
+            const res = await fetch('/api/quiz/saved');
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            const data = await res.json();
+            setItems(data.files || []);
+        } catch (e: any) {
+            setError(String(e?.message || e));
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        load();
+        const id = setInterval(load, 5000);
+        return () => clearInterval(id);
+    }, []);
+
+    return (
+        <div className="bg-white border border-gray-200 rounded p-3">
+            <div className="flex items-center justify-between">
+                <h3 className="text-sm font-semibold text-gray-800">Snapshots salvos</h3>
+                <button className="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded" onClick={load} disabled={loading}>
+                    {loading ? 'Carregando...' : 'Atualizar'}
+                </button>
+            </div>
+            {error && <p className="text-xs text-red-600 mt-2">Erro: {error}</p>}
+            <ul className="mt-2 space-y-1 max-h-48 overflow-auto">
+                {items.length === 0 && !loading && (
+                    <li className="text-xs text-gray-500">Nenhum snapshot encontrado</li>
+                )}
+                {items.map((it) => (
+                    <li key={it.name} className="flex items-center justify-between">
+                        <span className="text-xs text-gray-700 truncate">{it.name}</span>
+                        <button
+                            className="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded"
+                            onClick={() => navigator.clipboard?.writeText(it.path)}
+                            title="Copiar caminho do arquivo"
+                        >
+                            Copiar caminho
+                        </button>
+                    </li>
+                ))}
+            </ul>
+        </div>
+    );
+}

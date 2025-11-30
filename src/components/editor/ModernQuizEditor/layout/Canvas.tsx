@@ -229,7 +229,9 @@ function BlockActions({ block }: { block: QuizBlock }) {
 
 function ResultPreview() {
     const quiz = useQuizStore((s) => s.quiz);
-    // respostas simuladas: pegar primeira opção de cada bloco com options
+    if (!quiz) return null;
+
+    // Derivar respostas reais dos blocos: busca por propriedades padrão de resposta
     const answers: Answer[] = [];
     const rules: Record<string, Rule> = {};
     const config: CalculationConfig = {
@@ -239,28 +241,26 @@ function ResultPreview() {
             { label: 'Alto', min: 26, max: 100 },
         ]
     };
-    (quiz?.steps || []).forEach((step: any) => {
+    (quiz.steps || []).forEach((step: any) => {
         (step.blocks || []).forEach((b: any) => {
-            if (Array.isArray(b.properties?.options) && b.properties.options.length > 0) {
-                const chosen = b.properties.options[0]?.value ?? b.properties.options[0]?.label ?? 'opt_1';
-                answers.push({ blockId: b.id, value: chosen });
-                // regra: 1 ponto para primeira opção por padrão
-                rules[b.id] = { weight: 1, pointsMap: { [chosen]: 1 } };
-            }
-            if (typeof b.properties?.value === 'number') {
-                answers.push({ blockId: b.id, value: b.properties.value });
-                rules[b.id] = { weight: 1, numericScale: { mul: 1 } };
+            const val = b.selectedOption?.value ?? b.value ?? b.answer ?? b.properties?.value ?? b.properties?.selectedOption?.value;
+            if (val !== undefined && val !== null) {
+                answers.push({ blockId: b.id, value: val });
+                if (typeof val === 'number') {
+                    rules[b.id] = { weight: 1, numericScale: { mul: 1 } };
+                } else {
+                    rules[b.id] = { weight: 1, pointsMap: { [String(val)]: 1 } };
+                }
             }
         });
     });
 
-    if (!quiz) return null;
     const result = computeQuizResult(quiz as any, answers, rules, config);
 
     return (
         <div className="bg-white border border-gray-200 rounded p-3 flex items-center justify-between">
             <div className="text-sm text-gray-700">
-                <span className="font-medium">Resultado Simulado:</span>
+                <span className="font-medium">Resultado:</span>
                 <span className="ml-2">Score total {result.totalScore}</span>
                 {result.category && <span className="ml-2">• Categoria {result.category}</span>}
             </div>
