@@ -230,6 +230,24 @@ app.post('/api/quiz', (req, res) => {
   }
 });
 
+// List saved quizzes
+app.get('/api/quiz/saved', (req, res) => {
+  try {
+    const dir = path.join(process.cwd(), 'data', 'saved-quizzes');
+    if (!fs.existsSync(dir)) {
+      return res.json({ files: [], count: 0 });
+    }
+    const files = fs.readdirSync(dir)
+      .filter((f) => f.endsWith('.json'))
+      .map((name) => ({ name, path: path.join(dir, name) }))
+      .sort((a, b) => (a.name < b.name ? 1 : -1));
+    res.json({ files, count: files.length });
+  } catch (err) {
+    console.error('Failed to list saved quizzes', err);
+    res.status(500).send('Failed to list saved quizzes');
+  }
+});
+
 app.get('/api/quizzes/:id', (req, res) => {
   // Mock data - replace with actual database queries
   res.json({ id: req.params.id, title: 'Mock Quiz' });
