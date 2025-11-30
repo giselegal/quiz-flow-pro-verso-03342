@@ -84,6 +84,14 @@ export const BlockTypeZ = z.enum([
   'result-image',
   'result-display',
   'result-guide-image',
+  // Compat: blocos de resultado usados no gold
+  'result-congrats',
+  'quiz-score-display',
+  'result-main',
+  'result-progress-bars',
+  'result-secondary-styles',
+  'result-cta',
+  'result-share',
   
   // Offer Blocks
   'offer-hero',
@@ -123,7 +131,7 @@ export const BlockMetadataZ = z.object({
 export const QuizBlockSchemaZ = z.object({
   id: z.string().min(1, 'Block ID é obrigatório'),
   type: BlockTypeZ,
-  order: z.number().int().min(0, 'Order deve ser >= 0'),
+  order: z.number().min(0, 'Order deve be >= 0'),
   properties: z.record(z.any()),
   content: z.record(z.any()).optional(),
   parentId: z.string().nullable().optional(),
@@ -184,7 +192,9 @@ export const StepTypeZ = z.enum([
   'offer',
   // Compat: aliases usados em templates existentes
   'quiz-question',
-  'strategic-question'
+  'strategic-question',
+  'transition-result',
+  'quiz-result'
 ]);
 
 export const QuizStepSchemaZ = z.object({
