@@ -634,7 +634,8 @@
             "progressValue": 19,
             "showProgress": true,
             "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-            "logoAlt": "Logo Gisele Galvão"
+            "logoAlt": "Logo Gisele Galvão",
+            "alt": "Imagem ilustrativa: QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?"
           },
           "parentId": null,
           "metadata": {
@@ -833,7 +834,8 @@
             "progressValue": 24,
             "showProgress": true,
             "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-            "logoAlt": "Logo Gisele Galvão"
+            "logoAlt": "Logo Gisele Galvão",
+            "alt": "Imagem ilustrativa: QUAIS DETALHES VOCÊ GOSTA?"
           },
           "parentId": null,
           "metadata": {
@@ -1022,7 +1024,8 @@
             "progressValue": 29,
             "showProgress": true,
             "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-            "logoAlt": "Logo Gisele Galvão"
+            "logoAlt": "Logo Gisele Galvão",
+            "alt": "Imagem ilustrativa: QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?"
           },
           "parentId": null,
           "metadata": {
@@ -1219,7 +1222,8 @@
             "progressValue": 33,
             "showProgress": true,
             "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-            "logoAlt": "Logo Gisele Galvão"
+            "logoAlt": "Logo Gisele Galvão",
+            "alt": "Imagem ilustrativa: QUAL CASACO É SEU FAVORITO?"
           },
           "parentId": null,
           "metadata": {
@@ -1416,7 +1420,8 @@
             "progressValue": 38,
             "showProgress": true,
             "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-            "logoAlt": "Logo Gisele Galvão"
+            "logoAlt": "Logo Gisele Galvão",
+            "alt": "Imagem ilustrativa: QUAL SUA CALÇA FAVORITA?"
           },
           "parentId": null,
           "metadata": {
@@ -1613,7 +1618,8 @@
             "progressValue": 43,
             "showProgress": true,
             "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-            "logoAlt": "Logo Gisele Galvão"
+            "logoAlt": "Logo Gisele Galvão",
+            "alt": "Imagem ilustrativa: QUAL DESSES SAPATOS VOCÊ TEM OU MAIS GOSTA?"
           },
           "parentId": null,
           "metadata": {
@@ -1810,7 +1816,8 @@
             "progressValue": 48,
             "showProgress": true,
             "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-            "logoAlt": "Logo Gisele Galvão"
+            "logoAlt": "Logo Gisele Galvão",
+            "alt": "Imagem ilustrativa: QUE TIPO DE ACESSÓRIOS VOCÊ GOSTA?"
           },
           "parentId": null,
           "metadata": {
@@ -2007,7 +2014,8 @@
             "progressValue": 52,
             "showProgress": true,
             "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-            "logoAlt": "Logo Gisele Galvão"
+            "logoAlt": "Logo Gisele Galvão",
+            "alt": "Imagem ilustrativa: VOCÊ ESCOLHE CERTOS TECIDOS, PRINCIPALMENTE PORQUE ELES..."
           },
           "parentId": null,
           "metadata": {
@@ -2155,7 +2163,8 @@
             "subtitle": "Estamos montando seu perfil de estilo personalizado",
             "message": "Continue para descobrir ainda mais sobre seu estilo único!",
             "autoAdvanceDelay": 3500,
-            "description": "Queremos te fazer algumas perguntas que vão tornar sua experiência ainda mais completa. Responda com sinceridade. Isso é só entre você e a sua nova versão."
+            "description": "Queremos te fazer algumas perguntas que vão tornar sua experiência ainda mais completa. Responda com sinceridade. Isso é só entre você e a sua nova versão.",
+            "alt": "Imagem de transição"
           },
           "parentId": null,
           "metadata": {
@@ -2191,6 +2200,7 @@
           "properties": {},
           "content": {
             "label": "Continuar",
+            "text": "Continuar",
             "href": "#next",
             "variant": "primary",
             "size": "medium"
@@ -2275,7 +2285,8 @@
             "progressValue": 57,
             "showProgress": true,
             "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-            "logoAlt": "Logo Gisele Galvão"
+            "logoAlt": "Logo Gisele Galvão",
+            "alt": "Imagem ilustrativa: Quando você se olha no espelho, como se sente com sua imagem pessoal atualmente?"
           },
           "parentId": null,
           "metadata": {
@@ -2442,7 +2453,8 @@
             "progressValue": 62,
             "showProgress": true,
             "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-            "logoAlt": "Logo Gisele Galvão"
+            "logoAlt": "Logo Gisele Galvão",
+            "alt": "Imagem ilustrativa: O que mais te desafia na hora de se vestir?"
           },
           "parentId": null,
           "metadata": {
@@ -2609,7 +2621,8 @@
             "progressValue": 67,
             "showProgress": true,
             "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-            "logoAlt": "Logo Gisele Galvão"
+            "logoAlt": "Logo Gisele Galvão",
+            "alt": "Imagem ilustrativa: Com que frequência você se pega pensando: \"Com que roupa eu vou?\" — mesmo com o guarda-roupa cheio?"
           },
           "parentId": null,
           "metadata": {
@@ -2776,7 +2789,8 @@
             "progressValue": 71,
             "showProgress": true,
             "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-            "logoAlt": "Logo Gisele Galvão"
+            "logoAlt": "Logo Gisele Galvão",
+            "alt": "Imagem ilustrativa: Pense no quanto você já gastou com roupas que não usa ou que não representam quem você é... Você acredita que um material estratégico ajudaria?"
           },
           "parentId": null,
           "metadata": {
@@ -2943,7 +2957,8 @@
             "progressValue": 76,
             "showProgress": true,
             "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-            "logoAlt": "Logo Gisele Galvão"
+            "logoAlt": "Logo Gisele Galvão",
+            "alt": "Imagem ilustrativa: Se esse conteúdo completo custasse R$ 97,00 — você consideraria um bom investimento?"
           },
           "parentId": null,
           "metadata": {
@@ -3110,7 +3125,8 @@
             "progressValue": 81,
             "showProgress": true,
             "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-            "logoAlt": "Logo Gisele Galvão"
+            "logoAlt": "Logo Gisele Galvão",
+            "alt": "Imagem ilustrativa: Qual desses resultados você mais gostaria de alcançar?"
           },
           "parentId": null,
           "metadata": {
@@ -3235,7 +3251,8 @@
             "title": "Obrigada por compartilhar.",
             "subtitle": "Preparando seu resultado personalizado",
             "message": "Em instantes você descobrirá qual estilo te representa e como valorizar sua essência!",
-            "autoAdvanceDelay": 3000
+            "autoAdvanceDelay": 3000,
+            "alt": "Imagem de transição"
           },
           "parentId": null,
           "metadata": {
@@ -3268,7 +3285,8 @@
           "order": 2,
           "properties": {},
           "content": {
-            "label": "...",
+            "label": "Ver Meu Resultado",
+            "text": "Ver Meu Resultado",
             "variant": "outline",
             "size": "small"
           },
@@ -3472,7 +3490,9 @@
               "showDecorations": false
             }
           },
-          "content": {},
+          "content": {
+            "alt": "Imagem do resultado do quiz de estilo"
+          },
           "parentId": null,
           "metadata": {
             "editable": true,
@@ -3657,7 +3677,8 @@
             "title": "{userName}, Transforme Seu Guarda-Roupa e Sua Confiança Hoje!",
             "subtitle": "Oferta exclusiva para quem completou o quiz de estilo",
             "description": "Descubra como valorizar seu estilo único e se sentir confiante em qualquer ocasião com o método exclusivo 5 Passos.",
-            "urgencyMessage": "Oferta por tempo limitado!"
+            "urgencyMessage": "Oferta por tempo limitado!",
+            "alt": "Imagem da oferta especial"
           },
           "parentId": null,
           "metadata": {
