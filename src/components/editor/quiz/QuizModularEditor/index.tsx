@@ -386,6 +386,11 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                 // Guardar o ID para carregamento posterior (após handleLoadTemplate estar disponível)
                 pendingTidRef.current = tidFromQuery;
                 setActiveTemplateId(tidFromQuery);
+                console.log('[Bootstrap] 🎯 Setando activeTemplateId from query', { 
+                    tidFromQuery,
+                    hasPropsId,
+                    qp
+                });
                 appLogger.info('[Bootstrap] 🎯 Setando activeTemplateId from query', { 
                     tidFromQuery,
                     hasPropsId,
@@ -1128,7 +1133,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     // 🔍 DEBUG: Verificar valor de templateOrFunnelId antes de passar ao loader
     const templateOrFunnelIdValue = activeTemplateId ?? props.templateId ?? resourceId ?? null;
     useEffect(() => {
-        appLogger.info('[QuizModularEditor] 🎯 Template ID para loader', {
+        console.log('[QuizModularEditor] 🎯 Template ID para loader', {
             templateOrFunnelIdValue,
             activeTemplateId,
             propsTemplateId: props.templateId,

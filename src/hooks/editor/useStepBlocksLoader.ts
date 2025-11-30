@@ -32,7 +32,17 @@ export function useStepBlocksLoader({
   useEffect(() => {
     isMountedRef.current = true;
     
+    console.log('[useStepBlocksLoader] 🚀 INÍCIO', {
+      templateOrFunnelId,
+      stepIndex,
+      willReturn: !templateOrFunnelId || !stepIndex
+    });
+    
     if (!templateOrFunnelId || !stepIndex) {
+      console.log('[useStepBlocksLoader] ⚠️ Early return: id ou step ausente', {
+        templateOrFunnelId,
+        stepIndex
+      });
       appLogger.debug('[useStepBlocksLoader] Early return: id ou step ausente', {
         templateOrFunnelId,
         stepIndex
@@ -64,6 +74,10 @@ export function useStepBlocksLoader({
 
     async function loadStep() {
       try {
+        console.log('[useStepBlocksLoader] 📦 Carregando step', {
+          stepId,
+          templateOrFunnelId
+        });
         appLogger.info('[useStepBlocksLoader] Carregando step', {
           stepId,
           templateOrFunnelId
@@ -74,11 +88,16 @@ export function useStepBlocksLoader({
         let loadSource = 'unknown';
         
         try {
+          console.log('[useStepBlocksLoader] 🔄 Chamando unifiedTemplateLoader.loadStep', { stepId, templateOrFunnelId });
           // ✅ FIX: Encaminhar sempre o identificador como funnelId para permitir seleção de JSON v4 por chave (ex: 'quiz21-v4-gold')
           const loadResult = await unifiedTemplateLoader.loadStep(stepId, { 
             useCache: true, 
             signal,
             funnelId: templateOrFunnelId || undefined
+          });
+          console.log('[useStepBlocksLoader] ✅ loadStep retornou', { 
+            blocksCount: loadResult.data?.length,
+            source: loadResult.source
           });
           blocks = loadResult.data as Block[];
           loadSource = loadResult.source;
@@ -95,6 +114,12 @@ export function useStepBlocksLoader({
           }
         } catch (loaderErr) {
           // ✅ P10 FIX: Logar erro mas não criar placeholder
+          console.error('[useStepBlocksLoader] ❌ Falha ao carregar step', { 
+            stepId, 
+            error: (loaderErr as Error)?.message,
+            stack: (loaderErr as Error)?.stack,
+            templateOrFunnelId 
+          });
           appLogger.error('[useStepBlocksLoader] Falha ao carregar step', { 
             stepId, 
             error: (loaderErr as Error)?.message,
