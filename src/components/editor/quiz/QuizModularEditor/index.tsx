@@ -383,21 +383,9 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                 try {
                     templateService.setActiveFunnel?.(qp.funnel || null);
                 } catch { }
+                // Guardar o ID para carregamento posterior (após handleLoadTemplate estar disponível)
                 pendingTidRef.current = tidFromQuery;
                 setActiveTemplateId(tidFromQuery);
-                // Disparar carregamento assíncrono suave
-                setTimeout(() => {
-                    if (pendingTidRef.current) {
-                        // Chamar loader com override id
-                        (async () => {
-                            try {
-                                await handleLoadTemplate(pendingTidRef.current!);
-                            } catch (e) {
-                                appLogger.warn('[Bootstrap] Falha no auto-load por query', { data: [e] });
-                            }
-                        })();
-                    }
-                }, 0);
             }
         } catch { }
     }, []);
@@ -1512,17 +1500,53 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         try {
             const svc: any = templateService;
             appLogger.info(`🔍 [QuizModularEditor] Preparando template via botão (lazy): ${tid}`);
-            await svc.prepareTemplate?.(tid);
-
-            const templateStepsResult = await svc.steps.list({ templateId: tid });
-            if (!templateStepsResult.success) {
-                throw new Error('Falha ao carregar lista de steps do template');
+            
+            // ✅ FIX: Usar UnifiedTemplateLoader para templates v4 (como quiz21-v4-gold)
+            // Isso garante que o carregamento respeita o funnelId e carrega o JSON correto
+            const isV4Template = tid?.includes('v4') || tid?.includes('quiz21');
+            
+            if (isV4Template) {
+                // Carregar via UnifiedTemplateLoader (respeit funnelId)
+                appLogger.info(`📦 [QuizModularEditor] Loading v4 template via UnifiedLoader: ${tid}`);
+                const { unifiedTemplateLoader } = await import('@/services/templates/UnifiedTemplateLoader');
+                
+                const templateResult = await unifiedTemplateLoader.loadFullTemplate(tid, {
+                    useCache: true,
+                    timeout: 8000,
+                });
+                
+                if (!templateResult?.data?.steps) {
+                    throw new Error('Template v4 não contém steps válidos');
+                }
+                
+                // Converter steps para formato esperado pelo editor
+                const formattedSteps = templateResult.data.steps.map((step: any) => ({
+                    id: step.id,
+                    stepNumber: parseInt(step.id.replace('step-', ''), 10),
+                    title: step.metadata?.name || `Step ${step.id}`,
+                    type: step.type,
+                    blocks: step.blocks,
+                }));
+                
+                setLoadedTemplate({
+                    name: `Template: ${tid}`,
+                    steps: formattedSteps,
+                });
+            } else {
+                // Usar templateService legado para templates não-v4
+                await svc.prepareTemplate?.(tid);
+                
+                const templateStepsResult = await svc.steps.list({ templateId: tid });
+                if (!templateStepsResult.success) {
+                    throw new Error('Falha ao carregar lista de steps do template');
+                }
+                
+                setLoadedTemplate({
+                    name: `Template: ${tid}`,
+                    steps: templateStepsResult.data,
+                });
             }
-
-            setLoadedTemplate({
-                name: `Template: ${tid}`,
-                steps: templateStepsResult.data,
-            });
+            
             setActiveTemplateId(tid);
             // ✅ Carregamento simplificado: blocos do step inicial serão carregados pelo hook de step
             setTemplateLoading(false);
@@ -1539,7 +1563,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                 setCurrentStep(1);
             }
             appLogger.info(
-                `✅ [QuizModularEditor] Template preparado (lazy): ${templateStepsResult.data.length} steps`
+                `✅ [QuizModularEditor] Template preparado (lazy): ${loadedTemplate?.steps?.length || 0} steps`
             );
 
             try {
@@ -1562,7 +1586,25 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         }
     }, [props.templateId, resourceId, setTemplateLoading, setTemplateLoadError, setCurrentStep, unifiedState.editor.currentStep, toast]);
 
-    // 🚀 Auto-load de template/funil quando houver resourceId/funnelId presente
+    // 🚀 Auto-load de template via query param (processa pendingTidRef do bootstrap)
+    useEffect(() => {
+        if (!pendingTidRef.current) return;
+        if (loadedTemplate || templateLoadError) return; // Já carregado
+        
+        const tidToLoad = pendingTidRef.current;
+        pendingTidRef.current = null; // Limpar para evitar re-execução
+        
+        (async () => {
+            try {
+                appLogger.info(`🎯 [Auto-load] Carregando template from query param: ${tidToLoad}`);
+                await handleLoadTemplate(tidToLoad);
+            } catch (e) {
+                appLogger.warn('[Auto-load] Falha ao carregar template from query', { data: [e] });
+            }
+        })();
+    }, [handleLoadTemplate, loadedTemplate, templateLoadError]);
+
+    // 🚀 Auto-load de template/funil quando houver resourceId/funnelId presente nas props
     useEffect(() => {
         const tid = props.templateId ?? resourceId ?? props.funnelId;
         if (!tid) return;
