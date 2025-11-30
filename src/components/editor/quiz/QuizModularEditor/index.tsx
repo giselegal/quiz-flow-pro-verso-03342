@@ -24,14 +24,6 @@
  - Saves repetidos? Inspecionar hash atual comparado com `lastPersistedHashRef.current`.
  - Seleção incorreta? Confirmar se efeito de sync está resetando e aplicando auto-select apenas quando necessário.
 */
-import { useAppStore, selectors } from '@/state/store';
-// Exemplo de uso com subscrição seletiva para evitar re-render em cascata
-const useEditorSelectors = () => {
-    const currentStep = useAppStore(selectors.currentStep);
-    const selections = useAppStore(selectors.selections);
-    const theme = useAppStore(selectors.theme);
-    return { currentStep, selections, theme };
-};
 import React, { Suspense, useEffect, useState, useCallback, useMemo, useRef } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { stepKeys } from '@/services/api/steps/hooks';
@@ -47,8 +39,7 @@ import { useFeatureFlags } from '@/hooks/useFeatureFlags';
 import type { Block } from '@/types/editor';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
-import { Eye, Edit3, Play, Save, Download, Upload, Undo2, Redo2, Clock } from 'lucide-react';
+import { Edit3, Play, Save, Download, Upload, Undo2, Redo2, Clock } from 'lucide-react';
 import { templateService } from '@/services/canonical/TemplateService';
 import { validateTemplateIntegrity as validateTemplateIntegrityFull, formatValidationResult, type TemplateValidationResult } from '@/lib/utils/templateValidation';
 // Loading context (provider + hook)
