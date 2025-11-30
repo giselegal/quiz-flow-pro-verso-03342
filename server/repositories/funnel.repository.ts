@@ -69,10 +69,11 @@ export class FunnelRepository {
   constructor() {
     // Permitir modo de teste sem Supabase (apenas para E2E/unit tests)
     const isTest = process.env.NODE_ENV === 'test' || process.env.PLAYWRIGHT_TEST === 'true';
+    const isDev = process.env.NODE_ENV === 'development';
     
     if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-      if (isTest) {
-        console.warn('[FunnelRepository] Running in TEST MODE without Supabase (using in-memory store)');
+      if (isTest || isDev) {
+        console.warn('[FunnelRepository] Running in TEST/DEV MODE without Supabase (using in-memory store)');
         this.isTestMode = true;
         // Create a mock Supabase client for type compatibility
         this.supabase = {} as SupabaseClient;

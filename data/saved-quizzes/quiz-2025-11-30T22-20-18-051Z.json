@@ -1,0 +1,11 @@
+{
+  "quiz": {
+    "id": "test-quiz-1",
+    "title": "Quiz de Teste",
+    "steps": []
+  },
+  "metadata": {
+    "version": "1.0.0",
+    "savedAt": "2025-11-30T22:20:00.000Z"
+  }
+}
