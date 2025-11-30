@@ -190,9 +190,20 @@ function PropertyEditor({ label, value, kind, onChange }: PropertyEditorProps) {
             case 'text':
                 return z.string().min(1, 'Texto obrigatório');
             case 'number':
-                return z.number({ invalid_type_error: 'Número inválido' });
+                // números com limites padrão (opcional): >=0 e <= 1e6
+                return z.number({ invalid_type_error: 'Número inválido' })
+                    .min(0, 'Valor mínimo é 0')
+                    .max(1_000_000, 'Valor máximo é 1.000.000');
             case 'image':
                 return z.string().url('URL inválida');
+            case 'boolean':
+                // aceitar coerção de string e número para boolean
+                return z.union([z.boolean(), z.string(), z.number()]).transform((v) => {
+                    if (typeof v === 'boolean') return v;
+                    if (typeof v === 'number') return v !== 0;
+                    const s = String(v).toLowerCase().trim();
+                    return s === 'true' || s === '1' || s === 'yes' || s === 'sim';
+                });
             case 'options':
                 return z.array(z.object({
                     label: z.string().min(1, 'Label obrigatório'),
@@ -208,7 +219,10 @@ function PropertyEditor({ label, value, kind, onChange }: PropertyEditorProps) {
     const fieldError = (() => {
         if (!schema) return null;
         try {
-            schema.parse(kind === 'number' && typeof value === 'string' ? Number(value) : value);
+            let v: any = value;
+            if (kind === 'number' && typeof value === 'string') v = Number(value);
+            if (kind === 'boolean') v = value; // transformação cuidada pelo schema
+            schema.parse(v);
             return null;
         } catch (e: any) {
             const issue = e?.issues?.[0];
@@ -371,14 +385,17 @@ function PropertyEditor({ label, value, kind, onChange }: PropertyEditorProps) {
 
     if (type === 'boolean') {
         return (
-            <label className="flex items-center gap-2 text-sm">
-                <input
-                    type="checkbox"
-                    checked={value}
-                    onChange={(e) => onChange(e.target.checked)}
-                />
-                <span className="text-gray-700">{label}</span>
-            </label>
+            <div className="space-y-1">
+                <label className="flex items-center gap-2 text-sm">
+                    <input
+                        type="checkbox"
+                        checked={!!value}
+                        onChange={(e) => onChange(e.target.checked)}
+                    />
+                    <span className="text-gray-700">{label}</span>
+                </label>
+                {fieldError && <p className="text-xs text-red-600">{fieldError}</p>}
+            </div>
         );
     }
 
