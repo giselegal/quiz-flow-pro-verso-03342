@@ -9,6 +9,7 @@
 
 import React, { useState } from 'react';
 import SavedSnapshotsPanel from '../components/SavedSnapshotsPanel';
+import CalculationRuleEditor from '../components/CalculationRuleEditor';
 import { z } from 'zod';
 import { useQuizStore } from '../store/quizStore';
 import { useEditorStore } from '../store/editorStore';
@@ -129,6 +130,15 @@ function BlockProperties({ block }: BlockPropertiesProps) {
                                 onChange={(v) => handleChange(field.key, v)}
                             />
                         ))}
+
+                        {/* Editor de regras de cálculo */}
+                        <CalculationRuleEditor
+                            block={block}
+                            onChange={(rule) => {
+                                if (!selectedStepId) return;
+                                updateBlock(selectedStepId, block.id, { calculationRule: rule });
+                            }}
+                        />
 
                         {/* Exibir demais campos não mapeados */}
                         {Object.entries(block.properties)

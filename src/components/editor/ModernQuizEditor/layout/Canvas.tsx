@@ -246,7 +246,10 @@ function ResultPreview() {
             const val = b.selectedOption?.value ?? b.value ?? b.answer ?? b.properties?.value ?? b.properties?.selectedOption?.value;
             if (val !== undefined && val !== null) {
                 answers.push({ blockId: b.id, value: val });
-                if (typeof val === 'number') {
+                // Usar regra configurada ou fallback padrão
+                if (b.calculationRule) {
+                    rules[b.id] = b.calculationRule;
+                } else if (typeof val === 'number') {
                     rules[b.id] = { weight: 1, numericScale: { mul: 1 } };
                 } else {
                     rules[b.id] = { weight: 1, pointsMap: { [String(val)]: 1 } };

@@ -41,9 +41,19 @@ interface QuizStore {
   loadQuiz: (quiz: QuizSchema) => void;
   
   /**
+   * Definir quiz (alias para loadQuiz)
+   */
+  setQuiz: (quiz: QuizSchema) => void;
+  
+  /**
    * Limpar quiz atual
    */
   clearQuiz: () => void;
+  
+  /**
+   * Validar quiz completo e retornar erros
+   */
+  validateQuiz: () => { valid: boolean; errors: string[] };
   
   // ========================================================================
   // AÇÕES - EDIÇÃO DE BLOCOS
@@ -139,6 +149,10 @@ export const useQuizStore = create<QuizStore>()(
       });
     },
     
+    setQuiz: (quiz) => {
+      get().loadQuiz(quiz);
+    },
+    
     clearQuiz: () => {
       set((state) => {
         state.quiz = null;
@@ -147,6 +161,37 @@ export const useQuizStore = create<QuizStore>()(
         state.isDirty = false;
         state.lastSaved = null;
       });
+    },
+    
+    validateQuiz: () => {
+      const quiz = get().quiz;
+      if (!quiz) return { valid: false, errors: ['Nenhum quiz carregado'] };
+      
+      const errors: string[] = [];
+      
+      // Validar metadados básicos
+      if (!quiz.metadata?.name || quiz.metadata.name.trim().length < 3) {
+        errors.push('Nome do quiz deve ter pelo menos 3 caracteres');
+      }
+      
+      // Validar steps
+      if (!quiz.steps || quiz.steps.length === 0) {
+        errors.push('Quiz deve ter pelo menos 1 step');
+      }
+      
+      (quiz.steps || []).forEach((step: any, idx: number) => {
+        if (!step.id) errors.push(`Step ${idx + 1}: ID obrigatório`);
+        if (!step.blocks || step.blocks.length === 0) {
+          errors.push(`Step ${step.id || idx + 1}: deve ter pelo menos 1 bloco`);
+        }
+        
+        (step.blocks || []).forEach((blk: any, bidx: number) => {
+          if (!blk.id) errors.push(`Step ${step.id}, bloco ${bidx + 1}: ID obrigatório`);
+          if (!blk.type) errors.push(`Step ${step.id}, bloco ${blk.id || bidx + 1}: tipo obrigatório`);
+        });
+      });
+      
+      return { valid: errors.length === 0, errors };
     },
     
     // ========================================================================

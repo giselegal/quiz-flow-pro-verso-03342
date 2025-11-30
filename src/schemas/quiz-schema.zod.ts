@@ -128,6 +128,16 @@ export const BlockMetadataZ = z.object({
   deletable: z.boolean().default(true)
 }).optional();
 
+export const CalculationRuleZ = z.object({
+  weight: z.number().default(1),
+  pointsMap: z.record(z.string(), z.number()).optional(),
+  numericScale: z.object({
+    mul: z.number().default(1),
+    min: z.number().optional(),
+    max: z.number().optional()
+  }).optional()
+}).optional();
+
 export const QuizBlockSchemaZ = z.object({
   id: z.string().min(1, 'Block ID é obrigatório'),
   type: BlockTypeZ,
@@ -135,7 +145,8 @@ export const QuizBlockSchemaZ = z.object({
   properties: z.record(z.any()),
   content: z.record(z.any()).optional(),
   parentId: z.string().nullable().optional(),
-  metadata: BlockMetadataZ
+  metadata: BlockMetadataZ,
+  calculationRule: CalculationRuleZ
 });
 
 // ============================================================================
