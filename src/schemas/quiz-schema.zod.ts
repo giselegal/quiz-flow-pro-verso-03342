@@ -251,8 +251,7 @@ export const QuizMetadataZ = z.object({
   author: z.string().min(1, 'Autor é obrigatório'),
   createdAt: z.string().datetime({ message: 'Data de criação deve ser ISO 8601' }),
   updatedAt: z.string().datetime({ message: 'Data de atualização deve ser ISO 8601' }),
-  // 🔒 P1: Optimistic Locking - versão global do template
-  version: z.number().int().min(1).default(1),
+  // 🔒 P1: Optimistic Locking - versão global do template (semver)
   version: z.string().regex(/^\d+\.\d+\.\d+$/, 'Versão deve ser semver (x.y.z)').optional(),
   tags: z.array(z.string()).optional()
 });
@@ -333,9 +332,7 @@ export type BlockLibraryItem = z.infer<typeof BlockLibraryItemZ>;
 export type BlockLibrary = z.infer<typeof BlockLibraryZ>;
 export type QuizSchema = z.infer<typeof QuizSchemaZ>;
 
-// 🔒 P1: Optimistic Locking - tipos derivados do schema
-export type QuizStep = z.infer<typeof QuizStepSchemaZ>;
-export type QuizMetadata = z.infer<typeof QuizMetadataZ>;
+// 🔒 P1: Optimistic Locking - tipos já exportados acima (QuizStep, QuizMetadata)
 
 // ============================================================================
 // VALIDATION HELPERS
