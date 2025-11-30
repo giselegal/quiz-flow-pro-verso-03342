@@ -26,10 +26,7 @@ import { useRoute } from 'wouter';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 import { PageLoadingFallback } from '@/components/LoadingSpinner';
 import { appLogger } from '@/lib/utils/appLogger';
-import { TemplateService } from '@/services/canonical/TemplateService';
 import type { QuizSchema } from '@/schemas/quiz-schema.zod';
-
-const templateService = TemplateService.getInstance({ debug: false });
 
 // ✅ Novo editor moderno com arquitetura limpa
 const ModernQuizEditor = React.lazy(() =>
@@ -114,16 +111,26 @@ export default function EditorPage() {
 
             try {
                 appLogger.info('📂 Carregando quiz via ModernQuizEditor:', { funnelId });
-                const result = await templateService.loadV4Template();
 
-                if (!result.success || !result.data) {
-                    throw new Error(result.error?.message || 'Falha ao carregar template v4');
+                // Carregar o JSON diretamente
+                const response = await fetch('/templates/quiz21-v4.json', {
+                    cache: 'no-cache'
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Failed to load template: ${response.statusText}`);
                 }
 
-                setQuiz(result.data);
+                const data = await response.json();
+
+                // Validar com Zod
+                const { QuizSchemaZ } = await import('@/schemas/quiz-schema.zod');
+                const validated = QuizSchemaZ.parse(data);
+
+                setQuiz(validated);
                 appLogger.info('✅ Quiz carregado no editor moderno:', {
-                    title: result.data.metadata?.title || result.data.metadata?.name,
-                    steps: result.data.steps?.length || 0
+                    title: validated.metadata?.name,
+                    steps: validated.steps?.length || 0
                 });
             } catch (error) {
                 const message = error instanceof Error ? error.message : 'Erro desconhecido';
@@ -135,9 +142,7 @@ export default function EditorPage() {
         }
 
         loadQuiz();
-    }, [funnelId]);
-
-    // Handler de salvamento
+    }, [funnelId]);    // Handler de salvamento
     const handleSave = async (savedQuiz: QuizSchema) => {
         try {
             appLogger.info('💾 Salvando quiz via ModernQuizEditor:', {
