@@ -107,15 +107,17 @@ export class UnifiedTemplateLoader {
       throw new Error('Operation aborted');
     }
 
-    // Tentar cache primeiro
+    // ⚡ OTIMIZAÇÃO: Cache hit com early return
     if (useCache) {
       const cached = this.getCachedStep(stepId);
       if (cached) {
-        appLogger.debug(`✅ [UnifiedLoader] Cache hit: ${stepId}`);
+        const loadTime = performance.now() - startTime;
+        appLogger.debug(`✅ [UnifiedLoader] Cache hit: ${stepId} (${loadTime.toFixed(2)}ms)`);
+        // Early return - não precisamos tentar outras fontes
         return {
           data: cached,
           source: 'hierarchical',
-          loadTime: performance.now() - startTime,
+          loadTime,
           fromCache: true,
         };
       }
@@ -125,14 +127,29 @@ export class UnifiedTemplateLoader {
     let blocks: Block[] | null = null;
     let source: LoadResult<Block[]>['source'] = 'fallback';
 
-    // PRIORIDADE 1: v4 JSON (se forçado ou padrão)
+    // ⚡ OTIMIZAÇÃO: Priorizar V4 e retornar imediatamente se bem-sucedido
+    // PRIORIDADE 1: v4 JSON (fonte canônica)
     if (!forceSource || forceSource === 'v4') {
       try {
         const v4Result = await this.loadFromV4(stepId, { timeout, signal });
-        if (v4Result) {
+        if (v4Result && v4Result.length > 0) {
           blocks = v4Result;
           source = 'v4';
-          appLogger.info(`✅ [UnifiedLoader] Loaded from v4: ${stepId}`);
+          
+          // ⚡ Early return após sucesso - V4 é a fonte canônica
+          if (useCache) {
+            this.cacheStep(stepId, blocks);
+          }
+          
+          const loadTime = performance.now() - startTime;
+          appLogger.info(`✅ [UnifiedLoader] Loaded from v4: ${stepId} (${loadTime.toFixed(2)}ms)`);
+          
+          return {
+            data: blocks,
+            source,
+            loadTime,
+            fromCache: false,
+          };
         }
       } catch (error) {
         warnings.push(`v4 failed: ${(error as Error).message}`);
@@ -140,14 +157,29 @@ export class UnifiedTemplateLoader {
       }
     }
 
-    // PRIORIDADE 2: v3 Modular (step-XX-v3.json)
-    if (!blocks && (!forceSource || forceSource === 'v3-modular')) {
+    // PRIORIDADE 2: v3 Modular (fallback apenas se V4 falhar)
+    if (!forceSource || forceSource === 'v3-modular') {
       try {
         const v3Result = await this.loadFromV3Modular(stepId, { timeout, signal });
-        if (v3Result) {
+        if (v3Result && v3Result.length > 0) {
           blocks = v3Result;
           source = 'v3-modular';
-          appLogger.info(`✅ [UnifiedLoader] Loaded from v3-modular: ${stepId}`);
+          
+          // ⚡ Early return após sucesso
+          if (useCache) {
+            this.cacheStep(stepId, blocks);
+          }
+          
+          const loadTime = performance.now() - startTime;
+          appLogger.info(`✅ [UnifiedLoader] Loaded from v3-modular: ${stepId} (${loadTime.toFixed(2)}ms)`);
+          
+          return {
+            data: blocks,
+            source,
+            loadTime,
+            fromCache: false,
+            warnings: warnings.length > 0 ? warnings : undefined,
+          };
         }
       } catch (error) {
         warnings.push(`v3-modular failed: ${(error as Error).message}`);
@@ -155,23 +187,9 @@ export class UnifiedTemplateLoader {
       }
     }
 
-    // PRIORIDADE 3: v3 Master (quiz21-complete.json)
-    if (!blocks && (!forceSource || forceSource === 'v3-master')) {
-      try {
-        const masterResult = await this.loadFromV3Master(stepId, { timeout, signal });
-        if (masterResult) {
-          blocks = masterResult;
-          source = 'v3-master';
-          appLogger.info(`✅ [UnifiedLoader] Loaded from v3-master: ${stepId}`);
-        }
-      } catch (error) {
-        warnings.push(`v3-master failed: ${(error as Error).message}`);
-        appLogger.debug(`⚠️ [UnifiedLoader] v3-master failed for ${stepId}:`, error);
-      }
-    }
-
-    // PRIORIDADE 4: HierarchicalTemplateSource (sistema completo)
-    if (!blocks && (!forceSource || forceSource === 'hierarchical')) {
+    // PRIORIDADE 3: HierarchicalTemplateSource (fallback final otimizado)
+    // ⚠️ REMOVIDO v3-master para reduzir redundância - HierarchicalSource já verifica isso
+    if (!forceSource || forceSource === 'hierarchical') {
       try {
         const hierarchicalResult = await hierarchicalTemplateSource.getPrimary(stepId, funnelId);
         if (hierarchicalResult.data && hierarchicalResult.data.length > 0) {
