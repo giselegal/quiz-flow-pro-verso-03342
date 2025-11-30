@@ -11,6 +11,19 @@ import { useQuizStore } from '../store/quizStore';
 import { useEditorStore } from '../store/editorStore';
 import type { QuizBlock } from '@/schemas/quiz-schema.zod';
 import { getFieldsForType } from '../utils/propertyEditors';
+import {
+    DndContext,
+    closestCenter,
+    PointerSensor,
+    useSensor,
+    useSensors,
+} from '@dnd-kit/core';
+import {
+    SortableContext,
+    verticalListSortingStrategy,
+    useSortable,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 export function PropertiesPanel() {
     const quiz = useQuizStore((state) => state.quiz);
@@ -177,7 +190,7 @@ function PropertyEditor({ label, value, kind, onChange }: PropertyEditorProps) {
         const seen = new Set<string>();
         options.forEach((opt, i) => {
             const label = (opt.label ?? opt.text ?? '').trim();
-            const val = (opt.value ?? `opt_${i+1}`).toString().trim();
+            const val = (opt.value ?? `opt_${i + 1}`).toString().trim();
             if (!label) errors.push(`Opção ${i + 1}: label é obrigatório.`);
             if (!val) errors.push(`Opção ${i + 1}: value é obrigatório.`);
             if (seen.has(val)) errors.push(`Value duplicado: "${val}".`);
@@ -205,6 +218,8 @@ function PropertyEditor({ label, value, kind, onChange }: PropertyEditorProps) {
             onChange(next);
         };
 
+        const sensors = useSensors(useSensor(PointerSensor));
+
         return (
             <div className="space-y-2">
                 <label className="text-xs font-medium text-gray-700">{label}</label>
@@ -215,49 +230,53 @@ function PropertyEditor({ label, value, kind, onChange }: PropertyEditorProps) {
                         ))}
                     </div>
                 )}
-                <div className="space-y-2">
-                    {options.map((opt: any, idx: number) => (
-                        <div key={idx} className="flex items-center gap-2">
-                            <input
-                                className="flex-1 px-2 py-1 border border-gray-200 rounded text-sm"
-                                value={(opt.label ?? opt.text ?? '')}
-                                placeholder="Label"
-                                onChange={(e) => setOption(idx, { ...opt, label: e.target.value })}
-                            />
-                            <input
-                                className="flex-1 px-2 py-1 border border-gray-200 rounded text-sm"
-                                value={(opt.value ?? `opt_${idx+1}`)}
-                                placeholder="Value"
-                                onChange={(e) => setOption(idx, { ...opt, value: e.target.value })}
-                            />
-                            <div className="flex gap-1">
-                                <button
-                                    className="px-2 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded"
-                                    title="Mover para cima"
-                                    onClick={() => moveOption(idx, idx - 1)}
-                                >↑</button>
-                                <button
-                                    className="px-2 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded"
-                                    title="Mover para baixo"
-                                    onClick={() => moveOption(idx, idx + 1)}
-                                >↓</button>
-                            </div>
-                            <button
-                                className="px-2 py-1 text-xs bg-red-100 hover:bg-red-200 text-red-700 rounded"
-                                onClick={() => removeOption(idx)}
-                            >
-                                Remover
-                            </button>
+                <DndContext
+                    sensors={sensors}
+                    collisionDetection={closestCenter}
+                    onDragEnd={(event) => {
+                        const { active, over } = event;
+                        if (!over || active.id === over.id) return;
+                        const from = Number(active.id);
+                        const to = Number(over.id);
+                        moveOption(from, to);
+                    }}
+                >
+                    <SortableContext items={options.map((_, i) => i)} strategy={verticalListSortingStrategy}>
+                        <div className="space-y-2">
+                            {options.map((opt: any, idx: number) => (
+                                <SortableRow key={idx} id={idx}>
+                                    <div className="flex items-center gap-2">
+                                        <input
+                                            className="flex-1 px-2 py-1 border border-gray-200 rounded text-sm"
+                                            value={(opt.label ?? opt.text ?? '')}
+                                            placeholder="Label"
+                                            onChange={(e) => setOption(idx, { ...opt, label: e.target.value })}
+                                        />
+                                        <input
+                                            className="flex-1 px-2 py-1 border border-gray-200 rounded text-sm"
+                                            value={(opt.value ?? `opt_${idx + 1}`)}
+                                            placeholder="Value"
+                                            onChange={(e) => setOption(idx, { ...opt, value: e.target.value })}
+                                        />
+                                        <button
+                                            className="px-2 py-1 text-xs bg-red-100 hover:bg-red-200 text-red-700 rounded"
+                                            onClick={() => removeOption(idx)}
+                                        >
+                                            Remover
+                                        </button>
+                                    </div>
+                                </SortableRow>
+                            ))}
                         </div>
-                    ))}
-                    <div>
-                        <button
-                            className="px-2 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded"
-                            onClick={addOption}
-                        >
-                            Adicionar opção
-                        </button>
-                    </div>
+                    </SortableContext>
+                </DndContext>
+                <div>
+                    <button
+                        className="px-2 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded"
+                        onClick={addOption}
+                    >
+                        Adicionar opção
+                    </button>
                 </div>
             </div>
         );
@@ -342,4 +361,18 @@ function safeStringify(value: any): string {
     } catch {
         return String(value);
     }
+}
+
+// Wrapper para itens sortáveis
+function SortableRow({ id, children }: { id: number; children: React.ReactNode }) {
+    const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id });
+    const style = {
+        transform: CSS.Transform.toString(transform),
+        transition,
+    } as React.CSSProperties;
+    return (
+        <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+            {children}
+        </div>
+    );
 }
