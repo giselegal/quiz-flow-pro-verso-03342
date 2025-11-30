@@ -56,7 +56,8 @@ test.describe('Gold Funnel Debug Tests', () => {
     
     // Aguardar carregamento
     await page.waitForSelector('[data-testid="editor-header"]', { timeout: 15000 });
-    await page.waitForTimeout(3000);
+    // Dar tempo suficiente para o useStepBlocksLoader carregar
+    await page.waitForTimeout(5000);
 
     // Verificar quais arquivos JSON foram carregados
     console.log('\n📊 DIAGNÓSTICO:');
