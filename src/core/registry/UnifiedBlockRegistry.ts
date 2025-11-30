@@ -196,6 +196,13 @@ const lazyImports: Record<string, () => Promise<{ default: React.ComponentType<a
   'step20-personalized-offer': () => import('@/components/editor/blocks/Step20ModularBlocks').then(m => ({ default: m.Step20PersonalizedOfferBlock })),
   'step20-complete-template': () => import('@/components/editor/blocks/Step20ModularBlocks').then(m => ({ default: m.Step20CompleteTemplateBlock })),
 
+  // Aliases para GOLD Result Blocks → Step20 módulos existentes
+  'result-congrats': () => import('@/components/editor/blocks/Step20ModularBlocks').then(m => ({ default: m.Step20ResultHeaderBlock })),
+  'result-main': () => import('@/components/editor/blocks/Step20ModularBlocks').then(m => ({ default: m.Step20StyleRevealBlock })),
+  'result-progress-bars': () => import('@/components/editor/blocks/Step20ModularBlocks').then(m => ({ default: m.Step20CompatibilityBlock })),
+  'result-secondary-styles': () => import('@/components/editor/blocks/Step20ModularBlocks').then(m => ({ default: m.Step20SecondaryStylesBlock })),
+  'result-cta': () => import('@/components/editor/blocks/Step20ModularBlocks').then(m => ({ default: m.Step20PersonalizedOfferBlock })),
+
   // Sales & AI (MOVIDOS DE STATIC PARA LAZY)
   'sales-hero': () => import('@/components/editor/blocks/SalesHeroBlock'),
   'fashion-ai-generator': () => import('@/components/blocks/ai').then(m => ({ default: m.FashionAIGeneratorBlock })),

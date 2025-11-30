@@ -131,7 +131,7 @@ export class UnifiedTemplateLoader {
     // PRIORIDADE 1: v4 JSON (fonte canônica)
     if (!forceSource || forceSource === 'v4') {
       try {
-        const v4Result = await this.loadFromV4(stepId, { timeout, signal });
+        const v4Result = await this.loadFromV4(stepId, { timeout, signal, funnelId });
         if (v4Result && v4Result.length > 0) {
           blocks = v4Result;
           source = 'v4';
@@ -256,7 +256,7 @@ export class UnifiedTemplateLoader {
 
     // Carregar v4 JSON
     try {
-      const templatePath = `/templates/quiz21-v4.json`;
+      const templatePath = this.resolveV4Path(templateId);
       appLogger.info(`🔍 [UnifiedLoader] Loading full template from: ${templatePath}`);
 
       const response = await this.fetchWithTimeout(templatePath, timeout, signal);
@@ -348,10 +348,13 @@ export class UnifiedTemplateLoader {
    */
   private async loadFromV4(
     stepId: string,
-    options: { timeout: number; signal?: AbortSignal }
+    options: { timeout: number; signal?: AbortSignal; funnelId?: string }
   ): Promise<Block[] | null> {
-    // Tentar carregar template completo v4
-    const templateResult = await this.loadFullTemplate('quiz21StepsComplete', {
+    // Determinar qual arquivo v4 carregar (padrão ou gold) com base no funnelId
+    const templateKey = options.funnelId || 'quiz21-v4';
+
+    // Tentar carregar template completo v4 correspondente
+    const templateResult = await this.loadFullTemplate(templateKey, {
       useCache: true,
       timeout: options.timeout,
       signal: options.signal,
@@ -360,6 +363,19 @@ export class UnifiedTemplateLoader {
     const step = templateResult.data.steps.find(s => s.id === stepId);
     // Type cast: QuizBlock[] from Zod schema is compatible with Block[] from editor types
     return step ? (step.blocks as any as Block[]) : null;
+  }
+
+  /**
+   * Resolver caminho do JSON v4 a partir do templateId/funnelId
+   * Suporta 'quiz21-v4' (padrão) e 'quiz21-v4-gold'.
+   */
+  private resolveV4Path(templateId?: string): string {
+    const id = (templateId || '').toLowerCase();
+    if (id.includes('gold') || id === 'quiz21-v4-gold') {
+      return `/templates/quiz21-v4-gold.json`;
+    }
+    // Padrão
+    return `/templates/quiz21-v4.json`;
   }
 
   /**
