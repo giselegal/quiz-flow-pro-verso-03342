@@ -95,10 +95,6 @@ const StepNavigatorColumn = React.lazy(() => import('./components/StepNavigatorC
 // Isso permite que React Suspense e ErrorBoundary funcionem corretamente
 const CanvasColumn = React.lazy(() => import('./components/CanvasColumn'));
 const ComponentLibraryColumn = React.lazy(() => import('./components/ComponentLibraryColumn'));
-const PropertiesColumn = React.lazy(() => import('./components/PropertiesColumn'));
-const PropertiesColumnWithJson = React.lazy(() => import('./components/PropertiesColumn/PropertiesColumnWithJson'));
-const PropertiesColumnSimple = React.lazy(() => import('./components/PropertiesColumnSimple'));
-const PreviewPanel = React.lazy(() => import('./components/PreviewPanel'));
 
 // ✅ P2: Error boundaries granulares
 import { StepErrorBoundary, ColumnErrorBoundary } from '@/components/error';
@@ -292,7 +288,6 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         })();
         if (isTest) return;
         let idle1: any = null;
-        let idle2: any = null;
         import('./components/CanvasColumn');
         const schedule = (cb: () => void, timeout: number) => {
             try {
@@ -303,27 +298,14 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
             return setTimeout(cb, timeout);
         };
         idle1 = schedule(() => {
-            Promise.all([
-                import('./components/ComponentLibraryColumn'),
-                import('./components/PropertiesColumn'),
-            ]);
+            import('./components/ComponentLibraryColumn');
         }, 150);
-        idle2 = schedule(() => {
-            import('./components/PreviewPanel');
-        }, 300);
         return () => {
             try {
                 if (typeof window !== 'undefined' && 'cancelIdleCallback' in window && idle1) {
                     (window as any).cancelIdleCallback(idle1);
                 } else if (idle1) {
                     clearTimeout(idle1);
-                }
-            } catch { }
-            try {
-                if (typeof window !== 'undefined' && 'cancelIdleCallback' in window && idle2) {
-                    (window as any).cancelIdleCallback(idle2);
-                } else if (idle2) {
-                    clearTimeout(idle2);
                 }
             } catch { }
         };
