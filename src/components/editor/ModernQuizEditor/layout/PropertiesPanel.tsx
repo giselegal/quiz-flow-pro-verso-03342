@@ -170,30 +170,81 @@ interface PropertyEditorProps {
 function PropertyEditor({ label, value, kind, onChange }: PropertyEditorProps) {
     const type = typeof value;
 
-    // Editor específico para options
+    // Editor específico para options com validações e mover ↑/↓
     if (kind === 'options' && Array.isArray(value)) {
+        const options = value as Array<any>;
+        const errors: string[] = [];
+        const seen = new Set<string>();
+        options.forEach((opt, i) => {
+            const label = (opt.label ?? opt.text ?? '').trim();
+            const val = (opt.value ?? `opt_${i+1}`).toString().trim();
+            if (!label) errors.push(`Opção ${i + 1}: label é obrigatório.`);
+            if (!val) errors.push(`Opção ${i + 1}: value é obrigatório.`);
+            if (seen.has(val)) errors.push(`Value duplicado: "${val}".`);
+            seen.add(val);
+        });
+
+        const setOption = (idx: number, nextOpt: any) => {
+            const next = [...options];
+            next[idx] = nextOpt;
+            onChange(next);
+        };
+        const removeOption = (idx: number) => {
+            const next = options.filter((_, i) => i !== idx);
+            onChange(next);
+        };
+        const addOption = () => {
+            const next = [...options, { label: 'Nova opção', value: `opt_${options.length + 1}` }];
+            onChange(next);
+        };
+        const moveOption = (from: number, to: number) => {
+            if (to < 0 || to >= options.length) return;
+            const next = [...options];
+            const [item] = next.splice(from, 1);
+            next.splice(to, 0, item);
+            onChange(next);
+        };
+
         return (
             <div className="space-y-2">
                 <label className="text-xs font-medium text-gray-700">{label}</label>
+                {errors.length > 0 && (
+                    <div className="text-xs text-red-600 space-y-1">
+                        {errors.map((e, i) => (
+                            <div key={i}>• {e}</div>
+                        ))}
+                    </div>
+                )}
                 <div className="space-y-2">
-                    {value.map((opt: any, idx: number) => (
+                    {options.map((opt: any, idx: number) => (
                         <div key={idx} className="flex items-center gap-2">
                             <input
                                 className="flex-1 px-2 py-1 border border-gray-200 rounded text-sm"
-                                value={opt.label || opt.text || ''}
+                                value={(opt.label ?? opt.text ?? '')}
                                 placeholder="Label"
-                                onChange={(e) => {
-                                    const next = [...value];
-                                    next[idx] = { ...opt, label: e.target.value };
-                                    onChange(next);
-                                }}
+                                onChange={(e) => setOption(idx, { ...opt, label: e.target.value })}
                             />
+                            <input
+                                className="flex-1 px-2 py-1 border border-gray-200 rounded text-sm"
+                                value={(opt.value ?? `opt_${idx+1}`)}
+                                placeholder="Value"
+                                onChange={(e) => setOption(idx, { ...opt, value: e.target.value })}
+                            />
+                            <div className="flex gap-1">
+                                <button
+                                    className="px-2 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded"
+                                    title="Mover para cima"
+                                    onClick={() => moveOption(idx, idx - 1)}
+                                >↑</button>
+                                <button
+                                    className="px-2 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded"
+                                    title="Mover para baixo"
+                                    onClick={() => moveOption(idx, idx + 1)}
+                                >↓</button>
+                            </div>
                             <button
                                 className="px-2 py-1 text-xs bg-red-100 hover:bg-red-200 text-red-700 rounded"
-                                onClick={() => {
-                                    const next = value.filter((_: any, i: number) => i !== idx);
-                                    onChange(next);
-                                }}
+                                onClick={() => removeOption(idx)}
                             >
                                 Remover
                             </button>
@@ -202,7 +253,7 @@ function PropertyEditor({ label, value, kind, onChange }: PropertyEditorProps) {
                     <div>
                         <button
                             className="px-2 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded"
-                            onClick={() => onChange([...(value || []), { label: 'Nova opção' }])}
+                            onClick={addOption}
                         >
                             Adicionar opção
                         </button>
