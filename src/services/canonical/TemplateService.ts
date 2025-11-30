@@ -1304,30 +1304,15 @@ export class TemplateService extends BaseCanonicalService {
         // 🔧 FIX: Só retornar steps se template foi carregado
         let totalSteps = this.activeTemplateSteps;
 
-        // Se não configurado (0), verificar se há template/funnel ativo
+        // 🔧 FIX: Se não configurado (0), retornar lista vazia
+        // O hook useTemplateLoader DEVE chamar setActiveTemplate() antes de chamar list()
         if (totalSteps === 0) {
-          // Se não há template nem funnel ativo, retornar lista vazia
-          if (!this.activeTemplateId && !this.activeFunnelId) {
-            appLogger.debug('[TemplateService.steps.list] Nenhum template/funnel ativo, retornando lista vazia');
-            return this.createResult([]);
-          }
-
-          // Detectar template padrão conhecido
-          const isKnownTemplate = this.activeTemplateId === 'quiz21StepsComplete' ||
-            this.activeTemplateId?.includes('quiz21') ||
-            this.activeFunnelId?.includes('quiz21');
-
-          if (isKnownTemplate) {
-            totalSteps = 21;
-            appLogger.debug('[TemplateService.steps.list] Template quiz21 detectado, usando 21 steps');
-          } else {
-            // Para templates desconhecidos SEM totalSteps configurado, retornar vazio
-            appLogger.warn('[TemplateService.steps.list] Template/funnel ativo mas sem totalSteps definido', {
-              activeTemplateId: this.activeTemplateId,
-              activeFunnelId: this.activeFunnelId
-            });
-            return this.createResult([]);
-          }
+          appLogger.debug('[TemplateService.steps.list] activeTemplateSteps não configurado (0), retornando lista vazia', {
+            activeTemplateId: this.activeTemplateId,
+            activeFunnelId: this.activeFunnelId,
+            avisoImportante: 'useTemplateLoader deve chamar setActiveTemplate() primeiro'
+          });
+          return this.createResult([]);
         }
 
         appLogger.debug(`[TemplateService.steps.list] Listando ${totalSteps} steps`);
@@ -1794,7 +1779,7 @@ export class TemplateService extends BaseCanonicalService {
   async saveStep(
     stepId: string,
     blocks: Block[],
-    options?: ServiceOptions & { 
+    options?: ServiceOptions & {
       expectedVersion?: number;
       skipVersionCheck?: boolean;
     }
@@ -1810,7 +1795,7 @@ export class TemplateService extends BaseCanonicalService {
       if (!options?.skipVersionCheck && options?.expectedVersion !== undefined) {
         const { optimisticLockingService } = await import('@/services/optimistic-locking/OptimisticLockingService');
         const { supabase } = await import('@/lib/supabase');
-        
+
         const getCurrentVersion = async () => {
           // Buscar versão atual do step
           const funnelId = this.activeFunnelId;

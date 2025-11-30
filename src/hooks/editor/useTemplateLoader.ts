@@ -45,7 +45,7 @@ export function useTemplateLoader(options: UseTemplateLoaderOptions): UseTemplat
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<Error | null>(null);
     const [data, setData] = useState<{ name: string; steps: any[] } | null>(null);
-    
+
     // ✅ Prevent duplicate loads
     const loadingRef = useRef(false);
     const loadedIdRef = useRef<string | null>(null);
@@ -61,7 +61,7 @@ export function useTemplateLoader(options: UseTemplateLoaderOptions): UseTemplat
     useEffect(() => {
         // Resolver ID unificado (prioridade: templateId → funnelId → resourceId)
         const tid = templateId ?? funnelId ?? resourceId;
-        
+
         // Guards
         if (!enabled || !tid) return;
         if (loadingRef.current) {
@@ -100,21 +100,31 @@ export function useTemplateLoader(options: UseTemplateLoaderOptions): UseTemplat
                 if (signal.aborted) return;
 
                 // 2️⃣ Carregar template JSON para detectar número de steps
-                let totalSteps = 21; // Default para quiz21
+                let totalSteps = 0; // Não usar fallback - detectar do JSON
                 try {
                     const templateResult = await (templateService as any).templates?.get?.(tid);
                     if (templateResult?.success && templateResult.data) {
-                        const stepsObj = templateResult.data.steps || {};
-                        totalSteps = Object.keys(stepsObj).length || 21;
-                        appLogger.info(`🔍 [useTemplateLoader] Template ${tid} tem ${totalSteps} steps`);
+                        const stepsData = templateResult.data.steps;
+
+                        // JSON v4 usa array, v3 pode usar objeto
+                        if (Array.isArray(stepsData)) {
+                            totalSteps = stepsData.length;
+                        } else if (stepsData && typeof stepsData === 'object') {
+                            totalSteps = Object.keys(stepsData).length;
+                        }
+
+                        appLogger.info(`🔍 [useTemplateLoader] Template ${tid} tem ${totalSteps} steps (detectado)`);
                     }
                 } catch (err) {
-                    appLogger.warn(`[useTemplateLoader] Falha ao detectar steps do template, usando default: 21`);
+                    appLogger.error(`[useTemplateLoader] Falha ao detectar steps do template:`, err);
                 }
 
                 // 3️⃣ Definir template ativo com número correto de steps
                 if (typeof (templateService as any).setActiveTemplate === 'function') {
                     (templateService as any).setActiveTemplate(tid, totalSteps);
+                    appLogger.info(`✅ [useTemplateLoader] setActiveTemplate chamado: ${tid} com ${totalSteps} steps`);
+                } else {
+                    appLogger.error('[useTemplateLoader] setActiveTemplate não está disponível no templateService!');
                 }
 
                 if (signal.aborted) return;
@@ -135,10 +145,10 @@ export function useTemplateLoader(options: UseTemplateLoaderOptions): UseTemplat
 
                 setData(templateData);
                 loadedIdRef.current = tid ?? null;
-                
+
                 const duration = performance.now() - startTime;
                 appLogger.info(`✅ [useTemplateLoader] Template carregado em ${duration.toFixed(0)}ms: ${result.data.length} steps`);
-                
+
                 onSuccess?.(templateData);
             } catch (err) {
                 if (signal.aborted) return;
