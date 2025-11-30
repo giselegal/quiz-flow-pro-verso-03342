@@ -12,6 +12,7 @@ import React from 'react';
 import { useQuizStore } from '../store/quizStore';
 import { useEditorStore } from '../store/editorStore';
 import type { QuizBlock } from '@/schemas/quiz-schema.zod';
+import { computeQuizResult, type Answer, type Rule, type CalculationConfig } from '../utils/calculationEngine';
 import { DndContext, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
@@ -42,7 +43,7 @@ export function Canvas() {
                     )}
                 </div>
 
-                {/* Ações rápidas (Fase 3) */}
+                {/* Ações rápidas */}
                 <div className="flex items-center gap-2">
                     <button className="px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-100 rounded">
                         👁️ Preview
@@ -60,7 +61,10 @@ export function Canvas() {
                 ) : selectedStep.blocks?.length === 0 ? (
                     <EmptyState message="Esta etapa não possui blocos. Arraste um bloco da biblioteca." />
                 ) : (
-                    <CanvasSortable stepId={selectedStep.id} blocks={selectedStep.blocks} selectedBlockId={selectedBlockId} onSelect={selectBlock} />
+                    <div className="max-w-3xl mx-auto space-y-6">
+                        <ResultPreview />
+                        <CanvasSortable stepId={selectedStep.id} blocks={selectedStep.blocks} selectedBlockId={selectedBlockId} onSelect={selectBlock} />
+                    </div>
                 )}
             </div>
         </div>
@@ -219,6 +223,52 @@ function BlockActions({ block }: { block: QuizBlock }) {
             <button className="px-2 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded" onClick={moveUp}>↑ Mover</button>
             <button className="px-2 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded" onClick={moveDown}>↓ Mover</button>
             <button className="px-2 py-1 text-xs bg-red-100 hover:bg-red-200 text-red-700 rounded" onClick={remove}>Excluir</button>
+        </div>
+    );
+}
+
+function ResultPreview() {
+    const quiz = useQuizStore((s) => s.quiz);
+    // respostas simuladas: pegar primeira opção de cada bloco com options
+    const answers: Answer[] = [];
+    const rules: Record<string, Rule> = {};
+    const config: CalculationConfig = {
+        categoryThresholds: [
+            { label: 'Baixo', min: 0, max: 10 },
+            { label: 'Médio', min: 11, max: 25 },
+            { label: 'Alto', min: 26, max: 100 },
+        ]
+    };
+    (quiz?.steps || []).forEach((step: any) => {
+        (step.blocks || []).forEach((b: any) => {
+            if (Array.isArray(b.properties?.options) && b.properties.options.length > 0) {
+                const chosen = b.properties.options[0]?.value ?? b.properties.options[0]?.label ?? 'opt_1';
+                answers.push({ blockId: b.id, value: chosen });
+                // regra: 1 ponto para primeira opção por padrão
+                rules[b.id] = { weight: 1, pointsMap: { [chosen]: 1 } };
+            }
+            if (typeof b.properties?.value === 'number') {
+                answers.push({ blockId: b.id, value: b.properties.value });
+                rules[b.id] = { weight: 1, numericScale: { mul: 1 } };
+            }
+        });
+    });
+
+    if (!quiz) return null;
+    const result = computeQuizResult(quiz as any, answers, rules, config);
+
+    return (
+        <div className="bg-white border border-gray-200 rounded p-3 flex items-center justify-between">
+            <div className="text-sm text-gray-700">
+                <span className="font-medium">Resultado Simulado:</span>
+                <span className="ml-2">Score total {result.totalScore}</span>
+                {result.category && <span className="ml-2">• Categoria {result.category}</span>}
+            </div>
+            <div className="flex items-center gap-2 text-xs text-gray-500">
+                {result.byStep.map((s) => (
+                    <span key={s.stepId}>Etapa {s.stepId}: {s.score}</span>
+                ))}
+            </div>
         </div>
     );
 }
