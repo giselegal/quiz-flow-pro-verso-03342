@@ -16,6 +16,7 @@ import { computeQuizResult, type Answer, type Rule, type CalculationConfig } fro
 import { DndContext, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import ValidationPanel from '../components/ValidationPanel';
 
 export function Canvas() {
     const quiz = useQuizStore((state) => state.quiz);
@@ -62,6 +63,7 @@ export function Canvas() {
                     <EmptyState message="Esta etapa não possui blocos. Arraste um bloco da biblioteca." />
                 ) : (
                     <div className="max-w-3xl mx-auto space-y-6">
+                        <ValidationPanel />
                         <ResultPreview />
                         <CanvasSortable stepId={selectedStep.id} blocks={selectedStep.blocks} selectedBlockId={selectedBlockId} onSelect={selectBlock} />
                     </div>

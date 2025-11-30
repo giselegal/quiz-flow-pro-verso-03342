@@ -362,6 +362,16 @@ export const useQuizStore = create<QuizStore>()(
     save: async () => {
       const state = get();
       if (!state.quiz || !state.isDirty) return;
+      
+      // Validar antes de salvar
+      const validation = get().validateQuiz();
+      if (!validation.valid) {
+        const errorMsg = `Erros de validação:\n${validation.errors.join('\n')}`;
+        console.error('❌ Validação falhou', validation.errors);
+        set((s) => { s.error = errorMsg; });
+        // Ainda salvar para não perder dados, mas marcar erro
+      }
+      
       console.log('💾 Salvando quiz...', state.quiz);
 
       try {
@@ -373,6 +383,8 @@ export const useQuizStore = create<QuizStore>()(
             metadata: {
               savedAt: new Date().toISOString(),
               version: (state.quiz as any)?.version ?? 1,
+              validation: validation.valid ? 'passed' : 'failed',
+              errors: validation.valid ? [] : validation.errors,
             },
           }),
         });
@@ -383,6 +395,7 @@ export const useQuizStore = create<QuizStore>()(
         set((s) => {
           s.isDirty = false;
           s.lastSaved = new Date();
+          if (validation.valid) s.error = null;
         });
         console.log('✅ Quiz salvo com sucesso');
       } catch (err) {
