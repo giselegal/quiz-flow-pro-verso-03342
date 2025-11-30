@@ -28,8 +28,6 @@ import SentryErrorBoundary from './components/errors/SentryErrorBoundary'; // �
 import { Toaster } from './components/ui/toaster';
 import { RedirectRoute } from './components/RedirectRoute';
 import { QuizErrorBoundary } from './components/RouteErrorBoundary';
-import { EditorErrorBoundary } from './components/error/EditorErrorBoundary';
-import { EnhancedLoadingFallback } from './components/ui/enhanced-loading-fallback';
 import { PageLoadingFallback } from './components/LoadingSpinner';
 import { serviceManager } from './services/core/UnifiedServiceManager';
 import { setupCriticalRoutes } from '@/config/criticalRoutes.config';
@@ -42,10 +40,6 @@ import { PWANotifications } from './components/PWANotifications';
 
 // 🚀 FASE 3: SuperUnifiedProvider V3 (optimized architecture)
 import { SuperUnifiedProviderV3 } from '@/contexts/providers/SuperUnifiedProviderV3';
-import { SuperUnifiedProvider } from '@/contexts/providers/SuperUnifiedProviderV2';
-import { EditorProviderUnified } from '@/components/editor';
-import { FunnelContext } from '@/core/contexts/FunnelContext';
-import { ProviderGuard } from '@/components/ProviderGuard';
 import { appLogger } from '@/lib/utils/appLogger';
 import { setSupabaseCredentials } from '@/services/integrations/supabase/client';
 // EditorProvider legado removido - usar SuperUnifiedProvider que já inclui EditorStateProvider
@@ -66,8 +60,8 @@ const TemplateDiagnosticPage = lazy(() => import('./pages/TemplateDiagnosticPage
 const PerformanceTestPage = lazy(() => import('./pages/PerformanceTestPage'));
 const AccessibilityAuditorPage = lazy(() => import('./components/a11y/AccessibilityAuditor'));
 
-// 🎯 EDITOR PRINCIPAL - Import direto (V4Wrapper removido para otimização)
-const QuizModularEditor = lazy(() => import('./components/editor/quiz/QuizModularEditor'));
+// 🎯 EDITOR PRINCIPAL - Página unificada com normalização de URL
+const EditorPage = lazy(() => import('./pages/editor/EditorPage'));
 
 // 🧪 PÁGINAS DE QUIZ
 const QuizEstiloPessoalPage = lazy(() => import('./pages/QuizEstiloPessoalPage'));
@@ -87,7 +81,6 @@ const Phase2Dashboard = lazy(() => import('./pages/Phase2Dashboard'));
 // 🎨 PÁGINAS DE TEMPLATES
 const TemplatesPage = lazy(() => import('./pages/TemplatesPage'));
 const SystemDiagnosticPage = lazy(() => import('./pages/SystemDiagnosticPage'));
-const EditorTemplatesPage = lazy(() => import('./pages/editor-templates/index'));
 const FunnelTypesPage = lazy(() => import('./pages/SimpleFunnelTypesPage'));
 
 // 🧪 TESTES CRUD
@@ -252,66 +245,17 @@ function AppCore() {
                                             </Suspense>
                                         </Route>
 
-                                        {/* 🎯 EDITOR PRINCIPAL - QuizModularEditor */}
+                                        {/* 🎯 EDITOR PRINCIPAL - Normalização de URL centralizada em EditorPage */}
                                         <Route path="/editor">
-                                            {() => {
-                                                const params = new URLSearchParams(window.location.search);
-                                                const templateParam = params.get('template') || undefined;
-                                                let funnelId = params.get('funnelId') || params.get('funnel') || undefined;
-                                                const resourceIdParam = params.get('resource') || templateParam; // 🔥 FIX: resourceId da URL
-
-                                                // 🔄 PADRONIZAÇÃO: ?template= → ?funnel=
-                                                if (templateParam) {
-                                                    const url = new URL(window.location.href);
-                                                    url.searchParams.delete('template');
-                                                    if (!funnelId) {
-                                                        url.searchParams.set('funnel', templateParam);
-                                                        funnelId = templateParam;
-                                                    }
-                                                    window.history.replaceState({}, '', url.toString());
-                                                }
-
-                                                // 🛟 Fallback dev/test para funil padrão
-                                                try {
-                                                    const env = (import.meta as any)?.env || {};
-                                                    const isTestEnv = !!env.VITEST || env.MODE === 'test' || typeof (globalThis as any).vitest !== 'undefined';
-                                                    const isDev = !!env.DEV;
-                                                    if (!funnelId && (isTestEnv || isDev)) {
-                                                        funnelId = 'quiz21StepsComplete';
-                                                        const url = new URL(window.location.href);
-                                                        url.searchParams.set('funnel', funnelId);
-                                                        window.history.replaceState({}, '', url.toString());
-                                                    }
-                                                } catch { }
-
-                                                const resourceId = resourceIdParam;
-
-                                                return (
-                                                    <EditorErrorBoundary>
-                                                        <Suspense fallback={<PageLoadingFallback message="Carregando Editor..." />}>
-                                                            {/* ✅ SuperUnifiedProviderV3 no root é suficiente - provider duplicado removido */}
-                                                            <QuizModularEditor
-                                                                resourceId={resourceId}
-                                                                templateId={templateParam}
-                                                                funnelId={funnelId}
-                                                            />
-                                                        </Suspense>
-                                                    </EditorErrorBoundary>
-                                                );
-                                            }}
+                                            <Suspense fallback={<PageLoadingFallback message="Carregando Editor..." />}>
+                                                <EditorPage />
+                                            </Suspense>
                                         </Route>
 
                                         <Route path="/editor/:funnelId">
-                                            {(params) => (
-                                                <EditorErrorBoundary>
-                                                    <Suspense fallback={<PageLoadingFallback message="Carregando Editor..." />}>
-                                                        {/* ✅ SuperUnifiedProviderV3 no root é suficiente - provider duplicado removido */}
-                                                        <QuizModularEditor
-                                                            funnelId={params.funnelId}
-                                                        />
-                                                    </Suspense>
-                                                </EditorErrorBoundary>
-                                            )}
+                                            <Suspense fallback={<PageLoadingFallback message="Carregando Editor..." />}>
+                                                <EditorPage />
+                                            </Suspense>
                                         </Route>
 
                                         {/* 🎯 FASE 1: Preview Sandbox Isolado (iframe) */}

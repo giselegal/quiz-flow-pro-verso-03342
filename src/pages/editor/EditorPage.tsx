@@ -24,8 +24,6 @@ import React, { Suspense } from 'react';
 import { useRoute } from 'wouter';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 import { PageLoadingFallback } from '@/components/LoadingSpinner';
-import { useFeatureFlag } from '@/core/utils/featureFlags';
-import { EditorProvider } from '@/core/contexts/EditorContext';
 import { appLogger } from '@/lib/utils/appLogger';
 
 // Lazy load do editor modular (já integrado com v4)
@@ -38,8 +36,7 @@ const QuizModularEditor = React.lazy(() =>
  */
 export default function EditorPage() {
     // Capturar parâmetros da rota
-    const [matchDirect] = useRoute('/editor');
-    const [matchWithId, paramsWithId] = useRoute<{ funnelId: string }>('/editor/:funnelId');
+    const [, paramsWithId] = useRoute<{ funnelId: string }>('/editor/:funnelId');
 
     // Capturar query params
     const searchParams = new URLSearchParams(window.location.search);
@@ -85,13 +82,9 @@ export default function EditorPage() {
         // Silencioso em produção; apenas usar estado local
     }
 
-    // Feature flag para usar editor unificado
-    const useUnifiedEditor = useFeatureFlag('useUnifiedEditor');
-
     appLogger.info('🎯 EditorPage rendered', {
         funnelId,
         isFromTemplate: !!templateParam,
-        useUnifiedEditor,
     });
 
     // 🔄 Redirecionar ?template= para ?funnel= (padronização de URL)
@@ -120,17 +113,16 @@ export default function EditorPage() {
                 });
             }}
         >
-            <EditorProvider>
-                <Suspense fallback={
-                    <PageLoadingFallback
-                        message={funnelId ? 'Carregando editor...' : 'Preparando editor...'}
-                    />
-                }>
-                    <QuizModularEditor
-                        funnelId={funnelId}
-                    />
-                </Suspense>
-            </EditorProvider>
+            {/* ✅ EditorStateProvider já fornecido pelo SuperUnifiedProviderV3 no App.tsx */}
+            <Suspense fallback={
+                <PageLoadingFallback
+                    message={funnelId ? 'Carregando editor...' : 'Preparando editor...'}
+                />
+            }>
+                <QuizModularEditor
+                    funnelId={funnelId}
+                />
+            </Suspense>
         </ErrorBoundary>
     );
 }
