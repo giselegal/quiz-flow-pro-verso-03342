@@ -112,15 +112,15 @@ function BlockProperties({ block }: BlockPropertiesProps) {
 
                         {/* Exibir demais campos não mapeados */}
                         {Object.entries(block.properties)
-                          .filter(([key]) => !getFieldsForType(block.type).some(f => f.key === key))
-                          .map(([key, value]) => (
-                            <PropertyEditor
-                              key={key}
-                              label={key}
-                              value={value}
-                              onChange={(v) => handleChange(key, v)}
-                            />
-                          ))}
+                            .filter(([key]) => !getFieldsForType(block.type).some(f => f.key === key))
+                            .map(([key, value]) => (
+                                <PropertyEditor
+                                    key={key}
+                                    label={key}
+                                    value={value}
+                                    onChange={(v) => handleChange(key, v)}
+                                />
+                            ))}
                     </div>
                 )}
             </div>
