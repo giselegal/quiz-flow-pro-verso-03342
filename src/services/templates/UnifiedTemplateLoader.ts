@@ -17,9 +17,8 @@
 import { appLogger } from '@/lib/utils/appLogger';
 import { cacheService } from '@/services/canonical';
 import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplateSource';
-import { QuizSchemaZ, validateQuizSchema, type QuizSchema, type QuizStep } from '@/schemas/quiz-schema.zod';
+import { validateQuizSchema, type QuizSchema } from '@/schemas/quiz-schema.zod';
 import type { Block } from '@/types/editor';
-import type { ServiceResult } from '@/services/canonical/types';
 
 /**
  * Opções de carregamento
