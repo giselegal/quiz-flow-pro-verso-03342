@@ -8,6 +8,7 @@
  */
 
 import React, { useState } from 'react';
+import { z } from 'zod';
 import { useQuizStore } from '../store/quizStore';
 import { useEditorStore } from '../store/editorStore';
 import type { QuizBlock } from '@/schemas/quiz-schema.zod';
@@ -184,6 +185,36 @@ interface PropertyEditorProps {
 
 function PropertyEditor({ label, value, kind, onChange }: PropertyEditorProps) {
     const type = typeof value;
+    const schema = (() => {
+        switch (kind) {
+            case 'text':
+                return z.string().min(1, 'Texto obrigatório');
+            case 'number':
+                return z.number({ invalid_type_error: 'Número inválido' });
+            case 'image':
+                return z.string().url('URL inválida');
+            case 'options':
+                return z.array(z.object({
+                    label: z.string().min(1, 'Label obrigatório'),
+                    value: z.string().min(1, 'Value obrigatório'),
+                })).refine((opts) => {
+                    const set = new Set(opts.map(o => o.value.trim()));
+                    return set.size === opts.length;
+                }, { message: 'Values devem ser únicos' });
+            default:
+                return null;
+        }
+    })();
+    const fieldError = (() => {
+        if (!schema) return null;
+        try {
+            schema.parse(kind === 'number' && typeof value === 'string' ? Number(value) : value);
+            return null;
+        } catch (e: any) {
+            const issue = e?.issues?.[0];
+            return issue?.message || 'Valor inválido';
+        }
+    })();
 
     // Editor específico para options com validações e mover ↑/↓
     if (kind === 'options' && Array.isArray(value)) {
@@ -232,6 +263,9 @@ function PropertyEditor({ label, value, kind, onChange }: PropertyEditorProps) {
                             <div key={i}>• {e}</div>
                         ))}
                     </div>
+                )}
+                {fieldError && (
+                    <div className="text-xs text-red-600">• {fieldError}</div>
                 )}
                 <DndContext
                     sensors={sensors}
@@ -315,6 +349,7 @@ function PropertyEditor({ label, value, kind, onChange }: PropertyEditorProps) {
                         onChange(v);
                     }}
                 />
+                {fieldError && <p className="text-xs text-red-600">{fieldError}</p>}
             </div>
         );
     }
@@ -329,6 +364,7 @@ function PropertyEditor({ label, value, kind, onChange }: PropertyEditorProps) {
                     value={value}
                     onChange={(e) => onChange(Number(e.target.value))}
                 />
+                {fieldError && <p className="text-xs text-red-600">{fieldError}</p>}
             </div>
         );
     }
