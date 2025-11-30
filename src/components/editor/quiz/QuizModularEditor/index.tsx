@@ -56,7 +56,7 @@ import { AutosaveIndicator } from '@/components/editor/quiz/AutosaveIndicator';
 // Template Health Panel
 import { TemplateHealthPanel } from './components/TemplateHealthPanel';
 // 🔒 P1: Version Conflict Modal
-import { VersionConflictModal } from '../dialogs/VersionConflictModal';
+import { VersionConflictModal } from '../../dialogs/VersionConflictModal';
 // 🎯 FASE 3.1: Novos hooks refatorados
 import { useStepNavigation } from './hooks/useStepNavigation';
 import { useAutoSave } from '@/core';
@@ -2540,7 +2540,6 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                         onClose={() => setVersionConflict(null)}
                     />
                 )}
-qual funil é valido para essa estrutura???
             </div>
         </SafeDndContext >
     );
