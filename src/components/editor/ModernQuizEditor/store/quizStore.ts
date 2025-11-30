@@ -255,13 +255,14 @@ export const useQuizStore = create<QuizStore>()(
         // Atualizar ordem
         step.blocks = blocks.map((block, index) => ({
           ...block,
-          order: index,
+          order: index + 1,
         }));
         
         state.isDirty = true;
       });
       
       get().addToHistory();
+      get().scheduleAutoSave();
     },
     
     // ========================================================================

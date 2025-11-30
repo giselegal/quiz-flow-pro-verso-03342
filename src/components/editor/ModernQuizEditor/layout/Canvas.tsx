@@ -8,9 +8,13 @@
  * - Visual de bloco selecionado
  */
 
+import React from 'react';
 import { useQuizStore } from '../store/quizStore';
 import { useEditorStore } from '../store/editorStore';
 import type { QuizBlock } from '@/schemas/quiz-schema.zod';
+import { DndContext, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
+import { SortableContext, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 export function Canvas() {
     const quiz = useQuizStore((state) => state.quiz);
@@ -56,16 +60,7 @@ export function Canvas() {
                 ) : selectedStep.blocks?.length === 0 ? (
                     <EmptyState message="Esta etapa não possui blocos. Arraste um bloco da biblioteca." />
                 ) : (
-                    <div className="max-w-3xl mx-auto space-y-4">
-                        {selectedStep.blocks?.map((block: any) => (
-                            <BlockPreview
-                                key={block.id}
-                                block={block}
-                                isSelected={selectedBlockId === block.id}
-                                onClick={() => selectBlock(block.id)}
-                            />
-                        ))}
-                    </div>
+                    <CanvasSortable stepId={selectedStep.id} blocks={selectedStep.blocks} selectedBlockId={selectedBlockId} onSelect={selectBlock} />
                 )}
             </div>
         </div>
@@ -224,6 +219,53 @@ function BlockActions({ block }: { block: QuizBlock }) {
             <button className="px-2 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded" onClick={moveUp}>↑ Mover</button>
             <button className="px-2 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded" onClick={moveDown}>↓ Mover</button>
             <button className="px-2 py-1 text-xs bg-red-100 hover:bg-red-200 text-red-700 rounded" onClick={remove}>Excluir</button>
+        </div>
+    );
+}
+
+function CanvasSortable({ stepId, blocks, selectedBlockId, onSelect }: { stepId: string; blocks: any[]; selectedBlockId?: string | null; onSelect: (id: string) => void; }) {
+    const reorderBlocks = useQuizStore((s) => s.reorderBlocks);
+    const sensors = useSensors(useSensor(PointerSensor));
+    return (
+        <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={(event) => {
+                const { active, over } = event;
+                if (!over || active.id === over.id) return;
+                const from = Number(active.id);
+                const to = Number(over.id);
+                reorderBlocks(stepId, from, to);
+            }}
+        >
+            <SortableContext items={blocks.map((_, i) => i)} strategy={verticalListSortingStrategy}>
+                <div className="max-w-3xl mx-auto space-y-4">
+                    {blocks.map((block: any, idx: number) => (
+                        <SortableBlock key={block.id} id={idx}>
+                            <BlockPreview
+                                block={block}
+                                isSelected={selectedBlockId === block.id}
+                                onClick={() => onSelect(block.id)}
+                            />
+                        </SortableBlock>
+                    ))}
+                </div>
+            </SortableContext>
+        </DndContext>
+    );
+}
+
+function SortableBlock({ id, children }: { id: number; children: React.ReactNode }) {
+    const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
+    const style = {
+        transform: CSS.Transform.toString(transform),
+        transition,
+        boxShadow: isDragging ? '0 8px 24px rgba(0,0,0,0.12)' : undefined,
+        opacity: isDragging ? 0.98 : 1,
+    } as React.CSSProperties;
+    return (
+        <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+            {children}
         </div>
     );
 }
