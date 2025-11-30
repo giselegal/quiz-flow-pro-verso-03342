@@ -250,7 +250,7 @@ describe('ImportTemplateDialog - Preview de Template', () => {
         vi.clearAllMocks();
     });
 
-    it('deve mostrar preview após upload bem-sucedido', async () => {
+    it('deve mostrar resumo após upload bem-sucedido', async () => {
         const user = userEvent.setup({ pointerEventsCheck: 0 });
         const mockTemplate = {
             metadata: {
@@ -279,6 +279,7 @@ describe('ImportTemplateDialog - Preview de Template', () => {
                 open={true}
                 onClose={() => { }}
                 onImport={() => { }}
+                currentStepKey={"step-01"}
             />,
             { wrapper: createWrapper() }
         );
@@ -289,17 +290,14 @@ describe('ImportTemplateDialog - Preview de Template', () => {
         forceUpload(input, file);
 
         await waitFor(() => {
-            // Metadata
+            expect(screen.getByText(/template válido/i)).toBeInTheDocument();
             expect(screen.getByText(/quiz completo/i)).toBeInTheDocument();
-            expect(screen.getByText(/template com 21 passos/i)).toBeInTheDocument();
-            expect(screen.getByText(/versão 3\.1/i)).toBeInTheDocument();
-
-            // Steps count
-            expect(screen.getByText(/3 passos/i)).toBeInTheDocument();
+            expect(screen.getByText(/versão:/i)).toBeInTheDocument();
+            expect(screen.getByText(/3 step\(s\)/i)).toBeInTheDocument();
         });
     });
 
-    it('deve mostrar lista de steps no preview', async () => {
+    it('deve mostrar campos de ID e versão', async () => {
         const user = userEvent.setup({ pointerEventsCheck: 0 });
         const mockTemplate = {
             metadata: {
@@ -327,6 +325,7 @@ describe('ImportTemplateDialog - Preview de Template', () => {
                 open={true}
                 onClose={() => { }}
                 onImport={() => { }}
+                currentStepKey={"step-01-intro"}
             />,
             { wrapper: createWrapper() }
         );
@@ -337,13 +336,13 @@ describe('ImportTemplateDialog - Preview de Template', () => {
         forceUpload(input, file);
 
         await waitFor(() => {
-            expect(screen.getByText(/step-01-intro/i)).toBeInTheDocument();
-            expect(screen.getByText(/step-02-question/i)).toBeInTheDocument();
-            expect(screen.getByText(/step-03-result/i)).toBeInTheDocument();
+            expect(screen.getByText(/id:/i)).toBeInTheDocument();
+            expect(screen.getByText(/quiz21/i)).toBeInTheDocument();
+            expect(screen.getByText(/versão:/i)).toBeInTheDocument();
         });
     });
 
-    it('deve mostrar contagem de blocos por step', async () => {
+    it('deve mostrar contagem de blocos ao selecionar modo step', async () => {
         const user = userEvent.setup({ pointerEventsCheck: 0 });
         const mockTemplate = {
             metadata: {
@@ -373,6 +372,7 @@ describe('ImportTemplateDialog - Preview de Template', () => {
                 open={true}
                 onClose={() => { }}
                 onImport={() => { }}
+                currentStepKey={"step-01"}
             />,
             { wrapper: createWrapper() }
         );
@@ -382,6 +382,8 @@ describe('ImportTemplateDialog - Preview de Template', () => {
 
         forceUpload(input, file);
 
+        const stepModeBtn = screen.getByRole('button', { name: /apenas step atual/i });
+        await user.click(stepModeBtn);
         await waitFor(() => {
             expect(screen.getByText(/3 blocos/i)).toBeInTheDocument();
         });
@@ -423,9 +425,10 @@ describe('ImportTemplateDialog - Confirmação de Importação', () => {
         forceUpload(input, file);
 
         await waitFor(() => {
-            const importButton = screen.getByRole('button', { name: /importar/i });
-            expect(importButton).not.toBeDisabled();
+            expect(screen.getByText(/template válido/i)).toBeInTheDocument();
         });
+        const importButton = screen.getByRole('button', { name: /^importar$/i });
+        expect(importButton).not.toBeDisabled();
     });
 
     it('deve chamar onImport com template validado', async () => {
@@ -459,11 +462,9 @@ describe('ImportTemplateDialog - Confirmação de Importação', () => {
         forceUpload(input, file);
 
         await waitFor(() => {
-            const importButton = screen.getByRole('button', { name: /importar/i });
-            expect(importButton).not.toBeDisabled();
+            expect(screen.getByText(/template válido/i)).toBeInTheDocument();
         });
-
-        const importButton = screen.getByRole('button', { name: /importar/i });
+        const importButton = screen.getByRole('button', { name: /^importar$/i });
         await user.click(importButton);
 
         expect(onImport).toHaveBeenCalledWith(mockTemplate);
@@ -499,9 +500,11 @@ describe('ImportTemplateDialog - Confirmação de Importação', () => {
 
         forceUpload(input, file);
 
-        const importButton = await screen.findByRole('button', { name: /importar/i });
+        await waitFor(() => {
+            expect(screen.getByText(/template válido/i)).toBeInTheDocument();
+        });
+        const importButton = screen.getByRole('button', { name: /^importar$/i });
         await user.click(importButton);
-
         expect(onClose).toHaveBeenCalled();
     });
 });
@@ -573,13 +576,21 @@ describe('ImportTemplateDialog - Cancelamento', () => {
         forceUpload(input, file);
 
         await waitFor(() => {
-            expect(screen.getByText(/quiz/i)).toBeInTheDocument();
+            expect(screen.getByText(/template válido/i)).toBeInTheDocument();
         });
 
         const cancelButton = screen.getByRole('button', { name: /cancelar/i });
         await user.click(cancelButton);
 
-        // Reabrir diálogo
+        // Simular fechamento externo
+        rerender(
+            <ImportTemplateDialog
+                open={false}
+                onClose={() => { }}
+                onImport={() => { }}
+            />
+        );
+        // Reabrir
         rerender(
             <ImportTemplateDialog
                 open={true}
@@ -587,9 +598,7 @@ describe('ImportTemplateDialog - Cancelamento', () => {
                 onImport={() => { }}
             />
         );
-
-        // Preview deve estar limpo
-        expect(screen.queryByText(/quiz/i)).not.toBeInTheDocument();
+        expect(screen.queryByText(/template válido/i)).not.toBeInTheDocument();
     });
 });
 
@@ -598,7 +607,7 @@ describe('ImportTemplateDialog - Estados de Carregamento', () => {
         vi.clearAllMocks();
     });
 
-    it('deve mostrar resultado imediatamente (validação síncrona)', async () => {
+    it('deve mostrar mensagem de sucesso após validação síncrona', async () => {
         const user = userEvent.setup({ pointerEventsCheck: 0 });
         const mockTemplate = {
             metadata: { id: 'quiz21', version: '3.1', name: 'Quiz' },
@@ -626,7 +635,7 @@ describe('ImportTemplateDialog - Estados de Carregamento', () => {
         const input = document.querySelector('input[type="file"]') as HTMLInputElement;
         forceUpload(input, file);
 
-        await waitFor(() => expect(screen.getByText(/quiz/i)).toBeInTheDocument());
+        await waitFor(() => expect(screen.getByText(/template válido/i)).toBeInTheDocument());
     });
 });
 
