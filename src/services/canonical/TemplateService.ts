@@ -1803,6 +1803,7 @@ export class TemplateService extends BaseCanonicalService {
       // 🔒 P1: Optimistic Locking - validar versão antes de salvar
       if (!options?.skipVersionCheck && options?.expectedVersion !== undefined) {
         const { optimisticLockingService } = await import('@/services/optimistic-locking/OptimisticLockingService');
+        const { supabase } = await import('@/lib/supabase');
         
         const getCurrentVersion = async () => {
           // Buscar versão atual do step
@@ -1810,7 +1811,7 @@ export class TemplateService extends BaseCanonicalService {
           if (!funnelId) return null;
 
           try {
-            const { data, error } = await hierarchicalTemplateSource['supabase']
+            const { data, error } = await supabase
               .from('funnel_steps')
               .select('version, updated_at')
               .eq('funnel_id', funnelId)
