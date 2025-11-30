@@ -204,7 +204,10 @@ export const QuizStepSchemaZ = z.object({
   title: z.string().optional(),
   blocks: z.array(QuizBlockSchemaZ).min(1, 'Step deve ter pelo menos 1 block'),
   navigation: NavigationConfigZ,
-  validation: ValidationSchemaZ.optional()
+  validation: ValidationSchemaZ.optional(),
+  // 🔒 P1: Optimistic Locking - versionamento para detectar conflitos
+  version: z.number().int().min(1).default(1),
+  lastModified: z.string().datetime({ message: 'lastModified deve ser ISO 8601' }).optional()
 });
 
 // ============================================================================
@@ -248,6 +251,8 @@ export const QuizMetadataZ = z.object({
   author: z.string().min(1, 'Autor é obrigatório'),
   createdAt: z.string().datetime({ message: 'Data de criação deve ser ISO 8601' }),
   updatedAt: z.string().datetime({ message: 'Data de atualização deve ser ISO 8601' }),
+  // 🔒 P1: Optimistic Locking - versão global do template
+  version: z.number().int().min(1).default(1),
   version: z.string().regex(/^\d+\.\d+\.\d+$/, 'Versão deve ser semver (x.y.z)').optional(),
   tags: z.array(z.string()).optional()
 });
