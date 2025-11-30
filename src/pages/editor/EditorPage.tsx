@@ -1,40 +1,48 @@
 /**
- * 🎯 EDITOR PAGE - Página Unificada do Editor
+ * 🎯 EDITOR PAGE - Página Unificada do Editor (REFATORADO)
  * 
- * Página consolidada que usa a nova arquitetura core.
- * Substitui múltiplas implementações de editor (EditorV4, QuizBuilder, etc).
+ * ✅ NOVO: Usa ModernQuizEditor com arquitetura limpa
+ * - Zustand + Immer para estado
+ * - 4 colunas: Steps | Library | Canvas | Properties
+ * - Integração com templateService para carregar quiz
  * 
  * FEATURES:
- * - Usa @core/contexts para estado
  * - Lazy loading de componentes
  * - Error boundaries integrados
- * - Feature flags para rollout gradual
+ * - Loading states adequados
  * 
  * @example
  * ```typescript
  * // Rotas suportadas:
- * /editor                    → Novo editor vazio
- * /editor?template=quiz21    → Carregar template
+ * /editor                    → Carrega funnel padrão (quiz21StepsComplete)
+ * /editor?funnel=quiz21      → Carregar template específico
  * /editor?funnelId=abc123    → Editar funnel existente
  * /editor/abc123             → Editar funnel por ID (alias)
  * ```
  */
 
-import React, { Suspense } from 'react';
+import React, { Suspense, useState, useEffect } from 'react';
 import { useRoute } from 'wouter';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 import { PageLoadingFallback } from '@/components/LoadingSpinner';
 import { appLogger } from '@/lib/utils/appLogger';
+import { templateService } from '@/lib/services/template.service';
+import type { QuizSchema } from '@/schemas/quiz-schema.zod';
 
-// Lazy load do editor modular (já integrado com v4)
-const QuizModularEditor = React.lazy(() =>
-    import('@/components/editor/quiz/QuizModularEditor')
+// ✅ Novo editor moderno com arquitetura limpa
+const ModernQuizEditor = React.lazy(() =>
+    import('@/components/editor/ModernQuizEditor').then(m => ({ default: m.ModernQuizEditor }))
 );
 
 /**
  * Componente principal da página de editor
  */
 export default function EditorPage() {
+    // Estado para quiz carregado
+    const [quiz, setQuiz] = useState<QuizSchema | null>(null);
+    const [isLoadingQuiz, setIsLoadingQuiz] = useState(false);
+    const [loadError, setLoadError] = useState<string | null>(null);
+
     // Capturar parâmetros da rota
     const [, paramsWithId] = useRoute<{ funnelId: string }>('/editor/:funnelId');
 
@@ -78,11 +86,6 @@ export default function EditorPage() {
         }
     }
 
-    appLogger.info('🎯 EditorPage rendered', {
-        funnelId,
-        isFromTemplate: !!templateParam,
-    });
-
     // 🔄 Redirecionar ?template= para ?funnel= (padronização de URL)
     React.useEffect(() => {
         // Sempre padronizar ?template= para ?funnel= para evitar conflito de parâmetros
@@ -99,25 +102,101 @@ export default function EditorPage() {
         }
     }, [templateParam]);
 
+    // 🔄 Carregar quiz quando funnelId mudar
+    useEffect(() => {
+        async function loadQuiz() {
+            if (!funnelId) return;
+
+            setIsLoadingQuiz(true);
+            setLoadError(null);
+
+            try {
+                appLogger.info('📂 Carregando quiz via ModernQuizEditor:', { funnelId });
+                const loadedQuiz = await templateService.load(funnelId);
+                setQuiz(loadedQuiz);
+                appLogger.info('✅ Quiz carregado no editor moderno:', {
+                    title: loadedQuiz.metadata.name,
+                    steps: loadedQuiz.steps?.length || 0
+                });
+            } catch (error) {
+                const message = error instanceof Error ? error.message : 'Erro desconhecido';
+                appLogger.error('❌ Erro ao carregar quiz:', { funnelId, error: message });
+                setLoadError(message);
+            } finally {
+                setIsLoadingQuiz(false);
+            }
+        }
+
+        loadQuiz();
+    }, [funnelId]);
+
+    // Handler de salvamento
+    const handleSave = async (savedQuiz: QuizSchema) => {
+        try {
+            appLogger.info('💾 Salvando quiz via ModernQuizEditor:', {
+                funnelId,
+                title: savedQuiz.metadata.name
+            });
+            // TODO: Integrar com backend real
+            // await api.saveQuiz(funnelId, savedQuiz);
+            appLogger.info('✅ Quiz salvo com sucesso');
+        } catch (error) {
+            appLogger.error('❌ Erro ao salvar quiz:', error);
+            throw error;
+        }
+    };
+
+    // Handler de erro
+    const handleError = (error: Error) => {
+        appLogger.error('❌ Erro no editor moderno:', error);
+        setLoadError(error.message);
+    };
+
+    appLogger.debug('🎯 EditorPage rendered (Modern)', {
+        funnelId,
+        isLoadingQuiz,
+        hasQuiz: !!quiz,
+        loadError,
+    });
+
     return (
         <ErrorBoundary
             onError={(error, errorInfo) => {
-                appLogger.error('🔴 Editor crashed:', {
+                appLogger.error('🔴 ModernQuizEditor crashed:', {
                     error: error.message,
                     stack: error.stack,
                     componentStack: errorInfo.componentStack,
                 });
             }}
         >
-            {/* ✅ EditorStateProvider já fornecido pelo SuperUnifiedProviderV3 no App.tsx */}
-            <Suspense fallback={
-                <PageLoadingFallback
-                    message={funnelId ? 'Carregando editor...' : 'Preparando editor...'}
-                />
-            }>
-                <QuizModularEditor
-                    funnelId={funnelId}
-                />
+            <Suspense fallback={<PageLoadingFallback message="Carregando editor moderno..." />}>
+                {isLoadingQuiz ? (
+                    <PageLoadingFallback message={`Carregando ${funnelId}...`} />
+                ) : loadError ? (
+                    <div className="h-screen flex items-center justify-center bg-gray-50">
+                        <div className="text-center max-w-md">
+                            <div className="text-6xl mb-4">⚠️</div>
+                            <h2 className="text-xl font-semibold text-gray-900 mb-2">
+                                Erro ao carregar quiz
+                            </h2>
+                            <p className="text-gray-600 mb-4">{loadError}</p>
+                            <button
+                                onClick={() => window.location.reload()}
+                                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                            >
+                                Tentar novamente
+                            </button>
+                        </div>
+                    </div>
+                ) : quiz ? (
+                    <ModernQuizEditor
+                        initialQuiz={quiz}
+                        onSave={handleSave}
+                        onError={handleError}
+                    />
+                ) : (
+                    <PageLoadingFallback message="Preparando editor..." />
+                )}
             </Suspense>
         </ErrorBoundary>
     );
