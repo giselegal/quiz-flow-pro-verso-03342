@@ -371,8 +371,16 @@ function SortableRow({ id, children }: { id: number; children: React.ReactNode }
         transition,
     } as React.CSSProperties;
     return (
-        <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-            {children}
+        <div ref={setNodeRef} style={style} className="flex items-center gap-2">
+            <button
+                className="px-2 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded cursor-grab"
+                {...attributes}
+                {...listeners}
+                title="Arrastar para reordenar"
+            >⋮⋮</button>
+            <div className="flex-1">
+                {children}
+            </div>
         </div>
     );
 }
