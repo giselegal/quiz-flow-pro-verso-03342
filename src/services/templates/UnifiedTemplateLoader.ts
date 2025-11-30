@@ -70,7 +70,7 @@ export class UnifiedTemplateLoader {
 
   // Cache de templates v4 completos
   private v4Cache = new Map<string, QuizSchema>();
-  
+
   // Cache de steps individuais
   private stepCache = new Map<string, Block[]>();
 
@@ -134,15 +134,15 @@ export class UnifiedTemplateLoader {
         if (v4Result && v4Result.length > 0) {
           blocks = v4Result;
           source = 'v4';
-          
+
           // ⚡ Early return após sucesso - V4 é a fonte canônica
           if (useCache) {
             this.cacheStep(stepId, blocks);
           }
-          
+
           const loadTime = performance.now() - startTime;
           appLogger.info(`✅ [UnifiedLoader] Loaded from v4: ${stepId} (${loadTime.toFixed(2)}ms)`);
-          
+
           return {
             data: blocks,
             source,
@@ -163,15 +163,15 @@ export class UnifiedTemplateLoader {
         if (v3Result && v3Result.length > 0) {
           blocks = v3Result;
           source = 'v3-modular';
-          
+
           // ⚡ Early return após sucesso
           if (useCache) {
             this.cacheStep(stepId, blocks);
           }
-          
+
           const loadTime = performance.now() - startTime;
           appLogger.info(`✅ [UnifiedLoader] Loaded from v3-modular: ${stepId} (${loadTime.toFixed(2)}ms)`);
-          
+
           return {
             data: blocks,
             source,
@@ -366,13 +366,21 @@ export class UnifiedTemplateLoader {
 
   /**
    * Resolver caminho do JSON v4 a partir do templateId/funnelId
-   * Suporta 'quiz21-v4' (padrão) e 'quiz21-v4-gold'.
+   * Suporta 'quiz21-v4' (padrão), 'quiz21-v4-gold', e 'quiz21StepsComplete'.
    */
   private resolveV4Path(templateId?: string): string {
     const id = (templateId || '').toLowerCase();
+
+    // Mapeamento de IDs legados para arquivos v4
     if (id.includes('gold') || id === 'quiz21-v4-gold') {
       return `/templates/quiz21-v4-gold.json`;
     }
+
+    // 🔧 FIX: Mapear 'quiz21stepscomplete' (fallback padrão) para quiz21-v4.json
+    if (id === 'quiz21stepscomplete' || id === 'quiz21-steps-complete') {
+      return `/templates/quiz21-v4.json`;
+    }
+
     // Padrão
     return `/templates/quiz21-v4.json`;
   }
@@ -385,7 +393,7 @@ export class UnifiedTemplateLoader {
     options: { timeout: number; signal?: AbortSignal }
   ): Promise<Block[] | null> {
     const url = `/templates/${stepId}-v3.json`;
-    
+
     try {
       const response = await this.fetchWithTimeout(url, options.timeout, options.signal);
       const data = await response.json();
@@ -419,7 +427,7 @@ export class UnifiedTemplateLoader {
 
       if (data && data.steps && data.steps[stepId]) {
         const stepData = data.steps[stepId];
-        
+
         if (Array.isArray(stepData)) {
           return stepData as Block[];
         }
