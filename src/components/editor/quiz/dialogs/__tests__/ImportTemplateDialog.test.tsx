@@ -148,7 +148,7 @@ describe('ImportTemplateDialog - Upload de Arquivo', () => {
         const file = createMockJsonFile(mockTemplate);
         const input = document.querySelector('input[type="file"]') as HTMLInputElement;
 
-        await user.upload(input, file);
+        forceUpload(input, file);
 
         await waitFor(() => {
             expect(screen.getByText(/quiz 21 steps/i)).toBeInTheDocument();
@@ -170,7 +170,7 @@ describe('ImportTemplateDialog - Upload de Arquivo', () => {
         const file = new File(['texto plano'], 'arquivo.txt', { type: 'text/plain' });
         const input = document.querySelector('input[type="file"]') as HTMLInputElement;
 
-        await user.upload(input, file);
+        forceUpload(input, file);
 
         await waitFor(() => {
             expect(screen.getByText(/formato inválido/i)).toBeInTheDocument();
@@ -194,7 +194,7 @@ describe('ImportTemplateDialog - Upload de Arquivo', () => {
         });
         const input = document.querySelector('input[type="file"]') as HTMLInputElement;
 
-        await user.upload(input, file);
+        forceUpload(input, file);
 
         await waitFor(() => {
             expect(screen.getByText(/json inválido/i)).toBeInTheDocument();
@@ -227,7 +227,7 @@ describe('ImportTemplateDialog - Upload de Arquivo', () => {
         const file = createMockJsonFile(invalidTemplate);
         const input = document.querySelector('input[type="file"]') as HTMLInputElement;
 
-        await user.upload(input, file);
+        forceUpload(input, file);
 
         await waitFor(() => {
             expect(screen.getByText(/falta campo id/i)).toBeInTheDocument();
@@ -276,7 +276,7 @@ describe('ImportTemplateDialog - Preview de Template', () => {
         const file = createMockJsonFile(mockTemplate);
         const input = document.querySelector('input[type="file"]') as HTMLInputElement;
 
-        await user.upload(input, file);
+        forceUpload(input, file);
 
         await waitFor(() => {
             // Metadata
@@ -324,7 +324,7 @@ describe('ImportTemplateDialog - Preview de Template', () => {
         const file = createMockJsonFile(mockTemplate);
         const input = document.querySelector('input[type="file"]') as HTMLInputElement;
 
-        await user.upload(input, file);
+        forceUpload(input, file);
 
         await waitFor(() => {
             expect(screen.getByText(/step-01-intro/i)).toBeInTheDocument();
@@ -370,7 +370,7 @@ describe('ImportTemplateDialog - Preview de Template', () => {
         const file = createMockJsonFile(mockTemplate);
         const input = document.querySelector('input[type="file"]') as HTMLInputElement;
 
-        await user.upload(input, file);
+        forceUpload(input, file);
 
         await waitFor(() => {
             expect(screen.getByText(/3 blocos/i)).toBeInTheDocument();
@@ -410,7 +410,7 @@ describe('ImportTemplateDialog - Confirmação de Importação', () => {
         const file = createMockJsonFile(mockTemplate);
         const input = document.querySelector('input[type="file"]') as HTMLInputElement;
 
-        await user.upload(input, file);
+        forceUpload(input, file);
 
         await waitFor(() => {
             const importButton = screen.getByRole('button', { name: /importar/i });
@@ -446,7 +446,7 @@ describe('ImportTemplateDialog - Confirmação de Importação', () => {
         const file = createMockJsonFile(mockTemplate);
         const input = document.querySelector('input[type="file"]') as HTMLInputElement;
 
-        await user.upload(input, file);
+        forceUpload(input, file);
 
         await waitFor(() => {
             const importButton = screen.getByRole('button', { name: /importar/i });
@@ -487,7 +487,7 @@ describe('ImportTemplateDialog - Confirmação de Importação', () => {
         const file = createMockJsonFile(mockTemplate);
         const input = document.querySelector('input[type="file"]') as HTMLInputElement;
 
-        await user.upload(input, file);
+        forceUpload(input, file);
 
         const importButton = await screen.findByRole('button', { name: /importar/i });
         await user.click(importButton);
@@ -560,7 +560,7 @@ describe('ImportTemplateDialog - Cancelamento', () => {
         const file = createMockJsonFile(mockTemplate);
         const input = document.querySelector('input[type="file"]') as HTMLInputElement;
 
-        await user.upload(input, file);
+        forceUpload(input, file);
 
         await waitFor(() => {
             expect(screen.getByText(/quiz/i)).toBeInTheDocument();
@@ -614,7 +614,7 @@ describe('ImportTemplateDialog - Estados de Carregamento', () => {
 
         const file = createMockJsonFile(mockTemplate);
         const input = document.querySelector('input[type="file"]') as HTMLInputElement;
-        await user.upload(input, file);
+        forceUpload(input, file);
 
         await waitFor(() => expect(screen.getByText(/quiz/i)).toBeInTheDocument());
     });
