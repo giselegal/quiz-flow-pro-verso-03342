@@ -1,11 +1,13 @@
 import cors from 'cors';
 import express from 'express';
+import fs from 'fs';
+import path from 'path';
 import { createServer } from 'http';
 import { WebSocketServer } from 'ws';
 import compression from 'compression';
 import { logger, requestIdMiddleware, loggingMiddleware } from './utils/logger';
 // imports auxiliares removidos; usaremos dynamic import para 'archiver' dentro do handler
-import path, { dirname } from 'path';
+import { dirname } from 'path';
 import { templatesRouter } from './templates/controller';
 import { seedTemplates } from './templates/seed';
 import { componentsRouter } from './templates/components.controller';
@@ -205,6 +207,27 @@ app.get('/api/quizzes', (req, res) => {
 app.post('/api/quizzes', (req, res) => {
   // Mock creation - replace with actual database operations
   res.json({ id: Date.now().toString(), ...req.body });
+});
+
+// Editor save endpoint (singular)
+app.post('/api/quiz', (req, res) => {
+  const payload = req.body || {};
+  // Persist mock: write to memory store or disk later
+  console.log('[API] /api/quiz received', {
+    version: payload?.metadata?.version,
+    savedAt: payload?.metadata?.savedAt,
+  });
+  try {
+    const dir = path.join(process.cwd(), 'data', 'saved-quizzes');
+    fs.mkdirSync(dir, { recursive: true });
+    const ts = new Date().toISOString().replace(/[:.]/g, '-');
+    const filePath = path.join(dir, `quiz-${ts}.json`);
+    fs.writeFileSync(filePath, JSON.stringify(payload, null, 2), 'utf-8');
+    res.json({ ok: true, filePath });
+  } catch (err) {
+    console.error('Failed to write quiz file', err);
+    res.status(500).send('Failed to persist quiz');
+  }
 });
 
 app.get('/api/quizzes/:id', (req, res) => {
