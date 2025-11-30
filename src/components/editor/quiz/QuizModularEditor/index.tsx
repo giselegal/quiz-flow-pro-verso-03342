@@ -86,6 +86,9 @@ import { useVirtualizedBlocks } from '@/hooks/useVirtualizedBlocks';
 // Hash util para controle de persistência (Fase 4)
 import { computeBlocksHash } from '@/core/editor/utils/computeBlocksHash';
 
+// 🔐 Token Refresh: renova sessão a cada 45min (P0 - previne perda de dados)
+import { useTokenRefresh } from '@/hooks/useTokenRefresh';
+
 // ✨ V4: Dynamic Properties Panel com 7 tipos de controles
 import { DynamicPropertiesPanelV4 } from '@/components/editor/properties/DynamicPropertiesPanelV4';
 import { ensureV4Block, BlockV4ToV3Adapter } from '@/core/quiz/blocks/adapters';
@@ -386,7 +389,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                 // Guardar o ID para carregamento posterior (após handleLoadTemplate estar disponível)
                 pendingTidRef.current = tidFromQuery;
                 setActiveTemplateId(tidFromQuery);
-                appLogger.info('[Bootstrap] 🎯 Setando activeTemplateId from query', { 
+                appLogger.info('[Bootstrap] 🎯 Setando activeTemplateId from query', {
                     tidFromQuery,
                     hasPropsId,
                     qp
@@ -1508,25 +1511,25 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         try {
             const svc: any = templateService;
             appLogger.info(`🔍 [QuizModularEditor] Preparando template via botão (lazy): ${tid}`);
-            
+
             // ✅ FIX: Usar UnifiedTemplateLoader para templates v4 (como quiz21-v4-gold)
             // Isso garante que o carregamento respeita o funnelId e carrega o JSON correto
             const isV4Template = tid?.includes('v4') || tid?.includes('quiz21');
-            
+
             if (isV4Template) {
                 // Carregar via UnifiedTemplateLoader (respeit funnelId)
                 appLogger.info(`📦 [QuizModularEditor] Loading v4 template via UnifiedLoader: ${tid}`);
                 const { unifiedTemplateLoader } = await import('@/services/templates/UnifiedTemplateLoader');
-                
+
                 const templateResult = await unifiedTemplateLoader.loadFullTemplate(tid, {
                     useCache: true,
                     timeout: 8000,
                 });
-                
+
                 if (!templateResult?.data?.steps) {
                     throw new Error('Template v4 não contém steps válidos');
                 }
-                
+
                 // Converter steps para formato esperado pelo editor
                 const formattedSteps = templateResult.data.steps.map((step: any) => ({
                     id: step.id,
@@ -1535,7 +1538,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                     type: step.type,
                     blocks: step.blocks,
                 }));
-                
+
                 setLoadedTemplate({
                     name: `Template: ${tid}`,
                     steps: formattedSteps,
@@ -1543,18 +1546,18 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
             } else {
                 // Usar templateService legado para templates não-v4
                 await svc.prepareTemplate?.(tid);
-                
+
                 const templateStepsResult = await svc.steps.list({ templateId: tid });
                 if (!templateStepsResult.success) {
                     throw new Error('Falha ao carregar lista de steps do template');
                 }
-                
+
                 setLoadedTemplate({
                     name: `Template: ${tid}`,
                     steps: templateStepsResult.data,
                 });
             }
-            
+
             setActiveTemplateId(tid);
             // ✅ Carregamento simplificado: blocos do step inicial serão carregados pelo hook de step
             setTemplateLoading(false);
@@ -1598,10 +1601,10 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     useEffect(() => {
         if (!pendingTidRef.current) return;
         if (loadedTemplate || templateLoadError) return; // Já carregado
-        
+
         const tidToLoad = pendingTidRef.current;
         pendingTidRef.current = null; // Limpar para evitar re-execução
-        
+
         (async () => {
             try {
                 appLogger.info(`🎯 [Auto-load] Carregando template from query param: ${tidToLoad}`);
