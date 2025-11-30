@@ -605,7 +605,11 @@ describe('ImportTemplateDialog - Cancelamento', () => {
         const user = userEvent.setup({ pointerEventsCheck: 0 });
         const mockTemplate = {
             metadata: { id: 'quiz21', version: '3.1', name: 'Quiz' },
-            steps: { 'step-01': [{ id: 'b1', type: 'Block' }] },
+            steps: {
+                'step-01': [
+                    { id: 'b1', type: 'Block', order: 0, content: {}, properties: {} },
+                ],
+            },
         };
 
         vi.mocked(normalizeAndValidateTemplateV3).mockReturnValue({
@@ -655,7 +659,11 @@ describe('ImportTemplateDialog - Estados de Carregamento', () => {
         const user = userEvent.setup({ pointerEventsCheck: 0 });
         const mockTemplate = {
             metadata: { id: 'quiz21', version: '3.1', name: 'Quiz' },
-            steps: { 'step-01': [{ id: 'b1', type: 'Block' }] },
+            steps: {
+                'step-01': [
+                    { id: 'b1', type: 'Block', order: 0, content: {}, properties: {} },
+                ],
+            },
         };
 
         vi.mocked(normalizeAndValidateTemplateV3).mockReturnValue({
