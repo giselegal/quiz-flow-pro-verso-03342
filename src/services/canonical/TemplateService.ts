@@ -460,7 +460,7 @@ export class TemplateService extends BaseCanonicalService {
       // Isso evita retornar dados incorretos para funis diferentes
       const funnelPart = this.activeFunnelId || 'default-funnel';
       const loadKey = `${stepId}-${templateId || 'default'}-${funnelPart}`;
-      
+
       if (this.stepLoadPromises.has(loadKey)) {
         this.log(`🔄 [DEDUPLICATE] Aguardando load existente: ${stepId} (funnel: ${funnelPart})`);
         const existingPromise = this.stepLoadPromises.get(loadKey)!;
@@ -857,7 +857,7 @@ export class TemplateService extends BaseCanonicalService {
   setActiveTemplate(templateId: string, totalSteps: number): void {
     // 🆔 Converter JSON ID para UUID se necessário
     const resolvedId = this.resolveTemplateId(templateId);
-    
+
     this.activeTemplateId = resolvedId;
     this.activeTemplateSteps = totalSteps;
     appLogger.info(`🎯 [setActiveTemplate] Definindo template ativo: ${templateId} → ${resolvedId} com ${totalSteps} etapas`);
@@ -876,7 +876,7 @@ export class TemplateService extends BaseCanonicalService {
       this.log('ℹ️ Funnel ativo removido (voltando para TEMPLATE_DEFAULT/ADMIN_OVERRIDE)');
       return;
     }
-    
+
     // 🆔 Converter JSON ID para UUID se necessário
     const resolvedId = this.resolveFunnelId(funnelId);
     this.activeFunnelId = resolvedId;
@@ -1303,14 +1303,14 @@ export class TemplateService extends BaseCanonicalService {
 
         // ✅ P8 FIX: Fallback robusto para garantir steps sempre disponíveis
         let totalSteps = this.activeTemplateSteps;
-        
+
         // Se não configurado (0), usar 21 como padrão para templates conhecidos
         if (totalSteps === 0) {
           // Detectar template padrão
           const isKnownTemplate = this.activeTemplateId === 'quiz21StepsComplete' ||
-                                  this.activeTemplateId?.includes('quiz21') ||
-                                  this.activeFunnelId?.includes('quiz21');
-          
+            this.activeTemplateId?.includes('quiz21') ||
+            this.activeFunnelId?.includes('quiz21');
+
           if (isKnownTemplate) {
             totalSteps = 21;
             appLogger.debug('[TemplateService.steps.list] Usando 21 steps para template quiz21');
@@ -1787,6 +1787,12 @@ export class TemplateService extends BaseCanonicalService {
     options?: ServiceOptions
   ): Promise<ServiceResult<void>> {
     try {
+      // Validação Zod dos blocos do step
+      const { QuizBlockSchemaZ } = await import('@/schemas/quiz-schema.zod');
+      for (const block of blocks) {
+        QuizBlockSchemaZ.parse(block);
+      }
+
       // Usar HierarchicalTemplateSource para salvar (USER_EDIT priority)
       const funnelId = this.activeFunnelId || undefined;
 
