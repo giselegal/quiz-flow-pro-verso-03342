@@ -57,6 +57,11 @@ interface QuizStore {
    * Adicionar novo bloco a um step
    */
   addBlock: (stepId: string, blockType: string, order: number) => void;
+
+  /**
+   * Duplicar bloco com clone completo
+   */
+  duplicateBlock: (stepId: string, blockId: string) => void;
   
   /**
    * Deletar bloco de um step
@@ -185,6 +190,34 @@ export const useQuizStore = create<QuizStore>()(
         state.isDirty = true;
       });
       
+      get().addToHistory();
+    },
+
+    duplicateBlock: (stepId, blockId) => {
+      set((state) => {
+        if (!state.quiz) return;
+        const step = state.quiz.steps.find((s: any) => s.id === stepId);
+        if (!step) return;
+        const idx = step.blocks.findIndex((b: any) => b.id === blockId);
+        if (idx === -1) return;
+        const original = step.blocks[idx];
+        const newId = `${original.id}-copy-${Date.now()}`;
+        const clone = {
+          id: newId,
+          type: original.type,
+          order: (original.order || 0) + 1,
+          properties: JSON.parse(JSON.stringify(original.properties || {})),
+          content: JSON.parse(JSON.stringify(original.content || {})),
+          parentId: original.parentId ?? null,
+          metadata: JSON.parse(JSON.stringify(original.metadata || {})),
+        } as any;
+
+        // Inserir após original
+        step.blocks.splice(idx + 1, 0, clone);
+        // Reatribuir ordem sequencial
+        step.blocks = step.blocks.map((b: any, i: number) => ({ ...b, order: i + 1 }));
+        state.isDirty = true;
+      });
       get().addToHistory();
     },
     

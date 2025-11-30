@@ -196,11 +196,8 @@ function BlockActions({ block }: { block: QuizBlock }) {
     if (!selectedStepId) return null;
 
     const duplicate = () => {
-        // Duplicar bloco com clone de properties/content
-        const order = (block.order || 0) + 1;
-        addBlock(selectedStepId, block.type as any, order);
-        // Fase 2 mínima: inserção seguida de update para copiar props/content
-        // Em uma implementação ideal, addBlock aceitaria objeto completo
+        const duplicateBlock = useQuizStore.getState().duplicateBlock;
+        duplicateBlock(selectedStepId, block.id);
     };
 
     const remove = () => deleteBlock(selectedStepId, block.id);
