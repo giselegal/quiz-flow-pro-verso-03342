@@ -288,9 +288,9 @@ try {
   console.log('   • Etapa 20: Resultado Personalizado');
   console.log('   • Etapa 21: Oferta');
   console.log('\n🔗 Acesse no editor:');
-  console.log(`   http://localhost:5173/editor?funnelId=${funnel.id}`);
+  console.log(`   http://localhost:8080/editor?funnelId=${funnel.id}`);
   console.log('\n🎯 Preview:');
-  console.log(`   http://localhost:5173/preview/${funnel.id}`);
+  console.log(`   http://localhost:8080/preview/${funnel.id}`);
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
 
 } catch (error) {

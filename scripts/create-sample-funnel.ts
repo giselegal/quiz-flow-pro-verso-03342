@@ -385,8 +385,8 @@ try {
   console.log('📝 Detalhes:');
   console.log(`   - Nome: ${funnel.name}`);
   console.log(`   - ID: ${funnel.id}`);
-  console.log(`   - Páginas: ${pages.length}`);
-  console.log(`   - Status: ${funnel.is_published ? 'Publicado' : 'Rascunho'}`);
+  console.log('   - Páginas: ${pages.length}');
+  console.log('   - Status: ${funnel.is_published ? \'Publicado\' : \'Rascunho\'}');
   console.log('\n🔗 Acesse no editor:');
   console.log(`   http://localhost:8080/editor?funnelId=${funnel.id}`);
   console.log('\n');
