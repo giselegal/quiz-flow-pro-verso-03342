@@ -229,6 +229,17 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     const currentStepKey = `step-${String(safeCurrentStep).padStart(2, '0')}`;
     const selectedBlockId = unifiedState.editor.selectedBlockId;
     const isDirty = unifiedState.editor.isDirty;
+
+    // 🔍 DEBUG: Estado do editor
+    console.log('🔍 [QuizModularEditor] Estado inicial:', {
+        resourceId,
+        currentStepKey,
+        safeCurrentStep,
+        stepsCount: Object.keys(unifiedState.editor.stepBlocks || {}).length,
+        stepBlocks: unifiedState.editor.stepBlocks,
+        currentStepBlocks: unifiedState.editor.stepBlocks?.[safeCurrentStep]?.length || 0
+    });
+
     // adapter já inicializado acima
 
     // 🚦 Informar funnelId atual ao TemplateService para priorizar USER_EDIT no HierarchicalSource
@@ -2339,30 +2350,46 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                                                         : ''
                                                 }
                                             >
-                                                <CanvasColumn
-                                                    currentStepKey={currentStepKey}
-                                                    blocks={isEditableMode
+                                                {(() => {
+                                                    const blocksToRender = isEditableMode
                                                         ? (virtualization.isVirtualized ? virtualization.visibleBlocks : wysiwyg.state.blocks)
-                                                        : blocks}
-                                                    selectedBlockId={isEditableMode ? wysiwyg.state.selectedBlockId : selectedBlockId}
-                                                    onRemoveBlock={isEditableMode ? (id => {
-                                                        wysiwyg.actions.removeBlock(id);
-                                                    }) : undefined}
-                                                    onMoveBlock={isEditableMode ? ((from, to) => {
-                                                        wysiwyg.actions.reorderBlocks(from, to);
-                                                    }) : undefined}
-                                                    onUpdateBlock={isEditableMode ? ((id, patch) => {
-                                                        wysiwyg.actions.updateBlock(id, patch);
-                                                    }) : undefined}
-                                                    onBlockSelect={handleCanvasBlockSelect}
-                                                    hasTemplate={Boolean(
-                                                        loadedTemplate ||
-                                                        props.templateId ||
-                                                        resourceId
-                                                    )}
-                                                    onLoadTemplate={handleLoadTemplate}
-                                                    isEditable={isEditableMode}
-                                                />
+                                                        : blocks;
+
+                                                    console.log('🎨 [Canvas] Renderizando:', {
+                                                        isEditableMode,
+                                                        currentStepKey,
+                                                        blocksCount: blocksToRender?.length || 0,
+                                                        blocks: blocksToRender,
+                                                        wysiwygBlocks: wysiwyg.state.blocks?.length || 0,
+                                                        fallbackBlocks: blocks?.length || 0,
+                                                        isVirtualized: virtualization.isVirtualized
+                                                    });
+
+                                                    return (
+                                                        <CanvasColumn
+                                                            currentStepKey={currentStepKey}
+                                                            blocks={blocksToRender}
+                                                            selectedBlockId={isEditableMode ? wysiwyg.state.selectedBlockId : selectedBlockId}
+                                                            onRemoveBlock={isEditableMode ? (id => {
+                                                                wysiwyg.actions.removeBlock(id);
+                                                            }) : undefined}
+                                                            onMoveBlock={isEditableMode ? ((from, to) => {
+                                                                wysiwyg.actions.reorderBlocks(from, to);
+                                                            }) : undefined}
+                                                            onUpdateBlock={isEditableMode ? ((id, patch) => {
+                                                                wysiwyg.actions.updateBlock(id, patch);
+                                                            }) : undefined}
+                                                            onBlockSelect={handleCanvasBlockSelect}
+                                                            hasTemplate={Boolean(
+                                                                loadedTemplate ||
+                                                                props.templateId ||
+                                                                resourceId
+                                                            )}
+                                                            onLoadTemplate={handleLoadTemplate}
+                                                            isEditable={isEditableMode}
+                                                        />
+                                                    );
+                                                })()}
                                             </div>
                                         </StepErrorBoundary>
                                     )}
@@ -2533,11 +2560,10 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
                 {/* 🔒 P1: Optimistic Locking - Version Conflict Modal */}
                 {versionConflict && (
                     <VersionConflictModal
-                        isOpen={true}
+                        open={true}
                         conflict={versionConflict.conflict}
-                        localBlocks={versionConflict.blocks}
                         onResolve={handleConflictResolve}
-                        onClose={() => setVersionConflict(null)}
+                        onCancel={() => setVersionConflict(null)}
                     />
                 )}
             </div>
