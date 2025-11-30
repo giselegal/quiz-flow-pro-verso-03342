@@ -1079,6 +1079,38 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         }
     }, [blocks, safeCurrentStep, isEditableMode]);
 
+    // 🔒 P1: Optimistic Locking - Carregar versão do step ao trocar de step
+    useEffect(() => {
+        if (!resourceId || !isEditableMode) return;
+
+        const loadStepVersion = async () => {
+            try {
+                const { supabase } = await import('@/lib/supabase');
+                const { data, error } = await supabase
+                    .from('funnel_steps')
+                    .select('version, updated_at')
+                    .eq('funnel_id', resourceId)
+                    .eq('step_number', safeCurrentStep)
+                    .single();
+
+                if (error || !data) {
+                    appLogger.warn('[OptimisticLocking] Falha ao carregar versão do step', { error, step: safeCurrentStep });
+                    setCurrentStepVersion(1); // Versão padrão
+                    return;
+                }
+
+                const version = data.version || 1;
+                setCurrentStepVersion(version);
+                appLogger.debug('[OptimisticLocking] Versão do step carregada', { step: safeCurrentStep, version });
+            } catch (err) {
+                appLogger.warn('[OptimisticLocking] Erro ao buscar versão do step', { error: err });
+                setCurrentStepVersion(1);
+            }
+        };
+
+        loadStepVersion();
+    }, [resourceId, safeCurrentStep, isEditableMode]);
+
     // ✅ FASE 4: Flush debounced WYSIWYG → unified
     // Objetivos:
     // 1. Reduzir commits redundantes em edições rápidas
@@ -1287,6 +1319,85 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         },
         [dnd.handlers, blocks, safeCurrentStep, wysiwyg.actions, undo, showToast]
     );
+
+    // 🔒 P1: Optimistic Locking - Handler de resolução de conflitos
+    const handleConflictResolve = useCallback(async (strategy: 'overwrite' | 'merge' | 'cancel', mergedBlocks?: any[]) => {
+        if (!versionConflict) return;
+
+        const { stepId, conflict, blocks: localBlocks } = versionConflict;
+
+        try {
+            if (strategy === 'cancel') {
+                // Usuário cancelou, recarregar versão do servidor
+                appLogger.info('[Conflict] Usuário cancelou, recarregando step do servidor...');
+                setVersionConflict(null);
+
+                // Recarregar step atual
+                const stepNumber = safeCurrentStep;
+                queryClient.invalidateQueries({ queryKey: stepKeys.blocks(resourceId!, stepNumber) });
+                return;
+            }
+
+            if (strategy === 'overwrite') {
+                // Força sobrescrever com versão local (skipVersionCheck = true)
+                appLogger.info('[Conflict] Sobrescrevendo versão do servidor com versão local...');
+                await persistenceService.save(
+                    resourceId!,
+                    localBlocks,
+                    {
+                        maxRetries: 3,
+                        validateBeforeSave: true,
+                        skipVersionCheck: true, // ✅ Força sobrescrita
+                        metadata: {
+                            stepNumber: safeCurrentStep,
+                        },
+                    } as any
+                );
+                setCurrentStepVersion(conflict.actualVersion + 1);
+            } else if (strategy === 'merge') {
+                // Salva blocos mesclados (merge já foi feito no modal)
+                appLogger.info('[Conflict] Salvando blocos mesclados...');
+                if (!mergedBlocks) {
+                    throw new Error('Blocos mesclados não fornecidos');
+                }
+                await persistenceService.save(
+                    resourceId!,
+                    mergedBlocks,
+                    {
+                        maxRetries: 3,
+                        validateBeforeSave: true,
+                        skipVersionCheck: true, // ✅ Usa merge explícito
+                        metadata: {
+                            stepNumber: safeCurrentStep,
+                        },
+                    } as any
+                );
+
+                // Atualizar WYSIWYG com blocos mesclados
+                wysiwyg.actions.reset(mergedBlocks);
+                setCurrentStepVersion(conflict.actualVersion + 1);
+            }
+
+            // Limpar conflito
+            setVersionConflict(null);
+
+            toast({
+                type: 'success',
+                title: '✅ Conflito resolvido',
+                message: `Alterações salvas com estratégia: ${strategy}`,
+                duration: 3000,
+            });
+
+        } catch (err: any) {
+            appLogger.error('[Conflict] Erro ao resolver conflito:', err);
+            toast({
+                type: 'error',
+                title: '❌ Erro ao resolver conflito',
+                message: err.message || 'Tente novamente',
+                duration: 5000,
+            });
+        }
+    }, [versionConflict, resourceId, safeCurrentStep, queryClient, wysiwyg.actions, toast]);
 
     // Manual save
     const handleSave = useCallback(async () => {
