@@ -194,9 +194,28 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     // UI state agora via ux consolidado
     const uiState = ux;
 
+    // 🔧 FIX: Extrair query params ANTES de definir resourceId
+    const queryParams = React.useMemo(() => {
+        try {
+            const url = new URL(window.location.href);
+            return {
+                funnel: url.searchParams.get('funnel'),
+                template: url.searchParams.get('template'),
+                step: url.searchParams.get('step'),
+            };
+        } catch {
+            return { funnel: null, template: null, step: null };
+        }
+    }, []);
+
     // Resource unification (support legacy props)
-    // 🔄 PADRONIZAÇÃO: templateId é tratado como funnelId (editável)
-    const resourceId = props.resourceId || props.funnelId || props.templateId;
+    // 🎯 PRIORIDADE: query params > props > fallback
+    const resourceId =
+        queryParams.funnel ||
+        queryParams.template ||
+        props.resourceId ||
+        props.funnelId ||
+        props.templateId;
     // 🔓 EDIÇÃO SEMPRE HABILITADA: Templates e funnels são editáveis por padrão
     const isReadOnly = false; // Forçar edição habilitada
     const resourceMetadata = props.editorResource ?? null;
@@ -211,6 +230,22 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
             isEditableModel: true,
             isReadOnly: isReadOnly, // Deve ser sempre false
             edicaoHabilitada: !isReadOnly // Deve ser sempre true
+        }]
+    });
+
+    appLogger.info('🔍 [QuizModularEditor] ResourceId Resolvido:', {
+        data: [{
+            queryFunnel: queryParams.funnel,
+            queryTemplate: queryParams.template,
+            propResourceId: props.resourceId,
+            propFunnelId: props.funnelId,
+            propTemplateId: props.templateId,
+            resourceIdFinal: resourceId,
+            source: queryParams.funnel ? 'query:funnel' :
+                queryParams.template ? 'query:template' :
+                    props.resourceId ? 'props:resourceId' :
+                        props.funnelId ? 'props:funnelId' :
+                            props.templateId ? 'props:templateId' : 'NONE',
         }]
     });
 
@@ -347,7 +382,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     } | null>(null);
     const [currentStepVersion, setCurrentStepVersion] = useState<number>(1);
 
-    // 🔧 Bootstrap: registrar stores IndexedDB e diagnosticar query params
+    // 🔧 Bootstrap: registrar stores IndexedDB
     const pendingTidRef = useRef<string | null>(null);
     const [activeTemplateId, setActiveTemplateId] = useState<string | null>(() => {
         try {
@@ -355,43 +390,16 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         } catch { return null; }
     });
     useEffect(() => {
-        try {
-            indexedDBCache.registerStores(['funnels', 'steps', 'blocks']).catch(() => { });
-        } catch { }
-        try {
-            const url = new URL(typeof window !== 'undefined' ? window.location.href : 'http://local');
-            const qp = {
-                funnel: url.searchParams.get('funnel'),
-                template: url.searchParams.get('template'),
-                step: url.searchParams.get('step')
-            };
-            appLogger.info('🔎 [Bootstrap] Query params', { data: [qp] });
+        // Apenas registrar stores (query params já foram extraídos em queryParams memo)
+        indexedDBCache.registerStores(['funnels', 'steps', 'blocks']).catch(() => { });
 
-            // ✅ Respeitar step da query ao inicializar
-            const n = qp.step ? parseInt(qp.step, 10) : NaN;
-            const hasUrlStep = !isNaN(n) && n >= 1 && n <= 21;
-            if (hasUrlStep) {
-                setCurrentStep(n);
-            }
-
-            // ✅ Definir funnel ativo e preparar carregamento quando props ausentes
-            const hasPropsId = Boolean(props.templateId || resourceId || props.funnelId);
-            const tidFromQuery = qp.funnel || qp.template || null;
-            if (!hasPropsId && tidFromQuery) {
-                try {
-                    templateService.setActiveFunnel?.(qp.funnel || null);
-                } catch { }
-                // Guardar o ID para carregamento posterior (após handleLoadTemplate estar disponível)
-                pendingTidRef.current = tidFromQuery;
-                setActiveTemplateId(tidFromQuery);
-                appLogger.info('[Bootstrap] 🎯 Setando activeTemplateId from query', {
-                    tidFromQuery,
-                    hasPropsId,
-                    qp
-                });
-            }
-        } catch { }
-    }, []);
+        // ✅ Respeitar step da query ao inicializar
+        const n = queryParams.step ? parseInt(queryParams.step, 10) : NaN;
+        const hasUrlStep = !isNaN(n) && n >= 1 && n <= 21;
+        if (hasUrlStep) {
+            setCurrentStep(n);
+        }
+    }, [queryParams.step]);
 
     // 🐛 DEBUG: Flag para usar painel de propriedades simples (stateless)
     const [useSimplePropertiesPanel, setUseSimplePropertiesPanel] = useState<boolean>(() => {
@@ -910,7 +918,7 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         templateId: props.templateId,
         funnelId: props.funnelId,
         resourceId,
-        enabled: !!(props.templateId || resourceId),
+        enabled: !!resourceId, // 🔥 SIMPLIFICADO: só precisa do resourceId
         onSuccess: (data) => {
             setLoadedTemplate(data);
             setTemplateLoadError(false);
@@ -932,6 +940,14 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         onError: (error) => {
             appLogger.error('[useTemplateLoader] Erro ao carregar template:', error);
             setTemplateLoadError(true);
+
+            // 🆕 Toast de erro visível
+            toast({
+                type: 'error',
+                title: 'Erro ao Carregar Template',
+                message: `Falha: ${error.message || 'Erro desconhecido'}`,
+                duration: 8000,
+            });
         },
     });
 
@@ -939,6 +955,21 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
     useEffect(() => {
         setTemplateLoading(templateLoader.isLoading);
     }, [templateLoader.isLoading, setTemplateLoading]);
+
+    // 🔍 DEBUG: Estado de carregamento (dev only)
+    React.useEffect(() => {
+        if (import.meta.env.DEV) {
+            console.group('🔍 [QuizModularEditor] Estado de Carregamento');
+            console.log('resourceId:', resourceId);
+            console.log('templateLoader.isLoading:', templateLoader?.isLoading);
+            console.log('templateLoader.data:', templateLoader?.data);
+            console.log('templateLoader.error:', templateLoader?.error);
+            console.log('loadedTemplate:', loadedTemplate);
+            console.log('templateLoadError:', templateLoadError);
+            console.log('currentStepBlocks:', getStepBlocks(safeCurrentStep)?.length || 0);
+            console.groupEnd();
+        }
+    }, [resourceId, templateLoader?.isLoading, loadedTemplate, templateLoadError, safeCurrentStep, getStepBlocks]);
 
     // 🚫 Removido: auto-injeção duplicada do step-01 (agora apenas useStepBlocksLoader cuida do carregamento)
 
@@ -1765,39 +1796,36 @@ function QuizModularEditorInner(props: QuizModularEditorProps) {
         }
     }, [props.templateId, resourceId, setTemplateLoading, setTemplateLoadError, setCurrentStep, unifiedState.editor.currentStep, toast]);
 
-    // 🚀 Auto-load de template via query param (processa pendingTidRef do bootstrap)
+    // 🚀 Auto-load com retry e fallback para query params
     useEffect(() => {
-        if (!pendingTidRef.current) return;
-        if (loadedTemplate || templateLoadError) return; // Já carregado
+        const tid = resourceId; // Usar resourceId já resolvido (inclui query params)
 
-        const tidToLoad = pendingTidRef.current;
-        pendingTidRef.current = null; // Limpar para evitar re-execução
+        if (!tid) {
+            appLogger.warn('[Auto-load] Nenhum resourceId disponível para carregar');
+            return;
+        }
 
-        (async () => {
-            try {
-                appLogger.info(`🎯 [Auto-load] Carregando template from query param: ${tidToLoad}`);
-                await handleLoadTemplate(tidToLoad);
-            } catch (e) {
-                appLogger.warn('[Auto-load] Falha ao carregar template from query', { data: [e] });
-            }
-        })();
-    }, [handleLoadTemplate, loadedTemplate, templateLoadError]);
-
-    // 🚀 Auto-load de template/funil quando houver resourceId/funnelId presente nas props
-    useEffect(() => {
-        const tid = props.templateId ?? resourceId ?? props.funnelId;
-        if (!tid) return;
         // Evitar múltiplas chamadas
-        if (loadedTemplate || templateLoadError) return;
-        // Disparar carregamento inicial silencioso
+        if (loadedTemplate || templateLoader.isLoading) {
+            appLogger.debug('[Auto-load] Ignorado (já carregado ou carregando)');
+            return;
+        }
+
+        // 🔄 Permitir retry após erro
+        if (templateLoadError) {
+            appLogger.info('[Auto-load] Tentando novamente após erro anterior');
+        }
+
+        // Disparar carregamento
         (async () => {
             try {
-                await handleLoadTemplate();
-            } catch {
-                // erro já tratado internamente
+                appLogger.info(`[Auto-load] Iniciando carregamento: ${tid}`);
+                await handleLoadTemplate(tid);
+            } catch (error) {
+                appLogger.error('[Auto-load] Falha ao carregar template:', error);
             }
         })();
-    }, [props.templateId, props.funnelId, resourceId, loadedTemplate, templateLoadError, handleLoadTemplate]);
+    }, [resourceId]); // ✅ Dependência única e estável
 
     // Import template from JSON
     const handleImportTemplate = useCallback(
