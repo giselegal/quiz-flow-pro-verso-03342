@@ -144,27 +144,20 @@ src/components/editor/
 **Objetivo:** Adicionar funcionalidades principais
 
 #### 3.1 Drag & Drop (20min)
-- [ ] `hooks/useBlockDnD.ts` - Hook com dnd-kit
-- [ ] Arrastar da biblioteca para canvas
-- [ ] Reordenar blocos no canvas
-- [ ] Visual feedback durante drag
 
 #### 3.2 Cálculos (15min)
-- [ ] `hooks/useCalculation.ts` - Integrar lógica existente
-- [ ] Importar `computeResult` de `@/lib/utils/result/computeResult`
-- [ ] Preview de resultado em tempo real
-- [ ] Validar estrutura JSON
 
 #### 3.3 Persistência (15min)
-- [ ] Auto-save com debounce (1 segundo)
-- [ ] Botão "Salvar manualmente"
-- [ ] Indicador de mudanças não salvas
-- [ ] Exportar JSON final
 
 #### 3.4 Undo/Redo (10min)
-- [ ] Histórico de mudanças (usar Immer)
-- [ ] Atalhos Ctrl+Z / Ctrl+Shift+Z
-- [ ] Limite de 50 ações no histórico
+## Fase 4 — Resultados e Integração
+- Motor de cálculos: definir regras por bloco (peso/valor), agregação por etapa e score final (categorias/thresholds)
+- Engine: módulo puro (`src/components/editor/ModernQuizEditor/utils/calculationEngine.ts`) com tipos Zod e funções `computeStepScore`, `computeQuizResult`
+- Preview dinâmico: componente `ResultPreview` no Canvas mostrando score parcial com respostas simuladas
+- Persistência: integrar `quizStore.save()` com API (Supabase/Express), versão e auditoria
+- Validações: Zod end-to-end do quiz completo antes de salvar
+- Testes: Playwright cobrindo DnD, edição e cálculo
+
 
 ### 🔄 **FASE 4: Integração & Polish (30min)**
 **Objetivo:** Conectar com sistema existente
