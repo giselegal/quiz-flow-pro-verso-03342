@@ -26,7 +26,7 @@ import { useRoute } from 'wouter';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 import { PageLoadingFallback } from '@/components/LoadingSpinner';
 import { appLogger } from '@/lib/utils/appLogger';
-import { templateService } from '@/lib/services/template.service';
+import { templateService } from '@/services/canonical/TemplateService';
 import type { QuizSchema } from '@/schemas/quiz-schema.zod';
 
 // ✅ Novo editor moderno com arquitetura limpa
