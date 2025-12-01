@@ -199,13 +199,13 @@ const BlockPreview = memo(function BlockPreview({ block, isSelected, onClick, on
     }, [selectedStepId, updateBlock]);
 
     // Converter QuizBlock para Block (compatibilidade)
-    const editorBlock: Block = useMemo(() => ({
+    const editorBlock = useMemo(() => ({
         ...block,
-        type: block.type,
+        type: block.type as any,
         id: block.id,
         properties: block.properties || {},
         order: block.order ?? 0,
-    }), [block]);
+    } as Block), [block]);
 
     return (
         <div

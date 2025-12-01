@@ -86,11 +86,21 @@ const ModeRenderer: React.FC<{
     return <div className="flex items-center justify-center h-full">Loading editor...</div>;
   }
 
-  const { state, actions, deleteBlock, ensureStepLoaded, setSelectedBlockId, activeStageId, blockActions } = editor;
+  const { state, deleteBlock, ensureStepLoaded, setSelectedBlockId, activeStageId, blockActions } = editor;
 
   const totalSteps = useMemo(() => {
     return state.totalSteps || 21;
   }, [state.totalSteps]);
+
+  // Fallback para actions (compatibilidade)
+  const actions = useMemo(() => ({
+    setCurrentStep: (step: number) => {
+      // Implementação via adapter ou state direto
+      if (adapter?.actions?.setCurrentStep) {
+        adapter.actions.setCurrentStep(step);
+      }
+    },
+  }), [adapter]);
 
   const renderModeContent = useCallback(() => {
     switch (mode) {
@@ -164,7 +174,7 @@ const ModeRenderer: React.FC<{
                       []
                     }
                     selectedBlockId={adapter.selectedBlockId ?? state.selectedBlockId}
-                    onSelectBlock={(id) => editor.selectBlock(id)}
+                    onSelectBlock={(id) => setSelectedBlockId(id)}
                     onUpdateBlock={adapter.actions.updateBlock}
                     onDeleteBlock={adapter.actions.deleteBlock}
                   />
@@ -195,7 +205,7 @@ const ModeRenderer: React.FC<{
                   []
                 }
                 selectedBlockId={adapter.selectedBlockId ?? state.selectedBlockId}
-                onSelectBlock={(id) => editor.selectBlock(id)}
+                onSelectBlock={(id) => setSelectedBlockId(id)}
                 onUpdateBlock={adapter.actions.updateBlock}
                 onDeleteBlock={adapter.actions.deleteBlock}
                 className="h-full border border-border rounded-lg"
