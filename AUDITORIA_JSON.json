@@ -1,0 +1,1208 @@
+{
+  "templates": [
+    {
+      "path": "public/templates/blocks.json",
+      "size": 17552,
+      "sizeFormatted": "17.14 KB",
+      "modified": "2025-11-27T03:37:21.672Z",
+      "valid": true,
+      "structure": {
+        "type": "blocks-registry",
+        "blockCount": 2,
+        "blockTypes": [
+          "version",
+          "blocks"
+        ]
+      }
+    },
+    {
+      "path": "public/templates/funnels/funil-emagrecimento.json",
+      "size": 6270,
+      "sizeFormatted": "6.12 KB",
+      "modified": "2025-11-26T00:39:56.734Z",
+      "valid": true,
+      "structure": {
+        "type": "quiz-template",
+        "hasMetadata": true,
+        "hasSteps": true,
+        "stepsCount": 4,
+        "totalBlocks": 12,
+        "version": "1.0.0"
+      }
+    },
+    {
+      "path": "public/templates/funnels/quiz21StepsComplete/master.json",
+      "size": 639,
+      "sizeFormatted": "0.62 KB",
+      "modified": "2025-11-26T00:39:56.734Z",
+      "valid": true,
+      "structure": {
+        "type": "quiz-template",
+        "hasMetadata": true,
+        "hasSteps": true,
+        "stepsCount": 21,
+        "totalBlocks": 0,
+        "version": "3.2"
+      }
+    },
+    {
+      "path": "public/templates/funnels/quiz21StepsComplete/master.v3.json",
+      "size": 4212,
+      "sizeFormatted": "4.11 KB",
+      "modified": "2025-11-30T01:04:13.383Z",
+      "valid": true,
+      "structure": {
+        "type": "quiz-template",
+        "hasMetadata": true,
+        "hasSteps": true,
+        "stepsCount": 21,
+        "totalBlocks": 0,
+        "version": "3.2.0"
+      }
+    },
+    {
+      "path": "public/templates/quiz21-complete.json",
+      "valid": false,
+      "error": "data.steps?.reduce is not a function"
+    },
+    {
+      "path": "public/templates/quiz21-v4-gold.json",
+      "size": 97939,
+      "sizeFormatted": "95.64 KB",
+      "modified": "2025-11-30T02:06:00.679Z",
+      "valid": true,
+      "structure": {
+        "type": "quiz-template",
+        "hasMetadata": true,
+        "hasSteps": true,
+        "stepsCount": 21,
+        "totalBlocks": 103,
+        "version": "4.0.0"
+      }
+    },
+    {
+      "path": "public/templates/quiz21-v4.json",
+      "size": 116393,
+      "sizeFormatted": "113.67 KB",
+      "modified": "2025-12-01T02:39:34.918Z",
+      "valid": true,
+      "structure": {
+        "type": "quiz-template",
+        "hasMetadata": true,
+        "hasSteps": true,
+        "stepsCount": 21,
+        "totalBlocks": 103,
+        "version": "4.0.0"
+      }
+    },
+    {
+      "path": "public/templates/quiz21Steps/compiled/full.json",
+      "valid": false,
+      "error": "data.steps?.reduce is not a function"
+    },
+    {
+      "path": "public/templates/quiz21Steps/meta.json",
+      "size": 1762,
+      "sizeFormatted": "1.72 KB",
+      "modified": "2025-11-28T03:14:42.963Z",
+      "valid": true,
+      "structure": {
+        "type": "quiz-template",
+        "hasMetadata": true,
+        "hasSteps": false,
+        "stepsCount": 0,
+        "totalBlocks": 0,
+        "version": "4.0.0"
+      }
+    },
+    {
+      "path": "public/templates/quiz21Steps/steps/step-01.json",
+      "size": 5123,
+      "sizeFormatted": "5.00 KB",
+      "modified": "2025-11-28T02:01:05.444Z",
+      "valid": true,
+      "structure": {
+        "type": "quiz-template",
+        "hasMetadata": true,
+        "hasSteps": false,
+        "stepsCount": 0,
+        "totalBlocks": 0,
+        "version": "3.0.0"
+      }
+    },
+    {
+      "path": "public/templates/quiz21Steps/steps/step-02.json",
+      "size": 4955,
+      "sizeFormatted": "4.84 KB",
+      "modified": "2025-11-28T02:01:05.445Z",
+      "valid": true,
+      "structure": {
+        "type": "quiz-template",
+        "hasMetadata": true,
+        "hasSteps": false,
+        "stepsCount": 0,
+        "totalBlocks": 0,
+        "version": "3.0.1"
+      }
+    },
+    {
+      "path": "public/templates/quiz21Steps/steps/step-03.json",
+      "size": 4514,
+      "sizeFormatted": "4.41 KB",
+      "modified": "2025-11-28T02:01:05.445Z",
+      "valid": true,
+      "structure": {
+        "type": "quiz-template",
+        "hasMetadata": true,
+        "hasSteps": false,
+        "stepsCount": 0,
+        "totalBlocks": 0,
+        "version": "3.0.1"
+      }
+    },
+    {
+      "path": "public/templates/quiz21Steps/steps/step-04.json",
+      "size": 6405,
+      "sizeFormatted": "6.25 KB",
+      "modified": "2025-11-28T02:01:05.445Z",
+      "valid": true,
+      "structure": {
+        "type": "quiz-template",
+        "hasMetadata": true,
+        "hasSteps": false,
+        "stepsCount": 0,
+        "totalBlocks": 0,
+        "version": "3.0.0"
+      }
+    },
+    {
+      "path": "public/templates/quiz21Steps/steps/step-05.json",
+      "size": 5276,
+      "sizeFormatted": "5.15 KB",
+      "modified": "2025-11-28T02:01:05.446Z",
+      "valid": true,
+      "structure": {
+        "type": "quiz-template",
+        "hasMetadata": true,
+        "hasSteps": false,
+        "stepsCount": 0,
+        "totalBlocks": 0,
+        "version": "3.0.0"
+      }
+    },
+    {
+      "path": "public/templates/quiz21Steps/steps/step-06.json",
+      "size": 6236,
+      "sizeFormatted": "6.09 KB",
+      "modified": "2025-11-28T02:01:05.446Z",
+      "valid": true,
+      "structure": {
+        "type": "quiz-template",
+        "hasMetadata": true,
+        "hasSteps": false,
+        "stepsCount": 0,
+        "totalBlocks": 0,
+        "version": "3.0.0"
+      }
+    },
+    {
+      "path": "public/templates/quiz21Steps/steps/step-07.json",
+      "size": 6017,
+      "sizeFormatted": "5.88 KB",
+      "modified": "2025-11-28T02:01:05.446Z",
+      "valid": true,
+      "structure": {
+        "type": "quiz-template",
+        "hasMetadata": true,
+        "hasSteps": false,
+        "stepsCount": 0,
+        "totalBlocks": 0,
+        "version": "3.0.0"
+      }
+    },
+    {
+      "path": "public/templates/quiz21Steps/steps/step-08.json",
+      "size": 5985,
+      "sizeFormatted": "5.84 KB",
+      "modified": "2025-11-28T02:01:05.446Z",
+      "valid": true,
+      "structure": {
+        "type": "quiz-template",
+        "hasMetadata": true,
+        "hasSteps": false,
+        "stepsCount": 0,
+        "totalBlocks": 0,
+        "version": "3.0.0"
+      }
+    },
+    {
+      "path": "public/templates/quiz21Steps/steps/step-09.json",
+      "size": 6067,
+      "sizeFormatted": "5.92 KB",
+      "modified": "2025-11-28T02:01:05.446Z",
+      "valid": true,
+      "structure": {
+        "type": "quiz-template",
+        "hasMetadata": true,
+        "hasSteps": false,
+        "stepsCount": 0,
+        "totalBlocks": 0,
+        "version": "3.0.0"
+      }
+    },
+    {
+      "path": "public/templates/quiz21Steps/steps/step-10.json",
+      "size": 6141,
+      "sizeFormatted": "6.00 KB",
+      "modified": "2025-11-28T02:01:05.447Z",
+      "valid": true,
+      "structure": {
+        "type": "quiz-template",
+        "hasMetadata": true,
+        "hasSteps": false,
+        "stepsCount": 0,
+        "totalBlocks": 0,
+        "version": "3.0.0"
+      }
+    },
+    {
+      "path": "public/templates/quiz21Steps/steps/step-11.json",
+      "size": 5256,
+      "sizeFormatted": "5.13 KB",
+      "modified": "2025-11-28T02:01:05.447Z",
+      "valid": true,
+      "structure": {
+        "type": "quiz-template",
+        "hasMetadata": true,
+        "hasSteps": false,
+        "stepsCount": 0,
+        "totalBlocks": 0,
+        "version": "3.0.0"
+      }
+    },
+    {
+      "path": "public/templates/quiz21Steps/steps/step-12.json",
+      "size": 2898,
+      "sizeFormatted": "2.83 KB",
+      "modified": "2025-11-28T02:01:05.447Z",
+      "valid": true,
+      "structure": {
+        "type": "quiz-template",
+        "hasMetadata": true,
+        "hasSteps": false,
+        "stepsCount": 0,
+        "totalBlocks": 0,
+        "version": "3.0.0"
+      }
+    },
+    {
+      "path": "public/templates/quiz21Steps/steps/step-13.json",
+      "size": 4766,
+      "sizeFormatted": "4.65 KB",
+      "modified": "2025-11-28T02:01:05.447Z",
+      "valid": true,
+      "structure": {
+        "type": "quiz-template",
+        "hasMetadata": true,
+        "hasSteps": false,
+        "stepsCount": 0,
+        "totalBlocks": 0,
+        "version": "3.0.0"
+      }
+    },
+    {
+      "path": "public/templates/quiz21Steps/steps/step-14.json",
+      "size": 4711,
+      "sizeFormatted": "4.60 KB",
+      "modified": "2025-11-28T02:01:05.447Z",
+      "valid": true,
+      "structure": {
+        "type": "quiz-template",
+        "hasMetadata": true,
+        "hasSteps": false,
+        "stepsCount": 0,
+        "totalBlocks": 0,
+        "version": "3.0.0"
+      }
+    },
+    {
+      "path": "public/templates/quiz21Steps/steps/step-15.json",
+      "size": 4885,
+      "sizeFormatted": "4.77 KB",
+      "modified": "2025-11-28T02:01:05.448Z",
+      "valid": true,
+      "structure": {
+        "type": "quiz-template",
+        "hasMetadata": true,
+        "hasSteps": false,
+        "stepsCount": 0,
+        "totalBlocks": 0,
+        "version": "3.0.0"
+      }
+    },
+    {
+      "path": "public/templates/quiz21Steps/steps/step-16.json",
+      "size": 4921,
+      "sizeFormatted": "4.81 KB",
+      "modified": "2025-11-28T02:01:05.448Z",
+      "valid": true,
+      "structure": {
+        "type": "quiz-template",
+        "hasMetadata": true,
+        "hasSteps": false,
+        "stepsCount": 0,
+        "totalBlocks": 0,
+        "version": "3.0.0"
+      }
+    },
+    {
+      "path": "public/templates/quiz21Steps/steps/step-17.json",
+      "size": 4821,
+      "sizeFormatted": "4.71 KB",
+      "modified": "2025-11-28T02:01:05.448Z",
+      "valid": true,
+      "structure": {
+        "type": "quiz-template",
+        "hasMetadata": true,
+        "hasSteps": false,
+        "stepsCount": 0,
+        "totalBlocks": 0,
+        "version": "3.0.0"
+      }
+    },
+    {
+      "path": "public/templates/quiz21Steps/steps/step-18.json",
+      "size": 4755,
+      "sizeFormatted": "4.64 KB",
+      "modified": "2025-11-28T02:01:05.448Z",
+      "valid": true,
+      "structure": {
+        "type": "quiz-template",
+        "hasMetadata": true,
+        "hasSteps": false,
+        "stepsCount": 0,
+        "totalBlocks": 0,
+        "version": "3.0.0"
+      }
+    },
+    {
+      "path": "public/templates/quiz21Steps/steps/step-19.json",
+      "size": 2476,
+      "sizeFormatted": "2.42 KB",
+      "modified": "2025-11-28T02:01:05.448Z",
+      "valid": true,
+      "structure": {
+        "type": "quiz-template",
+        "hasMetadata": true,
+        "hasSteps": false,
+        "stepsCount": 0,
+        "totalBlocks": 0,
+        "version": "3.0.0"
+      }
+    },
+    {
+      "path": "public/templates/quiz21Steps/steps/step-20.json",
+      "size": 10313,
+      "sizeFormatted": "10.07 KB",
+      "modified": "2025-11-28T02:01:05.449Z",
+      "valid": true,
+      "structure": {
+        "type": "quiz-template",
+        "hasMetadata": true,
+        "hasSteps": false,
+        "stepsCount": 0,
+        "totalBlocks": 0,
+        "version": "unknown"
+      }
+    },
+    {
+      "path": "public/templates/quiz21Steps/steps/step-21.json",
+      "size": 2594,
+      "sizeFormatted": "2.53 KB",
+      "modified": "2025-11-28T02:01:05.449Z",
+      "valid": true,
+      "structure": {
+        "type": "quiz-template",
+        "hasMetadata": true,
+        "hasSteps": false,
+        "stepsCount": 0,
+        "totalBlocks": 0,
+        "version": "3.0.0"
+      }
+    },
+    {
+      "path": "public/templates/step-01-v3.json",
+      "size": 4432,
+      "sizeFormatted": "4.33 KB",
+      "modified": "2025-11-27T03:37:21.672Z",
+      "valid": true,
+      "structure": {
+        "type": "quiz-template",
+        "hasMetadata": true,
+        "hasSteps": false,
+        "stepsCount": 0,
+        "totalBlocks": 0,
+        "version": "3.0.0"
+      }
+    },
+    {
+      "path": "public/templates/step-02-v3.json",
+      "size": 4506,
+      "sizeFormatted": "4.40 KB",
+      "modified": "2025-11-26T00:39:56.738Z",
+      "valid": true,
+      "structure": {
+        "type": "quiz-template",
+        "hasMetadata": true,
+        "hasSteps": false,
+        "stepsCount": 0,
+        "totalBlocks": 0,
+        "version": "3.0.1"
+      }
+    },
+    {
+      "path": "public/templates/step-03-v3.json",
+      "size": 4065,
+      "sizeFormatted": "3.97 KB",
+      "modified": "2025-11-26T00:39:56.738Z",
+      "valid": true,
+      "structure": {
+        "type": "quiz-template",
+        "hasMetadata": true,
+        "hasSteps": false,
+        "stepsCount": 0,
+        "totalBlocks": 0,
+        "version": "3.0.1"
+      }
+    },
+    {
+      "path": "public/templates/step-04-v3.json",
+      "size": 5642,
+      "sizeFormatted": "5.51 KB",
+      "modified": "2025-11-26T00:39:56.738Z",
+      "valid": true,
+      "structure": {
+        "type": "quiz-template",
+        "hasMetadata": true,
+        "hasSteps": false,
+        "stepsCount": 0,
+        "totalBlocks": 0,
+        "version": "3.0.0"
+      }
+    },
+    {
+      "path": "public/templates/step-05-v3.json",
+      "size": 4689,
+      "sizeFormatted": "4.58 KB",
+      "modified": "2025-11-26T00:39:56.739Z",
+      "valid": true,
+      "structure": {
+        "type": "quiz-template",
+        "hasMetadata": true,
+        "hasSteps": false,
+        "stepsCount": 0,
+        "totalBlocks": 0,
+        "version": "3.0.0"
+      }
+    },
+    {
+      "path": "public/templates/step-06-v3.json",
+      "size": 5649,
+      "sizeFormatted": "5.52 KB",
+      "modified": "2025-11-26T00:39:56.739Z",
+      "valid": true,
+      "structure": {
+        "type": "quiz-template",
+        "hasMetadata": true,
+        "hasSteps": false,
+        "stepsCount": 0,
+        "totalBlocks": 0,
+        "version": "3.0.0"
+      }
+    },
+    {
+      "path": "public/templates/step-07-v3.json",
+      "size": 5430,
+      "sizeFormatted": "5.30 KB",
+      "modified": "2025-11-26T00:39:56.739Z",
+      "valid": true,
+      "structure": {
+        "type": "quiz-template",
+        "hasMetadata": true,
+        "hasSteps": false,
+        "stepsCount": 0,
+        "totalBlocks": 0,
+        "version": "3.0.0"
+      }
+    },
+    {
+      "path": "public/templates/step-08-v3.json",
+      "size": 5398,
+      "sizeFormatted": "5.27 KB",
+      "modified": "2025-11-26T00:39:56.739Z",
+      "valid": true,
+      "structure": {
+        "type": "quiz-template",
+        "hasMetadata": true,
+        "hasSteps": false,
+        "stepsCount": 0,
+        "totalBlocks": 0,
+        "version": "3.0.0"
+      }
+    },
+    {
+      "path": "public/templates/step-09-v3.json",
+      "size": 5480,
+      "sizeFormatted": "5.35 KB",
+      "modified": "2025-11-26T00:39:56.739Z",
+      "valid": true,
+      "structure": {
+        "type": "quiz-template",
+        "hasMetadata": true,
+        "hasSteps": false,
+        "stepsCount": 0,
+        "totalBlocks": 0,
+        "version": "3.0.0"
+      }
+    },
+    {
+      "path": "public/templates/step-10-v3.json",
+      "size": 5554,
+      "sizeFormatted": "5.42 KB",
+      "modified": "2025-11-26T00:39:56.739Z",
+      "valid": true,
+      "structure": {
+        "type": "quiz-template",
+        "hasMetadata": true,
+        "hasSteps": false,
+        "stepsCount": 0,
+        "totalBlocks": 0,
+        "version": "3.0.0"
+      }
+    },
+    {
+      "path": "public/templates/step-11-v3.json",
+      "size": 4669,
+      "sizeFormatted": "4.56 KB",
+      "modified": "2025-11-26T00:39:56.739Z",
+      "valid": true,
+      "structure": {
+        "type": "quiz-template",
+        "hasMetadata": true,
+        "hasSteps": false,
+        "stepsCount": 0,
+        "totalBlocks": 0,
+        "version": "3.0.0"
+      }
+    },
+    {
+      "path": "public/templates/step-12-v3.json",
+      "size": 2476,
+      "sizeFormatted": "2.42 KB",
+      "modified": "2025-11-26T00:39:56.739Z",
+      "valid": true,
+      "structure": {
+        "type": "quiz-template",
+        "hasMetadata": true,
+        "hasSteps": false,
+        "stepsCount": 0,
+        "totalBlocks": 0,
+        "version": "3.0.0"
+      }
+    },
+    {
+      "path": "public/templates/step-13-v3.json",
+      "size": 4179,
+      "sizeFormatted": "4.08 KB",
+      "modified": "2025-11-26T00:39:56.740Z",
+      "valid": true,
+      "structure": {
+        "type": "quiz-template",
+        "hasMetadata": true,
+        "hasSteps": false,
+        "stepsCount": 0,
+        "totalBlocks": 0,
+        "version": "3.0.0"
+      }
+    },
+    {
+      "path": "public/templates/step-14-v3.json",
+      "size": 4124,
+      "sizeFormatted": "4.03 KB",
+      "modified": "2025-11-26T00:39:56.740Z",
+      "valid": true,
+      "structure": {
+        "type": "quiz-template",
+        "hasMetadata": true,
+        "hasSteps": false,
+        "stepsCount": 0,
+        "totalBlocks": 0,
+        "version": "3.0.0"
+      }
+    },
+    {
+      "path": "public/templates/step-15-v3.json",
+      "size": 4298,
+      "sizeFormatted": "4.20 KB",
+      "modified": "2025-11-26T00:39:56.740Z",
+      "valid": true,
+      "structure": {
+        "type": "quiz-template",
+        "hasMetadata": true,
+        "hasSteps": false,
+        "stepsCount": 0,
+        "totalBlocks": 0,
+        "version": "3.0.0"
+      }
+    },
+    {
+      "path": "public/templates/step-16-v3.json",
+      "size": 4334,
+      "sizeFormatted": "4.23 KB",
+      "modified": "2025-11-26T00:39:56.740Z",
+      "valid": true,
+      "structure": {
+        "type": "quiz-template",
+        "hasMetadata": true,
+        "hasSteps": false,
+        "stepsCount": 0,
+        "totalBlocks": 0,
+        "version": "3.0.0"
+      }
+    },
+    {
+      "path": "public/templates/step-17-v3.json",
+      "size": 4234,
+      "sizeFormatted": "4.13 KB",
+      "modified": "2025-11-26T00:39:56.740Z",
+      "valid": true,
+      "structure": {
+        "type": "quiz-template",
+        "hasMetadata": true,
+        "hasSteps": false,
+        "stepsCount": 0,
+        "totalBlocks": 0,
+        "version": "3.0.0"
+      }
+    },
+    {
+      "path": "public/templates/step-18-v3.json",
+      "size": 4168,
+      "sizeFormatted": "4.07 KB",
+      "modified": "2025-11-26T00:39:56.740Z",
+      "valid": true,
+      "structure": {
+        "type": "quiz-template",
+        "hasMetadata": true,
+        "hasSteps": false,
+        "stepsCount": 0,
+        "totalBlocks": 0,
+        "version": "3.0.0"
+      }
+    },
+    {
+      "path": "public/templates/step-19-v3.json",
+      "size": 2054,
+      "sizeFormatted": "2.01 KB",
+      "modified": "2025-11-26T00:39:56.740Z",
+      "valid": true,
+      "structure": {
+        "type": "quiz-template",
+        "hasMetadata": true,
+        "hasSteps": false,
+        "stepsCount": 0,
+        "totalBlocks": 0,
+        "version": "3.0.0"
+      }
+    },
+    {
+      "path": "public/templates/step-20-v3.json",
+      "size": 9855,
+      "sizeFormatted": "9.62 KB",
+      "modified": "2025-11-26T00:39:56.741Z",
+      "valid": true,
+      "structure": {
+        "type": "quiz-template",
+        "hasMetadata": true,
+        "hasSteps": false,
+        "stepsCount": 0,
+        "totalBlocks": 0,
+        "version": "unknown"
+      }
+    },
+    {
+      "path": "public/templates/step-21-v3.json",
+      "size": 2079,
+      "sizeFormatted": "2.03 KB",
+      "modified": "2025-11-26T00:39:56.741Z",
+      "valid": true,
+      "structure": {
+        "type": "quiz-template",
+        "hasMetadata": true,
+        "hasSteps": false,
+        "stepsCount": 0,
+        "totalBlocks": 0,
+        "version": "3.0.0"
+      }
+    },
+    {
+      "path": "public/templates/steps-refs/step-01-ref.json",
+      "size": 207,
+      "sizeFormatted": "0.20 KB",
+      "modified": "2025-11-26T00:39:56.741Z",
+      "valid": true,
+      "structure": {
+        "type": "generic",
+        "keys": [
+          "id",
+          "version",
+          "blockIds"
+        ],
+        "depth": 2
+      }
+    },
+    {
+      "path": "public/templates/steps-refs/step-02-ref.json",
+      "size": 187,
+      "sizeFormatted": "0.18 KB",
+      "modified": "2025-11-26T00:39:56.741Z",
+      "valid": true,
+      "structure": {
+        "type": "generic",
+        "keys": [
+          "id",
+          "version",
+          "blockIds"
+        ],
+        "depth": 2
+      }
+    },
+    {
+      "path": "public/templates/steps-refs/step-03-ref.json",
+      "size": 187,
+      "sizeFormatted": "0.18 KB",
+      "modified": "2025-11-26T00:39:56.741Z",
+      "valid": true,
+      "structure": {
+        "type": "generic",
+        "keys": [
+          "id",
+          "version",
+          "blockIds"
+        ],
+        "depth": 2
+      }
+    },
+    {
+      "path": "public/templates/steps-refs/step-04-ref.json",
+      "size": 216,
+      "sizeFormatted": "0.21 KB",
+      "modified": "2025-11-26T00:39:56.741Z",
+      "valid": true,
+      "structure": {
+        "type": "generic",
+        "keys": [
+          "id",
+          "version",
+          "blockIds"
+        ],
+        "depth": 2
+      }
+    },
+    {
+      "path": "public/templates/steps-refs/step-05-ref.json",
+      "size": 216,
+      "sizeFormatted": "0.21 KB",
+      "modified": "2025-11-26T00:39:56.741Z",
+      "valid": true,
+      "structure": {
+        "type": "generic",
+        "keys": [
+          "id",
+          "version",
+          "blockIds"
+        ],
+        "depth": 2
+      }
+    },
+    {
+      "path": "public/templates/steps-refs/step-06-ref.json",
+      "size": 216,
+      "sizeFormatted": "0.21 KB",
+      "modified": "2025-11-26T00:39:56.742Z",
+      "valid": true,
+      "structure": {
+        "type": "generic",
+        "keys": [
+          "id",
+          "version",
+          "blockIds"
+        ],
+        "depth": 2
+      }
+    },
+    {
+      "path": "public/templates/steps-refs/step-07-ref.json",
+      "size": 216,
+      "sizeFormatted": "0.21 KB",
+      "modified": "2025-11-26T00:39:56.742Z",
+      "valid": true,
+      "structure": {
+        "type": "generic",
+        "keys": [
+          "id",
+          "version",
+          "blockIds"
+        ],
+        "depth": 2
+      }
+    },
+    {
+      "path": "public/templates/steps-refs/step-08-ref.json",
+      "size": 216,
+      "sizeFormatted": "0.21 KB",
+      "modified": "2025-11-26T00:39:56.742Z",
+      "valid": true,
+      "structure": {
+        "type": "generic",
+        "keys": [
+          "id",
+          "version",
+          "blockIds"
+        ],
+        "depth": 2
+      }
+    },
+    {
+      "path": "public/templates/steps-refs/step-09-ref.json",
+      "size": 216,
+      "sizeFormatted": "0.21 KB",
+      "modified": "2025-11-26T00:39:56.742Z",
+      "valid": true,
+      "structure": {
+        "type": "generic",
+        "keys": [
+          "id",
+          "version",
+          "blockIds"
+        ],
+        "depth": 2
+      }
+    },
+    {
+      "path": "public/templates/steps-refs/step-10-ref.json",
+      "size": 216,
+      "sizeFormatted": "0.21 KB",
+      "modified": "2025-11-26T00:39:56.742Z",
+      "valid": true,
+      "structure": {
+        "type": "generic",
+        "keys": [
+          "id",
+          "version",
+          "blockIds"
+        ],
+        "depth": 2
+      }
+    },
+    {
+      "path": "public/templates/steps-refs/step-11-ref.json",
+      "size": 216,
+      "sizeFormatted": "0.21 KB",
+      "modified": "2025-11-26T00:39:56.742Z",
+      "valid": true,
+      "structure": {
+        "type": "generic",
+        "keys": [
+          "id",
+          "version",
+          "blockIds"
+        ],
+        "depth": 2
+      }
+    },
+    {
+      "path": "public/templates/steps-refs/step-12-ref.json",
+      "size": 148,
+      "sizeFormatted": "0.14 KB",
+      "modified": "2025-11-26T00:39:56.742Z",
+      "valid": true,
+      "structure": {
+        "type": "generic",
+        "keys": [
+          "id",
+          "version",
+          "blockIds"
+        ],
+        "depth": 2
+      }
+    },
+    {
+      "path": "public/templates/steps-refs/step-13-ref.json",
+      "size": 216,
+      "sizeFormatted": "0.21 KB",
+      "modified": "2025-11-26T00:39:56.742Z",
+      "valid": true,
+      "structure": {
+        "type": "generic",
+        "keys": [
+          "id",
+          "version",
+          "blockIds"
+        ],
+        "depth": 2
+      }
+    },
+    {
+      "path": "public/templates/steps-refs/step-14-ref.json",
+      "size": 216,
+      "sizeFormatted": "0.21 KB",
+      "modified": "2025-11-26T00:39:56.742Z",
+      "valid": true,
+      "structure": {
+        "type": "generic",
+        "keys": [
+          "id",
+          "version",
+          "blockIds"
+        ],
+        "depth": 2
+      }
+    },
+    {
+      "path": "public/templates/steps-refs/step-15-ref.json",
+      "size": 216,
+      "sizeFormatted": "0.21 KB",
+      "modified": "2025-11-26T00:39:56.742Z",
+      "valid": true,
+      "structure": {
+        "type": "generic",
+        "keys": [
+          "id",
+          "version",
+          "blockIds"
+        ],
+        "depth": 2
+      }
+    },
+    {
+      "path": "public/templates/steps-refs/step-16-ref.json",
+      "size": 216,
+      "sizeFormatted": "0.21 KB",
+      "modified": "2025-11-26T00:39:56.743Z",
+      "valid": true,
+      "structure": {
+        "type": "generic",
+        "keys": [
+          "id",
+          "version",
+          "blockIds"
+        ],
+        "depth": 2
+      }
+    },
+    {
+      "path": "public/templates/steps-refs/step-17-ref.json",
+      "size": 216,
+      "sizeFormatted": "0.21 KB",
+      "modified": "2025-11-26T00:39:56.743Z",
+      "valid": true,
+      "structure": {
+        "type": "generic",
+        "keys": [
+          "id",
+          "version",
+          "blockIds"
+        ],
+        "depth": 2
+      }
+    },
+    {
+      "path": "public/templates/steps-refs/step-18-ref.json",
+      "size": 216,
+      "sizeFormatted": "0.21 KB",
+      "modified": "2025-11-26T00:39:56.743Z",
+      "valid": true,
+      "structure": {
+        "type": "generic",
+        "keys": [
+          "id",
+          "version",
+          "blockIds"
+        ],
+        "depth": 2
+      }
+    },
+    {
+      "path": "public/templates/steps-refs/step-19-ref.json",
+      "size": 148,
+      "sizeFormatted": "0.14 KB",
+      "modified": "2025-11-26T00:39:56.743Z",
+      "valid": true,
+      "structure": {
+        "type": "generic",
+        "keys": [
+          "id",
+          "version",
+          "blockIds"
+        ],
+        "depth": 2
+      }
+    },
+    {
+      "path": "public/templates/steps-refs/step-20-ref.json",
+      "size": 424,
+      "sizeFormatted": "0.41 KB",
+      "modified": "2025-11-26T00:39:56.743Z",
+      "valid": true,
+      "structure": {
+        "type": "generic",
+        "keys": [
+          "id",
+          "version",
+          "blockIds"
+        ],
+        "depth": 2
+      }
+    },
+    {
+      "path": "public/templates/steps-refs/step-21-ref.json",
+      "size": 110,
+      "sizeFormatted": "0.11 KB",
+      "modified": "2025-11-26T00:39:56.743Z",
+      "valid": true,
+      "structure": {
+        "type": "generic",
+        "keys": [
+          "id",
+          "version",
+          "blockIds"
+        ],
+        "depth": 2
+      }
+    }
+  ],
+  "config": [
+    {
+      "path": "package.json",
+      "size": 27388,
+      "sizeFormatted": "26.75 KB",
+      "modified": "2025-11-30T18:16:39.577Z",
+      "valid": true,
+      "structure": {
+        "type": "config",
+        "keys": [
+          "name",
+          "version",
+          "type",
+          "license",
+          "scripts",
+          "lintCoverage",
+          "smoke",
+          "dependencies",
+          "devDependencies",
+          "optionalDependencies"
+        ]
+      }
+    },
+    {
+      "path": "tsconfig.json",
+      "size": 1792,
+      "sizeFormatted": "1.75 KB",
+      "modified": "2025-11-26T00:39:57.498Z",
+      "valid": true,
+      "structure": {
+        "type": "config",
+        "keys": [
+          "compilerOptions",
+          "include",
+          "exclude"
+        ]
+      }
+    },
+    {
+      "path": "tsconfig.node.json",
+      "size": 234,
+      "sizeFormatted": "0.23 KB",
+      "modified": "2025-10-15T22:24:58.271Z",
+      "valid": true,
+      "structure": {
+        "type": "config",
+        "keys": [
+          "compilerOptions",
+          "include"
+        ]
+      }
+    },
+    {
+      "path": "railway.json",
+      "size": 238,
+      "sizeFormatted": "0.23 KB",
+      "modified": "2025-11-26T00:39:56.752Z",
+      "valid": true,
+      "structure": {
+        "type": "generic",
+        "keys": [
+          "$schema",
+          "build",
+          "deploy"
+        ],
+        "depth": 2
+      }
+    },
+    {
+      "path": "knip-report.json",
+      "size": 243393,
+      "sizeFormatted": "237.69 KB",
+      "modified": "2025-12-01T00:24:46.147Z",
+      "valid": true,
+      "structure": {
+        "type": "generic",
+        "keys": [
+          "files",
+          "issues"
+        ],
+        "depth": 6
+      }
+    }
+  ],
+  "data": [
+    {
+      "path": "data/extracted-questions.json",
+      "size": 28326,
+      "sizeFormatted": "27.66 KB",
+      "modified": "2025-10-20T10:35:34.875Z",
+      "valid": true,
+      "structure": {
+        "type": "quiz-template",
+        "hasMetadata": false,
+        "hasSteps": true,
+        "stepsCount": 21,
+        "totalBlocks": 0,
+        "version": "unknown"
+      }
+    },
+    {
+      "path": "data/saved-quizzes/quiz-2025-11-30T22-20-18-051Z.json",
+      "size": 177,
+      "sizeFormatted": "0.17 KB",
+      "modified": "2025-11-30T22:20:18.050Z",
+      "valid": true,
+      "structure": {
+        "type": "quiz-template",
+        "hasMetadata": true,
+        "hasSteps": false,
+        "stepsCount": 0,
+        "totalBlocks": 0,
+        "version": "1.0.0"
+      }
+    }
+  ],
+  "invalid": [],
+  "stats": {
+    "total": 79,
+    "valid": 77,
+    "invalid": 2,
+    "totalSize": 757180
+  }
+}
