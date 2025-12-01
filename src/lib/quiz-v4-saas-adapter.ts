@@ -3,6 +3,9 @@
  * 
  * Permite que o código existente funcione com o novo formato,
  * enquanto você migra gradualmente os componentes.
+ * 
+ * @version 4.1.0
+ * @date 2025-12-01
  */
 
 import React from 'react';

@@ -12,6 +12,7 @@
 import { QuizAnswer, StyleResult, ComputedResult } from '@/types/quiz';
 import { mapToStyleResult } from '@/lib/utils/styleResultMapper';
 import { appLogger } from '@/lib/utils/appLogger';
+import { calculateScoring, type SaaSOption } from '@/lib/quiz-v4-saas-adapter';
 
 // ===== ENGINE CONFIGURATION =====
 export const ENGINE_VERSION = '2.0.0';
@@ -319,8 +320,20 @@ export class CalculationEngine {
       if (this.isValidResponse(response)) {
         validResponses++;
         
+        // V4.1-SAAS COMPATIBILITY: Use response.weight (v4.0 legacy) or response.weights
+        // Future: Migrate to option.score.category from normalized options via calculateScoring()
+        // For now, maintain backward compatibility with existing response format
         if (response.weight && typeof response.weight === 'object') {
           Object.entries(response.weight).forEach(([style, weight]) => {
+            if (scores.hasOwnProperty(style) && typeof weight === 'number') {
+              scores[style] += weight;
+              styleDistribution[style].score += weight;
+              styleDistribution[style].responseCount++;
+            }
+          });
+        } else if (response.weights && typeof response.weights === 'object') {
+          // Support weights (plural) format
+          Object.entries(response.weights).forEach(([style, weight]) => {
             if (scores.hasOwnProperty(style) && typeof weight === 'number') {
               scores[style] += weight;
               styleDistribution[style].score += weight;

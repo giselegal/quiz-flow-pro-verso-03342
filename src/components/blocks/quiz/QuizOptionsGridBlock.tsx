@@ -5,6 +5,7 @@ import { computeSelectionValidity } from '@/lib/quiz/selectionRules';
 import { StorageService } from '@/services/core/StorageService';
 import { useAppStore, selectors } from '@/state/store';
 import { appLogger } from '@/lib/utils/appLogger';
+import { normalizeOption, type SaaSOption } from '@/lib/quiz-v4-saas-adapter';
 
 /**
  * QuizOptionsGridBlock - Componente de grid de opções para quiz
@@ -146,27 +147,28 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
   });
 
   // Extrair as opções - pode ser array de objetos ou string
-  const parseOptions = (options: any) => {
+  // Agora usa o adapter v4.1-saas para normalizar formatos legados
+  const parseOptions = (options: any): SaaSOption[] => {
     appLogger.info('QuizOptionsGridBlock - parseOptions input:', { data: [options] });
 
-    // Se já é um array de objetos, retornar diretamente
+    // Se já é um array de objetos, normalizar cada opção através do adapter
     if (Array.isArray(options) && options.length > 0 && typeof options[0] === 'object') {
-      appLogger.info('QuizOptionsGridBlock - returning object array:', { data: [options] });
-      return options;
+      const normalized = options.map(opt => normalizeOption(opt));
+      appLogger.info('QuizOptionsGridBlock - normalized object array:', { data: [normalized] });
+      return normalized;
     }
 
-    // Se é uma string, parsear linha por linha
+    // Se é uma string, parsear linha por linha e normalizar
     if (typeof options === 'string') {
       const parsed = options
         .split('\n')
         .filter(line => line.trim() !== '')
-        .map((line, index) => ({
+        .map((line, index) => normalizeOption({
           id: `option-${index}`,
           text: line.trim(),
           value: `option-${index}`,
-          imageUrl: '',
         }));
-      appLogger.info('QuizOptionsGridBlock - returning parsed string:', { data: [parsed] });
+      appLogger.info('QuizOptionsGridBlock - normalized parsed string:', { data: [parsed] });
       return parsed;
     }
 
@@ -281,7 +283,7 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
         const questionId = properties?.questionId || properties?.question || id;
         const entry = {
           ids: opts.map(o => o.id),
-          texts: opts.map(o => o.text || ''),
+          texts: opts.map(o => o.label || ''),
         };
         const next = {
           ...prev,
@@ -406,8 +408,9 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
         options={options.map(option => ({
           ...option,
           // Aplicar configurações visuais
-          imageUrl: contentType === 'text-only' ? undefined : option.imageUrl,
-          text: contentType === 'image-only' ? '' : option.text,
+          imageUrl: contentType === 'text-only' ? undefined : (option.imageUrl ?? undefined),
+          text: contentType === 'image-only' ? '' : option.label,
+          label: contentType === 'image-only' ? '' : option.label,
         }))}
         multipleSelection={multipleSelection}
         minSelections={minSelections}

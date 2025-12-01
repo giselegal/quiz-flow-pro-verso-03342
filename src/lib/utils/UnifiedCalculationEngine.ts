@@ -5,6 +5,8 @@ import { QuizAnswer, QuizResult, StyleResult, StyleType } from '@/types/quiz';
 import { isScorableQuestion } from '@/core/constants/quiz';
 import { QuizRulesConfig } from '@/hooks/useQuizRulesConfig';
 import { appLogger } from '@/lib/utils/appLogger';
+// V4.1-SAAS ADAPTER: For future migration to option.score.category format
+// import { calculateScoring, type SaaSOption } from '@/lib/quiz-v4-saas-adapter';
 
 /**
  * UnifiedCalculationEngine - Algoritmo consolidado que combina:
@@ -296,6 +298,11 @@ export class UnifiedCalculationEngine {
         // Extract selected options from answer (use optionId for compatibility)
         const selectedOptions = answer.optionId ? [answer.optionId] : [];
 
+        // V4.1-SAAS COMPATIBILITY: Future migration path
+        // If answer contains normalized options with option.score.category:
+        // const normalizedOptions = answer.normalizedOptions as SaaSOption[];
+        // return calculateScoring(normalizedOptions);
+        
         if (Object.keys(stylePoints).length > 0) {
             return stylePoints;
         }

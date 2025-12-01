@@ -12,6 +12,7 @@ import QuizQuestion from '@/components/funnel-blocks/QuizQuestion';
 import { QuizBlockProps } from './types';
 import { appLogger } from '@/lib/utils/appLogger';
 import { useAppStore } from '@/state/store';
+import { normalizeOption, type SaaSOption } from '@/lib/quiz-v4-saas-adapter';
 
 interface QuizOptionsGridBlockConnectedProps extends Omit<QuizBlockProps, 'properties'> {
     // Props mínimas - tudo vem da API
@@ -139,6 +140,9 @@ export default function QuizOptionsGridBlockConnected({
         if (!Array.isArray(merged.options as any)) {
             (merged as any).options = [];
         }
+
+        // Normalizar todas as options via adapter v4.1-saas
+        (merged as any).options = (merged.options as any[]).map((opt: any) => normalizeOption(opt));
 
         return merged;
     }, [properties]);
