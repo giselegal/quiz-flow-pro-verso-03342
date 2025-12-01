@@ -1,0 +1,68 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "entry": [
+    "src/main.tsx",
+    "src/pages/**/*.tsx",
+    "src/pages/**/*.ts",
+    "server/index.ts",
+    "vite.config.ts",
+    "playwright.config.ts"
+  ],
+  "project": [
+    "src/**/*.{ts,tsx}",
+    "server/**/*.{ts,tsx}",
+    "shared/**/*.{ts,tsx}"
+  ],
+  "ignore": [
+    "**/*.test.{ts,tsx}",
+    "**/*.spec.{ts,tsx}",
+    "**/__tests__/**",
+    "**/deprecated/**",
+    "**/_deprecated/**",
+    "**/archive/**",
+    "**/*.backup.{ts,tsx}",
+    "coverage/**",
+    "dist/**",
+    "build/**",
+    "node_modules/**",
+    "playwright-report/**",
+    "test-results/**",
+    "reports/**"
+  ],
+  "ignoreDependencies": [
+    "@types/*",
+    "typescript",
+    "vite",
+    "vitest"
+  ],
+  "ignoreExportsUsedInFile": true,
+  "includeEntryExports": true,
+  "workspaces": {
+    ".": {
+      "entry": [
+        "src/main.tsx",
+        "src/pages/index.tsx",
+        "src/pages/editor/EditorPage.tsx",
+        "src/pages/QuizAIPage.tsx",
+        "src/pages/dashboard/*.tsx"
+      ],
+      "project": [
+        "src/**/*.{ts,tsx}"
+      ]
+    }
+  },
+  "rules": {
+    "files": "error",
+    "dependencies": "warn",
+    "unlisted": "warn",
+    "unresolved": "warn",
+    "exports": "warn",
+    "types": "warn",
+    "duplicates": "error",
+    "enumMembers": "warn"
+  },
+  "exclude": [
+    "unlisted",
+    "unresolved"
+  ]
+}
