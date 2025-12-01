@@ -8,16 +8,20 @@
  * - Integração com cálculos
  * 
  * 🆕 PHASE 1: Added performance monitoring and memory leak detection
+ * 🆕 PHASE 2: Added analytics sidebar integration
  */
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { EditorLayout } from './layout/EditorLayout';
 import { useQuizStore } from './store/quizStore';
 import { useEditorStore } from './store/editorStore';
 import { usePersistence, useAutoSave } from './hooks/usePersistence';
 import { SaveStatusIndicator } from './components/SaveStatusIndicator';
 import { PerformanceDebugger } from './components/PerformanceDebugger';
+import { AnalyticsSidebar } from './components/AnalyticsSidebar';
+import { DevTools } from './components/DevTools';
 import { usePerformanceMonitor, useMemoryLeakDetector } from '@/hooks/usePerformanceMonitor';
+import { Activity } from 'lucide-react';
 import type { QuizSchema } from '@/schemas/quiz-schema.zod';
 
 export interface ModernQuizEditorProps {
@@ -38,6 +42,9 @@ export function ModernQuizEditor({
     onError,
 }: ModernQuizEditorProps) {
     console.log('🎨 ModernQuizEditor rendering', { initialQuiz: !!initialQuiz, quizId });
+
+    // 🆕 PHASE 2: Analytics sidebar state
+    const [showAnalytics, setShowAnalytics] = useState(false);
 
     // 🆕 PHASE 1: Performance monitoring
     const { metrics } = usePerformanceMonitor('ModernQuizEditor');
@@ -194,6 +201,22 @@ export function ModernQuizEditor({
                 </div>
 
                 <div className="flex items-center gap-2">
+                    {/* 🆕 PHASE 2: Analytics toggle button */}
+                    <button
+                        onClick={() => setShowAnalytics(!showAnalytics)}
+                        className={`
+                            px-3 py-2 rounded-lg flex items-center gap-2
+                            transition-colors text-sm font-medium
+                            ${showAnalytics 
+                                ? 'bg-blue-100 text-blue-700 hover:bg-blue-200' 
+                                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}
+                        `}
+                        title="Analytics em Tempo Real"
+                    >
+                        <Activity className="w-4 h-4" />
+                        Analytics
+                    </button>
+                    
                     {/* Botão de salvar manual */}
                     <button
                         onClick={handleSave}
@@ -223,8 +246,17 @@ export function ModernQuizEditor({
                 <EditorLayout />
             </div>
             
+            {/* 🆕 PHASE 2: Analytics Sidebar */}
+            <AnalyticsSidebar 
+                isOpen={showAnalytics} 
+                onClose={() => setShowAnalytics(false)} 
+            />
+            
             {/* 🆕 PHASE 1: Performance Debugger (dev only) */}
             <PerformanceDebugger position="bottom-right" />
+            
+            {/* 🆕 PHASE 4: DevTools with Accessibility Auditor (dev only) */}
+            <DevTools />
         </div>
     );
 }
