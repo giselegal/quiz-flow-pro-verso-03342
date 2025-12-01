@@ -18,7 +18,7 @@
 
 import { type QuizSchema } from '@/schemas/quiz-schema.zod';
 import { appLogger } from '@/lib/utils/appLogger';
-import { supabase } from '@/lib/supabase/client';
+import { supabase } from '@/lib/supabase';
 import { 
   resolveFunnel, 
   type FunnelIdentifier, 

@@ -21,7 +21,7 @@
  */
 
 import JSZip from 'jszip';
-import { supabase } from '@/lib/supabase/client';
+import { supabase } from '@/lib/supabase';
 
 export interface ExportOptions {
   /**
