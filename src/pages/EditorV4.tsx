@@ -254,7 +254,7 @@ export function EditorV4() {
     const templateId = params.get('template');
 
     // 🎯 Mapear templateId para caminho do JSON
-    let templatePath = '/templates/quiz21-v4.json'; // default
+    let templatePath = '/templates/quiz21-v4-saas.json'; // default
 
     if (templateId) {
         // Tentar vários caminhos possíveis
@@ -262,7 +262,7 @@ export function EditorV4() {
             `/templates/funnels/${templateId}/master.json`,
             `/templates/funnels/${templateId}.json`,
             `/templates/${templateId}.json`,
-            `/templates/quiz21-v4.json`, // fallback
+            `/templates/quiz21-v4-saas.json`, // fallback
         ];
 
         // Por enquanto, usar o primeiro caminho (master.json)

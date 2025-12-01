@@ -303,9 +303,9 @@ export class TemplateService extends BaseCanonicalService {
    */
   async loadV4Template(): Promise<ServiceResult<any>> {
     try {
-      this.log('📂 Loading quiz21-v4.json...');
+      this.log('📂 Loading quiz21-v4-saas.json...');
 
-      const response = await fetch('/templates/quiz21-v4.json', {
+      const response = await fetch('/templates/quiz21-v4-saas.json', {
         cache: 'no-cache'
       });
 

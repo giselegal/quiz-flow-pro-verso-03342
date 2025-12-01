@@ -188,7 +188,7 @@ export default function EditorPage() {
                 appLogger.info('📂 Carregando quiz via ModernQuizEditor:', { funnelId });
 
                 // ✅ AUDIT: Use cached loader instead of direct fetch
-                const validated = await loadQuizWithCache('/templates/quiz21-v4.json');
+                const validated = await loadQuizWithCache('/templates/quiz21-v4-saas.json');
 
                 // Only update state if component is still mounted
                 if (isMounted) {
