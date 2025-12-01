@@ -231,9 +231,19 @@ export function usePersistence(options: PersistenceOptions = {}): UsePersistence
           borderRadius: {},
         },
         settings: {
-          scoring: { enabled: false, method: 'sum' },
-          navigation: { allowBack: true, autoAdvance: false, showProgress: true },
-          validation: { required: true, strictMode: false },
+          scoring: { 
+            enabled: false, 
+            method: 'sum' as const 
+          },
+          navigation: { 
+            allowBack: true, 
+            autoAdvance: false, 
+            showProgress: true 
+          },
+          validation: { 
+            required: true, 
+            strictMode: false 
+          },
         },
         steps: data.steps as any[], // quiz_drafts.steps já é array de steps
       };
