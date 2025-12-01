@@ -7,18 +7,13 @@ export default function SavedSnapshotsPanel() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [loadingSnapshot, setLoadingSnapshot] = useState<string | null>(null);
-    const [hasLoggedWarning, setHasLoggedWarning] = useState(false);
 
     const load = async () => {
         setLoading(true);
         setError(null);
         try {
             // ✅ TODO: Implementar API /api/quiz/saved quando backend estiver pronto
-            // Por enquanto, retornar lista vazia para evitar erro 404
-            if (!hasLoggedWarning) {
-                console.warn('SavedSnapshotsPanel: API /api/quiz/saved não implementada ainda');
-                setHasLoggedWarning(true);
-            }
+            // Por enquanto, retornar lista vazia silenciosamente
             setItems([]);
         } catch (e: any) {
             setError(String(e?.message || e));
@@ -48,12 +43,12 @@ export default function SavedSnapshotsPanel() {
         }
     };
 
-    useEffect(() => {
-        load();
-        // Aumentar intervalo de pooling para reduzir logs (30s ao invés de 5s)
-        const id = setInterval(load, 30000);
-        return () => clearInterval(id);
-    }, []);
+    // Desabilitado auto-load até que a API esteja implementada
+    // useEffect(() => {
+    //     load();
+    //     const id = setInterval(load, 30000);
+    //     return () => clearInterval(id);
+    // }, []);
 
     return (
         <div className="bg-white border border-gray-200 rounded p-3">
