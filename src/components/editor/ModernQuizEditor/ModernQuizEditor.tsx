@@ -56,9 +56,24 @@ export function ModernQuizEditor({
     // Carregar quiz inicial
     useEffect(() => {
         if (initialQuiz) {
+            console.log('📂 Carregando quiz inicial:', {
+                steps: initialQuiz.steps?.length,
+                firstStepId: initialQuiz.steps?.[0]?.id,
+                firstStepBlocks: initialQuiz.steps?.[0]?.blocks?.length
+            });
             loadQuiz(initialQuiz);
         }
     }, [initialQuiz, loadQuiz]);
+
+    // ✅ CRITICAL: Auto-selecionar primeiro step quando quiz carregar
+    useEffect(() => {
+        if (quiz && quiz.steps && quiz.steps.length > 0) {
+            const { selectStep } = require('./store/editorStore').useEditorStore.getState();
+            const firstStepId = quiz.steps[0].id;
+            console.log('🎯 Auto-selecionando primeiro step:', firstStepId);
+            selectStep(firstStepId);
+        }
+    }, [quiz]);
 
     // Notificar erro do store
     useEffect(() => {

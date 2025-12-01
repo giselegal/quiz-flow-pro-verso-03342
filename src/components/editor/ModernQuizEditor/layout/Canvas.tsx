@@ -25,6 +25,16 @@ export function Canvas() {
     // Encontrar o step selecionado
     const selectedStep = quiz?.steps?.find((step: any) => step.id === selectedStepId);
 
+    // 🐛 DEBUG: Log do estado atual
+    console.log('🎨 Canvas render:', {
+        hasQuiz: !!quiz,
+        totalSteps: quiz?.steps?.length,
+        selectedStepId,
+        selectedStep: selectedStep?.id,
+        blocksCount: selectedStep?.blocks?.length,
+        blocks: selectedStep?.blocks?.map((b: any) => ({ id: b.id, type: b.type }))
+    });
+
     return (
         <div className="flex-1 bg-gray-50 flex flex-col overflow-hidden">
             {/* Toolbar do Canvas */}
