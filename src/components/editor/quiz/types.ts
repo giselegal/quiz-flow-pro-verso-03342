@@ -7,6 +7,7 @@
  * Resolve: 73 erros de build relacionados a tipos ausentes
  */
 
+import { z } from 'zod';
 import type { 
   QuizStep, 
   BlockType, 
@@ -20,21 +21,30 @@ import type {
   ResultsConfig,
   BlockLibrary
 } from '@/schemas/quiz-schema.zod';
+import { StepTypeZ } from '@/schemas/quiz-schema.zod';
 
 // ============================================================================
 // ALIASES PARA COMPATIBILIDADE COM SISTEMA LEGADO
 // ============================================================================
 
 /**
- * Alias para QuizStep - usado em componentes legados
+ * EditableQuizStep - QuizStep estendido com propriedades do sistema legado
  * EditModeRenderer, PreviewModeRenderer, UnifiedStepContent, etc.
  */
-export type EditableQuizStep = QuizStep;
+export interface EditableQuizStep extends QuizStep {
+  /** Metadados adicionais do editor */
+  metadata?: Record<string, any>;
+  /** Settings específicos do step */
+  settings?: Record<string, any>;
+  /** Próximo step (para navegação condicional) */
+  nextStep?: string;
+}
 
 /**
- * Alias para BlockType - usado em StepDataAdapter
+ * StepType - Tipos de STEP (não de Block)
+ * Valores: 'intro', 'question', 'strategic-question', 'transition', etc.
  */
-export type StepType = BlockType;
+export type StepType = z.infer<typeof StepTypeZ>;
 
 // ============================================================================
 // INTERFACE BLOCKCOMPONENT (LEGADO)
