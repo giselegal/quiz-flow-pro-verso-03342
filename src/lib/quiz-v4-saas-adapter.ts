@@ -208,10 +208,14 @@ export function getPredominantStyle(
 
 /**
  * Resolve URLs de assets (mapeia /quiz-assets/ para CDN real)
+ * 
+ * Usa variáveis de ambiente:
+ * - VITE_ASSET_CDN_BASE_URL: Base URL do CDN (ex: https://res.cloudinary.com/cloudname/image/upload)
+ * - VITE_ENABLE_ASSET_CDN: Habilita resolução de CDN (default: true em produção)
  */
 export function resolveAssetUrl(
   url: string | null,
-  cdnBaseUrl = 'https://res.cloudinary.com/dqljyf76t/image/upload'
+  cdnBaseUrl?: string
 ): string | null {
   if (!url) return null;
 
@@ -220,10 +224,25 @@ export function resolveAssetUrl(
     return url;
   }
 
+  // Verificar se CDN está habilitado
+  const cdnEnabled = import.meta.env.VITE_ENABLE_ASSET_CDN !== 'false';
+  
+  if (!cdnEnabled) {
+    // Em desenvolvimento sem CDN, retornar path relativo
+    return url;
+  }
+
+  // Obter CDN base URL das variáveis de ambiente
+  const baseCdn = 
+    cdnBaseUrl || 
+    import.meta.env.VITE_ASSET_CDN_BASE_URL || 
+    'https://res.cloudinary.com/dqljyf76t/image/upload';
+
   // Se é path relativo, mapear para CDN
   if (url.startsWith('/quiz-assets/')) {
     const filename = url.replace('/quiz-assets/', '');
-    return `${cdnBaseUrl}/v1744735329/${filename}`;
+    // Remover v1744735329 hardcoded - usar diretamente o filename
+    return `${baseCdn}/f_auto,q_auto/${filename}`;
   }
 
   return url;

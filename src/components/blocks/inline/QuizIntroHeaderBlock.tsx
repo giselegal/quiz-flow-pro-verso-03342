@@ -219,15 +219,17 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
             <h1
               className="text-2xl md:text-3xl font-bold leading-snug"
               style={{ color: '#432818', fontFamily: 'Playfair Display, serif' }}
-              dangerouslySetInnerHTML={{ __html: title }}
-            />
+            >
+              <RichText content={title} as="span" allowLegacyHTML={true} />
+            </h1>
           )}
           {subtitle && (
             <div
               className="text-base md:text-lg"
               style={{ color: '#432818' }}
-              dangerouslySetInnerHTML={{ __html: subtitle }}
-            />
+            >
+              <RichText content={subtitle} as="span" allowLegacyHTML={true} />
+            </div>
           )}
           {description && <p className="text-sm md:text-base text-gray-700">{description}</p>}
         </div>

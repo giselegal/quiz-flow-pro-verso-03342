@@ -3,9 +3,14 @@
  * 
  * Componente independente responsável por renderizar o cabeçalho
  * da etapa de introdução com logo e título personalizáveis.
+ * 
+ * @security FASE 2 - V4.1-SaaS
+ * - Usa <RichText> component para renderização segura
+ * - Substitui dangerouslySetInnerHTML
  */
 
 import React from 'react';
+import { RichText } from '@/components/shared/RichText';
 
 interface IntroHeaderProps {
     title?: string;
@@ -68,7 +73,12 @@ const IntroHeader: React.FC<IntroHeaderProps> = ({
                 }}
             >
                 {isHtmlTitle ? (
-                    <span dangerouslySetInnerHTML={{ __html: safeTitle }} />
+                    <RichText
+                        content={safeTitle}
+                        as="span"
+                        allowLegacyHTML={true}
+                        highlightClassName="font-bold"
+                    />
                 ) : (
                     // Versão padrão com spans coloridos
                     <>

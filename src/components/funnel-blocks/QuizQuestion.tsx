@@ -476,7 +476,7 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
           {customStyles?.contentType !== 'image-only' && option.imageUrl && (
             <div className="py-2 px-4 w-full flex flex-row text-base items-center text-full-primary justify-between">
               <div className="break-words w-full custom-quill quill ql-editor quill-option text-centered mt-2">
-                {option.text && <p dangerouslySetInnerHTML={{ __html: sanitizeHtml(option.text) }} />}
+                {option.text && <RichText content={option.text} as="p" allowLegacyHTML={true} />}
               </div>
             </div>
           )}

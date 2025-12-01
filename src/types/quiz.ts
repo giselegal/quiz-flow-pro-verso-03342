@@ -77,15 +77,26 @@ export interface UserResponse {
   timestamp: string;
 }
 
-// Legacy compatibility
+// Legacy compatibility + V4.1-SaaS support
 export interface QuizAnswer {
   questionId: string;
   selectedOptions: string[];
   value: string | string[];
   timestamp: string;
+  // Legacy v4.0 compatibility
   optionId?: string; // Legacy compatibility
-  weight?: number; // Legacy compatibility
-  weights?: Record<string, number>; // Legacy compatibility
+  weight?: number; // Legacy compatibility (deprecated)
+  weights?: Record<string, number>; // Legacy compatibility (deprecated)
+  // V4.1-SaaS: normalized options with explicit scoring
+  normalizedOptions?: Array<{
+    id: string;
+    label: string;
+    value: string;
+    score: {
+      category: string;
+      points: number;
+    };
+  }>;
 }
 
 export interface QuizStage {

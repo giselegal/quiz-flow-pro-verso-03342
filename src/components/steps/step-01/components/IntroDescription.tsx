@@ -3,13 +3,13 @@
  * 
  * Componente para o texto descritivo da etapa de introdução.
  * 
- * @security FASE 1 - Sprint 1
- * - Sanitização com DOMPurify aplicada em texto dinâmico
- * - Proteção contra XSS em conteúdo HTML customizado
+ * @security FASE 2 - V4.1-SaaS
+ * - Usa <RichText> component para renderização segura
+ * - Substitui dangerouslySetInnerHTML + sanitizeHtml
  */
 
 import React from 'react';
-import { sanitizeHtml } from '@/lib/utils/sanitizeHtml';
+import { RichText } from '@/components/shared/RichText';
 
 interface IntroDescriptionProps {
     text?: string;
@@ -47,7 +47,11 @@ const IntroDescription: React.FC<IntroDescriptionProps> = ({
     return (
         <p className="text-sm text-center leading-relaxed px-2 sm:text-base text-gray-600">
             {text ? (
-                <span dangerouslySetInnerHTML={{ __html: sanitizeHtml(text) }} />
+                <RichText
+                    content={text}
+                    as="span"
+                    allowLegacyHTML={true}
+                />
             ) : (
                 defaultText
             )}

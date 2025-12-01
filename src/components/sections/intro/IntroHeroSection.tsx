@@ -13,7 +13,7 @@ import { SectionContainer } from '../shared/SectionContainer';
 import { AnimatedTransition } from '../shared/AnimatedTransition';
 import { DesignTokens } from '@/styles/design-tokens';
 import { useResponsive } from '@/hooks/useResponsive';
-import { sanitizeHtml } from '@/lib/utils/sanitizeHtml';
+import { RichText } from '@/components/shared/RichText';
 import type { BaseSectionProps } from '@/types/section-types';
 
 export interface IntroHeroContent {
@@ -140,8 +140,9 @@ export const IntroHeroSection: React.FC<IntroHeroSectionProps> = ({
                         marginBottom: DesignTokens.spacing.md,
                         lineHeight: DesignTokens.lineHeights.tight,
                     }}
-                    dangerouslySetInnerHTML={{ __html: sanitizeHtml(title) }}
-                />
+                >
+                    <RichText content={title} as="span" allowLegacyHTML={true} />
+                </h1>
 
                 {/* Hero Image */}
                 {imageUrl && (
@@ -171,8 +172,9 @@ export const IntroHeroSection: React.FC<IntroHeroSectionProps> = ({
                             marginBottom: description ? DesignTokens.spacing.md : 0,
                             lineHeight: DesignTokens.lineHeights.normal,
                         }}
-                        dangerouslySetInnerHTML={{ __html: sanitizeHtml(subtitle) }}
-                    />
+                    >
+                        <RichText content={subtitle} as="span" allowLegacyHTML={true} />
+                    </p>
                 )}
 
                 {/* Description */}

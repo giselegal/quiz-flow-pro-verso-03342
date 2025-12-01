@@ -275,15 +275,25 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
     }
 
     // 💾 Persistir respostas para cálculo de resultados em produção
+    // V4.1-SAAS: Salvar normalizedOptions para scoring explícito
     try {
       const step = (window as any)?.__quizCurrentStep ?? null;
       if (step) {
         const key = 'quizResponses';
         const prev = (StorageService.safeGetJSON(key) as any) || {};
         const questionId = properties?.questionId || properties?.question || id;
+
+        // Salvar formato v4.1-saas com normalizedOptions
         const entry = {
           ids: opts.map(o => o.id),
           texts: opts.map(o => o.label || ''),
+          // V4.1-SaaS: incluir options normalizadas com scoring
+          normalizedOptions: opts.map(o => ({
+            id: o.id,
+            label: o.label,
+            value: o.value,
+            score: o.score,
+          })),
         };
         const next = {
           ...prev,

@@ -13,6 +13,7 @@ import { QuizAnswer, StyleResult, ComputedResult } from '@/types/quiz';
 import { mapToStyleResult } from '@/lib/utils/styleResultMapper';
 import { appLogger } from '@/lib/utils/appLogger';
 import { calculateScoring, type SaaSOption } from '@/lib/quiz-v4-saas-adapter';
+import { calculateScoresFromNormalizedOptions } from '@/lib/scoring-migration';
 
 // ===== ENGINE CONFIGURATION =====
 export const ENGINE_VERSION = '2.0.0';
@@ -320,19 +321,20 @@ export class CalculationEngine {
       if (this.isValidResponse(response)) {
         validResponses++;
         
-        // V4.1-SAAS COMPATIBILITY: Use response.weight (v4.0 legacy) or response.weights
-        // Future: Migrate to option.score.category from normalized options via calculateScoring()
-        // For now, maintain backward compatibility with existing response format
-        if (response.weight && typeof response.weight === 'object') {
-          Object.entries(response.weight).forEach(([style, weight]) => {
-            if (scores.hasOwnProperty(style) && typeof weight === 'number') {
+        // V4.1-SAAS: Priorizar normalizedOptions (formato novo)
+        if (response.normalizedOptions && response.normalizedOptions.length > 0) {
+          // Formato v4.1-saas: usar option.score.category
+          response.normalizedOptions.forEach(option => {
+            const { category: style, points: weight } = option.score;
+            if (scores.hasOwnProperty(style)) {
               scores[style] += weight;
               styleDistribution[style].score += weight;
               styleDistribution[style].responseCount++;
             }
           });
-        } else if (response.weights && typeof response.weights === 'object') {
-          // Support weights (plural) format
+        } 
+        // Fallback v4.0: weights (plural)
+        else if (response.weights && typeof response.weights === 'object') {
           Object.entries(response.weights).forEach(([style, weight]) => {
             if (scores.hasOwnProperty(style) && typeof weight === 'number') {
               scores[style] += weight;
@@ -340,8 +342,19 @@ export class CalculationEngine {
               styleDistribution[style].responseCount++;
             }
           });
-        } else {
-          // Default scoring for responses without weights
+        }
+        // Fallback v4.0: weight (singular)
+        else if (response.weight && typeof response.weight === 'object') {
+          Object.entries(response.weight).forEach(([style, weight]) => {
+            if (scores.hasOwnProperty(style) && typeof weight === 'number') {
+              scores[style] += weight;
+              styleDistribution[style].score += weight;
+              styleDistribution[style].responseCount++;
+            }
+          });
+        } 
+        // Default scoring (sem weights)
+        else {
           const randomStyle = styles[Math.floor(Math.random() * styles.length)];
           scores[randomStyle] += 1;
           styleDistribution[randomStyle].score += 1;
