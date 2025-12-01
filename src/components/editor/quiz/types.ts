@@ -119,6 +119,42 @@ export function blockComponentToQuizBlock(component: BlockComponent): QuizBlock 
 }
 
 // ============================================================================
+// CONVERSORES ADICIONAIS PARA BRIDGE COM SISTEMA LEGADO
+// ============================================================================
+
+/**
+ * Converte QuizBlock (Zod) para Block (Sistema Legado)
+ * Usado pelo useBridgeSync para sincronizar com EditorStateProvider
+ */
+export function quizBlockToBlock(qb: QuizBlock): any {
+  return {
+    id: qb.id,
+    type: qb.type,
+    order: qb.order,
+    content: qb.content || {},
+    properties: qb.properties,
+    parentId: qb.parentId ?? undefined,
+    metadata: qb.metadata,
+  };
+}
+
+/**
+ * Converte Block (Sistema Legado) para BlockComponent
+ * Usado para compatibilidade reversa
+ */
+export function blockToBlockComponent(b: any): BlockComponent {
+  return {
+    id: b.id,
+    type: b.type,
+    order: b.order,
+    properties: b.properties,
+    content: b.content,
+    parentId: b.parentId ?? null,
+    metadata: b.metadata,
+  };
+}
+
+// ============================================================================
 // RE-EXPORTS PARA CONVENIÊNCIA
 // ============================================================================
 
