@@ -123,6 +123,12 @@ class BlockRegistry {
       category: 'question',
     });
 
+    this.register('question-hero', {
+      component: lazy(() => import('@/components/editor/blocks/atomic/QuestionHeroBlock')),
+      aliases: [],
+      category: 'question',
+    });
+
     // ===== TRANSITION BLOCKS =====
     this.register('transition-hero', {
       component: lazy(() => import('@/components/editor/blocks/atomic/TransitionHeroBlock')),
@@ -205,6 +211,18 @@ class BlockRegistry {
     });
 
     // ===== OFFER BLOCKS =====
+    this.register('offer-hero', {
+      component: lazy(() => import('@/components/editor/blocks/OfferHeroBlock')),
+      aliases: [],
+      category: 'offer',
+    });
+
+    this.register('pricing', {
+      component: lazy(() => import('@/components/editor/blocks/PricingInlineBlock')),
+      aliases: ['pricing-section'],
+      category: 'offer',
+    });
+
     this.register('offer.core', {
       component: lazy(() => import('@/components/editor/blocks/CTAInlineBlock')),
       aliases: [],

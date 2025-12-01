@@ -91,12 +91,22 @@ export const PropertySchemaMap: Record<string, FieldDef[]> = {
     { key: 'image', label: 'Imagem', kind: 'image' },
   ],
 
+  'question-hero': [
+    { key: 'title', label: 'Título', kind: 'text' },
+    { key: 'subtitle', label: 'Subtítulo', kind: 'text' },
+    { key: 'image', label: 'Imagem', kind: 'image' },
+  ],
+
   // ============================================================================
   // TRANSITION BLOCKS
   // ============================================================================
   'transition-hero': [
     { key: 'title', label: 'Título', kind: 'text' },
     { key: 'subtitle', label: 'Subtítulo', kind: 'text' },
+  ],
+  'transition-text': [
+    { key: 'text', label: 'Texto de Transição', kind: 'text' },
+    { key: 'duration', label: 'Duração (ms)', kind: 'number' },
   ],
   'transition-title': [
     { key: 'text', label: 'Título', kind: 'text' },
@@ -186,8 +196,24 @@ export const PropertySchemaMap: Record<string, FieldDef[]> = {
     { key: 'items', label: 'Depoimentos', kind: 'json' },
   ],
   'pricing': [
+    { key: 'title', label: 'Título do Plano', kind: 'text' },
+    { key: 'price', label: 'Preço', kind: 'text' },
     { key: 'amount', label: 'Valor', kind: 'text' },
     { key: 'currency', label: 'Moeda', kind: 'text' },
+    { key: 'features', label: 'Recursos', kind: 'json' },
+    { key: 'highlighted', label: 'Destacado', kind: 'boolean' },
+  ],
+  'offer-hero': [
+    { key: 'title', label: 'Título Principal', kind: 'text' },
+    { key: 'subtitle', label: 'Subtítulo', kind: 'text' },
+    { key: 'description', label: 'Descrição', kind: 'text' },
+    { key: 'image', label: 'Imagem de Fundo', kind: 'image' },
+  ],
+  'quiz-score-display': [
+    { key: 'score', label: 'Pontuação', kind: 'number' },
+    { key: 'maxScore', label: 'Pontuação Máxima', kind: 'number' },
+    { key: 'category', label: 'Categoria', kind: 'text' },
+    { key: 'title', label: 'Título', kind: 'text' },
   ],
   'guarantee': [
     { key: 'text', label: 'Texto da garantia', kind: 'text' },
