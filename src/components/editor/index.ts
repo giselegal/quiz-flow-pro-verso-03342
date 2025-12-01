@@ -32,8 +32,7 @@ export { usePureBuilder, usePureBuilderCompat } from '@/hooks/usePureBuilderComp
 // ============================================================================
 
 // Principais componentes do editor - APENAS OS ESSENCIAIS
-export { default as ComponentList } from './ComponentList';
-export { default as QuizEditorSteps } from './QuizEditorSteps';
+// REMOVIDO: ComponentList, QuizEditorSteps - use ModernQuizEditor
 
 // Componentes com named exports
 export { AddBlockButton } from './AddBlockButton';
