@@ -6,9 +6,11 @@
  * - Selecionar blocos (onclick)
  * - Drop zone para DnD (Fase 3)
  * - Visual de bloco selecionado
+ * 
+ * ✅ AUDIT: Optimized with React.memo and useCallback
  */
 
-import React from 'react';
+import React, { memo, useCallback, useMemo } from 'react';
 import { useQuizStore } from '../store/quizStore';
 import { useEditorStore } from '../store/editorStore';
 import type { QuizBlock } from '@/schemas/quiz-schema.zod';
@@ -18,81 +20,98 @@ import { SortableContext, verticalListSortingStrategy, useSortable } from '@dnd-
 import { CSS } from '@dnd-kit/utilities';
 import ValidationPanel from '../components/ValidationPanel';
 
-export function Canvas() {
+// ✅ AUDIT: Debug logging only in development
+const DEBUG = import.meta.env.DEV && false; // Set to true to enable debug logs
+
+export const Canvas = memo(function Canvas() {
     const quiz = useQuizStore((state) => state.quiz);
-    const { selectedStepId, selectedBlockId, selectBlock } = useEditorStore();
+    const selectedStepId = useEditorStore((state) => state.selectedStepId);
+    const selectedBlockId = useEditorStore((state) => state.selectedBlockId);
+    const selectBlock = useEditorStore((state) => state.selectBlock);
 
-    // Encontrar o step selecionado
-    const selectedStep = quiz?.steps?.find((step: any) => step.id === selectedStepId);
+    // ✅ AUDIT: Memoize step lookup to prevent unnecessary recalculations
+    const selectedStep = useMemo(() => {
+        return quiz?.steps?.find((step: any) => step.id === selectedStepId);
+    }, [quiz?.steps, selectedStepId]);
 
-    // 🐛 DEBUG: Log do estado atual
-    console.log('🎨 Canvas render:', {
-        hasQuiz: !!quiz,
-        totalSteps: quiz?.steps?.length,
-        selectedStepId,
-        selectedStep: selectedStep?.id,
-        blocksCount: selectedStep?.blocks?.length,
-        blocks: selectedStep?.blocks?.map((b: any) => ({ id: b.id, type: b.type }))
-    });
+    // ✅ AUDIT: Conditional debug logging
+    if (DEBUG) {
+        console.log('🎨 Canvas render:', {
+            hasQuiz: !!quiz,
+            totalSteps: quiz?.steps?.length,
+            selectedStepId,
+            selectedStep: selectedStep?.id,
+            blocksCount: selectedStep?.blocks?.length,
+        });
+    }
+
+    // ✅ AUDIT: Memoize select handler
+    const handleSelectBlock = useCallback((blockId: string) => {
+        selectBlock(blockId);
+    }, [selectBlock]);
 
     return (
         <div className="flex-1 bg-gray-50 flex flex-col overflow-hidden">
             {/* Toolbar do Canvas */}
-            <div className="bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between">
-                <div>
-                    {selectedStep ? (
-                        <>
-                            <h2 className="text-lg font-semibold text-gray-900">
-                                {selectedStep.title || 'Sem título'}
-                            </h2>
-                            <p className="text-sm text-gray-500">
-                                Etapa {selectedStep.order} • {selectedStep.blocks?.length || 0} blocos
-                            </p>
-                        </>
-                    ) : (
-                        <p className="text-sm text-gray-500">Selecione uma etapa para começar</p>
-                    )}
-                </div>
-
-                {/* Ações rápidas */}
-                <div className="flex items-center gap-2">
-                    <button className="px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-100 rounded">
-                        👁️ Preview
-                    </button>
-                    <button className="px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-100 rounded">
-                        ↩️ Desfazer
-                    </button>
-                </div>
-            </div>
+            <CanvasToolbar selectedStep={selectedStep} />
 
             {/* Área de renderização de blocos */}
             <div className="flex-1 overflow-y-auto p-6">
                 {!selectedStep ? (
                     <EmptyState message="Selecione uma etapa no painel esquerdo" />
                 ) : !selectedStep.blocks || selectedStep.blocks.length === 0 ? (
-                    (() => {
-                        console.log('⚠️ Step tem 0 blocos:', selectedStep.id);
-                        return <EmptyState message="Esta etapa não possui blocos. Arraste um bloco da biblioteca." />;
-                    })()
+                    <EmptyState message="Esta etapa não possui blocos. Arraste um bloco da biblioteca." />
                 ) : (
-                    (() => {
-                        console.log('✅ Renderizando container de blocos para step:', selectedStep.id, 'com', selectedStep.blocks.length, 'blocos');
-                        return (
-                            <div className="max-w-3xl mx-auto space-y-6">
-                                <ValidationPanel />
-                                <ResultPreview />
-                                <CanvasSortable stepId={selectedStep.id} blocks={selectedStep.blocks} selectedBlockId={selectedBlockId} onSelect={selectBlock} />
-                            </div>
-                        );
-                    })()
+                    <div className="max-w-3xl mx-auto space-y-6">
+                        <ValidationPanel />
+                        <ResultPreview />
+                        <CanvasSortable 
+                            stepId={selectedStep.id} 
+                            blocks={selectedStep.blocks} 
+                            selectedBlockId={selectedBlockId} 
+                            onSelect={handleSelectBlock} 
+                        />
+                    </div>
                 )}
             </div>
         </div>
     );
-}
+});
 
-// Estado vazio (com drop zone)
-function EmptyState({ message }: { message: string }) {
+// ✅ AUDIT: Memoized toolbar component
+const CanvasToolbar = memo(function CanvasToolbar({ selectedStep }: { selectedStep: any }) {
+    return (
+        <div className="bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between">
+            <div>
+                {selectedStep ? (
+                    <>
+                        <h2 className="text-lg font-semibold text-gray-900">
+                            {selectedStep.title || 'Sem título'}
+                        </h2>
+                        <p className="text-sm text-gray-500">
+                            Etapa {selectedStep.order} • {selectedStep.blocks?.length || 0} blocos
+                        </p>
+                    </>
+                ) : (
+                    <p className="text-sm text-gray-500">Selecione uma etapa para começar</p>
+                )}
+            </div>
+
+            {/* Ações rápidas */}
+            <div className="flex items-center gap-2">
+                <button className="px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-100 rounded">
+                    👁️ Preview
+                </button>
+                <button className="px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-100 rounded">
+                    ↩️ Desfazer
+                </button>
+            </div>
+        </div>
+    );
+});
+
+// ✅ AUDIT: Memoized empty state component
+const EmptyState = memo(function EmptyState({ message }: { message: string }) {
     const { setNodeRef, isOver } = useDroppable({
         id: 'empty-canvas-drop-zone',
     });
@@ -116,25 +135,16 @@ function EmptyState({ message }: { message: string }) {
             </div>
         </div>
     );
-}
+});
 
-// Preview individual de cada bloco (com Sortable)
+// ✅ AUDIT: Memoized block preview component
 interface BlockPreviewProps {
     block: QuizBlock;
     isSelected: boolean;
     onClick: () => void;
 }
 
-function BlockPreview({ block, isSelected, onClick }: BlockPreviewProps) {
-    // 🐛 DEBUG: Log de renderização
-    console.log('🎨 BlockPreview render:', {
-        id: block.id,
-        type: block.type,
-        isSelected,
-        hasProperties: !!block.properties,
-        title: block.properties?.title
-    });
-
+const BlockPreview = memo(function BlockPreview({ block, isSelected, onClick }: BlockPreviewProps) {
     const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
         id: block.id,
         data: {
@@ -143,11 +153,11 @@ function BlockPreview({ block, isSelected, onClick }: BlockPreviewProps) {
         },
     });
 
-    const style = {
+    const style = useMemo(() => ({
         transform: CSS.Transform.toString(transform),
         transition,
         opacity: isDragging ? 0.5 : 1,
-    };
+    }), [transform, transition, isDragging]);
 
     return (
         <div
@@ -258,38 +268,46 @@ function BlockPreview({ block, isSelected, onClick }: BlockPreviewProps) {
             </div>
         </div>
     );
-}
+});
 
-function BlockActions({ block }: { block: QuizBlock }) {
-    const { selectedStepId } = useEditorStore();
+// ✅ AUDIT: Memoized block actions component
+const BlockActions = memo(function BlockActions({ block }: { block: QuizBlock }) {
+    const selectedStepId = useEditorStore((state) => state.selectedStepId);
     const deleteBlock = useQuizStore((s) => s.deleteBlock);
-    const addBlock = useQuizStore((s) => s.addBlock);
     const reorderBlocks = useQuizStore((s) => s.reorderBlocks);
 
-    if (!selectedStepId) return null;
-
-    const duplicate = () => {
+    const duplicate = useCallback(() => {
+        if (!selectedStepId) return;
         const duplicateBlock = useQuizStore.getState().duplicateBlock;
         duplicateBlock(selectedStepId, block.id);
-    };
+    }, [selectedStepId, block.id]);
 
-    const remove = () => deleteBlock(selectedStepId, block.id);
-    const moveUp = () => {
+    const remove = useCallback(() => {
+        if (!selectedStepId) return;
+        deleteBlock(selectedStepId, block.id);
+    }, [selectedStepId, block.id, deleteBlock]);
+
+    const moveUp = useCallback(() => {
+        if (!selectedStepId) return;
         const quiz = useQuizStore.getState().quiz;
         const step = quiz?.steps?.find((s: any) => s.id === selectedStepId);
         if (!step) return;
         const idx = step.blocks.findIndex((b: any) => b.id === block.id);
         if (idx <= 0) return;
         reorderBlocks(selectedStepId, idx, idx - 1);
-    };
-    const moveDown = () => {
+    }, [selectedStepId, block.id, reorderBlocks]);
+
+    const moveDown = useCallback(() => {
+        if (!selectedStepId) return;
         const quiz = useQuizStore.getState().quiz;
         const step = quiz?.steps?.find((s: any) => s.id === selectedStepId);
         if (!step) return;
         const idx = step.blocks.findIndex((b: any) => b.id === block.id);
         if (idx === -1 || idx >= step.blocks.length - 1) return;
         reorderBlocks(selectedStepId, idx, idx + 1);
-    };
+    }, [selectedStepId, block.id, reorderBlocks]);
+
+    if (!selectedStepId) return null;
 
     return (
         <div className="flex items-center gap-2">
@@ -299,99 +317,103 @@ function BlockActions({ block }: { block: QuizBlock }) {
             <button className="px-2 py-1 text-xs bg-red-100 hover:bg-red-200 text-red-700 rounded" onClick={remove}>Excluir</button>
         </div>
     );
-}
+});
 
-function ResultPreview() {
+// ✅ AUDIT: Memoized result preview component
+const ResultPreview = memo(function ResultPreview() {
     const quiz = useQuizStore((s) => s.quiz);
-    if (!quiz) return null;
+    
+    // ✅ AUDIT: Memoize complex computation
+    const result = useMemo(() => {
+        if (!quiz) return null;
 
-    try {
-        // Derivar respostas reais dos blocos: busca por propriedades padrão de resposta
-        const answers: Answer[] = [];
-        const rules: Record<string, Rule> = {};
-        const config: CalculationConfig = {
-            categoryThresholds: [
-                { label: 'Baixo', min: 0, max: 10 },
-                { label: 'Médio', min: 11, max: 25 },
-                { label: 'Alto', min: 26, max: 100 },
-            ]
-        };
-        (quiz.steps || []).forEach((step: any) => {
-            (step.blocks || []).forEach((b: any) => {
-                const val = b.selectedOption?.value ?? b.value ?? b.answer ?? b.properties?.value ?? b.properties?.selectedOption?.value;
-                if (val !== undefined && val !== null) {
-                    answers.push({ blockId: b.id, value: val });
-                    // Usar regra configurada ou fallback padrão
-                    if (b.calculationRule) {
-                        rules[b.id] = b.calculationRule;
-                    } else if (typeof val === 'number') {
-                        rules[b.id] = { weight: 1, numericScale: { mul: 1 } };
-                    } else {
-                        rules[b.id] = { weight: 1, pointsMap: { [String(val)]: 1 } };
+        try {
+            // Derivar respostas reais dos blocos: busca por propriedades padrão de resposta
+            const answers: Answer[] = [];
+            const rules: Record<string, Rule> = {};
+            const config: CalculationConfig = {
+                categoryThresholds: [
+                    { label: 'Baixo', min: 0, max: 10 },
+                    { label: 'Médio', min: 11, max: 25 },
+                    { label: 'Alto', min: 26, max: 100 },
+                ]
+            };
+            
+            (quiz.steps || []).forEach((step: any) => {
+                (step.blocks || []).forEach((b: any) => {
+                    const val = b.selectedOption?.value ?? b.value ?? b.answer ?? b.properties?.value ?? b.properties?.selectedOption?.value;
+                    if (val !== undefined && val !== null) {
+                        answers.push({ blockId: b.id, value: val });
+                        // Usar regra configurada ou fallback padrão
+                        if (b.calculationRule) {
+                            rules[b.id] = b.calculationRule;
+                        } else if (typeof val === 'number') {
+                            rules[b.id] = { weight: 1, numericScale: { mul: 1 } };
+                        } else {
+                            rules[b.id] = { weight: 1, pointsMap: { [String(val)]: 1 } };
+                        }
                     }
-                }
+                });
             });
-        });
 
-        const result = computeQuizResult(quiz as any, answers, rules, config);
-        console.log('✅ ResultPreview calculado:', result);
+            return computeQuizResult(quiz as any, answers, rules, config);
+        } catch (error) {
+            if (DEBUG) {
+                console.error('❌ Erro no ResultPreview:', error);
+            }
+            return null;
+        }
+    }, [quiz]);
 
-        return (
-            <div className="bg-white border border-gray-200 rounded p-3 flex items-center justify-between">
-                <div className="text-sm text-gray-700">
-                    <span className="font-medium">Resultado:</span>
-                    <span className="ml-2">Score total {result.totalScore}</span>
-                    {result.category && <span className="ml-2">• Categoria {result.category}</span>}
-                </div>
-                <div className="flex items-center gap-2 text-xs text-gray-500">
-                    {result.byStep.map((s) => (
-                        <span key={s.stepId}>Etapa {s.stepId}: {s.score}</span>
-                    ))}
-                </div>
+    if (!result) return null;
+
+    return (
+        <div className="bg-white border border-gray-200 rounded p-3 flex items-center justify-between">
+            <div className="text-sm text-gray-700">
+                <span className="font-medium">Resultado:</span>
+                <span className="ml-2">Score total {result.totalScore}</span>
+                {result.category && <span className="ml-2">• Categoria {result.category}</span>}
             </div>
-        );
-    } catch (error) {
-        console.error('❌ Erro no ResultPreview:', error);
-        return null; // Falhar silenciosamente para não bloquear renderização
-    }
+            <div className="flex items-center gap-2 text-xs text-gray-500">
+                {result.byStep.map((s) => (
+                    <span key={s.stepId}>Etapa {s.stepId}: {s.score}</span>
+                ))}
+            </div>
+        </div>
+    );
+});
+
+// ✅ AUDIT: Memoized sortable container
+interface CanvasSortableProps {
+    stepId: string;
+    blocks: any[];
+    selectedBlockId?: string | null;
+    onSelect: (id: string) => void;
 }
 
-function CanvasSortable({ stepId, blocks, selectedBlockId, onSelect }: { stepId: string; blocks: any[]; selectedBlockId?: string | null; onSelect: (id: string) => void; }) {
-    // Usar IDs dos blocos para o SortableContext
-    const blockIds = blocks.map((block) => block.id);
-
-    // 🐛 DEBUG: Log detalhado
-    console.log('🔧 CanvasSortable render:', {
-        stepId,
-        blocksLength: blocks.length,
-        blockIds,
-        firstBlock: blocks[0],
-        selectedBlockId
-    });
+const CanvasSortable = memo(function CanvasSortable({ stepId, blocks, selectedBlockId, onSelect }: CanvasSortableProps) {
+    // ✅ AUDIT: Memoize block IDs array
+    const blockIds = useMemo(() => blocks.map((block) => block.id), [blocks]);
 
     if (!blocks || blocks.length === 0) {
-        console.warn('⚠️ CanvasSortable: Nenhum bloco para renderizar!');
+        if (DEBUG) {
+            console.warn('⚠️ CanvasSortable: Nenhum bloco para renderizar!');
+        }
         return <div className="p-4 text-center text-gray-500">Nenhum bloco encontrado</div>;
     }
 
     return (
         <SortableContext items={blockIds} strategy={verticalListSortingStrategy}>
             <div className="space-y-4">
-                {blocks.map((block: any, index: number) => {
-                    console.log(`📦 Renderizando bloco ${index}:`, block.id, block.type);
-                    return (
-                        <BlockPreview
-                            key={block.id}
-                            block={block}
-                            isSelected={selectedBlockId === block.id}
-                            onClick={() => {
-                                console.log('🖱️ Bloco clicado:', block.id);
-                                onSelect(block.id);
-                            }}
-                        />
-                    );
-                })}
+                {blocks.map((block: any) => (
+                    <BlockPreview
+                        key={block.id}
+                        block={block}
+                        isSelected={selectedBlockId === block.id}
+                        onClick={() => onSelect(block.id)}
+                    />
+                ))}
             </div>
         </SortableContext>
     );
-}
+});

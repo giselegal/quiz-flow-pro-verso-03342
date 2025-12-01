@@ -10,6 +10,8 @@
  * - Lazy loading de componentes
  * - Error boundaries integrados
  * - Loading states adequados
+ * - ✅ AUDIT: Optimized JSON loading with caching
+ * - ✅ AUDIT: Request deduplication for concurrent loads
  * 
  * @example
  * ```typescript
@@ -21,12 +23,82 @@
  * ```
  */
 
-import React, { Suspense, useState, useEffect } from 'react';
+import React, { Suspense, useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useRoute } from 'wouter';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 import { PageLoadingFallback } from '@/components/LoadingSpinner';
 import { appLogger } from '@/lib/utils/appLogger';
 import type { QuizSchema } from '@/schemas/quiz-schema.zod';
+
+// ✅ AUDIT: In-memory cache for loaded quizzes to prevent redundant fetches
+const quizCache = new Map<string, { data: QuizSchema; timestamp: number }>();
+const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
+
+// ✅ AUDIT: Track in-flight requests to prevent duplicate fetches
+const inFlightRequests = new Map<string, Promise<QuizSchema>>();
+
+/**
+ * ✅ AUDIT: Optimized quiz loading with caching and deduplication
+ */
+async function loadQuizWithCache(templatePath: string): Promise<QuizSchema> {
+    // Check memory cache first
+    const cached = quizCache.get(templatePath);
+    if (cached && Date.now() - cached.timestamp < CACHE_TTL_MS) {
+        appLogger.info('⚡ [EditorPage] Cache HIT:', { templatePath });
+        return cached.data;
+    }
+
+    // Check for in-flight request
+    const inFlight = inFlightRequests.get(templatePath);
+    if (inFlight) {
+        appLogger.info('🔄 [EditorPage] Reusing in-flight request:', { templatePath });
+        return inFlight;
+    }
+
+    // Create new request
+    const fetchPromise = (async (): Promise<QuizSchema> => {
+        const startTime = performance.now();
+        
+        const response = await fetch(templatePath, {
+            cache: 'default', // Use browser's native caching
+            headers: {
+                'Accept': 'application/json',
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error(`Failed to load template: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+
+        // Validate with Zod
+        const { QuizSchemaZ } = await import('@/schemas/quiz-schema.zod');
+        const validated = QuizSchemaZ.parse(data);
+
+        const loadTime = performance.now() - startTime;
+        appLogger.info('✅ [EditorPage] Quiz loaded:', { 
+            templatePath, 
+            loadTimeMs: loadTime.toFixed(0),
+            steps: validated.steps?.length || 0 
+        });
+
+        // Store in cache
+        quizCache.set(templatePath, { data: validated, timestamp: Date.now() });
+
+        return validated;
+    })();
+
+    // Track in-flight request
+    inFlightRequests.set(templatePath, fetchPromise);
+    
+    try {
+        return await fetchPromise;
+    } finally {
+        // Clean up in-flight tracker
+        inFlightRequests.delete(templatePath);
+    }
+}
 
 // ✅ Novo editor moderno com arquitetura limpa
 const ModernQuizEditor = React.lazy(() =>
@@ -102,7 +174,10 @@ export default function EditorPage() {
     }, [templateParam]);
 
     // 🔄 Carregar quiz quando funnelId mudar
+    // ✅ AUDIT: Using memoized loader with caching
     useEffect(() => {
+        let isMounted = true;
+        
         async function loadQuiz() {
             if (!funnelId) return;
 
@@ -112,36 +187,36 @@ export default function EditorPage() {
             try {
                 appLogger.info('📂 Carregando quiz via ModernQuizEditor:', { funnelId });
 
-                // Carregar o JSON diretamente
-                const response = await fetch('/templates/quiz21-v4.json', {
-                    cache: 'no-cache'
-                });
+                // ✅ AUDIT: Use cached loader instead of direct fetch
+                const validated = await loadQuizWithCache('/templates/quiz21-v4.json');
 
-                if (!response.ok) {
-                    throw new Error(`Failed to load template: ${response.statusText}`);
+                // Only update state if component is still mounted
+                if (isMounted) {
+                    setQuiz(validated);
+                    appLogger.info('✅ Quiz carregado no editor moderno:', {
+                        title: validated.metadata?.name,
+                        steps: validated.steps?.length || 0
+                    });
                 }
-
-                const data = await response.json();
-
-                // Validar com Zod
-                const { QuizSchemaZ } = await import('@/schemas/quiz-schema.zod');
-                const validated = QuizSchemaZ.parse(data);
-
-                setQuiz(validated);
-                appLogger.info('✅ Quiz carregado no editor moderno:', {
-                    title: validated.metadata?.name,
-                    steps: validated.steps?.length || 0
-                });
             } catch (error) {
-                const message = error instanceof Error ? error.message : 'Erro desconhecido';
-                appLogger.error('❌ Erro ao carregar quiz:', { funnelId, error: message });
-                setLoadError(message);
+                if (isMounted) {
+                    const message = error instanceof Error ? error.message : 'Erro desconhecido';
+                    appLogger.error('❌ Erro ao carregar quiz:', { funnelId, error: message });
+                    setLoadError(message);
+                }
             } finally {
-                setIsLoadingQuiz(false);
+                if (isMounted) {
+                    setIsLoadingQuiz(false);
+                }
             }
         }
 
         loadQuiz();
+        
+        // Cleanup function to prevent state updates on unmounted component
+        return () => {
+            isMounted = false;
+        };
     }, [funnelId]);    // Handler de salvamento
     const handleSave = async (savedQuiz: QuizSchema) => {
         try {

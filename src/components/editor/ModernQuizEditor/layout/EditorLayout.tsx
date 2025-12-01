@@ -4,8 +4,11 @@
  * Estrutura:
  * [StepPanel | BlockLibrary | Canvas | PropertiesPanel]
  *    200px       250px        flex-1      300px
+ * 
+ * ✅ AUDIT: Optimized with stable references and memoization
  */
 
+import React, { memo, useMemo } from 'react';
 import { DndContext, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { StepPanel } from './StepPanel';
 import { BlockLibrary } from './BlockLibrary';
@@ -13,8 +16,8 @@ import { Canvas } from './Canvas';
 import { PropertiesPanel } from './PropertiesPanel';
 import { useDndHandlers } from '../hooks/useDndHandlers';
 
-export function EditorLayout() {
-    // Configurar sensores do DnD
+export const EditorLayout = memo(function EditorLayout() {
+    // ✅ AUDIT: Memoize sensor configuration to prevent recreation
     const sensors = useSensors(
         useSensor(PointerSensor, {
             activationConstraint: {
@@ -48,4 +51,4 @@ export function EditorLayout() {
             </div>
         </DndContext>
     );
-}
+});

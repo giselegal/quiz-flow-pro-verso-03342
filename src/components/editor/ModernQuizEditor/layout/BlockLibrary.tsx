@@ -5,9 +5,13 @@
  * - Exibir tipos de blocos disponíveis
  * - Categorizar blocos (Pergunta, Resultado, UI)
  * - Drag source para DnD (Fase 3)
+ * 
+ * ✅ AUDIT: Optimized with React.memo
  */
 
+import React, { memo, useMemo } from 'react';
 import { useEditorStore } from '../store/editorStore';
+import { useDraggable } from '@dnd-kit/core';
 
 // Tipos de blocos disponíveis no sistema
 const BLOCK_TYPES = {
@@ -26,9 +30,9 @@ const BLOCK_TYPES = {
         { type: 'image', label: 'Imagem', icon: '🖼️', description: 'Exibir imagem' },
         { type: 'divider', label: 'Divisor', icon: '➖', description: 'Linha divisória' },
     ],
-};
+} as const;
 
-export function BlockLibrary() {
+export const BlockLibrary = memo(function BlockLibrary() {
     const isBlockLibraryOpen = useEditorStore((state) => state.isBlockLibraryOpen);
 
     if (!isBlockLibraryOpen) {
@@ -46,46 +50,40 @@ export function BlockLibrary() {
             {/* Categorias de blocos */}
             <div className="flex-1 overflow-y-auto p-4 space-y-6">
                 {/* Categoria: Perguntas */}
-                <div>
-                    <h3 className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2">
-                        Perguntas
-                    </h3>
-                    <div className="space-y-2">
-                        {BLOCK_TYPES.question.map((block: any) => (
-                            <BlockCard key={block.type} {...block} />
-                        ))}
-                    </div>
-                </div>
+                <BlockCategory title="Perguntas" blocks={BLOCK_TYPES.question} />
 
                 {/* Categoria: Resultados */}
-                <div>
-                    <h3 className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2">
-                        Resultados
-                    </h3>
-                    <div className="space-y-2">
-                        {BLOCK_TYPES.result.map((block: any) => (
-                            <BlockCard key={block.type} {...block} />
-                        ))}
-                    </div>
-                </div>
+                <BlockCategory title="Resultados" blocks={BLOCK_TYPES.result} />
 
                 {/* Categoria: UI */}
-                <div>
-                    <h3 className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2">
-                        Interface
-                    </h3>
-                    <div className="space-y-2">
-                        {BLOCK_TYPES.ui.map((block: any) => (
-                            <BlockCard key={block.type} {...block} />
-                        ))}
-                    </div>
-                </div>
+                <BlockCategory title="Interface" blocks={BLOCK_TYPES.ui} />
             </div>
         </div>
     );
+});
+
+// ✅ AUDIT: Memoized category component
+interface BlockCategoryProps {
+    title: string;
+    blocks: readonly { type: string; label: string; icon: string; description: string }[];
 }
 
-// Card individual de cada tipo de bloco
+const BlockCategory = memo(function BlockCategory({ title, blocks }: BlockCategoryProps) {
+    return (
+        <div>
+            <h3 className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2">
+                {title}
+            </h3>
+            <div className="space-y-2">
+                {blocks.map((block) => (
+                    <BlockCard key={block.type} {...block} />
+                ))}
+            </div>
+        </div>
+    );
+});
+
+// ✅ AUDIT: Memoized block card component
 interface BlockCardProps {
     type: string;
     label: string;
@@ -93,9 +91,7 @@ interface BlockCardProps {
     description: string;
 }
 
-import { useDraggable } from '@dnd-kit/core';
-
-function BlockCard({ type, label, icon, description }: BlockCardProps) {
+const BlockCard = memo(function BlockCard({ type, label, icon, description }: BlockCardProps) {
     // Tornar o card draggable
     const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
         id: `new-block-${type}`,
@@ -105,13 +101,13 @@ function BlockCard({ type, label, icon, description }: BlockCardProps) {
         },
     });
 
-    const style = transform
+    const style = useMemo(() => transform
         ? {
             transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
             opacity: isDragging ? 0.5 : 1,
             cursor: isDragging ? 'grabbing' : 'grab',
         }
-        : { cursor: 'grab' };
+        : { cursor: 'grab' }, [transform, isDragging]);
 
     return (
         <div
@@ -120,11 +116,11 @@ function BlockCard({ type, label, icon, description }: BlockCardProps) {
             {...listeners}
             {...attributes}
             className={`
-        p-3 bg-white border border-gray-200 rounded-lg
-        hover:border-blue-400 hover:bg-blue-50
-        transition-all duration-150
-        ${isDragging ? 'opacity-50 shadow-lg ring-2 ring-blue-400' : ''}
-      `}
+                p-3 bg-white border border-gray-200 rounded-lg
+                hover:border-blue-400 hover:bg-blue-50
+                transition-all duration-150
+                ${isDragging ? 'opacity-50 shadow-lg ring-2 ring-blue-400' : ''}
+            `}
             data-block-type={type}
         >
             <div className="flex items-start gap-3">
@@ -138,4 +134,4 @@ function BlockCard({ type, label, icon, description }: BlockCardProps) {
             </div>
         </div>
     );
-}
+});
