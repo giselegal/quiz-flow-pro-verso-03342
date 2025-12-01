@@ -54,7 +54,8 @@ setTimeout(() => {
     console.log(`📊 Elementos Step 20 no DOM: ${step20Elements.length}`);
     
     // Verificar requests de rede
-    const originalFetch = window.fetch;
+    // ✅ CRITICAL: Bind fetch to window to prevent "Illegal invocation"
+    const originalFetch = window.fetch.bind(window);
     window.fetch = async function(...args) {
       const url = args[0];
       if (typeof url === 'string' && url.includes('template')) {

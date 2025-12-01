@@ -45,7 +45,8 @@ class SupabaseErrorInterceptor {
                 appLogger.info(`🔍 Interceptando requisição Supabase: ${this.extractEndpoint(url)}`);
                 
                 try {
-                    const response = await this.originalFetch(input, init);
+                    // Call with explicit window context for extra safety
+                    const response = await this.originalFetch.call(window, input, init);
                     
                     // Se 404 ou erro, usar fallback
                     if (response.status === 404 || !response.ok) {
@@ -60,8 +61,8 @@ class SupabaseErrorInterceptor {
                 }
             }
             
-            // Requisições normais passam direto
-            return this.originalFetch(input, init);
+            // Requisições normais passam direto (with explicit window context)
+            return this.originalFetch.call(window, input, init);
         };
 
         this.isActive = true;

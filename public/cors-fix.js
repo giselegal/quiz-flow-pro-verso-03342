@@ -14,7 +14,8 @@ if ('serviceWorker' in navigator) {
 
 // Configurações globais para resolver problemas de fetch
 if (window.fetch) {
-  const originalFetch = window.fetch;
+  // ✅ CRITICAL: Bind fetch to window to prevent "Illegal invocation"
+  const originalFetch = window.fetch.bind(window);
   window.fetch = function(url, options = {}) {
     // Adicionar headers CORS para todas as requisições
     const corsOptions = {

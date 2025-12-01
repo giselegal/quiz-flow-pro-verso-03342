@@ -12,7 +12,8 @@
     console.log('=====================================\n');
 
     // 1. Verificar requests de templates
-    const originalFetch = window.fetch;
+    // ✅ CRITICAL: Bind fetch to window to prevent "Illegal invocation"
+    const originalFetch = window.fetch.bind(window);
     const templateRequests = [];
 
     window.fetch = async function(...args) {

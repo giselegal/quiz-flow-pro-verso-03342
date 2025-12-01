@@ -201,7 +201,8 @@ class SupabaseErrorInterceptor {
     originalFetch;
 
     constructor() {
-        this.originalFetch = window.fetch;
+        // ✅ CRITICAL: Bind fetch to window to prevent "Illegal invocation"
+        this.originalFetch = window.fetch.bind(window);
         this.setupInterceptor();
         this.populateCache();
         console.log('🔧 Supabase Error Interceptor ativo');
@@ -232,8 +233,8 @@ class SupabaseErrorInterceptor {
                     }
                 } catch {}
                 try {
-                    // Tentar requisição original primeiro
-                    const response = await self.originalFetch(input, init);
+                    // Tentar requisição original primeiro (com contexto window explícito)
+                    const response = await self.originalFetch.call(window, input, init);
                     if (response.status === 404) {
                         console.log(`📦 Fornecendo dados locais para: ${url}`);
                         return self.createFallbackResponse(url);
@@ -244,8 +245,8 @@ class SupabaseErrorInterceptor {
                     return self.createFallbackResponse(url);
                 }
             }
-            // Para URLs normais, usar fetch original
-            return self.originalFetch(input, init);
+            // Para URLs normais, usar fetch original (com contexto window explícito)
+            return self.originalFetch.call(window, input, init);
         };
     }
 
