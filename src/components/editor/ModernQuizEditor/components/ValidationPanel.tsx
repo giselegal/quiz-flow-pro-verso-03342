@@ -6,16 +6,42 @@ import React from 'react';
 import { useQuizStore } from '../store/quizStore';
 
 export default function ValidationPanel() {
-    const { error, quiz } = useQuizStore((s) => ({
-        error: s.error,
-        quiz: s.quiz,
-    }));
+    // ✅ CRITICAL: Select only primitive values and use shallow equality
+    const error = useQuizStore((s) => s.error);
+    const quiz = useQuizStore((s) => s.quiz);
 
     const [showDetails, setShowDetails] = React.useState(false);
 
-    // ✅ CRITICAL: Use useMemo to cache validation result and prevent infinite loop
+    // ✅ CRITICAL: Cache validation result and prevent infinite loop
+    // Validação inline evita chamar métodos do store que retornam novos objetos
     const validation = React.useMemo(() => {
-        return useQuizStore.getState().validateQuiz();
+        if (!quiz) return { valid: false, errors: ['Nenhum quiz carregado'] };
+
+        const errors: string[] = [];
+
+        // Validar metadados básicos
+        if (!quiz.metadata?.name || quiz.metadata.name.trim().length < 3) {
+            errors.push('Nome do quiz deve ter pelo menos 3 caracteres');
+        }
+
+        // Validar steps
+        if (!quiz.steps || quiz.steps.length === 0) {
+            errors.push('Quiz deve ter pelo menos 1 step');
+        }
+
+        (quiz.steps || []).forEach((step: any, idx: number) => {
+            if (!step.id) errors.push(`Step ${idx + 1}: ID obrigatório`);
+            if (!step.blocks || step.blocks.length === 0) {
+                errors.push(`Step ${step.id || idx + 1}: deve ter pelo menos 1 bloco`);
+            }
+
+            (step.blocks || []).forEach((blk: any, bidx: number) => {
+                if (!blk.id) errors.push(`Step ${step.id}, bloco ${bidx + 1}: ID obrigatório`);
+                if (!blk.type) errors.push(`Step ${step.id}, bloco ${blk.id || bidx + 1}: tipo obrigatório`);
+            });
+        });
+
+        return { valid: errors.length === 0, errors };
     }, [quiz]);
 
     if (validation.valid && !error) return null;
