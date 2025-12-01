@@ -149,7 +149,15 @@ export default defineConfig({
         secure: false,
       },
     },
+    // ✅ CRÍTICO: Desabilitar SPA fallback para arquivos .json
+    middlewareMode: false,
+    fs: {
+      strict: false,
+      allow: ['..']
+    },
   },
+  // ✅ CRÍTICO: Configurar publicDir corretamente
+  publicDir: 'public',
   // ✅ OTIMIZAÇÃO: Pre-bundling de deps comuns
   optimizeDeps: {
     include: [
