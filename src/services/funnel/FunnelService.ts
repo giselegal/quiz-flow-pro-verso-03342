@@ -207,60 +207,49 @@ export class FunnelService {
     try {
       appLogger.info('📂 [FunnelService] Loading template from file', { templatePath });
 
-      // ✅ SOLUÇÃO: Usar import dinâmico em vez de fetch para evitar problema de SPA fallback
-      // O Vite trata ?url como arquivo estático e import() como módulo ES
-      let data: any;
+      // ✅ Fetch direto sem query params (Vite dev server serve /public automaticamente)
+      const response = await fetch(templatePath, {
+        headers: {
+          'Accept': 'application/json, text/plain, */*',
+        },
+        cache: 'no-cache',
+      });
+
+      console.log('🌐 [FunnelService] Fetch response:', {
+        status: response.status,
+        statusText: response.statusText,
+        contentType: response.headers.get('content-type'),
+        url: response.url,
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text().catch(() => 'Unable to read response');
+        console.error('❌ Response body (first 200 chars):', errorText.substring(0, 200));
+        throw new Error(
+          `Failed to load template (HTTP ${response.status}): ${response.statusText}. ` +
+          `Path: ${templatePath}`
+        );
+      }
+
+      // Check if response is HTML instead of JSON (SPA fallback issue)
+      const contentType = response.headers.get('content-type') || '';
+      const responseText = await response.text();
       
+      if (contentType.includes('text/html') || responseText.trim().startsWith('<!DOCTYPE')) {
+        console.error('❌ Got HTML instead of JSON. Response preview:', responseText.substring(0, 200));
+        throw new Error(
+          `Vite SPA fallback intercepted the request. ` +
+          `The file ${templatePath} may not exist in public/ folder, ` +
+          `or there's a routing issue. Check public/templates/ directory.`
+        );
+      }
+
+      let data: any;
       try {
-        // Tentar carregar via fetch com ?raw query para forçar texto puro
-        const response = await fetch(`${templatePath}?raw`, {
-          headers: {
-            'Accept': 'application/json',
-          },
-          cache: 'no-cache',
-        });
-
-        console.log('🌐 [FunnelService] Fetch response:', {
-          status: response.status,
-          statusText: response.statusText,
-          contentType: response.headers.get('content-type'),
-          url: response.url,
-        });
-
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-        }
-
-        // Check if response is HTML instead of JSON
-        const contentType = response.headers.get('content-type');
-        if (contentType?.includes('text/html')) {
-          console.warn('⚠️ Got HTML instead of JSON, trying alternative method...');
-          throw new Error('SPA fallback intercepted request');
-        }
-
-        data = await response.json();
-      } catch (fetchError) {
-        // Fallback: Tentar importar diretamente como módulo
-        console.warn('⚠️ Fetch failed, trying direct import:', fetchError);
-        
-        // Mapear caminhos conhecidos para imports diretos
-        if (templatePath.includes('quiz21-v4-saas.json')) {
-          data = await import('/public/templates/quiz21-v4-saas.json');
-          data = data.default || data;
-        } else if (templatePath.includes('quiz21-complete.json')) {
-          data = await import('/public/templates/quiz21-complete.json');
-          data = data.default || data;
-        } else if (templatePath.includes('quiz21-v4-gold.json')) {
-          data = await import('/public/templates/quiz21-v4-gold.json');
-          data = data.default || data;
-        } else if (templatePath.includes('quiz21-v4.json')) {
-          data = await import('/public/templates/quiz21-v4.json');
-          data = data.default || data;
-        } else {
-          throw new Error(`Unknown template path: ${templatePath}`);
-        }
-        
-        console.log('✅ Loaded via direct import');
+        data = JSON.parse(responseText);
+      } catch (parseError) {
+        console.error('❌ JSON parse error. Response:', responseText.substring(0, 500));
+        throw new Error(`Invalid JSON in template file: ${parseError instanceof Error ? parseError.message : String(parseError)}`);
       }
 
       // Validate with Zod
