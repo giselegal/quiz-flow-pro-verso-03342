@@ -11,6 +11,7 @@
 import { useEffect } from 'react';
 import { EditorLayout } from './layout/EditorLayout';
 import { useQuizStore } from './store/quizStore';
+import { useEditorStore } from './store/editorStore';
 import { usePersistence, useAutoSave } from './hooks/usePersistence';
 import { SaveStatusIndicator } from './components/SaveStatusIndicator';
 import type { QuizSchema } from '@/schemas/quiz-schema.zod';
@@ -68,10 +69,9 @@ export function ModernQuizEditor({
     // ✅ CRITICAL: Auto-selecionar primeiro step quando quiz carregar
     useEffect(() => {
         if (quiz && quiz.steps && quiz.steps.length > 0) {
-            const { selectStep } = require('./store/editorStore').useEditorStore.getState();
             const firstStepId = quiz.steps[0].id;
             console.log('🎯 Auto-selecionando primeiro step:', firstStepId);
-            selectStep(firstStepId);
+            useEditorStore.getState().selectStep(firstStepId);
         }
     }, [quiz]);
 
