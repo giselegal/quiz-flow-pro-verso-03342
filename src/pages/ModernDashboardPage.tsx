@@ -274,41 +274,38 @@ const ModernDashboardPage: React.FC = () => {
                     <Route path="/dashboard/integrations" component={IntegrationsPage} />
                     <Route path="/dashboard/settings" component={SettingsPage} />
 
-                    {/* SYSTEM - Configurações do sistema */}
-                    <Route path="/dashboard/integrations" component={IntegrationsPage} />
-                    <Route path="/dashboard/settings" component={SettingsPage} />
-
                     {/* LEGACY REDIRECTS - Compatibilidade com rotas antigas */}
+                    <Route path="/dashboard/templates-funis">
+                        {() => {
+                            window.history.replaceState(null, '', '/dashboard/funnel-templates');
+                            return null;
                         }}
-                </Route>
-                <Route path="/dashboard/meus-funis">
-                    {() => {
-                        window.history.replaceState(null, '', '/dashboard/funnels');
-                        return null;
-                    }}
-                </Route>
-                <Route path="/dashboard/quizzes">
-                    {() => {
-                        window.history.replaceState(null, '', '/dashboard/funnels');
-                        return null;
-                    }}
-                </Route>
+                    </Route>
+                    <Route path="/dashboard/meus-funis">
+                        {() => {
+                            window.history.replaceState(null, '', '/dashboard/funnels');
+                            return null;
+                        }}
+                    </Route>
+                    <Route path="/dashboard/quizzes">
+                        {() => {
+                            window.history.replaceState(null, '', '/dashboard/funnels');
+                            return null;
+                        }}
+                    </Route>
 
-                {/* Configurações */}
-                <Route path="/dashboard/settings" component={SettingsPage} />
-
-                {/* Fallback para rotas não encontradas dentro do dashboard */}
-                <Route>
-                    <div className="text-center py-12">
-                        <h2 className="text-2xl font-bold text-gray-900 mb-2">Página não encontrada</h2>
-                        <p className="text-gray-600 mb-4">A página que você procura não existe.</p>
-                        <Button onClick={() => window.location.href = '/dashboard'}>
-                            Voltar ao Dashboard
-                        </Button>
-                    </div>
-                </Route>
-            </Switch>
-        </Suspense>
+                    {/* Fallback para rotas não encontradas dentro do dashboard */}
+                    <Route>
+                        <div className="text-center py-12">
+                            <h2 className="text-2xl font-bold text-gray-900 mb-2">Página não encontrada</h2>
+                            <p className="text-gray-600 mb-4">A página que você procura não existe.</p>
+                            <Button onClick={() => window.location.href = '/dashboard'}>
+                                Voltar ao Dashboard
+                            </Button>
+                        </div>
+                    </Route>
+                </Switch>
+            </Suspense>
         </UnifiedAdminLayout >
     );
 };
