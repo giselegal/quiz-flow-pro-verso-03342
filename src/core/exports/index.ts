@@ -17,18 +17,20 @@
 // ============================================================================
 
 /**
- * Hook principal do editor - usa EditorContext
- * @deprecated Use useEditorContext from '@/core/hooks/useEditorContext'
- */
-export { useEditorContext as useEditor } from '@/core/hooks/useEditorContext';
-
-/**
- * Hook unificado do editor com todas as funcionalidades
+ * Hook principal do editor - CANÔNICO (FASE 2)
+ * Retorna contexto unificado do editor
  */
 export { useEditorContext } from '@/core/hooks/useEditorContext';
 
 /**
- * Adapter para compatibilidade com código legado
+ * Hook do editor (alias para compatibilidade)
+ * Usa implementação legada que redireciona para @core
+ */
+export { useEditor } from '@/hooks/useEditor';
+
+/**
+ * Adapter para gerenciamento de blocos
+ * Localização canônica: @/core/editor/hooks/useEditorAdapter
  */
 export { useEditorAdapter } from '@/core/editor/hooks/useEditorAdapter';
 
