@@ -323,7 +323,6 @@ describe('🔍 DIAGNÓSTICO: Painel de Propriedades', () => {
         console.log('- Step selecionado:', editorState.selectedStepId);
         console.log('- Bloco selecionado:', editorState.selectedBlockId);
         console.log('- isPropertiesPanelOpen:', editorState.isPropertiesPanelOpen);
-        console.log('- Tab ativa:', editorState.activeTab);
         console.log('');
         console.log('📦 BLOCOS DO STEP SELECIONADO:');
         const selectedStep = quizState.quiz?.steps.find((s) => s.id === editorState.selectedStepId);

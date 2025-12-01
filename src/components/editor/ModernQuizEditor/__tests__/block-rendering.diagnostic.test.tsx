@@ -149,13 +149,12 @@ describe('🔍 DIAGNÓSTICO: Renderização de Blocos', () => {
                         },
                     ],
                     navigation: {
-                        allowBack: true,
-                        autoAdvance: false,
+                        nextStep: 'step-02',
+                        conditions: [],
                     },
                     validation: {
                         required: true,
-                        minBlocks: 0,
-                        customRules: [],
+                        rules: {},
                     },
                     version: 1,
                 },
