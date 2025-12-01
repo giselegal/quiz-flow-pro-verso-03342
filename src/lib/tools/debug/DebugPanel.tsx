@@ -99,7 +99,8 @@ const DebugPanel: React.FC<DebugPanelProps> = ({
     useEffect(() => {
         if (!isVisible) return;
 
-        const originalFetch = window.fetch;
+        // ✅ CRITICAL: Bind para preservar contexto e evitar "Illegal invocation"
+        const originalFetch = window.fetch.bind(window);
         let requestCounter = 0;
 
         window.fetch = async (...args) => {

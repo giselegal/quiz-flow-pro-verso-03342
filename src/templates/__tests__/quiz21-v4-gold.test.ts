@@ -54,7 +54,7 @@ describe('Quiz V4 Gold Standard - Validação Zod', () => {
   });
 
   it('todos os steps devem ter IDs válidos', () => {
-    goldTemplate.steps.forEach((step, index) => {
+    goldTemplate.steps.forEach((step: any, index: number) => {
       expect(step.id).toMatch(/^step-\d{2}$/);
       expect(step.order).toBeGreaterThanOrEqual(1);
       expect(step.order).toBeLessThanOrEqual(50);
@@ -64,8 +64,8 @@ describe('Quiz V4 Gold Standard - Validação Zod', () => {
   });
 
   it('todos os blocks devem ter content definido', () => {
-    goldTemplate.steps.forEach(step => {
-      step.blocks.forEach(block => {
+    goldTemplate.steps.forEach((step: any) => {
+      step.blocks.forEach((block: any) => {
         expect(block.content).toBeDefined();
         expect(typeof block.content).toBe('object');
         expect(block.order).toBeGreaterThanOrEqual(0);
@@ -74,7 +74,7 @@ describe('Quiz V4 Gold Standard - Validação Zod', () => {
   });
 
   it('validation.required deve ser boolean quando definido', () => {
-    goldTemplate.steps.forEach(step => {
+    goldTemplate.steps.forEach((step: any) => {
       if (step.validation) {
         if ('required' in step.validation) {
           expect(typeof step.validation.required).toBe('boolean');
@@ -135,7 +135,7 @@ describe('Quiz V4 Gold Standard - Validação Zod', () => {
   });
 
   it('navigation.nextStep deve ser string ou null', () => {
-    goldTemplate.steps.forEach((step, index) => {
+    goldTemplate.steps.forEach((step: any, index: number) => {
       const { navigation } = step;
       
       if (navigation && navigation.nextStep !== undefined) {
@@ -155,7 +155,7 @@ describe('Quiz V4 Gold Standard - Validação Zod', () => {
     expect(goldTemplate.steps.length).toBe(21);
     
     // Verificar ordem sequencial
-    goldTemplate.steps.forEach((step, index) => {
+    goldTemplate.steps.forEach((step: any, index: number) => {
       expect(step.order).toBe(index + 1);
     });
   });

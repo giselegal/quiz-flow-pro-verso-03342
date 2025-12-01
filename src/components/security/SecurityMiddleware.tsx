@@ -17,20 +17,21 @@ export const SecurityMiddleware: React.FC<SecurityMiddlewareProps> = ({ children
 
   useEffect(() => {
     // Interceptar fetch requests para aplicar rate limiting
-    const originalFetch = window.fetch;
-    
+    // ✅ CRITICAL: Bind para preservar contexto e evitar "Illegal invocation"
+    const originalFetch = window.fetch.bind(window);
+
     window.fetch = async (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
       const url = typeof input === 'string' ? input : input instanceof URL ? input.href : input.url;
       const method = init?.method || 'GET';
-      
+
       try {
         // Determinar endpoint para rate limiting
         const endpoint = getEndpointForRateLimit(url, method);
-        
+
         if (endpoint) {
           // Verificar rate limit
           const rateLimitResult = await checkRateLimit(endpoint);
-          
+
           if (!rateLimitResult.allowed) {
             // Log da violação
             await logSecurityEvent({
@@ -86,7 +87,7 @@ export const SecurityMiddleware: React.FC<SecurityMiddlewareProps> = ({ children
         // Log de requests suspeitos
         if (!response.ok && response.status >= 400) {
           const severity = response.status >= 500 ? 'high' : 'medium';
-          
+
           await logSecurityEvent({
             event_type: 'failed_request',
             event_data: {
@@ -152,11 +153,11 @@ export const SecurityMiddleware: React.FC<SecurityMiddlewareProps> = ({ children
     const handleDevToolsCheck = () => {
       const devtools = { open: false };
       const threshold = 160;
-      
+
       setInterval(() => {
         const widthThreshold = window.outerWidth - window.innerWidth > threshold;
         const heightThreshold = window.outerHeight - window.innerHeight > threshold;
-        
+
         if (widthThreshold || heightThreshold) {
           if (!devtools.open) {
             devtools.open = true;
@@ -180,7 +181,7 @@ export const SecurityMiddleware: React.FC<SecurityMiddlewareProps> = ({ children
     const handleCodeInjection = () => {
       const originalConsoleLog = console.log;
       const originalConsoleError = console.error;
-      
+
       console.log = (...args) => {
         logSecurityEvent({
           event_type: 'console_log_intercepted',
@@ -192,7 +193,7 @@ export const SecurityMiddleware: React.FC<SecurityMiddlewareProps> = ({ children
 
       console.error = (...args) => {
         logSecurityEvent({
-          event_type: 'console_error_intercepted',  
+          event_type: 'console_error_intercepted',
           event_data: { args: args.slice(0, 3) },
           severity: 'medium',
         });
@@ -204,7 +205,7 @@ export const SecurityMiddleware: React.FC<SecurityMiddlewareProps> = ({ children
     document.addEventListener('visibilitychange', handleVisibilityChange);
     window.addEventListener('focus', handleFocus);
     window.addEventListener('blur', handleBlur);
-    
+
     // Iniciar monitoramentos
     handleDevToolsCheck();
     handleCodeInjection();
@@ -225,7 +226,7 @@ export const SecurityMiddleware: React.FC<SecurityMiddlewareProps> = ({ children
 function getEndpointForRateLimit(url: string, method: string): string | null {
   try {
     const urlObj = new URL(url);
-    
+
     // APIs Supabase
     if (urlObj.hostname.includes('supabase.co')) {
       if (urlObj.pathname.includes('/functions/v1/')) {
@@ -238,17 +239,17 @@ function getEndpointForRateLimit(url: string, method: string): string | null {
         return 'public_api';
       }
     }
-    
+
     // APIs locais de quiz
     if (urlObj.pathname.includes('/api/quiz')) {
       return 'quiz_submission';
     }
-    
+
     // APIs de funnel
     if (urlObj.pathname.includes('/api/funnel') && method !== 'GET') {
       return 'funnel_update';
     }
-    
+
     // APIs de IA
     if (urlObj.pathname.includes('ai') || urlObj.pathname.includes('generate')) {
       return 'ai_generation';
