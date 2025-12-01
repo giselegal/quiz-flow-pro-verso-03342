@@ -261,6 +261,17 @@ const getTemplateWithFallback = (templateId: string) => {
   return { unified: null, legacy: null };
 };
 
+/**
+ * ⚠️ LEGACY TEMPLATE REGISTRY - OBSOLETO
+ * 
+ * Este registry está DEPRECATED e será removido em breve.
+ * Mantido apenas para compatibilidade com código legacy.
+ * 
+ * ✅ USAR: getUnifiedTemplates() de @/config/unifiedTemplatesRegistry
+ * ❌ NÃO USAR: FUNNEL_TEMPLATES
+ * 
+ * @deprecated Use getUnifiedTemplates() ao invés deste registry
+ */
 const FUNNEL_TEMPLATES: Record<
   string,
   {
@@ -655,14 +666,16 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
   // 🔍 DEBUG CRÍTICO: Monitor de contexto
   React.useEffect(() => {
     if (debug) {
-      appLogger.info('🔍 FUNNELS CONTEXT DEBUG:', { data: [{
-                currentFunnelId,
-                stepsLength: steps.length,
-                loading,
-                error,
-                stepsIds: steps.map(s => s.id),
-                stepsNames: steps.map(s => s.name),
-              }] });
+      appLogger.info('🔍 FUNNELS CONTEXT DEBUG:', {
+        data: [{
+          currentFunnelId,
+          stepsLength: steps.length,
+          loading,
+          error,
+          stepsIds: steps.map(s => s.id),
+          stepsNames: steps.map(s => s.name),
+        }]
+      });
     }
   }, [steps, currentFunnelId, loading, error, debug]);
 
@@ -913,11 +926,13 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
 
 export const useFunnels = (): FunnelsContextType => {
   const context = useContext(FunnelsContext);
-  appLogger.info('🔍 useFunnels called:', { data: [{
-        contextExists: !!context,
-        contextType: typeof context,
-        contextKeys: context ? Object.keys(context) : 'null',
-      }] });
+  appLogger.info('🔍 useFunnels called:', {
+    data: [{
+      contextExists: !!context,
+      contextType: typeof context,
+      contextKeys: context ? Object.keys(context) : 'null',
+    }]
+  });
   if (context === undefined) {
     appLogger.error('🔴 useFunnels: Context is undefined!');
     throw new Error('useFunnels must be used within a FunnelsProvider');

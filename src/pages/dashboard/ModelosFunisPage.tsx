@@ -26,8 +26,8 @@ import {
   Plus,
 } from 'lucide-react';
 
-// Templates reais disponíveis
-import { AVAILABLE_TEMPLATES, TemplateService, type TemplateConfig } from '@/config/templates';
+// Templates reais disponíveis do registry unificado
+import { getUnifiedTemplates } from '@/config/unifiedTemplatesRegistry';
 import { appLogger } from '@/lib/utils/appLogger';
 
 interface FunnelModel {
@@ -69,21 +69,22 @@ const ModelosFunisPage: React.FC = () => {
         // const metrics = await EnhancedUnifiedDataService.getRealTimeMetrics();
         // setRealTimeMetrics(metrics);
 
-        // Converter templates para modelos
-        const funnelModels: FunnelModel[] = AVAILABLE_TEMPLATES.map(template => ({
+        // Converter templates do registry unificado para modelos
+        const unifiedTemplates = getUnifiedTemplates({ excludeAliases: true });
+        const funnelModels: FunnelModel[] = unifiedTemplates.map(template => ({
           id: template.id,
           name: template.name,
           description: template.description,
           category: template.category,
-          difficulty: template.difficulty || 'Intermediário',
+          difficulty: 'Intermediário' as const,
           stepCount: template.stepCount || 0,
-          conversionRate: `${65 + Math.floor(Math.random() * 20)}%`, // Simulated based on real data
-          preview: typeof template.preview === 'string' ? template.preview : template.preview?.image || 'https://placehold.co/400x240',
+          conversionRate: template.conversionRate || `${65 + Math.floor(Math.random() * 20)}%`,
+          preview: template.image || 'https://placehold.co/400x240',
           tags: template.tags,
           features: template.features || [],
-          isActive: template.isActive,
-          templatePath: template.templatePath || '',
-          editorUrl: template.editorUrl || '/editor',
+          isActive: template.isOfficial || false,
+          templatePath: `/templates/${template.id}`,
+          editorUrl: `/editor?funnel=${template.id}`,
         }));
 
         // Adicionar modelos específicos do quiz21StepsComplete
