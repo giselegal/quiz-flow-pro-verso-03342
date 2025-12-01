@@ -15,7 +15,16 @@ export function StepPanel() {
     const quiz = useQuizStore((state) => state.quiz);
     const { selectedStepId, selectStep } = useEditorStore();
 
+    // 🐛 DEBUG: Log do estado do painel
+    console.log('📋 StepPanel render:', {
+        hasQuiz: !!quiz,
+        stepsCount: quiz?.steps?.length,
+        selectedStepId,
+        steps: quiz?.steps?.map((s: any) => ({ id: s.id, blocks: s.blocks?.length }))
+    });
+
     if (!quiz) {
+        console.log('⚠️ StepPanel: Quiz não carregado');
         return (
             <div className="w-52 border-r border-gray-200 bg-white flex items-center justify-center">
                 <p className="text-sm text-gray-500">Carregando...</p>

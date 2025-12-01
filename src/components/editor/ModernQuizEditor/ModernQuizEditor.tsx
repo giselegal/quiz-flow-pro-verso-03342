@@ -68,10 +68,29 @@ export function ModernQuizEditor({
 
     // ✅ CRITICAL: Auto-selecionar primeiro step quando quiz carregar
     useEffect(() => {
+        console.log('🔍 useEffect[quiz] executado:', {
+            hasQuiz: !!quiz,
+            hasSteps: !!quiz?.steps,
+            stepsLength: quiz?.steps?.length,
+            firstStep: quiz?.steps?.[0]
+        });
+
         if (quiz && quiz.steps && quiz.steps.length > 0) {
             const firstStepId = quiz.steps[0].id;
             console.log('🎯 Auto-selecionando primeiro step:', firstStepId);
             useEditorStore.getState().selectStep(firstStepId);
+
+            // Verificar se foi realmente selecionado
+            const editorState = useEditorStore.getState();
+            console.log('✅ Verificação pós-seleção:', {
+                selectedStepId: editorState.selectedStepId,
+                match: editorState.selectedStepId === firstStepId
+            });
+        } else {
+            console.warn('⚠️ Não foi possível auto-selecionar step:', {
+                quiz: !!quiz,
+                steps: quiz?.steps?.length || 0
+            });
         }
     }, [quiz]);
 
