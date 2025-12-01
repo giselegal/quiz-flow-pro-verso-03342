@@ -209,7 +209,7 @@ export const StepTypeZ = z.enum([
 ]);
 
 export const QuizStepSchemaZ = z.object({
-  id: z.string().regex(/^step-\d{2}$/, 'Step ID deve ser no formato "step-XX"'),
+  id: z.string().min(1, 'Step ID é obrigatório'),
   type: StepTypeZ,
   order: z.number().int().min(1).max(50, 'Order deve estar entre 1 e 50'),
   title: z.string().optional(),

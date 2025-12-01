@@ -109,7 +109,12 @@ export function blockComponentToQuizBlock(component: BlockComponent): QuizBlock 
     properties: component.properties,
     content: component.content,
     parentId: component.parentId || undefined,
-    metadata: component.metadata,
+    metadata: component.metadata ? {
+      editable: component.metadata.editable ?? true,
+      reorderable: component.metadata.reorderable ?? true,
+      reusable: component.metadata.reusable ?? true,
+      deletable: component.metadata.deletable ?? true,
+    } : undefined,
   };
 }
 

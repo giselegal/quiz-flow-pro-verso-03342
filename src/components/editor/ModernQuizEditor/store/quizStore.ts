@@ -375,29 +375,54 @@ export const useQuizStore = create<QuizStore>()(
       console.log('💾 Salvando quiz...', state.quiz);
 
       try {
-        const res = await fetch('/api/quiz', {
+        // Extrair funnelId do metadata ou usar padrão
+        const funnelId = state.quiz?.metadata?.id || 'quiz-default';
+        
+        // Usar edge function do Supabase
+        const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+        const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+        
+        if (!supabaseUrl || !supabaseKey) {
+          throw new Error('Configuração do Supabase não encontrada. Configure VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY');
+        }
+
+        const res = await fetch(`${supabaseUrl}/functions/v1/quiz-save`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${supabaseKey}`,
+            'apikey': supabaseKey,
+          },
           body: JSON.stringify({
+            funnelId,
             quiz: state.quiz,
             metadata: {
               savedAt: new Date().toISOString(),
-              version: (state.quiz as any)?.version ?? 1,
               validation: validation.valid ? 'passed' : 'failed',
               errors: validation.valid ? [] : validation.errors,
+              source: 'editor',
             },
           }),
         });
+        
         if (!res.ok) {
           const msg = await res.text();
           throw new Error(`Falha ao salvar: ${res.status} ${msg}`);
         }
+        
+        const result = await res.json();
+        
+        if (!result.success) {
+          throw new Error(result.error || 'Erro desconhecido ao salvar');
+        }
+        
         set((s) => {
           s.isDirty = false;
           s.lastSaved = new Date();
           if (validation.valid) s.error = null;
         });
-        console.log('✅ Quiz salvo com sucesso');
+        
+        console.log('✅ Quiz salvo com sucesso:', result.data);
       } catch (err) {
         console.error('❌ Erro ao salvar quiz', err);
         set((s) => { s.error = (err as Error).message; });
