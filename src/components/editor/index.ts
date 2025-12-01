@@ -19,8 +19,9 @@ import { appLogger } from '@/lib/utils/appLogger';
 /** @deprecated Use SuperUnifiedProvider from @/contexts/providers/SuperUnifiedProviderV2 */
 export { SuperUnifiedProvider as EditorProviderUnified } from '@/contexts/providers/SuperUnifiedProviderV2';
 
-/** @deprecated Use useEditor from @/hooks/useEditor */
-export { useEditor as useEditorOptional } from '@/hooks/useEditor';
+/** @deprecated Use useEditor from @/core/exports */
+// Removido: export { useEditor as useEditorOptional } from '@/hooks/useEditor';
+// Use: import { useEditor } from '@/core/exports';
 
 // ❌ REMOVIDO: EditorProviderCanonical - Use SuperUnifiedProvider
 

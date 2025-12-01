@@ -66,6 +66,8 @@ export { EditorContext } from './editor/EditorContext';
 // ❌ REMOVIDO: MigrationEditorProvider (use EditorProvider diretamente)
 // ❌ REMOVIDO: EditorProvider de /contexts/providers/ (duplicado - movido para archive)
 // Compat: reexporta useEditor como useUnifiedEditor para manter chamadas existentes funcionando
+// Use exports centralizados ao invés de criar aliases
+// import { useEditorContext } from '@/core/exports';
 export { useEditor as useUnifiedEditor } from './editor/EditorContext';
 // EditorDndContext.tsx está vazio - removido
 export { EditorQuizProvider, useEditorQuiz } from './editor/EditorQuizContext';
