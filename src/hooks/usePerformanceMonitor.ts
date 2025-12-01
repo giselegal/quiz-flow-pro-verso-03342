@@ -24,6 +24,7 @@ export interface PerformanceMetrics {
 export function usePerformanceMonitor(componentName?: string): PerformanceMetrics & { metrics: PerformanceMetrics } {
   const renderStartTime = useRef<number>(performance.now());
   const renderTimes = useRef<number[]>([]);
+  const latestRenderTime = useRef<number>(0);
   const [metrics, setMetrics] = useState<PerformanceMetrics>({
     renderTime: 0,
     renderCount: 0,
@@ -35,37 +36,37 @@ export function usePerformanceMonitor(componentName?: string): PerformanceMetric
 
   useEffect(() => {
     const renderTime = performance.now() - renderStartTime.current;
+    latestRenderTime.current = renderTime;
     renderTimes.current.push(renderTime);
-    
     if (renderTimes.current.length > 100) {
       renderTimes.current.shift();
     }
-    
-    const avgRenderTime =
-      renderTimes.current.reduce((a, b) => a + b, 0) / renderTimes.current.length;
-    
-    const memoryUsage = 
-      (performance as any).memory?.usedJSHeapSize 
-        ? Math.round((performance as any).memory.usedJSHeapSize / 1024 / 1024)
-        : 0;
-    
-    const memoStats = componentName ? MemoizationMetrics.getStats(componentName) : { hitRate: 0 };
-    
-    setMetrics({
-      renderTime,
-      renderCount: renderTimes.current.length,
-      avgRenderTime,
-      memoryUsage,
-      memoHitRate: memoStats.hitRate,
-      bundleSize: 2.1, // Valor fixo para compatibilidade
-    });
-    
     if (renderTime > 50 && componentName && process.env.NODE_ENV === 'development') {
       appLogger.warn(`⚠️ Slow render: ${componentName} took ${renderTime.toFixed(2)}ms`);
     }
   });
 
-  // Retornar com compatibilidade retroativa
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const avgRenderTime = renderTimes.current.length
+        ? renderTimes.current.reduce((a, b) => a + b, 0) / renderTimes.current.length
+        : 0;
+      const memoryUsage = (performance as any).memory?.usedJSHeapSize
+        ? Math.round((performance as any).memory.usedJSHeapSize / 1024 / 1024)
+        : 0;
+      const memoStats = componentName ? MemoizationMetrics.getStats(componentName) : { hitRate: 0 };
+      setMetrics({
+        renderTime: latestRenderTime.current,
+        renderCount: renderTimes.current.length,
+        avgRenderTime,
+        memoryUsage,
+        memoHitRate: memoStats.hitRate,
+        bundleSize: 2.1,
+      });
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [componentName]);
+
   return { ...metrics, metrics };
 }
 
