@@ -64,19 +64,19 @@ export interface ResolvedFunnel {
  * Add new funnels here.
  */
 export const FUNNEL_TEMPLATE_MAP: Record<string, string> = {
-  // V4.1 SaaS (default)
+  // V4.1 SaaS (ÚNICO TEMPLATE ATIVO)
   'quiz21StepsComplete': TEMPLATE_PATHS.V4_SAAS,
   'quiz21-v4-saas': TEMPLATE_PATHS.V4_SAAS,
   'quiz21-v4': TEMPLATE_PATHS.V4_SAAS, // Redirect v4 → v4-saas
   
-  // Legacy templates
+  // Legacy templates (OBSOLETOS - arquivos em /templates/.obsolete/)
+  // ⚠️ Mantidos apenas para compatibilidade com drafts antigos
   'quiz21-complete': TEMPLATE_PATHS.V3_COMPLETE,
   'quiz21-v4-gold': TEMPLATE_PATHS.V4_GOLD,
   'quiz21-v4-legacy': TEMPLATE_PATHS.V4_LEGACY,
   
-  // Add new funnels here:
-  // 'clienteX-quiz21': '/templates/funnels/clienteX/master.json',
-  // 'quiz-style-moderne': '/templates/funnels/moderne/master.json',
+  // 🚀 ADICIONAR NOVOS FUNIS AQUI:
+  // Exemplo: 'meu-funil-custom': '/templates/funnels/meu-funil/master.json',
 };
 
 /**

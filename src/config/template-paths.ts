@@ -14,26 +14,27 @@ export const TEMPLATE_PATHS = {
   /** V4.1 SaaS - Production template with normalized options and RichText */
   V4_SAAS: '/templates/quiz21-v4-saas.json',
   
-  /** V4.0 - Previous production template (legacy) */
-  V4_LEGACY: '/templates/quiz21-v4.json',
+  /** V4.0 - Previous production template (OBSOLETO - movido para .obsolete/) */
+  V4_LEGACY: '/templates/.obsolete/quiz21-v4.json',
   
-  /** V3 Complete - Complete v3 template (legacy) */
-  V3_COMPLETE: '/templates/quiz21-complete.json',
+  /** V3 Complete - Complete v3 template (OBSOLETO - movido para .obsolete/) */
+  V3_COMPLETE: '/templates/.obsolete/quiz21-complete.json',
   
-  /** V4 Gold - Gold standard reference template */
-  V4_GOLD: '/templates/quiz21-v4-gold.json',
+  /** V4 Gold - Gold standard reference template (OBSOLETO - movido para .obsolete/) */
+  V4_GOLD: '/templates/.obsolete/quiz21-v4-gold.json',
 } as const;
 
 /**
  * Template ID to path mapping
  */
 export const TEMPLATE_ID_MAP: Record<string, string> = {
-  // V4.1 SaaS (current production)
+  // V4.1 SaaS (current production) - ÚNICO TEMPLATE ATIVO
   'quiz21-v4-saas': TEMPLATE_PATHS.V4_SAAS,
   'quiz21StepsComplete': TEMPLATE_PATHS.V4_SAAS, // Default for legacy IDs
   'quiz21-v4': TEMPLATE_PATHS.V4_SAAS, // Redirect v4 to v4-saas
   
-  // Legacy templates
+  // Legacy templates (OBSOLETOS - mantidos apenas para compatibilidade)
+  // ⚠️ Estes arquivos foram movidos para /templates/.obsolete/
   'quiz21-complete': TEMPLATE_PATHS.V3_COMPLETE,
   'quiz21-v4-gold': TEMPLATE_PATHS.V4_GOLD,
   'quiz21-v4-legacy': TEMPLATE_PATHS.V4_LEGACY,
