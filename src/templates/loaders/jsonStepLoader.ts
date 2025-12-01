@@ -228,7 +228,8 @@ export async function loadStepFromJson(
 
   // Paths ordenados por prioridade
   const paths: string[] = [
-    `/templates/quiz21-complete.json${bust}`, // Master consolidado
+    `/templates/quiz21-v4-saas.json${bust}`, // V4.1 SaaS (prioridade)
+    `/templates/quiz21-complete.json${bust}`, // Master consolidado (legacy)
     `/templates/${stepId}-v3.json${bust}`, // Step individual v3
     `/templates/funnels/${templateId}/steps/${stepId}.json${bust}`, // Path por template
     `/templates/funnels/${templateId}/master.v3.json${bust}`, // Master por template

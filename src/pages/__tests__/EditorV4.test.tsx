@@ -28,7 +28,7 @@ describe('EditorV4 - Template URL Parameter', () => {
     });
 
     describe('Template ID Mapping', () => {
-        it('deve mapear quiz21StepsComplete para quiz21-v4.json', () => {
+        it('deve mapear quiz21StepsComplete para quiz21-v4-saas.json', () => {
             // Simular URL: /editor?template=quiz21StepsComplete
             (window as any).location.search = '?template=quiz21StepsComplete';
 
@@ -36,15 +36,15 @@ describe('EditorV4 - Template URL Parameter', () => {
             const templateId = params.get('template');
 
             const templateMap: Record<string, string> = {
-                'quiz21StepsComplete': '/templates/quiz21-v4.json',
+                'quiz21StepsComplete': '/templates/quiz21-v4-saas.json',
                 'quiz21-complete': '/templates/quiz21-complete.json',
-                'quiz21-v4': '/templates/quiz21-v4.json',
+                'quiz21-v4': '/templates/quiz21-v4-saas.json',
             };
 
             const expectedPath = templateMap[templateId!];
 
             expect(templateId).toBe('quiz21StepsComplete');
-            expect(expectedPath).toBe('/templates/quiz21-v4.json');
+            expect(expectedPath).toBe('/templates/quiz21-v4-saas.json');
         });
 
         it('deve mapear quiz21-complete para quiz21-complete.json', () => {
@@ -54,9 +54,9 @@ describe('EditorV4 - Template URL Parameter', () => {
             const templateId = params.get('template');
 
             const templateMap: Record<string, string> = {
-                'quiz21StepsComplete': '/templates/quiz21-v4.json',
+                'quiz21StepsComplete': '/templates/quiz21-v4-saas.json',
                 'quiz21-complete': '/templates/quiz21-complete.json',
-                'quiz21-v4': '/templates/quiz21-v4.json',
+                'quiz21-v4': '/templates/quiz21-v4-saas.json',
             };
 
             const expectedPath = templateMap[templateId!];
@@ -72,15 +72,15 @@ describe('EditorV4 - Template URL Parameter', () => {
             const templateId = params.get('template');
 
             const templateMap: Record<string, string> = {
-                'quiz21StepsComplete': '/templates/quiz21-v4.json',
+                'quiz21StepsComplete': '/templates/quiz21-v4-saas.json',
                 'quiz21-complete': '/templates/quiz21-complete.json',
-                'quiz21-v4': '/templates/quiz21-v4.json',
+                'quiz21-v4': '/templates/quiz21-v4-saas.json',
             };
 
-            const templatePath = templateMap[templateId!] || '/templates/quiz21-v4.json';
+            const templatePath = templateMap[templateId!] || '/templates/quiz21-v4-saas.json';
 
             expect(templateId).toBe('unknown-template');
-            expect(templatePath).toBe('/templates/quiz21-v4.json');
+            expect(templatePath).toBe('/templates/quiz21-v4-saas.json');
         });
 
         it('deve usar default quando não há parâmetro template', () => {
@@ -89,10 +89,10 @@ describe('EditorV4 - Template URL Parameter', () => {
             const params = new URLSearchParams((window as any).location.search);
             const templateId = params.get('template');
 
-            const templatePath = '/templates/quiz21-v4.json';
+            const templatePath = '/templates/quiz21-v4-saas.json';
 
             expect(templateId).toBeNull();
-            expect(templatePath).toBe('/templates/quiz21-v4.json');
+            expect(templatePath).toBe('/templates/quiz21-v4-saas.json');
         });
     });
 
@@ -140,9 +140,9 @@ describe('EditorV4 - Template URL Parameter', () => {
     describe('Template Path Resolution', () => {
         it('deve gerar caminho correto para todos os templates conhecidos', () => {
             const knownTemplates = [
-                { id: 'quiz21StepsComplete', path: '/templates/quiz21-v4.json' },
+                { id: 'quiz21StepsComplete', path: '/templates/quiz21-v4-saas.json' },
                 { id: 'quiz21-complete', path: '/templates/quiz21-complete.json' },
-                { id: 'quiz21-v4', path: '/templates/quiz21-v4.json' },
+                { id: 'quiz21-v4', path: '/templates/quiz21-v4-saas.json' },
             ];
 
             knownTemplates.forEach(({ id, path }) => {
@@ -152,9 +152,9 @@ describe('EditorV4 - Template URL Parameter', () => {
                 const templateId = params.get('template');
 
                 const templateMap: Record<string, string> = {
-                    'quiz21StepsComplete': '/templates/quiz21-v4.json',
+                    'quiz21StepsComplete': '/templates/quiz21-v4-saas.json',
                     'quiz21-complete': '/templates/quiz21-complete.json',
-                    'quiz21-v4': '/templates/quiz21-v4.json',
+                    'quiz21-v4': '/templates/quiz21-v4-saas.json',
                 };
 
                 const resolvedPath = templateMap[templateId!];
@@ -165,7 +165,7 @@ describe('EditorV4 - Template URL Parameter', () => {
 
         it('deve validar formato de caminho', () => {
             const templatePaths = [
-                '/templates/quiz21-v4.json',
+                '/templates/quiz21-v4-saas.json',
                 '/templates/quiz21-complete.json',
             ];
 
@@ -187,7 +187,7 @@ describe('EditorV4 - Template URL Parameter', () => {
             const templateId = params.get('template');
 
             const templateMap: Record<string, string> = {
-                'quiz21StepsComplete': '/templates/quiz21-v4.json',
+                'quiz21StepsComplete': '/templates/quiz21-v4-saas.json',
             };
 
             const templatePath = templateMap[templateId!];
