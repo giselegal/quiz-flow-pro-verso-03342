@@ -689,7 +689,7 @@ const BuilderDrivenPanel: React.FC<BuilderDrivenPanelProps & { externalSaving?: 
                                 <AlertDescription className="text-xs space-y-1">
                                     {Object.entries(errors).map(([key, message]) => (
                                         <div key={key}>
-                                            <strong>{key}:</strong> {message}
+                                            <strong>{key}:</strong> {String(message)}
                                         </div>
                                     ))}
                                 </AlertDescription>

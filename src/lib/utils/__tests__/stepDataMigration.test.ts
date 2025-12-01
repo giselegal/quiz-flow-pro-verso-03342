@@ -6,8 +6,11 @@ const makeStep = (blocks: Partial<BlockComponent>[], metadata?: Record<string, a
   id: 's1',
   type: 'question',
   order: 1,
-  blocks: blocks as BlockComponent[],
+  blocks: blocks as any, // Cast necessário: BlockComponent.type é string, QuizBlock.type é literal union
   metadata,
+  navigation: { nextStep: null },
+  validation: { required: true },
+  version: 1,
 });
 
 const block = (type: string, content: Record<string, any> = {}, properties: Record<string, any> = {}): BlockComponent => ({

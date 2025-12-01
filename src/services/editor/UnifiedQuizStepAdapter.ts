@@ -99,19 +99,25 @@ export class UnifiedQuizStepAdapter {
         
         return {
           id: block.id,
-          type: block.type,
+          type: block.type as any, // Cast necessário: ExtendedRuntimeBlock.type é string, QuizBlock.type é literal union
           order: block.order || 0,
           parentId: block.parentId || null,
           properties: config,
           content: block.content || {},
         };
-      }),
+      }) as any, // Cast necessário para compatibilidade com QuizBlock[]
       
       // 🎯 METADADOS completos
+      navigation: { nextStep: runtime.nextStep || null },
+      validation: { required: true },
+      version: 1,
       title: runtime.title,
       settings: extendedRuntime.settings,
-      metadata: extendedRuntime.metadata,
-      offerMap: (runtime as any).offerMap,
+      metadata: {
+        ...(extendedRuntime.metadata || {}),
+        // Preservar offerMap em metadata (não existe em EditableQuizStep top-level)
+        offerMap: (runtime as any).offerMap,
+      },
     };
   }
 

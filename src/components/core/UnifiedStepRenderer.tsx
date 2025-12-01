@@ -157,7 +157,7 @@ const VirtualizedStepRenderer: React.FC<{
                                     block={block}
                                     isSelected={selectedBlockId === block.id}
                                     isPreview={isPreview}
-                                    onUpdate={(updates) => onBlockUpdate?.(block.id, updates)}
+                                    onUpdate={(updates: Partial<Block>) => onBlockUpdate?.(block.id, updates)}
                                     onDelete={() => onBlockDelete?.(block.id)}
                                     onSelect={() => onBlockSelect?.(block.id)}
                                     priority={virtualItem.index < 3 ? 'high' : 'normal'}
@@ -199,7 +199,7 @@ const StandardStepRenderer: React.FC<{
                         block={block}
                         isSelected={selectedBlockId === block.id}
                         isPreview={isPreview}
-                        onUpdate={(updates) => onBlockUpdate?.(block.id, updates)}
+                        onUpdate={(updates: Partial<Block>) => onBlockUpdate?.(block.id, updates)}
                         onDelete={() => onBlockDelete?.(block.id)}
                         onSelect={() => onBlockSelect?.(block.id)}
                         priority={index < 3 ? 'high' : 'normal'}

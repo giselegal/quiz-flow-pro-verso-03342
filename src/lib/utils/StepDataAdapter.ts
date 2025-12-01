@@ -36,6 +36,12 @@ const STEP_DEFAULTS: Record<StepType, Partial<QuizStep>> = {
     requiredSelections: 3,
     options: [],
   },
+  'strategicQuestion': {
+    questionNumber: '1 de 6',
+    questionText: 'Selecione uma opção',
+    requiredSelections: 1,
+    options: [],
+  },
   'strategic-question': {
     questionNumber: '1 de 6',
     questionText: 'Selecione uma opção',
@@ -48,6 +54,12 @@ const STEP_DEFAULTS: Record<StepType, Partial<QuizStep>> = {
     duration: 3000,
     showContinueButton: false,
   },
+  'loading': {
+    title: 'Carregando...',
+    text: 'Aguarde um momento',
+    duration: 2000,
+    showContinueButton: false,
+  },
   'transition-result': {
     title: 'Preparando seu resultado personalizado...',
     text: 'Seu estilo está sendo definido',
@@ -58,11 +70,21 @@ const STEP_DEFAULTS: Record<StepType, Partial<QuizStep>> = {
     title: 'Seu Estilo Predominante',
     text: 'Descubra sua essência',
   },
+  'quiz-result': {
+    title: 'Seu Resultado',
+    text: 'Veja o que descobrimos sobre você',
+  },
   'offer': {
     title: 'Transforme Seu Estilo Hoje',
     text: 'Oferta especial personalizada',
     buttonText: 'Quero Conhecer',
     offerMap: {},
+  },
+  'quiz-question': {
+    questionNumber: '1 de 10',
+    questionText: 'Selecione suas preferências',
+    requiredSelections: 3,
+    options: [],
   },
 };
 
@@ -94,13 +116,16 @@ export const adaptStepData = (
   const stepType = (productionData?.type as StepType) || inferStepType(stepNumber);
   const defaults = STEP_DEFAULTS[stepType] || {};
   
+  // Normalizar stepType para QuizStepV3 (remove aliases não compatíveis)
+  const normalizedStepType: QuizStep['type'] = normalizeStepTypeForV3(stepType);
+  
   // Observação: ignoramos editableStep.type caso divirja do canônico
   
   // Se solicitado, usar apenas dados canônicos de produção + defaults (ignora metadata do editor)
   if (mode === 'production-only') {
     const adaptedProductionOnly: QuizStep = {
       id: editableStep.id,
-      type: stepType,
+      type: normalizedStepType,
       title: productionData?.title || defaults.title,
       questionNumber: productionData?.questionNumber || defaults.questionNumber,
       questionText: productionData?.questionText || defaults.questionText,
@@ -125,7 +150,7 @@ export const adaptStepData = (
   // Merge com prioridade: metadata > productionData > defaults
   const adapted: QuizStep = {
     id: editableStep.id,
-    type: stepType,
+    type: normalizedStepType,
     
     // Textos principais
     title: metadata.title || productionData?.title || defaults.title,
@@ -257,6 +282,40 @@ function validateAdaptedData(data: QuizStep): void {
 export function extractStepNumber(stepId: string): number {
   const match = stepId.match(/step-?(\d+)/i);
   return match ? parseInt(match[1], 10) : 1;
+}
+
+/**
+ * 🔧 HELPER: Normalizar StepType para QuizStepV3
+ * Converte aliases e tipos extras para tipos compatíveis com QuizStepV3
+ */
+export function normalizeStepTypeForV3(stepType: StepType): QuizStep['type'] {
+  // Mapear aliases para tipos canônicos
+  switch (stepType) {
+    case 'quiz-question':
+      return 'question';
+    case 'strategicQuestion':
+      return 'strategic-question';
+    case 'quiz-result':
+      return 'result';
+    case 'loading':
+      return 'transition'; // Loading é tratado como transição
+    default:
+      // Verificar se é um tipo válido em QuizStepV3
+      const validTypes: Array<QuizStep['type']> = [
+        'intro',
+        'question',
+        'strategic-question',
+        'transition',
+        'transition-result',
+        'result',
+        'offer'
+      ];
+      if (validTypes.includes(stepType as any)) {
+        return stepType as QuizStep['type'];
+      }
+      // Fallback para question se tipo desconhecido
+      return 'question';
+  }
 }
 
 /**
