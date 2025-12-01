@@ -23,6 +23,7 @@ import { DevTools } from './components/DevTools';
 import { usePerformanceMonitor, useMemoryLeakDetector } from '@/hooks/usePerformanceMonitor';
 import { Activity } from 'lucide-react';
 import type { QuizSchema } from '@/schemas/quiz-schema.zod';
+import { normalizeQuizFormat } from './utils/quizAdapter';
 
 export interface ModernQuizEditorProps {
     /** Quiz inicial para carregar no editor */
@@ -48,10 +49,10 @@ export function ModernQuizEditor({
 
     // 🆕 PHASE 1: Performance monitoring
     const { metrics } = usePerformanceMonitor('ModernQuizEditor');
-    
+
     // 🆕 PHASE 1: Memory leak detection
     useMemoryLeakDetector('ModernQuizEditor');
-    
+
     // Log slow renders in development
     useEffect(() => {
         if (process.env.NODE_ENV === 'development' && metrics.avgRenderTime > 50) {
@@ -81,12 +82,22 @@ export function ModernQuizEditor({
     // Carregar quiz inicial
     useEffect(() => {
         if (initialQuiz) {
-            console.log('📂 Carregando quiz inicial:', {
-                steps: initialQuiz.steps?.length,
-                firstStepId: initialQuiz.steps?.[0]?.id,
-                firstStepBlocks: initialQuiz.steps?.[0]?.blocks?.length
+            console.log('📂 Carregando quiz inicial (RAW):', {
+                stepsType: Array.isArray(initialQuiz.steps) ? 'array' : 'object',
+                stepsKeys: !Array.isArray(initialQuiz.steps) ? Object.keys(initialQuiz.steps || {}) : undefined,
+                stepsLength: Array.isArray(initialQuiz.steps) ? initialQuiz.steps?.length : undefined,
             });
-            loadQuiz(initialQuiz);
+
+            // 🔄 Normalizar formato (converte objeto para array se necessário)
+            const normalizedQuiz = normalizeQuizFormat(initialQuiz);
+
+            console.log('📂 Quiz normalizado:', {
+                steps: normalizedQuiz.steps?.length,
+                firstStepId: normalizedQuiz.steps?.[0]?.id,
+                firstStepBlocks: normalizedQuiz.steps?.[0]?.blocks?.length
+            });
+
+            loadQuiz(normalizedQuiz);
         }
     }, [initialQuiz, loadQuiz]);
 
@@ -207,8 +218,8 @@ export function ModernQuizEditor({
                         className={`
                             px-3 py-2 rounded-lg flex items-center gap-2
                             transition-colors text-sm font-medium
-                            ${showAnalytics 
-                                ? 'bg-blue-100 text-blue-700 hover:bg-blue-200' 
+                            ${showAnalytics
+                                ? 'bg-blue-100 text-blue-700 hover:bg-blue-200'
                                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}
                         `}
                         title="Analytics em Tempo Real"
@@ -216,7 +227,7 @@ export function ModernQuizEditor({
                         <Activity className="w-4 h-4" />
                         Analytics
                     </button>
-                    
+
                     {/* Botão de salvar manual */}
                     <button
                         onClick={handleSave}
@@ -245,16 +256,16 @@ export function ModernQuizEditor({
             <div className="flex-1 overflow-hidden">
                 <EditorLayout />
             </div>
-            
+
             {/* 🆕 PHASE 2: Analytics Sidebar */}
-            <AnalyticsSidebar 
-                isOpen={showAnalytics} 
-                onClose={() => setShowAnalytics(false)} 
+            <AnalyticsSidebar
+                isOpen={showAnalytics}
+                onClose={() => setShowAnalytics(false)}
             />
-            
+
             {/* 🆕 PHASE 1: Performance Debugger (dev only) */}
             <PerformanceDebugger position="bottom-right" />
-            
+
             {/* 🆕 PHASE 4: DevTools with Accessibility Auditor (dev only) */}
             <DevTools />
         </div>

@@ -13,6 +13,7 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { supabaseSafe } from '@/lib/supabase-client-safe';
 import type { QuizSchema } from '@/schemas/quiz-schema.zod';
+import { normalizeQuizFormat } from '../utils/quizAdapter';
 
 export type SaveStatus = 'idle' | 'saving' | 'saved' | 'error';
 
@@ -272,7 +273,10 @@ export function usePersistence(options: PersistenceOptions = {}): UsePersistence
         steps: content.steps || [],
       };
 
-      return quizSchema;
+      // 🔄 Normalizar formato (converte objeto para array se necessário)
+      const normalizedQuiz = normalizeQuizFormat(quizSchema);
+      
+      return normalizedQuiz;
 
     } catch (err) {
       const error = err instanceof Error ? err : new Error('Erro desconhecido ao carregar');
