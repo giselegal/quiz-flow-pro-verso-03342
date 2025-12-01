@@ -17,9 +17,7 @@ const EnhancedAnalytics = React.lazy(() => import('@/components/dashboard/Enhanc
 const ParticipantsPage = React.lazy(() => import('./dashboard/ParticipantsPage'));
 const FacebookMetrics = React.lazy(() => import('./dashboard/FacebookMetricsPage'));
 const MeusFunisReal = React.lazy(() => import('./dashboard/MeusFunisPageReal'));
-const TemplatesReal = React.lazy(() => import('./dashboard/TemplatesPage'));
 const CurrentFunnelPage = React.lazy(() => import('./dashboard/CurrentFunnelPage'));
-const TemplatesFunisPage = React.lazy(() => import('./dashboard/TemplatesFunisPage'));
 const ModelosFunisPage = React.lazy(() => import('./dashboard/ModelosFunisPage'));
 const TemplatePreviewPage = React.lazy(() => import('./dashboard/TemplatePreviewPage'));
 const AIInsightsPage = React.lazy(() => import('./dashboard/AIInsightsPage'));
@@ -76,11 +74,6 @@ const routeConfig = {
     component: MeusFunisReal,
     title: 'Meus Funis',
     description: 'Gerenciar funis criados',
-  },
-  '/admin/templates': {
-    component: TemplatesReal,
-    title: 'Templates',
-    description: 'Biblioteca de templates',
   },
 
   // Ferramentas
@@ -174,8 +167,12 @@ const ModernAdminDashboard: React.FC = () => {
               <CurrentFunnelPage />
             </Route>
 
+            {/* ⚠️ TEMPLATES: Redirecionar para página principal /templates */}
             <Route path="/admin/templates">
-              <TemplatesReal />
+              <Redirect to="/templates" />
+            </Route>
+            <Route path="/admin/templates-funis">
+              <Redirect to="/templates" />
             </Route>
 
             {/* Modelos de Funis - Nova rota dedicada */}
@@ -188,9 +185,6 @@ const ModernAdminDashboard: React.FC = () => {
             {/* Preview de templates acessível dentro do admin para conveniência */}
             <Route path="/templates/preview/:id">
               <TemplatePreviewPage />
-            </Route>
-            <Route path="/admin/templates-funis">
-              <TemplatesFunisPage />
             </Route>
 
             {/* Ferramentas - A/B Tests e Criativos */}
