@@ -202,55 +202,49 @@ export class FunnelService {
 
   /**
    * Load template from file
+   * 
+   * ✅ SOLUÇÃO DEFINITIVA: Importar JSONs como módulos ES estáticos
+   * Vite tem suporte nativo para import de JSON com `?url` suffix
    */
   private async loadTemplateFromFile(templatePath: string): Promise<QuizSchema> {
     try {
       appLogger.info('📂 [FunnelService] Loading template from file', { templatePath });
 
-      // ✅ Fetch direto sem query params (Vite dev server serve /public automaticamente)
-      const response = await fetch(templatePath, {
-        headers: {
-          'Accept': 'application/json, text/plain, */*',
-        },
-        cache: 'no-cache',
-      });
-
-      console.log('🌐 [FunnelService] Fetch response:', {
-        status: response.status,
-        statusText: response.statusText,
-        contentType: response.headers.get('content-type'),
-        url: response.url,
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text().catch(() => 'Unable to read response');
-        console.error('❌ Response body (first 200 chars):', errorText.substring(0, 200));
-        throw new Error(
-          `Failed to load template (HTTP ${response.status}): ${response.statusText}. ` +
-          `Path: ${templatePath}`
-        );
-      }
-
-      // Check if response is HTML instead of JSON (SPA fallback issue)
-      const contentType = response.headers.get('content-type') || '';
-      const responseText = await response.text();
-      
-      if (contentType.includes('text/html') || responseText.trim().startsWith('<!DOCTYPE')) {
-        console.error('❌ Got HTML instead of JSON. Response preview:', responseText.substring(0, 200));
-        throw new Error(
-          `Vite SPA fallback intercepted the request. ` +
-          `The file ${templatePath} may not exist in public/ folder, ` +
-          `or there's a routing issue. Check public/templates/ directory.`
-        );
-      }
-
       let data: any;
-      try {
-        data = JSON.parse(responseText);
-      } catch (parseError) {
-        console.error('❌ JSON parse error. Response:', responseText.substring(0, 500));
-        throw new Error(`Invalid JSON in template file: ${parseError instanceof Error ? parseError.message : String(parseError)}`);
+
+      // Map template paths to static imports
+      // Vite will bundle these at build time and serve correctly in dev
+      if (templatePath.includes('quiz21-v4-saas')) {
+        const module = await import('/public/templates/quiz21-v4-saas.json?url');
+        const response = await fetch(module.default);
+        data = await response.json();
+      } else if (templatePath.includes('quiz21-complete')) {
+        const module = await import('/public/templates/quiz21-complete.json?url');
+        const response = await fetch(module.default);
+        data = await response.json();
+      } else if (templatePath.includes('quiz21-v4-gold')) {
+        const module = await import('/public/templates/quiz21-v4-gold.json?url');
+        const response = await fetch(module.default);
+        data = await response.json();
+      } else if (templatePath.includes('quiz21-v4') && !templatePath.includes('saas')) {
+        const module = await import('/public/templates/quiz21-v4.json?url');
+        const response = await fetch(module.default);
+        data = await response.json();
+      } else {
+        // Fallback: try direct fetch (may fail due to SPA routing)
+        console.warn('⚠️ Unknown template path, trying direct fetch:', templatePath);
+        const response = await fetch(templatePath);
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        data = await response.json();
       }
+
+      console.log('✅ Template loaded successfully:', {
+        path: templatePath,
+        stepsCount: data?.steps?.length,
+        metadata: data?.metadata?.name
+      });
 
       // Validate with Zod
       const { QuizSchemaZ } = await import('@/schemas/quiz-schema.zod');
