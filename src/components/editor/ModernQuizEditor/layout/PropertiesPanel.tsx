@@ -7,6 +7,7 @@
  * - Validação em tempo real (Fase 2)
  * 
  * ✅ AUDIT: Optimized with React.memo and useCallback
+ * 🆕 PHASE 1: Added debounce for property updates
  */
 
 import React, { useState, memo, useCallback, useMemo } from 'react';
@@ -17,6 +18,7 @@ import { useQuizStore } from '../store/quizStore';
 import { useEditorStore } from '../store/editorStore';
 import type { QuizBlock } from '@/schemas/quiz-schema.zod';
 import { getFieldsForType } from '../utils/propertyEditors';
+import { debounce } from '@/lib/utils/performanceOptimizations';
 import {
     DndContext,
     closestCenter,
@@ -97,10 +99,19 @@ interface BlockPropertiesProps {
 const BlockProperties = memo(function BlockProperties({ block, stepId }: BlockPropertiesProps) {
     const updateBlock = useQuizStore((state) => state.updateBlock);
 
+    // 🆕 PHASE 1: Debounced update handler for better performance
+    // This prevents excessive re-renders and store updates during rapid typing
+    const debouncedUpdate = useMemo(
+        () => debounce((blockId: string, key: string, value: any) => {
+            updateBlock(stepId, blockId, { [key]: value });
+        }, 300),
+        [updateBlock, stepId]
+    );
+
     // ✅ AUDIT: Memoize property change handler
     const handleChange = useCallback((key: string, value: any) => {
-        updateBlock(stepId, block.id, { [key]: value });
-    }, [updateBlock, stepId, block.id]);
+        debouncedUpdate(block.id, key, value);
+    }, [debouncedUpdate, block.id]);
 
     // ✅ AUDIT: Memoize calculation rule change handler
     const handleRuleChange = useCallback((rule: any) => {

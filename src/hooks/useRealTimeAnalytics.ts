@@ -14,7 +14,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { RealtimeChannel } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
-import { appLogger } from '@/services/core/Logger';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================
 // INTERFACES DE DADOS EM TEMPO REAL
