@@ -29,76 +29,8 @@ import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 import { PageLoadingFallback } from '@/components/LoadingSpinner';
 import { appLogger } from '@/lib/utils/appLogger';
 import type { QuizSchema } from '@/schemas/quiz-schema.zod';
-
-// ✅ AUDIT: In-memory cache for loaded quizzes to prevent redundant fetches
-const quizCache = new Map<string, { data: QuizSchema; timestamp: number }>();
-const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
-
-// ✅ AUDIT: Track in-flight requests to prevent duplicate fetches
-const inFlightRequests = new Map<string, Promise<QuizSchema>>();
-
-/**
- * ✅ AUDIT: Optimized quiz loading with caching and deduplication
- */
-async function loadQuizWithCache(templatePath: string): Promise<QuizSchema> {
-    // Check memory cache first
-    const cached = quizCache.get(templatePath);
-    if (cached && Date.now() - cached.timestamp < CACHE_TTL_MS) {
-        appLogger.info('⚡ [EditorPage] Cache HIT:', { templatePath });
-        return cached.data;
-    }
-
-    // Check for in-flight request
-    const inFlight = inFlightRequests.get(templatePath);
-    if (inFlight) {
-        appLogger.info('🔄 [EditorPage] Reusing in-flight request:', { templatePath });
-        return inFlight;
-    }
-
-    // Create new request
-    const fetchPromise = (async (): Promise<QuizSchema> => {
-        const startTime = performance.now();
-
-        const response = await fetch(templatePath, {
-            cache: 'default', // Use browser's native caching
-            headers: {
-                'Accept': 'application/json',
-            },
-        });
-
-        if (!response.ok) {
-            throw new Error(`Failed to load template: ${response.statusText}`);
-        }
-
-        const data = await response.json();
-
-        // Validate with Zod
-        const { QuizSchemaZ } = await import('@/schemas/quiz-schema.zod');
-        const validated = QuizSchemaZ.parse(data);
-
-        const loadTime = performance.now() - startTime;
-        appLogger.info('✅ [EditorPage] Quiz loaded:', {
-            templatePath,
-            loadTimeMs: loadTime.toFixed(0),
-            steps: validated.steps?.length || 0
-        });
-
-        // Store in cache
-        quizCache.set(templatePath, { data: validated, timestamp: Date.now() });
-
-        return validated;
-    })();
-
-    // Track in-flight request
-    inFlightRequests.set(templatePath, fetchPromise);
-
-    try {
-        return await fetchPromise;
-    } finally {
-        // Clean up in-flight tracker
-        inFlightRequests.delete(templatePath);
-    }
-}
+import { funnelService } from '@/services/funnel/FunnelService';
+import { parseFunnelFromURL } from '@/services/funnel/FunnelResolver';
 
 // ✅ Novo editor moderno com arquitetura limpa
 const ModernQuizEditor = React.lazy(() =>
@@ -111,113 +43,100 @@ const ModernQuizEditor = React.lazy(() =>
 export default function EditorPage() {
     // Estado para quiz carregado
     const [quiz, setQuiz] = useState<QuizSchema | null>(null);
+    const [quizId, setQuizId] = useState<string | undefined>(undefined); // 🆕 DRAFT ID
+    const [funnelId, setFunnelId] = useState<string>('quiz21StepsComplete');
     const [isLoadingQuiz, setIsLoadingQuiz] = useState(false);
     const [loadError, setLoadError] = useState<string | null>(null);
 
     // Capturar parâmetros da rota
     const [, paramsWithId] = useRoute<{ funnelId: string }>('/editor/:funnelId');
 
-    // Capturar query params
+    // 🆕 USAR FUNNELRESOLVER para parsear URL
     const searchParams = new URLSearchParams(window.location.search);
-    // Sanitizar template param para evitar casos de objeto serializado implicitamente
-    const rawTemplateParam = searchParams.get('template');
-    const templateParam = (() => {
-        if (!rawTemplateParam) return undefined;
-        // Caso típico de erro: '?template=[object Object]' vindo de concatenação com objeto
-        if (rawTemplateParam === '[object Object]') {
-            appLogger.warn('⚠️ Parametro template inválido ([object Object]) ignorado');
-            return undefined;
-        }
-        // Evitar valores excessivamente longos ou contendo espaços suspeitos
-        const trimmed = rawTemplateParam.trim();
-        if (trimmed.length === 0 || trimmed.length > 150) {
-            appLogger.warn('⚠️ Parametro template vazio ou muito longo, ignorado', { value: trimmed });
-            return undefined;
-        }
-        return trimmed;
-    })();
-    const funnelIdFromQuery = searchParams.get('funnelId') || searchParams.get('funnel') || undefined;
+    const funnelIdentifier = parseFunnelFromURL(searchParams);
 
-    // 🔄 PADRONIZAÇÃO: ?template= agora é tratado como ?funnel=
-    // Templates são funis editáveis e duplicáveis
-    let funnelId = paramsWithId?.funnelId || funnelIdFromQuery || templateParam || undefined;
+    // Resolver funnelId final
+    const resolvedFunnelId =
+        paramsWithId?.funnelId ||
+        funnelIdentifier.funnelId ||
+        'quiz21StepsComplete';
 
-    // ✅ Fallback: garantir funil padrão quando ausente
-    // Motivo: editor precisa de canvas visível mesmo sem query params
-    if (!funnelId) {
-        funnelId = 'quiz21StepsComplete';
-        // Padronizar URL sem poluir histórico
-        try {
-            const url = new URL(window.location.href);
-            url.searchParams.set('funnel', funnelId);
-            window.history.replaceState({}, '', url.toString());
-            appLogger.info('🛟 Fallback de funil aplicado:', { funnelId });
-        } catch (e) {
-            appLogger.debug('Não foi possível atualizar URL:', e);
-        }
-    }
+    // Atualizar estado quando resolver mudar
+    useEffect(() => {
+        setFunnelId(resolvedFunnelId);
 
-    // 🔄 Redirecionar ?template= para ?funnel= (padronização de URL)
-    React.useEffect(() => {
-        // Sempre padronizar ?template= para ?funnel= para evitar conflito de parâmetros
-        if (templateParam) {
+        // 🔄 Padronizar URL (normalizar ?template= para ?funnel=)
+        const currentParams = new URLSearchParams(window.location.search);
+        const hasTemplate = currentParams.has('template');
+        const hasFunnel = currentParams.has('funnel') || currentParams.has('funnelId');
+
+        if (hasTemplate && !hasFunnel) {
             const newUrl = new URL(window.location.href);
             newUrl.searchParams.delete('template');
-            // Se já houver um funnel, manter; senão usar o templateParam
-            const existingFunnel = newUrl.searchParams.get('funnel') || newUrl.searchParams.get('funnelId');
-            if (!existingFunnel) {
-                newUrl.searchParams.set('funnel', templateParam);
-            }
+            newUrl.searchParams.set('funnel', resolvedFunnelId);
             window.history.replaceState({}, '', newUrl.toString());
-            appLogger.info('🔄 URL padronizada: ?template= → ?funnel=', { from: templateParam });
+            appLogger.info('🔄 URL padronizada: ?template= → ?funnel=', {
+                funnelId: resolvedFunnelId
+            });
         }
-    }, [templateParam]);
+    }, [resolvedFunnelId]);
 
-    // 🔄 Carregar quiz quando funnelId mudar
-    // ✅ AUDIT: Using memoized loader with caching
+    // 🔄 Carregar funnel quando funnelId mudar
+    // 🆕 USAR FUNNELSERVICE (resolve GARGALOS #1, #2, #4)
     useEffect(() => {
         let isMounted = true;
 
-        async function loadQuiz() {
+        async function loadFunnel() {
             if (!funnelId) return;
 
             setIsLoadingQuiz(true);
             setLoadError(null);
 
             try {
-                appLogger.info('📂 Carregando quiz via ModernQuizEditor:', { funnelId });
+                appLogger.info('🎯 [EditorPage] Carregando funnel via FunnelService:', {
+                    funnelId,
+                    identifier: funnelIdentifier
+                });
 
-                // ✅ AUDIT: Use cached loader instead of direct fetch
-                const validated = await loadQuizWithCache('/templates/quiz21-v4-saas.json');
+                // 🆕 USAR FUNNELSERVICE.LOADFUNNEL
+                // Verifica draft no Supabase → carrega draft OU template base
+                const result = await funnelService.loadFunnel(funnelIdentifier);
 
-                // Only update state if component is still mounted
-                if (isMounted) {
-                    setQuiz(validated);
-                    appLogger.info('✅ Quiz carregado no editor moderno:', {
-                        title: validated.metadata?.name,
-                        steps: validated.steps?.length || 0,
-                        firstStepId: validated.steps?.[0]?.id,
-                        firstStepBlocks: validated.steps?.[0]?.blocks?.length || 0,
-                        sampleBlock: validated.steps?.[0]?.blocks?.[0] ? {
-                            id: validated.steps[0].blocks[0].id,
-                            type: validated.steps[0].blocks[0].type
-                        } : null
-                    });
+                if (!isMounted) return;
 
-                    console.log('📦 Quiz completo carregado:', {
-                        metadata: validated.metadata,
-                        stepsCount: validated.steps?.length,
-                        allSteps: validated.steps?.map(s => ({
-                            id: s.id,
-                            title: s.title,
-                            blocksCount: s.blocks?.length || 0
-                        }))
-                    });
-                }
+                const { funnel, resolved, source } = result;
+
+                setQuiz(funnel.quiz);
+                setQuizId(funnel.draftId); // 🆕 PASSAR DRAFT ID PARA EDITOR
+
+                appLogger.info('✅ [EditorPage] Funnel carregado:', {
+                    funnelId: funnel.id,
+                    draftId: funnel.draftId,
+                    source,
+                    isDraft: resolved.isDraft,
+                    templatePath: resolved.templatePath,
+                    version: funnel.version,
+                    steps: funnel.quiz.steps?.length || 0
+                });
+
+                console.log('📦 Funnel completo carregado:', {
+                    metadata: funnel.quiz.metadata,
+                    stepsCount: funnel.quiz.steps?.length,
+                    allSteps: funnel.quiz.steps?.map(s => ({
+                        id: s.id,
+                        title: s.title,
+                        blocksCount: s.blocks?.length || 0
+                    })),
+                    isDraft: resolved.isDraft,
+                    draftId: funnel.draftId
+                });
             } catch (error) {
                 if (isMounted) {
                     const message = error instanceof Error ? error.message : 'Erro desconhecido';
-                    appLogger.error('❌ Erro ao carregar quiz:', { funnelId, error: message });
+                    appLogger.error('❌ [EditorPage] Erro ao carregar funnel:', {
+                        funnelId,
+                        error: message
+                    });
                     setLoadError(message);
                 }
             } finally {
@@ -227,24 +146,45 @@ export default function EditorPage() {
             }
         }
 
-        loadQuiz();
+        loadFunnel();
 
-        // Cleanup function to prevent state updates on unmounted component
         return () => {
             isMounted = false;
         };
-    }, [funnelId]);    // Handler de salvamento - ✅ CORRIGIDO: Agora realmente salva no Supabase
+    }, [funnelId, funnelIdentifier.draftId]);    // 🆕 Handler de salvamento usando FunnelService
     const handleSave = async (savedQuiz: QuizSchema) => {
         try {
-            appLogger.info('💾 Salvando quiz via ModernQuizEditor:', {
+            appLogger.info('💾 [EditorPage] Salvando funnel via FunnelService:', {
                 funnelId,
+                quizId,
                 title: savedQuiz.metadata.name
             });
-            // ✅ O salvamento real é feito pelo usePersistence dentro do ModernQuizEditor
-            // Este callback é apenas para logging e notificações
-            appLogger.info('✅ Quiz salvo com sucesso no Supabase');
+
+            // 🆕 USAR FUNNELSERVICE.SAVEFUNNEL
+            const result = await funnelService.saveFunnel(
+                savedQuiz,
+                funnelId,
+                quizId // Passa quizId para UPDATE ou undefined para INSERT
+            );
+
+            if (!result.success) {
+                throw new Error(result.error || 'Falha ao salvar funnel');
+            }
+
+            // Atualizar quizId se foi criado novo draft
+            if (!quizId && result.draftId) {
+                setQuizId(result.draftId);
+                appLogger.info('🆕 [EditorPage] Novo draft criado:', {
+                    draftId: result.draftId
+                });
+            }
+
+            appLogger.info('✅ [EditorPage] Funnel salvo com sucesso:', {
+                draftId: result.draftId,
+                version: result.version
+            });
         } catch (error) {
-            appLogger.error('❌ Erro ao salvar quiz:', error);
+            appLogger.error('❌ [EditorPage] Erro ao salvar funnel:', error);
             throw error;
         }
     };
@@ -296,10 +236,12 @@ export default function EditorPage() {
                         {console.log('🎯 Renderizando ModernQuizEditor com quiz:', {
                             name: quiz.metadata?.name,
                             steps: quiz.steps?.length,
-                            version: quiz.version
+                            version: quiz.version,
+                            quizId // 🆕 PASSAR QUIZ ID
                         })}
                         <ModernQuizEditor
                             initialQuiz={quiz}
+                            quizId={quizId} // 🆕 PASSAR QUIZ ID PARA PERSISTÊNCIA
                             onSave={handleSave}
                             onError={handleError}
                         />
