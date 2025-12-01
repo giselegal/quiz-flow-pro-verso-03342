@@ -5,9 +5,11 @@
  * - Exibir propriedades do bloco selecionado
  * - Formulário de edição (Fase 2)
  * - Validação em tempo real (Fase 2)
+ * 
+ * ✅ AUDIT: Optimized with React.memo and useCallback
  */
 
-import React, { useState } from 'react';
+import React, { useState, memo, useCallback, useMemo } from 'react';
 import SavedSnapshotsPanel from '../components/SavedSnapshotsPanel';
 import CalculationRuleEditor from '../components/CalculationRuleEditor';
 import { z } from 'zod';
@@ -30,17 +32,22 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 import { DragOverlay } from '@dnd-kit/core';
 
-export function PropertiesPanel() {
+export const PropertiesPanel = memo(function PropertiesPanel() {
     const quiz = useQuizStore((state) => state.quiz);
-    const { selectedStepId, selectedBlockId, isPropertiesPanelOpen } = useEditorStore();
+    const selectedStepId = useEditorStore((state) => state.selectedStepId);
+    const selectedBlockId = useEditorStore((state) => state.selectedBlockId);
+    const isPropertiesPanelOpen = useEditorStore((state) => state.isPropertiesPanelOpen);
+
+    // ✅ AUDIT: Memoize step and block lookups
+    const selectedBlock = useMemo(() => {
+        if (!quiz || !selectedStepId || !selectedBlockId) return null;
+        const step = quiz.steps?.find((s: any) => s.id === selectedStepId);
+        return step?.blocks?.find((b: any) => b.id === selectedBlockId) || null;
+    }, [quiz, selectedStepId, selectedBlockId]);
 
     if (!isPropertiesPanelOpen) {
         return null;
     }
-
-    // Encontrar o step e o bloco selecionados
-    const selectedStep = quiz?.steps?.find((step: any) => step.id === selectedStepId);
-    const selectedBlock = selectedStep?.blocks?.find((block: any) => block.id === selectedBlockId);
 
     return (
         <div className="w-80 border-l border-gray-200 bg-white flex flex-col">
@@ -59,16 +66,16 @@ export function PropertiesPanel() {
                 {!selectedBlock ? (
                     <EmptyState />
                 ) : (
-                    <BlockProperties block={selectedBlock} />
+                    <BlockProperties block={selectedBlock} stepId={selectedStepId!} />
                 )}
                 <SavedSnapshotsPanel />
             </div>
         </div>
     );
-}
+});
 
-// Estado vazio quando nenhum bloco está selecionado
-function EmptyState() {
+// ✅ AUDIT: Memoized empty state
+const EmptyState = memo(function EmptyState() {
     return (
         <div className="h-full flex items-center justify-center p-6 text-center">
             <div>
@@ -79,22 +86,35 @@ function EmptyState() {
             </div>
         </div>
     );
-}
+});
 
-// Exibir propriedades do bloco (versão simplificada - Fase 1)
-// Na Fase 2, será substituído por formulários completos
+// ✅ AUDIT: Memoized block properties component
 interface BlockPropertiesProps {
     block: QuizBlock;
+    stepId: string;
 }
 
-function BlockProperties({ block }: BlockPropertiesProps) {
+const BlockProperties = memo(function BlockProperties({ block, stepId }: BlockPropertiesProps) {
     const updateBlock = useQuizStore((state) => state.updateBlock);
-    const selectedStepId = useEditorStore((state) => state.selectedStepId);
 
-    const handleChange = (key: string, value: any) => {
-        if (!selectedStepId) return;
-        updateBlock(selectedStepId, block.id, { [key]: value });
-    };
+    // ✅ AUDIT: Memoize property change handler
+    const handleChange = useCallback((key: string, value: any) => {
+        updateBlock(stepId, block.id, { [key]: value });
+    }, [updateBlock, stepId, block.id]);
+
+    // ✅ AUDIT: Memoize calculation rule change handler
+    const handleRuleChange = useCallback((rule: any) => {
+        updateBlock(stepId, block.id, { calculationRule: rule });
+    }, [updateBlock, stepId, block.id]);
+
+    // ✅ AUDIT: Memoize fields lookup
+    const fieldsForType = useMemo(() => getFieldsForType(block.type), [block.type]);
+
+    // ✅ AUDIT: Memoize unmapped fields
+    const unmappedFields = useMemo(() => {
+        return Object.entries(block.properties || {})
+            .filter(([key]) => !fieldsForType.some(f => f.key === key));
+    }, [block.properties, fieldsForType]);
 
     return (
         <div className="p-4 space-y-4">
@@ -120,7 +140,7 @@ function BlockProperties({ block }: BlockPropertiesProps) {
                 ) : (
                     <div className="space-y-3">
                         {/* Priorizar campos mapeados pelo tipo */}
-                        {getFieldsForType(block.type).map((field) => (
+                        {fieldsForType.map((field) => (
                             <PropertyEditor
                                 key={field.key}
                                 label={field.label}
@@ -134,38 +154,33 @@ function BlockProperties({ block }: BlockPropertiesProps) {
                         {/* Editor de regras de cálculo */}
                         <CalculationRuleEditor
                             block={block}
-                            onChange={(rule) => {
-                                if (!selectedStepId) return;
-                                updateBlock(selectedStepId, block.id, { calculationRule: rule });
-                            }}
+                            onChange={handleRuleChange}
                         />
 
                         {/* Exibir demais campos não mapeados */}
-                        {Object.entries(block.properties)
-                            .filter(([key]) => !getFieldsForType(block.type).some(f => f.key === key))
-                            .map(([key, value]) => (
-                                <PropertyEditor
-                                    key={key}
-                                    label={key}
-                                    value={value}
-                                    constraints={(block.properties as any)?.constraints?.[key]}
-                                    onChange={(v) => handleChange(key, v)}
-                                />
-                            ))}
+                        {unmappedFields.map(([key, value]) => (
+                            <PropertyEditor
+                                key={key}
+                                label={key}
+                                value={value}
+                                constraints={(block.properties as any)?.constraints?.[key]}
+                                onChange={(v) => handleChange(key, v)}
+                            />
+                        ))}
                     </div>
                 )}
             </div>
         </div>
     );
-}
+});
 
-// Row de propriedade (label + valor)
+// ✅ AUDIT: Memoized property row component
 interface PropertyRowProps {
     label: string;
     value: string;
 }
 
-function PropertyRow({ label, value }: PropertyRowProps) {
+const PropertyRow = memo(function PropertyRow({ label, value }: PropertyRowProps) {
     return (
         <div className="flex items-start justify-between gap-2 py-1">
             <span className="text-xs font-medium text-gray-600 capitalize">
@@ -176,7 +191,7 @@ function PropertyRow({ label, value }: PropertyRowProps) {
             </span>
         </div>
     );
-}
+});
 
 // Formatar valores complexos para exibição
 function formatPropertyValue(value: any): string {
