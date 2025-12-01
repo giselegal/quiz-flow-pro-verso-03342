@@ -1,4 +1,4 @@
-import { useEditor } from '@/hooks/useEditor';
+import { useEditor } from '@/core/hooks/useEditor';
 import { getLoadedFunnelSync } from '@/templates/loaders/dynamic';
 import React from 'react';
 import { appLogger } from '@/lib/utils/appLogger';

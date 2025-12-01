@@ -1,5 +1,5 @@
 import React from 'react';
-import { useEditor } from '@/hooks/useEditor';
+import { useEditor } from '@/core/hooks/useEditor';
 
 interface EditorTelemetryPanelProps {
   quizId?: string;

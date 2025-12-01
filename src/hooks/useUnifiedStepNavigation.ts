@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'react';
-import { useEditor } from '@/hooks/useEditor';
+import { useEditor } from '@/core/hooks/useEditor';
 import { appLogger } from '@/lib/utils/appLogger';
 
 /**
@@ -103,16 +103,18 @@ export const useUnifiedStepNavigation = (): UseUnifiedStepNavigationReturn => {
                 (stepBlocks[stepKey as any]?.length || 0) > 0 ||
                 (stepBlocks[altStepKey as any]?.length || 0) > 0
             );
-            
+
             setCurrentStep(targetStep);
 
             if (process.env.NODE_ENV === 'development') {
-                appLogger.info('🧭 useUnifiedStepNavigation: Navegando para step', { data: [{
-                    from: currentStep,
-                    to: targetStep,
-                    stepId: stepKey,
-                    hasBlocks,
-                }] });
+                appLogger.info('🧭 useUnifiedStepNavigation: Navegando para step', {
+                    data: [{
+                        from: currentStep,
+                        to: targetStep,
+                        stepId: stepKey,
+                        hasBlocks,
+                    }]
+                });
             }
         }
     }, [currentStep, setCurrentStep, stepBlocks, TOTAL_STEPS]);

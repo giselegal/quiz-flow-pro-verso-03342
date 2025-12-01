@@ -14,7 +14,7 @@
  */
 
 import { useEffect, useRef, useState, useCallback } from 'react';
-import { useEditor } from '@/hooks/useEditor';
+import { useEditor } from '@/core/hooks/useEditor';
 import { funnelComponentsService } from '@/services/funnelComponentsService';
 import { convertBlocksToComponentInstances } from '@/lib/utils/componentInstanceConverter';
 import { useToast } from '@/hooks/use-toast';
@@ -202,7 +202,7 @@ export function useAutoSave(options: UseAutoSaveOptions = {}): UseAutoSaveReturn
       if (errorCount === 0) {
         setStatus('saved');
         appLogger.info(`✅ [useAutoSave] ${savedCount} steps salvos com sucesso`);
-        
+
         // Resetar para idle após 2s
         setTimeout(() => {
           setStatus('idle');

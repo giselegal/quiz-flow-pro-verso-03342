@@ -11,7 +11,7 @@ import { CSS } from '@dnd-kit/utilities';
 import { GripVertical, Trash2 } from 'lucide-react';
 import React from 'react';
 // Migrado: usar hook unificado em vez do provider canônico deprecated
-import { useEditor } from '@/hooks/useEditor';
+import { useEditor } from '@/core/hooks/useEditor';
 import { generateUniqueId } from '@/lib/utils/generateUniqueId';
 import { useStepSelection } from '@/hooks/useStepSelection';
 

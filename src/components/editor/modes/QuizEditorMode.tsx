@@ -20,7 +20,7 @@ import { useTemplateLoader } from '@/hooks/useTemplateLoader';
 import { useFunnelLivePreview } from '@/hooks/useFunnelLivePreview';
 import { useEditorStore, useCurrentStepBlocks } from '@/contexts/store/editorStore';
 import { UnifiedStepRenderer } from '@/components/editor-bridge/unified';
-import { useEditor } from '@/hooks/useEditor';
+import { useEditor } from '@/core/hooks/useEditor';
 
 // Componentes especializados
 import QuizPropertiesPanel from '../panels/QuizPropertiesPanel';
@@ -121,7 +121,7 @@ const QuizEditorMode: React.FC<QuizEditorModeProps> = ({
           win?.postMessage({ type: 'steps', steps: map }, '*');
         } catch { /* noop */ }
       }).catch(() => { /* noop */ });
-    } catch {}
+    } catch { }
   }, [funnelId]);
 
   useEffect(() => {
@@ -142,7 +142,7 @@ const QuizEditorMode: React.FC<QuizEditorModeProps> = ({
     const url = funnelId ? `/preview?slug=quiz-estilo&funnel=${encodeURIComponent(funnelId)}` : '/preview?slug=quiz-estilo';
     try {
       window.open(url, '_blank', 'noopener,noreferrer');
-    } catch {}
+    } catch { }
   }, [funnelId]);
 
   const handleRealExperienceToggle = useCallback(() => {
@@ -321,8 +321,8 @@ const QuizEditorMode: React.FC<QuizEditorModeProps> = ({
                       <Card
                         key={stepNum}
                         className={`cursor-pointer transition-colors ${stepNum === currentStep
-                            ? 'border-primary bg-primary/5'
-                            : 'hover:bg-muted/50'
+                          ? 'border-primary bg-primary/5'
+                          : 'hover:bg-muted/50'
                           }`}
                         onClick={() => handleStepSelect(stepNum)}
                       >
@@ -410,26 +410,26 @@ const QuizEditorMode: React.FC<QuizEditorModeProps> = ({
                     Visualização em tempo real alinhada ao modo edição
                   </CardDescription>
                 </CardHeader>
-                    <CardContent className="h-[calc(100%-88px)]">
-                      <div className="h-full">
-                        {(() => {
-                          const stepId = `step-${String(currentStep).padStart(2, '0')}`;
-                          const rawBlocks = (liveBlocks as any) || [];
-                          const blocks = toBlockComponents(rawBlocks);
-                          const stepType = getStepTypeKey(currentStep);
-                          const step = { id: stepId, type: stepType, order: currentStep, blocks } as any;
-                          return (
-                            <UnifiedStepRenderer
-                              step={step}
-                              mode="preview"
-                              productionParityInEdit
-                              autoAdvanceInEdit
-                              sessionData={{ selectedBlockId }}
-                            />
-                          );
-                        })()}
-                      </div>
-                    </CardContent>
+                <CardContent className="h-[calc(100%-88px)]">
+                  <div className="h-full">
+                    {(() => {
+                      const stepId = `step-${String(currentStep).padStart(2, '0')}`;
+                      const rawBlocks = (liveBlocks as any) || [];
+                      const blocks = toBlockComponents(rawBlocks);
+                      const stepType = getStepTypeKey(currentStep);
+                      const step = { id: stepId, type: stepType, order: currentStep, blocks } as any;
+                      return (
+                        <UnifiedStepRenderer
+                          step={step}
+                          mode="preview"
+                          productionParityInEdit
+                          autoAdvanceInEdit
+                          sessionData={{ selectedBlockId }}
+                        />
+                      );
+                    })()}
+                  </div>
+                </CardContent>
               </Card>
             </TabsContent>
           </div>

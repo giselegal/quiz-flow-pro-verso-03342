@@ -2,7 +2,7 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 // Migrado: usar hook unificado em vez do provider canônico deprecated
-import { useEditor } from '@/hooks/useEditor';
+import { useEditor } from '@/core/hooks/useEditor';
 import { useEditorAdapter } from '@/hooks/editor/useEditorAdapter';
 import { BlockType } from '@/types/editor';
 import { Trophy, User, Palette, Target, Star, Heart, Award } from 'lucide-react';

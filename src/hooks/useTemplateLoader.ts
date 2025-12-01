@@ -1,4 +1,4 @@
-import { useEditor } from '@/hooks/useEditor';
+import { useEditor } from '@/core/hooks/useEditor';
 import { Block } from '@/types/editor';
 import { useCallback, useEffect, useState } from 'react';
 import type { QuizStepV3 } from '@/types/quiz';
@@ -85,7 +85,7 @@ export function useTemplateLoader(): UseTemplateLoaderResult {
         // 3. Adaptar blocos para QuizStep
         appLogger.info(`🔄 Adaptando template ${stepId} para QuizStep`);
         const blocks = result.data;
-  const adapted = QuizStepAdapter.fromBlocks(blocks, stepId);
+        const adapted = QuizStepAdapter.fromBlocks(blocks, stepId);
 
         // 4. Salvar no cache
         templateCache[stepId] = adapted;
@@ -128,8 +128,8 @@ export function useTemplateLoader(): UseTemplateLoaderResult {
             });
         });
 
-  const results = await Promise.all(promises);
-  const validResults = results.filter(Boolean) as [string, QuizStepV3][];
+        const results = await Promise.all(promises);
+        const validResults = results.filter(Boolean) as [string, QuizStepV3][];
 
         const stepsMap = Object.fromEntries(validResults);
 

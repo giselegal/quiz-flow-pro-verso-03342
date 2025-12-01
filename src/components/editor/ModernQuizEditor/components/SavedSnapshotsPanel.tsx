@@ -7,6 +7,7 @@ export default function SavedSnapshotsPanel() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [loadingSnapshot, setLoadingSnapshot] = useState<string | null>(null);
+    const [hasLoggedWarning, setHasLoggedWarning] = useState(false);
 
     const load = async () => {
         setLoading(true);
@@ -14,7 +15,10 @@ export default function SavedSnapshotsPanel() {
         try {
             // ✅ TODO: Implementar API /api/quiz/saved quando backend estiver pronto
             // Por enquanto, retornar lista vazia para evitar erro 404
-            console.warn('SavedSnapshotsPanel: API /api/quiz/saved não implementada ainda');
+            if (!hasLoggedWarning) {
+                console.warn('SavedSnapshotsPanel: API /api/quiz/saved não implementada ainda');
+                setHasLoggedWarning(true);
+            }
             setItems([]);
         } catch (e: any) {
             setError(String(e?.message || e));
@@ -42,9 +46,12 @@ export default function SavedSnapshotsPanel() {
         } finally {
             setLoadingSnapshot(null);
         }
-    }; useEffect(() => {
+    };
+
+    useEffect(() => {
         load();
-        const id = setInterval(load, 5000);
+        // Aumentar intervalo de pooling para reduzir logs (30s ao invés de 5s)
+        const id = setInterval(load, 30000);
         return () => clearInterval(id);
     }, []);
 

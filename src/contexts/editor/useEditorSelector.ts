@@ -4,7 +4,7 @@
  * Hook simplificado para acesso ao state do editor
  */
 
-import { useEditor } from '@/hooks/useEditor';
+import { useEditor } from '@/core/hooks/useEditor';
 import type { Block } from '@/types/editor';
 
 interface LightweightEditorStateCompat {

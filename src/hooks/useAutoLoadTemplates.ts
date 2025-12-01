@@ -1,4 +1,4 @@
-import { useEditor } from '@/hooks/useEditor';
+import { useEditor } from '@/core/hooks/useEditor';
 import { useFunnels } from '@/contexts';
 import { useEffect } from 'react';
 import { appLogger } from '@/lib/utils/appLogger';
@@ -7,9 +7,9 @@ import { appLogger } from '@/lib/utils/appLogger';
  * Hook para carregar automaticamente os templates das etapas
  * quando o usuário navega entre as etapas no editor
  */
-export const useAutoLoadTemplates = (): { 
-  activeStageId: string; 
-  currentFunnelId: string | undefined; 
+export const useAutoLoadTemplates = (): {
+  activeStageId: string;
+  currentFunnelId: string | undefined;
 } => {
   const { getTemplateBlocks, currentFunnelId } = useFunnels();
   const activeStageId = 'step-1'; // Simplified - uses current step

@@ -2,7 +2,7 @@ import React from 'react';
 import { appLogger } from '@/lib/utils/logger';
 import { Button } from '@/components/ui/button';
 // Migrado: usar hook unificado em vez do provider canônico deprecated
-import { useEditor } from '@/hooks/useEditor';
+import { useEditor } from '@/core/hooks/useEditor';
 
 const FunnelStagesPanel: React.FC = () => {
   const editorContext = useEditor({ optional: true });
