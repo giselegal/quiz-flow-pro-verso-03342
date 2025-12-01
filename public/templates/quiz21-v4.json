@@ -1,5 +1,5 @@
 {
-  "$schema": "/schemas/quiz-template-v4.schema.json",
+  "$schema": "file:///workspaces/quiz-flow-pro-verso-03342/public/schemas/quiz-template-v4.schema.json",
   "version": "4.0.0",
   "schemaVersion": "4.0",
   "metadata": {
