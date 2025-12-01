@@ -97,12 +97,20 @@ export function usePersistence(options: PersistenceOptions = {}): UsePersistence
 
         // Atualizar com version check
         const slug = quiz.metadata?.name?.toLowerCase().replace(/\s+/g, '-') || `quiz-${Date.now()}`;
+        const funnel_id = quiz.metadata?.id || quizId;
+        
         const { error: updateError } = await supabaseSafe
           .from('quiz_drafts')
           .update({
             name: quiz.metadata?.name || 'Quiz sem título',
             slug,
-            steps: quiz.steps || [],
+            funnel_id,
+            content: {
+              steps: quiz.steps || [],
+              metadata: quiz.metadata || {},
+              theme: quiz.theme || {},
+              settings: quiz.settings || {},
+            },
             version: newVersion,
             updated_at: new Date().toISOString(),
           })
@@ -119,20 +127,32 @@ export function usePersistence(options: PersistenceOptions = {}): UsePersistence
 
         console.log(`✅ Draft ${quizId} atualizado (v${newVersion})`);
       } else {
-        // INSERT: novo draft
-        const newId = `draft-${Date.now()}`;
+        // INSERT: novo draft (UUID gerado automaticamente pelo Supabase)
         const slug = quiz.metadata?.name?.toLowerCase().replace(/\s+/g, '-') || `quiz-${Date.now()}`;
+        const funnel_id = quiz.metadata?.id || `funnel-${Date.now()}`;
+        
+        // Obter user_id do Supabase auth (se disponível)
+        const { data: { user } } = await supabaseSafe.auth.getUser();
+        
+        if (!user) {
+          throw new Error('Usuário não autenticado. Faça login para salvar o quiz.');
+        }
+        
         const { data, error: insertError } = await supabaseSafe
           .from('quiz_drafts')
           .insert({
-            id: newId,
+            user_id: user.id,
+            funnel_id,
             name: quiz.metadata?.name || 'Quiz sem título',
             slug,
-            steps: quiz.steps || [],
+            content: {
+              steps: quiz.steps || [],
+              metadata: quiz.metadata || {},
+              theme: quiz.theme || {},
+              settings: quiz.settings || {},
+            },
             version: 1,
-            is_published: false,
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString(),
+            status: 'draft',
           })
           .select()
           .single();
@@ -193,7 +213,7 @@ export function usePersistence(options: PersistenceOptions = {}): UsePersistence
     try {
       const { data, error: fetchError } = await supabaseSafe
         .from('quiz_drafts')
-        .select('id, name, slug, steps, version, updated_at')
+        .select('id, name, slug, content, version, updated_at')
         .eq('id', quizId)
         .single();
 
@@ -203,6 +223,9 @@ export function usePersistence(options: PersistenceOptions = {}): UsePersistence
 
       console.log(`✅ Draft ${quizId} carregado (v${data.version})`);
       
+      // Extrair dados do content JSONB
+      const content = data.content as any || {};
+      
       // Converter de quiz_drafts para QuizSchema
       const quizSchema: QuizSchema = {
         version: '1.0.0',
@@ -210,12 +233,13 @@ export function usePersistence(options: PersistenceOptions = {}): UsePersistence
         metadata: {
           id: data.id,
           name: data.name,
-          description: '',
-          author: '',
-          createdAt: new Date().toISOString(),
+          description: content.metadata?.description || '',
+          author: content.metadata?.author || '',
+          createdAt: content.metadata?.createdAt || new Date().toISOString(),
           updatedAt: data.updated_at || new Date().toISOString(),
+          ...content.metadata,
         },
-        theme: {
+        theme: content.theme || {
           colors: {
             primary: '#3B82F6',
             secondary: '#8B5CF6',
@@ -230,7 +254,7 @@ export function usePersistence(options: PersistenceOptions = {}): UsePersistence
           spacing: {},
           borderRadius: {},
         },
-        settings: {
+        settings: content.settings || {
           scoring: { 
             enabled: false, 
             method: 'sum' as const 
@@ -245,7 +269,7 @@ export function usePersistence(options: PersistenceOptions = {}): UsePersistence
             strictMode: false 
           },
         },
-        steps: data.steps as any[], // quiz_drafts.steps já é array de steps
+        steps: content.steps || [],
       };
 
       return quizSchema;
