@@ -51,13 +51,12 @@ export function adaptLegacyQuizToV4(legacy: LegacyQuizFormat | QuizSchema): Quiz
         },
       })),
       navigation: {
-        allowBack: true,
-        autoAdvance: false,
+        nextStep: null,
+        conditions: [],
       },
       validation: {
         required: false,
-        minBlocks: 0,
-        customRules: [],
+        rules: {},
       },
       version: 1,
     };

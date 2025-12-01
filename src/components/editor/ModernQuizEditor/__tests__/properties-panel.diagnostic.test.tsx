@@ -72,6 +72,8 @@ describe('🔍 DIAGNÓSTICO: Painel de Propriedades', () => {
                             metadata: {
                                 editable: true,
                                 reorderable: true,
+                                reusable: true,
+                                deletable: true,
                             },
                         },
                         {
@@ -87,6 +89,9 @@ describe('🔍 DIAGNÓSTICO: Painel de Propriedades', () => {
                             parentId: null,
                             metadata: {
                                 editable: true,
+                                reorderable: true,
+                                reusable: true,
+                                deletable: true,
                             },
                         },
                     ],
@@ -317,7 +322,7 @@ describe('🔍 DIAGNÓSTICO: Painel de Propriedades', () => {
         console.log('🎨 EDITOR STORE:');
         console.log('- Step selecionado:', editorState.selectedStepId);
         console.log('- Bloco selecionado:', editorState.selectedBlockId);
-        console.log('- isPanelOpen:', editorState.isPanelOpen);
+        console.log('- isPropertiesPanelOpen:', editorState.isPropertiesPanelOpen);
         console.log('- Tab ativa:', editorState.activeTab);
         console.log('');
         console.log('📦 BLOCOS DO STEP SELECIONADO:');

@@ -159,8 +159,8 @@ describe('🔗 DIAGNÓSTICO: Integração Completa', () => {
         console.log('');
         console.log('📝 ETAPA 5: PropertiesPanel deve mostrar campos...');
         await waitFor(() => {
-            const { isPanelOpen } = useEditorStore.getState();
-            console.log('  ✓ Painel aberto:', isPanelOpen);
+            const { isPropertiesPanelOpen } = useEditorStore.getState();
+            console.log('  ✓ Painel aberto:', isPropertiesPanelOpen);
 
             // Procurar por campos de propriedades
             const hasFields = container.querySelector('input[name="fontSize"]') ||
@@ -238,7 +238,7 @@ describe('🔗 DIAGNÓSTICO: Integração Completa', () => {
         console.log('Estado final do editor:');
         console.log('  - Step selecionado:', finalEditorState.selectedStepId ? '✓' : '✗');
         console.log('  - Bloco selecionado:', finalEditorState.selectedBlockId ? '✓' : '✗');
-        console.log('  - Painel aberto:', finalEditorState.isPanelOpen ? '✓' : '✗');
+        console.log('  - Painel aberto:', finalEditorState.isPropertiesPanelOpen ? '✓' : '✗');
         console.log('');
         console.log('═══════════════════════════════════════════════════════════');
     });

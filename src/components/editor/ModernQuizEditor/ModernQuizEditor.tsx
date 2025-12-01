@@ -24,6 +24,7 @@ import { usePerformanceMonitor, useMemoryLeakDetector } from '@/hooks/usePerform
 import { Activity } from 'lucide-react';
 import type { QuizSchema } from '@/schemas/quiz-schema.zod';
 import { normalizeQuizFormat } from './utils/quizAdapter';
+import { validateTemplateFormat, formatValidationReport } from './utils/templateValidator';
 
 export interface ModernQuizEditorProps {
     /** Quiz inicial para carregar no editor */
@@ -78,7 +79,6 @@ export function ModernQuizEditor({
 
     // Auto-save quando quiz muda
     useAutoSave(quiz, isDirty, persistence, 3000);
-
     // Carregar quiz inicial
     useEffect(() => {
         if (initialQuiz) {
@@ -87,6 +87,26 @@ export function ModernQuizEditor({
                 stepsKeys: !Array.isArray(initialQuiz.steps) ? Object.keys(initialQuiz.steps || {}) : undefined,
                 stepsLength: Array.isArray(initialQuiz.steps) ? initialQuiz.steps?.length : undefined,
             });
+
+            // 🔒 VALIDAR formato do template
+            const validationResult = validateTemplateFormat(initialQuiz);
+
+            if (!validationResult.valid) {
+                console.warn('⚠️ Template com problemas detectados:');
+                console.warn(formatValidationReport(validationResult));
+
+                // Se auto-fix disponível, usar
+                if (validationResult.fixed) {
+                    console.log('✅ Usando template auto-corrigido');
+                    loadQuiz(validationResult.fixed);
+                    return;
+                }
+            } else {
+                console.log('✅ Template válido!');
+                if (validationResult.warnings.length > 0) {
+                    console.warn(`⚠️ ${validationResult.warnings.length} avisos detectados - verifique console`);
+                }
+            }
 
             // 🔄 Normalizar formato (converte objeto para array se necessário)
             const normalizedQuiz = normalizeQuizFormat(initialQuiz);
@@ -100,7 +120,6 @@ export function ModernQuizEditor({
             loadQuiz(normalizedQuiz);
         }
     }, [initialQuiz, loadQuiz]);
-
     // ✅ CRITICAL: Auto-selecionar primeiro step quando quiz carregar
     useEffect(() => {
         console.log('🔍 useEffect[quiz] executado:', {
