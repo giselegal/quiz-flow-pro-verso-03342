@@ -118,6 +118,15 @@ interface BlockPreviewProps {
 }
 
 function BlockPreview({ block, isSelected, onClick }: BlockPreviewProps) {
+    // 🐛 DEBUG: Log de renderização
+    console.log('🎨 BlockPreview render:', {
+        id: block.id,
+        type: block.type,
+        isSelected,
+        hasProperties: !!block.properties,
+        title: block.properties?.title
+    });
+
     const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
         id: block.id,
         data: {
