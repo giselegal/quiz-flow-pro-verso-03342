@@ -296,7 +296,20 @@ export class TemplateService extends BaseCanonicalService {
     this.log('TemplateService disposed');
   }
 
-  // ==================== CORE OPERATIONS ====================
+  // ============================================================================
+  // 📥 LOADING & FETCHING (8 métodos)
+  // ============================================================================
+  // - loadV4Template()
+  // - getTemplate(id)
+  // - getStep(stepId)
+  // - getStepV4(stepId)
+  // - getAllSteps()
+  // - getAllStepsSync()
+  // - getStepOrder()
+  // - hasStep(stepId)
+  //
+  // 📝 Ver: src/services/templates/README.md (Extração futura)
+  // ============================================================================
 
   /**
    * 🆕 FASE 1: Carregar template v4 com validação Zod
@@ -700,6 +713,20 @@ export class TemplateService extends BaseCanonicalService {
     return this.createResult(normalizedBlocks);
   }
 
+  // ============================================================================
+  // 💾 CRUD OPERATIONS (7 métodos)
+  // ============================================================================
+  // - saveTemplate(template)
+  // - updateTemplate(id, updates)
+  // - deleteTemplate(id)
+  // - saveStep(stepId, blocks)
+  // - createBlock(stepId, dto)
+  // - updateBlock(stepId, blockId, updates)
+  // - deleteBlock(stepId, blockId)
+  //
+  // 📝 Ver: src/services/templates/README.md (Extração futura)
+  // ============================================================================
+
   /**
    * Salvar template (persiste no cache)
    */
@@ -765,7 +792,16 @@ export class TemplateService extends BaseCanonicalService {
     }
   }
 
-  // ==================== REGISTRY OPERATIONS ====================
+  // ============================================================================
+  // 🔍 QUERY & SEARCH (4 métodos)
+  // ============================================================================
+  // - listTemplates(filters)
+  // - searchTemplates(query)
+  // - listSteps(templateId)
+  // - getTemplateMetadata(id)
+  //
+  // 📝 Ver: src/services/templates/README.md (Extração futura)
+  // ============================================================================
 
   /**
    * Listar templates disponíveis
@@ -849,7 +885,16 @@ export class TemplateService extends BaseCanonicalService {
     }
   }
 
-  // ==================== CACHE OPERATIONS ====================
+  // ============================================================================
+  // 🎯 ACTIVE STATE MANAGEMENT (4 métodos)
+  // ============================================================================
+  // - setActiveTemplate(templateId, totalSteps)
+  // - setActiveFunnel(funnelId)
+  // - getActiveTemplate()
+  // - getActiveFunnel()
+  //
+  // 📝 Ver: src/services/templates/README.md (Extração futura)
+  // ============================================================================
 
   /**
    * 🎯 Definir template ativo (afeta número de steps na navegação)
@@ -907,6 +952,18 @@ export class TemplateService extends BaseCanonicalService {
       return 21; // Fallback seguro
     }
   }
+
+  // ============================================================================
+  // 🚀 PRELOAD & LAZY LOADING (5 métodos)
+  // ============================================================================
+  // - lazyLoadStep(stepId, preloadNeighbors)
+  // - preloadTemplates(ids)
+  // - prepareTemplate(templateId, options)
+  // - preloadTemplate(templateId, options)
+  // - unloadInactiveSteps(inactiveMinutes)
+  //
+  // 📝 Ver: src/services/templates/README.md (Extração futura)
+  // ============================================================================
 
   /**
    * 🚀 FASE 3.1: Smart Lazy Loading de Steps
@@ -1135,6 +1192,18 @@ export class TemplateService extends BaseCanonicalService {
     }
   }
 
+  // ============================================================================
+  // 🔄 CACHE MANAGEMENT (5 métodos)
+  // ============================================================================
+  // - invalidateTemplate(id)
+  // - invalidateStepCache(stepId)
+  // - clearCache()
+  // - getCacheStats()
+  // - logCacheReport()
+  //
+  // 📝 Ver: src/services/templates/README.md (Extração futura)
+  // ============================================================================
+
   /**
    * Invalidar template do cache
    */
@@ -1202,7 +1271,16 @@ export class TemplateService extends BaseCanonicalService {
     console.groupEnd();
   }
 
-  // ==================== CONVERSIONS & VALIDATION ====================
+  // ============================================================================
+  // ✅ VALIDATION & NORMALIZATION (4 métodos)
+  // ============================================================================
+  // - validateTemplate(template)
+  // - validateStep(stepId, blocks)
+  // - normalizeBlocks(blocks)
+  // - normalizeBlockType(type)  [private]
+  //
+  // 📝 Ver: src/services/templates/README.md (Extração futura)
+  // ============================================================================
 
   /**
    * Validar estrutura de template
