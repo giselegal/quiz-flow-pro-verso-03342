@@ -422,7 +422,7 @@ export class TemplateService extends BaseCanonicalService {
             blocks,
             metadata: {
               category: 'quiz-style',
-              funnelType: 'quiz21StepsComplete',
+              funnelType: this.activeFunnelId || 'unknown',
             },
           };
 
@@ -824,7 +824,7 @@ export class TemplateService extends BaseCanonicalService {
           blocks: [], // Não carregar blocos na listagem
           metadata: {
             category: 'quiz-style',
-            funnelType: 'quiz21StepsComplete',
+            funnelType: this.activeFunnelId || 'unknown',
           },
         });
       }
