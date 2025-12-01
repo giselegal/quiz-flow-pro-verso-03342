@@ -6,12 +6,14 @@
  * - Edição de steps e blocos
  * - Histórico para Undo/Redo
  * - Auto-save
+ * - 🆕 Multi-layer cache integration (L1+L2+L3)
  */
 
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 import type { QuizSchema } from '@/schemas/quiz-schema.zod';
 import type { HistoryEntry } from './types';
+import { multiLayerCache, cacheKeys, cacheTTL } from '@/config/cache.config';
 
 interface QuizStore {
   // ========================================================================
@@ -39,6 +41,16 @@ interface QuizStore {
    * Carregar quiz do JSON
    */
   loadQuiz: (quiz: QuizSchema) => void;
+  
+  /**
+   * 🆕 Carregar quiz do cache ou servidor
+   */
+  loadQuizFromCache: (quizId: string) => Promise<QuizSchema | null>;
+  
+  /**
+   * 🆕 Invalidar cache do quiz
+   */
+  invalidateQuizCache: (quizId: string) => Promise<void>;
   
   /**
    * Definir quiz (alias para loadQuiz)
@@ -147,6 +159,64 @@ export const useQuizStore = create<QuizStore>()(
         state.historyIndex = 0;
         state.lastSaved = new Date();
       });
+      
+      // 🆕 Cache the quiz in all layers
+      const quizId = quiz?.metadata?.id || 'default';
+      multiLayerCache.set('templates', cacheKeys.quiz(quizId), quiz, cacheTTL.quiz)
+        .catch((err) => console.warn('⚠️ Failed to cache quiz:', err));
+    },
+    
+    // 🆕 Load quiz from cache first, then fallback to server
+    loadQuizFromCache: async (quizId: string) => {
+      set((state) => { state.isLoading = true; });
+      
+      try {
+        // Try cache first (L1 → L2 → L3)
+        const cached = await multiLayerCache.get<QuizSchema>('templates', cacheKeys.quiz(quizId));
+        
+        if (cached) {
+          console.log('💾 [CACHE HIT] Quiz loaded from cache:', quizId);
+          get().loadQuiz(cached);
+          return cached;
+        }
+        
+        console.log('❌ [CACHE MISS] Quiz not in cache:', quizId);
+        
+        // Fallback: Try localStorage (legacy support)
+        const localData = localStorage.getItem(`quiz-saved-${quizId}`);
+        if (localData) {
+          try {
+            const parsed = JSON.parse(localData);
+            if (parsed?.quiz) {
+              console.log('💾 [LOCALSTORAGE] Quiz loaded from localStorage:', quizId);
+              get().loadQuiz(parsed.quiz);
+              return parsed.quiz;
+            }
+          } catch {
+            console.warn('⚠️ Failed to parse localStorage quiz');
+          }
+        }
+        
+        set((state) => { 
+          state.isLoading = false; 
+          state.error = 'Quiz não encontrado no cache';
+        });
+        return null;
+        
+      } catch (error) {
+        console.error('❌ Error loading quiz from cache:', error);
+        set((state) => { 
+          state.isLoading = false; 
+          state.error = (error as Error).message;
+        });
+        return null;
+      }
+    },
+    
+    // 🆕 Invalidate quiz cache
+    invalidateQuizCache: async (quizId: string) => {
+      console.log('🗑️ Invalidating quiz cache:', quizId);
+      await multiLayerCache.delete('templates', cacheKeys.quiz(quizId));
     },
     
     setQuiz: (quiz) => {
@@ -399,6 +469,9 @@ export const useQuizStore = create<QuizStore>()(
           
           localStorage.setItem(`quiz-saved-${funnelId}`, JSON.stringify(saveData));
           
+          // 🆕 Update cache after save
+          await multiLayerCache.set('templates', cacheKeys.quiz(funnelId), state.quiz, cacheTTL.quiz);
+          
           set((s) => {
             s.isDirty = false;
             s.lastSaved = new Date();
@@ -444,6 +517,9 @@ export const useQuizStore = create<QuizStore>()(
           s.lastSaved = new Date();
           if (validation.valid) s.error = null;
         });
+        
+        // 🆕 Update cache after successful save
+        await multiLayerCache.set('templates', cacheKeys.quiz(funnelId), state.quiz, cacheTTL.quiz);
         
         console.log('✅ Quiz salvo com sucesso:', result.data);
       } catch (err) {

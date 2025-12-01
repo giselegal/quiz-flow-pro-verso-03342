@@ -7,11 +7,13 @@
  * - Drag source para DnD (Fase 3)
  * 
  * ✅ AUDIT: Optimized with React.memo
+ * 🆕 PHASE 1: Added throttle for scroll events
  */
 
-import React, { memo, useMemo } from 'react';
+import React, { memo, useMemo, useRef, useCallback } from 'react';
 import { useEditorStore } from '../store/editorStore';
 import { useDraggable } from '@dnd-kit/core';
+import { throttle } from '@/lib/utils/performanceOptimizations';
 
 // Tipos de blocos disponíveis no sistema
 const BLOCK_TYPES = {
@@ -35,6 +37,16 @@ const BLOCK_TYPES = {
 export const BlockLibrary = memo(function BlockLibrary() {
     const isBlockLibraryOpen = useEditorStore((state) => state.isBlockLibraryOpen);
 
+    // 🆕 PHASE 1: Throttled scroll handler for performance (max 10 calls/second)
+    const handleScroll = useMemo(
+        () => throttle((e: React.UIEvent<HTMLDivElement>) => {
+            // Future: Implement lazy loading of block categories if needed
+            // const scrollTop = e.currentTarget.scrollTop;
+            // console.debug('Library scroll position:', scrollTop);
+        }, 100),
+        []
+    );
+
     if (!isBlockLibraryOpen) {
         return null;
     }
@@ -48,7 +60,10 @@ export const BlockLibrary = memo(function BlockLibrary() {
             </div>
 
             {/* Categorias de blocos */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-6">
+            <div 
+                className="flex-1 overflow-y-auto p-4 space-y-6"
+                onScroll={handleScroll}
+            >
                 {/* Categoria: Perguntas */}
                 <BlockCategory title="Perguntas" blocks={BLOCK_TYPES.question} />
 

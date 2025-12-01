@@ -6,6 +6,8 @@
  * - Zustand + Immer para estado
  * - dnd-kit para drag & drop
  * - Integração com cálculos
+ * 
+ * 🆕 PHASE 1: Added performance monitoring and memory leak detection
  */
 
 import { useEffect } from 'react';
@@ -14,6 +16,8 @@ import { useQuizStore } from './store/quizStore';
 import { useEditorStore } from './store/editorStore';
 import { usePersistence, useAutoSave } from './hooks/usePersistence';
 import { SaveStatusIndicator } from './components/SaveStatusIndicator';
+import { PerformanceDebugger } from './components/PerformanceDebugger';
+import { usePerformanceMonitor, useMemoryLeakDetector } from '@/hooks/usePerformanceMonitor';
 import type { QuizSchema } from '@/schemas/quiz-schema.zod';
 
 export interface ModernQuizEditorProps {
@@ -34,6 +38,19 @@ export function ModernQuizEditor({
     onError,
 }: ModernQuizEditorProps) {
     console.log('🎨 ModernQuizEditor rendering', { initialQuiz: !!initialQuiz, quizId });
+
+    // 🆕 PHASE 1: Performance monitoring
+    const { metrics } = usePerformanceMonitor('ModernQuizEditor');
+    
+    // 🆕 PHASE 1: Memory leak detection
+    useMemoryLeakDetector('ModernQuizEditor');
+    
+    // Log slow renders in development
+    useEffect(() => {
+        if (process.env.NODE_ENV === 'development' && metrics.avgRenderTime > 50) {
+            console.warn('⚠️ ModernQuizEditor renderizando lento:', metrics);
+        }
+    }, [metrics]);
 
     const { loadQuiz, quiz, isLoading, error, isDirty } = useQuizStore();
 
@@ -205,6 +222,9 @@ export function ModernQuizEditor({
             <div className="flex-1 overflow-hidden">
                 <EditorLayout />
             </div>
+            
+            {/* 🆕 PHASE 1: Performance Debugger (dev only) */}
+            <PerformanceDebugger position="bottom-right" />
         </div>
     );
 }
