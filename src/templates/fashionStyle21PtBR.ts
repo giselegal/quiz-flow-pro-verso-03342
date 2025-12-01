@@ -1,17 +1,11 @@
 /**
  * Template: Fashion Style 21 (PT-BR)
  * 
- * ⚠️ PRECISA REFATORAÇÃO para ModernQuizEditor
- * 
- * TODO: Atualizar para novo schema (QuizStepSchemaZ):
- * - Usar navigation: { nextStep: string } ao invés de nextStep direto
- * - IDs no formato step-XX (dois dígitos)
- * - Adicionar title obrigatório
- * - Usar tipos corretos do Zod
+ * ✅ ATUALIZADO para QuizStepSchemaZ
  * 
  * Estrutura: 1 intro, 10 perguntas principais, 1 transição, 6 perguntas estratégicas, 1 transição-result, 1 resultado, 1 oferta
  * 
- * @deprecated Use templates JSON ou crie via ModernQuizEditor
+ * @deprecated Use templates JSON ou crie via ModernQuizEditor para novos projetos
  */
 
 import type { QuizStep, QuizBlock } from '@/schemas/quiz-schema.zod';
@@ -46,18 +40,19 @@ export function buildFashionStyle21Steps(funnelId?: string): QuizStep[] {
       makeBlock('b1-4', 'button', 4, { action: 'next-step' }, { text: 'Começar' }),
     ],
     navigation: { nextStep: 'step-02' },
-  } as QuizStep);
+  });
 
   // 2-11) 10 perguntas principais (multiSelect, 3 seleções obrigatórias)
   for (let i = 2; i <= 11; i++) {
     const order = i;
-    const stepId = `step-${i}`;
-    const next = i < 11 ? `step-${i + 1}` : 'step-12';
+    const stepId = `step-${String(i).padStart(2, '0')}`;
+    const next = i < 11 ? `step-${String(i + 1).padStart(2, '0')}` : 'step-12';
     steps.push({
       id: stepId,
       type: 'question',
       order,
-      nextStep: next,
+      title: `Pergunta ${i - 1}`,
+      navigation: { nextStep: next },
       blocks: [
         makeBlock(`b${i}-t`, 'heading', 1, { level: 2, textAlign: 'left' }, { text: `Pergunta ${i - 1}: selecione 3 opções` }),
         makeBlock(
@@ -76,7 +71,8 @@ export function buildFashionStyle21Steps(funnelId?: string): QuizStep[] {
     id: 'step-12',
     type: 'transition',
     order: 12,
-    nextStep: 'step-13',
+    title: 'Transição',
+    navigation: { nextStep: 'step-13' },
     blocks: [
       makeBlock('b12-1', 'heading', 1, { level: 2, textAlign: 'center' }, { text: 'Quase lá!' }),
       makeBlock('b12-2', 'text', 2, { textAlign: 'center' }, { text: 'Agora algumas perguntas estratégicas para refinar seu resultado.' }),
@@ -93,7 +89,8 @@ export function buildFashionStyle21Steps(funnelId?: string): QuizStep[] {
       id: stepId,
       type: 'strategic-question',
       order,
-      nextStep: next,
+      title: `Pergunta estratégica ${i - 12}`,
+      navigation: { nextStep: next },
       blocks: [
         makeBlock(`b${i}-t`, 'heading', 1, { level: 2, textAlign: 'left' }, { text: `Pergunta estratégica ${i - 12}` }),
         makeBlock(
@@ -112,7 +109,8 @@ export function buildFashionStyle21Steps(funnelId?: string): QuizStep[] {
     id: 'step-19',
     type: 'transition-result',
     order: 19,
-    nextStep: 'step-20',
+    title: 'Processando',
+    navigation: { nextStep: 'step-20' },
     blocks: [
       makeBlock('b19-1', 'heading', 1, { level: 2, textAlign: 'center' }, { text: 'Processando seu resultado...' }),
       makeBlock('b19-2', 'text', 2, { textAlign: 'center' }, { text: 'Levamos em conta suas preferências e combinamos com nosso mapa de estilos.' }),
@@ -124,7 +122,8 @@ export function buildFashionStyle21Steps(funnelId?: string): QuizStep[] {
     id: 'step-20',
     type: 'result',
     order: 20,
-    nextStep: 'step-21',
+    title: 'Seu Resultado',
+    navigation: { nextStep: 'step-21' },
     blocks: [
       makeBlock('b20-1', 'heading', 1, { level: 2, textAlign: 'center' }, { text: 'Seu resultado personalizado' }),
       makeBlock('b20-2', 'text', 2, { textAlign: 'center' }, { text: 'Seu estilo predominante é: {resultStyle}. Toque em continuar para ver uma oferta especial para você.' }),
@@ -137,19 +136,17 @@ export function buildFashionStyle21Steps(funnelId?: string): QuizStep[] {
     id: 'step-21',
     type: 'offer',
     order: 21,
+    title: 'Oferta Especial',
+    navigation: { nextStep: null },
     blocks: [
       makeBlock('b21-1', 'heading', 1, { level: 2, textAlign: 'center' }, { text: 'Oferta Especial' }),
       makeBlock('b21-2', 'text', 2, { textAlign: 'center' }, { text: 'Receba um guia completo com combinações, cores e peças-chave para seu estilo.' }),
       makeBlock('b21-3', 'button', 3, { action: 'open-url', url: 'https://example.com/checkout' }, { text: 'Quero meu guia' }),
     ],
-    offerMap: {
-      // Estrutura simples pronta para evoluir
-      default: { sku: 'guia-estilo', price: 97.0 },
-    },
   });
 
-  // Se veio um funnelId, guardar como metadata simples
-  return steps.map(s => ({ ...s, metadata: { ...(s.metadata || {}), funnelId: funnelId || undefined } }));
+  // Retorna steps conforme schema
+  return steps;
 }
 
 export default { buildFashionStyle21Steps };
