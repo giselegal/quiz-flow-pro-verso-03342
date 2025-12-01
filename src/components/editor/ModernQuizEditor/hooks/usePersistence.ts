@@ -205,7 +205,8 @@ export function usePersistence(options: PersistenceOptions = {}): UsePersistence
       
       // Converter de quiz_drafts para QuizSchema
       const quizSchema: QuizSchema = {
-        version: data.version?.toString() || '1.0',
+        version: '1.0.0',
+        schemaVersion: '4.0',
         metadata: {
           id: data.id,
           name: data.name,
@@ -214,8 +215,27 @@ export function usePersistence(options: PersistenceOptions = {}): UsePersistence
           createdAt: new Date().toISOString(),
           updatedAt: data.updated_at || new Date().toISOString(),
         },
+        theme: {
+          colors: {
+            primary: '#3B82F6',
+            secondary: '#8B5CF6',
+            background: '#FFFFFF',
+            text: '#1F2937',
+            border: '#E5E7EB',
+          },
+          fonts: {
+            heading: 'Inter',
+            body: 'Inter',
+          },
+          spacing: {},
+          borderRadius: {},
+        },
+        settings: {
+          scoring: { enabled: false, method: 'sum' },
+          navigation: { allowBack: true, autoAdvance: false, showProgress: true },
+          validation: { required: true, strictMode: false },
+        },
         steps: data.steps as any[], // quiz_drafts.steps já é array de steps
-        defaultTemplateId: null,
       };
 
       return quizSchema;
