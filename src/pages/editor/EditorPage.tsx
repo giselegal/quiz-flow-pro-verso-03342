@@ -58,7 +58,7 @@ async function loadQuizWithCache(templatePath: string): Promise<QuizSchema> {
     // Create new request
     const fetchPromise = (async (): Promise<QuizSchema> => {
         const startTime = performance.now();
-        
+
         const response = await fetch(templatePath, {
             cache: 'default', // Use browser's native caching
             headers: {
@@ -77,10 +77,10 @@ async function loadQuizWithCache(templatePath: string): Promise<QuizSchema> {
         const validated = QuizSchemaZ.parse(data);
 
         const loadTime = performance.now() - startTime;
-        appLogger.info('✅ [EditorPage] Quiz loaded:', { 
-            templatePath, 
+        appLogger.info('✅ [EditorPage] Quiz loaded:', {
+            templatePath,
             loadTimeMs: loadTime.toFixed(0),
-            steps: validated.steps?.length || 0 
+            steps: validated.steps?.length || 0
         });
 
         // Store in cache
@@ -91,7 +91,7 @@ async function loadQuizWithCache(templatePath: string): Promise<QuizSchema> {
 
     // Track in-flight request
     inFlightRequests.set(templatePath, fetchPromise);
-    
+
     try {
         return await fetchPromise;
     } finally {
@@ -177,7 +177,7 @@ export default function EditorPage() {
     // ✅ AUDIT: Using memoized loader with caching
     useEffect(() => {
         let isMounted = true;
-        
+
         async function loadQuiz() {
             if (!funnelId) return;
 
@@ -195,7 +195,23 @@ export default function EditorPage() {
                     setQuiz(validated);
                     appLogger.info('✅ Quiz carregado no editor moderno:', {
                         title: validated.metadata?.name,
-                        steps: validated.steps?.length || 0
+                        steps: validated.steps?.length || 0,
+                        firstStepId: validated.steps?.[0]?.id,
+                        firstStepBlocks: validated.steps?.[0]?.blocks?.length || 0,
+                        sampleBlock: validated.steps?.[0]?.blocks?.[0] ? {
+                            id: validated.steps[0].blocks[0].id,
+                            type: validated.steps[0].blocks[0].type
+                        } : null
+                    });
+
+                    console.log('📦 Quiz completo carregado:', {
+                        metadata: validated.metadata,
+                        stepsCount: validated.steps?.length,
+                        allSteps: validated.steps?.map(s => ({
+                            id: s.id,
+                            title: s.title,
+                            blocksCount: s.blocks?.length || 0
+                        }))
                     });
                 }
             } catch (error) {
@@ -212,7 +228,7 @@ export default function EditorPage() {
         }
 
         loadQuiz();
-        
+
         // Cleanup function to prevent state updates on unmounted component
         return () => {
             isMounted = false;

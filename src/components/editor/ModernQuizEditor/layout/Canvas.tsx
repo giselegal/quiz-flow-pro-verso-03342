@@ -21,7 +21,7 @@ import { CSS } from '@dnd-kit/utilities';
 import ValidationPanel from '../components/ValidationPanel';
 
 // ✅ AUDIT: Debug logging only in development
-const DEBUG = import.meta.env.DEV && false; // Set to true to enable debug logs
+const DEBUG = import.meta.env.DEV && true; // Set to true to enable debug logs
 
 export const Canvas = memo(function Canvas() {
     const quiz = useQuizStore((state) => state.quiz);
@@ -42,8 +42,27 @@ export const Canvas = memo(function Canvas() {
             selectedStepId,
             selectedStep: selectedStep?.id,
             blocksCount: selectedStep?.blocks?.length,
+            blocks: selectedStep?.blocks,
+            firstBlock: selectedStep?.blocks?.[0],
         });
     }
+
+    // 🔍 DIAGNÓSTICO: Log crítico de renderização
+    console.log('🔍 Canvas DIAGNÓSTICO:', {
+        '1_temQuiz': !!quiz,
+        '2_temSteps': !!quiz?.steps,
+        '3_quantosSteps': quiz?.steps?.length || 0,
+        '4_stepSelecionado': selectedStepId,
+        '5_stepEncontrado': !!selectedStep,
+        '6_stepId': selectedStep?.id,
+        '7_temBlocks': !!selectedStep?.blocks,
+        '8_quantosBlocks': selectedStep?.blocks?.length || 0,
+        '9_primeiroBloco': selectedStep?.blocks?.[0] ? {
+            id: selectedStep.blocks[0].id,
+            type: selectedStep.blocks[0].type,
+            hasProperties: !!selectedStep.blocks[0].properties
+        } : null
+    });
 
     // ✅ AUDIT: Memoize select handler
     const handleSelectBlock = useCallback((blockId: string) => {
@@ -65,11 +84,11 @@ export const Canvas = memo(function Canvas() {
                     <div className="max-w-3xl mx-auto space-y-6">
                         <ValidationPanel />
                         <ResultPreview />
-                        <CanvasSortable 
-                            stepId={selectedStep.id} 
-                            blocks={selectedStep.blocks} 
-                            selectedBlockId={selectedBlockId} 
-                            onSelect={handleSelectBlock} 
+                        <CanvasSortable
+                            stepId={selectedStep.id}
+                            blocks={selectedStep.blocks}
+                            selectedBlockId={selectedBlockId}
+                            onSelect={handleSelectBlock}
                         />
                     </div>
                 )}
@@ -322,7 +341,7 @@ const BlockActions = memo(function BlockActions({ block }: { block: QuizBlock })
 // ✅ AUDIT: Memoized result preview component
 const ResultPreview = memo(function ResultPreview() {
     const quiz = useQuizStore((s) => s.quiz);
-    
+
     // ✅ AUDIT: Memoize complex computation
     const result = useMemo(() => {
         if (!quiz) return null;
@@ -338,7 +357,7 @@ const ResultPreview = memo(function ResultPreview() {
                     { label: 'Alto', min: 26, max: 100 },
                 ]
             };
-            
+
             (quiz.steps || []).forEach((step: any) => {
                 (step.blocks || []).forEach((b: any) => {
                     const val = b.selectedOption?.value ?? b.value ?? b.answer ?? b.properties?.value ?? b.properties?.selectedOption?.value;

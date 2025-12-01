@@ -77,15 +77,25 @@ export function ModernQuizEditor({
 
         if (quiz && quiz.steps && quiz.steps.length > 0) {
             const firstStepId = quiz.steps[0].id;
-            console.log('🎯 Auto-selecionando primeiro step:', firstStepId);
+            const firstStepBlocks = quiz.steps[0].blocks;
+            console.log('🎯 Auto-selecionando primeiro step:', {
+                stepId: firstStepId,
+                stepTitle: quiz.steps[0].title,
+                blocksCount: firstStepBlocks?.length || 0,
+                firstBlockType: firstStepBlocks?.[0]?.type,
+            });
+
             useEditorStore.getState().selectStep(firstStepId);
 
             // Verificar se foi realmente selecionado
-            const editorState = useEditorStore.getState();
-            console.log('✅ Verificação pós-seleção:', {
-                selectedStepId: editorState.selectedStepId,
-                match: editorState.selectedStepId === firstStepId
-            });
+            setTimeout(() => {
+                const editorState = useEditorStore.getState();
+                console.log('✅ Verificação pós-seleção (após timeout):', {
+                    selectedStepId: editorState.selectedStepId,
+                    match: editorState.selectedStepId === firstStepId,
+                    quizSteps: quiz.steps.length,
+                });
+            }, 100);
         } else {
             console.warn('⚠️ Não foi possível auto-selecionar step:', {
                 quiz: !!quiz,
