@@ -337,17 +337,37 @@ function CanvasSortable({ stepId, blocks, selectedBlockId, onSelect }: { stepId:
     // Usar IDs dos blocos para o SortableContext
     const blockIds = blocks.map((block) => block.id);
 
+    // 🐛 DEBUG: Log detalhado
+    console.log('🔧 CanvasSortable render:', {
+        stepId,
+        blocksLength: blocks.length,
+        blockIds,
+        firstBlock: blocks[0],
+        selectedBlockId
+    });
+
+    if (!blocks || blocks.length === 0) {
+        console.warn('⚠️ CanvasSortable: Nenhum bloco para renderizar!');
+        return <div className="p-4 text-center text-gray-500">Nenhum bloco encontrado</div>;
+    }
+
     return (
         <SortableContext items={blockIds} strategy={verticalListSortingStrategy}>
             <div className="space-y-4">
-                {blocks.map((block: any) => (
-                    <BlockPreview
-                        key={block.id}
-                        block={block}
-                        isSelected={selectedBlockId === block.id}
-                        onClick={() => onSelect(block.id)}
-                    />
-                ))}
+                {blocks.map((block: any, index: number) => {
+                    console.log(`📦 Renderizando bloco ${index}:`, block.id, block.type);
+                    return (
+                        <BlockPreview
+                            key={block.id}
+                            block={block}
+                            isSelected={selectedBlockId === block.id}
+                            onClick={() => {
+                                console.log('🖱️ Bloco clicado:', block.id);
+                                onSelect(block.id);
+                            }}
+                        />
+                    );
+                })}
             </div>
         </SortableContext>
     );
