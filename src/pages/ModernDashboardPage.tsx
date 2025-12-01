@@ -31,7 +31,7 @@ const AIOptimizationPage = lazy(() => import('./dashboard/AIOptimizationPage'));
 const BackupPage = lazy(() => import('./dashboard/BackupPage'));
 const ParticipantsPage = lazy(() => import('./dashboard/ParticipantsPage'));
 const FacebookMetricsPage = lazy(() => import('./dashboard/FacebookMetricsPage'));
-const TemplatesFunisPage = lazy(() => import('./dashboard/TemplatesFunisPage'));
+const ModelosFunisPage = lazy(() => import('./dashboard/ModelosFunisPage'));
 const MeusFunisPageReal = lazy(() => import('./dashboard/MeusFunisPageReal'));
 const TemplatesPage = lazy(() => import('./dashboard/TemplatesPage'));
 const QuizFunnelsPage = lazy(() => import('./dashboard/QuizFunnelsPage'));
@@ -39,10 +39,6 @@ const ABTestsPage = lazy(() => import('./dashboard/ABTestsPage'));
 const CreativesPage = lazy(() => import('./dashboard/CreativesPage'));
 const IntegrationsPage = lazy(() => import('./dashboard/IntegrationsPage'));
 const SettingsPage = lazy(() => import('./dashboard/SettingsPage'));
-
-// Páginas de debug para templates
-const TemplateDebugPage = lazy(() => import('./dashboard/TemplateDebugPage'));
-const TemplateInvestigationPage = lazy(() => import('./dashboard/TemplateInvestigationPage'));
 
 // Substituímos a antiga TemplatesPage mockada por um wrapper leve que usa dados reais
 
@@ -142,12 +138,12 @@ const pageConfig: Record<string, { title: string; subtitle: string; actions?: Re
         ),
     },
     '/dashboard/funnel-templates': {
-        title: 'Templates de Funis',
-        subtitle: 'Modelos profissionais prontos para uso',
+        title: 'Modelos de Funis',
+        subtitle: 'Templates profissionais prontos para uso',
         actions: (
             <Button variant="outline" size="sm">
                 <Plus className="w-4 h-4 mr-2" />
-                Criar Template
+                Novo Funil
             </Button>
         ),
     },
@@ -265,7 +261,7 @@ const ModernDashboardPage: React.FC = () => {
                     <Route path="/dashboard/backup" component={BackupPage} />
 
                     {/* CONTENT MANAGEMENT - Páginas de conteúdo */}
-                    <Route path="/dashboard/funnel-templates" component={TemplatesFunisPage} />
+                    <Route path="/dashboard/funnel-templates" component={ModelosFunisPage} />
                     <Route path="/dashboard/funnels" component={MeusFunisPageReal} />
                     <Route path="/dashboard/templates" component={TemplatesPage} />
                     <Route path="/dashboard/quiz-funnels" component={QuizFunnelsPage} />
@@ -278,46 +274,42 @@ const ModernDashboardPage: React.FC = () => {
                     <Route path="/dashboard/integrations" component={IntegrationsPage} />
                     <Route path="/dashboard/settings" component={SettingsPage} />
 
-                    {/* DEBUG - Páginas de debug para templates */}
-                    <Route path="/dashboard/template-debug" component={TemplateDebugPage} />
-                    <Route path="/dashboard/template-investigation" component={TemplateInvestigationPage} />
-
-                    {/* LEGACY REDIRECTS - Compatibilidade com rotas antigas */}
-                    <Route path="/dashboard/templates-funis">
-                        {() => {
-                            window.history.replaceState(null, '', '/dashboard/funnel-templates');
-                            return null;
-                        }}
-                    </Route>
-                    <Route path="/dashboard/meus-funis">
-                        {() => {
-                            window.history.replaceState(null, '', '/dashboard/funnels');
-                            return null;
-                        }}
-                    </Route>
-                    <Route path="/dashboard/quizzes">
-                        {() => {
-                            window.history.replaceState(null, '', '/dashboard/funnels');
-                            return null;
-                        }}
-                    </Route>
-
-                    {/* Configurações */}
+                    {/* SYSTEM - Configurações do sistema */}
+                    <Route path="/dashboard/integrations" component={IntegrationsPage} />
                     <Route path="/dashboard/settings" component={SettingsPage} />
 
-                    {/* Fallback para rotas não encontradas dentro do dashboard */}
-                    <Route>
-                        <div className="text-center py-12">
-                            <h2 className="text-2xl font-bold text-gray-900 mb-2">Página não encontrada</h2>
-                            <p className="text-gray-600 mb-4">A página que você procura não existe.</p>
-                            <Button onClick={() => window.location.href = '/dashboard'}>
-                                Voltar ao Dashboard
-                            </Button>
-                        </div>
-                    </Route>
-                </Switch>
-            </Suspense>
-        </UnifiedAdminLayout>
+                    {/* LEGACY REDIRECTS - Compatibilidade com rotas antigas */}
+                        }}
+                </Route>
+                <Route path="/dashboard/meus-funis">
+                    {() => {
+                        window.history.replaceState(null, '', '/dashboard/funnels');
+                        return null;
+                    }}
+                </Route>
+                <Route path="/dashboard/quizzes">
+                    {() => {
+                        window.history.replaceState(null, '', '/dashboard/funnels');
+                        return null;
+                    }}
+                </Route>
+
+                {/* Configurações */}
+                <Route path="/dashboard/settings" component={SettingsPage} />
+
+                {/* Fallback para rotas não encontradas dentro do dashboard */}
+                <Route>
+                    <div className="text-center py-12">
+                        <h2 className="text-2xl font-bold text-gray-900 mb-2">Página não encontrada</h2>
+                        <p className="text-gray-600 mb-4">A página que você procura não existe.</p>
+                        <Button onClick={() => window.location.href = '/dashboard'}>
+                            Voltar ao Dashboard
+                        </Button>
+                    </div>
+                </Route>
+            </Switch>
+        </Suspense>
+        </UnifiedAdminLayout >
     );
 };
 

@@ -220,8 +220,7 @@ const ModelosFunisPage: React.FC = () => {
 
   const handleUseModel = (model: FunnelModel) => {
     appLogger.info('🚀 Usando modelo:', { data: [model.id] });
-    const tpl = TemplateService.getTemplate(model.id);
-    const baseUrl = tpl?.editorUrl || model.editorUrl || `/editor?funnel=${model.id}`;
+    const baseUrl = model.editorUrl || `/editor?funnel=${model.id}`;
     const newFunnelId = `funnel-${model.id}-${Date.now()}`;
     const url = `${baseUrl}${baseUrl.includes('?') ? '&' : '?'}funnel=${newFunnelId}`;
     window.open(url, '_blank');
@@ -229,22 +228,20 @@ const ModelosFunisPage: React.FC = () => {
 
   const handlePreviewModel = (model: FunnelModel) => {
     appLogger.info('👁️ Preview do modelo:', { data: [model.id] });
-    const tpl = TemplateService.getTemplate(model.id);
-    let previewId = tpl?.id;
-    if (!previewId && model.editorUrl) {
+    let previewId = model.id;
+    if (model.editorUrl) {
       try {
         const url = new URL(model.editorUrl, window.location.origin);
         const t = url.searchParams.get('template');
         if (t) previewId = t;
       } catch { }
     }
-    window.open(`/templates/preview/${previewId || model.id}`, '_blank');
+    window.open(`/templates/preview/${previewId}`, '_blank');
   };
 
   const handleCloneModel = (model: FunnelModel) => {
     appLogger.info('📋 Clonando modelo:', { data: [model.id] });
-    const tpl = TemplateService.getTemplate(model.id);
-    const baseUrl = tpl?.editorUrl || model.editorUrl || `/editor?funnel=${model.id}`;
+    const baseUrl = model.editorUrl || `/editor?funnel=${model.id}`;
     const newFunnelId = `clone-${model.id}-${Date.now()}`;
     const joiner = baseUrl.includes('?') ? '&' : '?';
     window.open(`${baseUrl}${joiner}funnel=${newFunnelId}&mode=clone`, '_blank');
