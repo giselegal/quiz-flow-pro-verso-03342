@@ -85,7 +85,7 @@ function EmptyState({ message }: { message: string }) {
     );
 }
 
-// Preview individual de cada bloco
+// Preview individual de cada bloco (com Sortable)
 interface BlockPreviewProps {
     block: QuizBlock;
     isSelected: boolean;
@@ -93,8 +93,25 @@ interface BlockPreviewProps {
 }
 
 function BlockPreview({ block, isSelected, onClick }: BlockPreviewProps) {
+    const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+        id: block.id,
+        data: {
+            block,
+            isExisting: true,
+        },
+    });
+
+    const style = {
+        transform: CSS.Transform.toString(transform),
+        transition,
+        opacity: isDragging ? 0.5 : 1,
+    };
+
     return (
         <div
+            ref={setNodeRef}
+            style={style}
+            {...attributes}
             onClick={onClick}
             className={`
         p-4 bg-white rounded-lg border-2 cursor-pointer
@@ -103,8 +120,21 @@ function BlockPreview({ block, isSelected, onClick }: BlockPreviewProps) {
                     ? 'border-blue-500 shadow-lg ring-2 ring-blue-200'
                     : 'border-gray-200 hover:border-blue-300 hover:shadow-md'
                 }
+        ${isDragging ? 'shadow-2xl ring-4 ring-blue-400' : ''}
       `}
         >
+            {/* Handle de Drag (só aparece quando hover) */}
+            <div
+                {...listeners}
+                className="flex items-center gap-2 mb-2 opacity-0 hover:opacity-100 transition-opacity cursor-grab active:cursor-grabbing"
+            >
+                <div className="flex gap-1">
+                    <div className="w-1 h-4 bg-gray-300 rounded"></div>
+                    <div className="w-1 h-4 bg-gray-300 rounded"></div>
+                    <div className="w-1 h-4 bg-gray-300 rounded"></div>
+                </div>
+                <span className="text-xs text-gray-400">Arrastar para reordenar</span>
+            </div>
             {/* Header do bloco */}
             <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center gap-2">

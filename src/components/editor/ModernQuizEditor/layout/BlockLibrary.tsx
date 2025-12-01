@@ -93,16 +93,38 @@ interface BlockCardProps {
     description: string;
 }
 
+import { useDraggable } from '@dnd-kit/core';
+
 function BlockCard({ type, label, icon, description }: BlockCardProps) {
+    // Tornar o card draggable
+    const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
+        id: `new-block-${type}`,
+        data: {
+            blockType: type,
+            isNew: true,
+        },
+    });
+
+    const style = transform
+        ? {
+            transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
+            opacity: isDragging ? 0.5 : 1,
+            cursor: isDragging ? 'grabbing' : 'grab',
+        }
+        : { cursor: 'grab' };
+
     return (
         <div
-            className="
+            ref={setNodeRef}
+            style={style}
+            {...listeners}
+            {...attributes}
+            className={`
         p-3 bg-white border border-gray-200 rounded-lg
         hover:border-blue-400 hover:bg-blue-50
-        cursor-grab active:cursor-grabbing
         transition-all duration-150
-      "
-            draggable // Será implementado com dnd-kit na Fase 3
+        ${isDragging ? 'opacity-50 shadow-lg ring-2 ring-blue-400' : ''}
+      `}
             data-block-type={type}
         >
             <div className="flex items-start gap-3">
