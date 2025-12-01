@@ -211,8 +211,26 @@ export class FunnelService {
         cache: 'no-cache',
       });
 
+      console.log('🌐 [FunnelService] Fetch response:', {
+        status: response.status,
+        statusText: response.statusText,
+        contentType: response.headers.get('content-type'),
+        url: response.url,
+      });
+
       if (!response.ok) {
-        throw new Error(`Failed to load template: ${response.statusText}`);
+        const errorText = await response.text();
+        console.error('❌ Response body (first 200 chars):', errorText.substring(0, 200));
+        throw new Error(`Failed to load template (${response.status}): ${response.statusText}`);
+      }
+
+      // Check if response is HTML instead of JSON
+      const contentType = response.headers.get('content-type');
+      if (contentType && !contentType.includes('application/json')) {
+        const responseText = await response.text();
+        console.error('❌ Expected JSON but got:', contentType);
+        console.error('Response preview:', responseText.substring(0, 200));
+        throw new Error(`Template returned ${contentType} instead of JSON. Check if file exists at: ${templatePath}`);
       }
 
       const data = await response.json();
