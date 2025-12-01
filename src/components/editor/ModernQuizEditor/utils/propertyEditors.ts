@@ -91,12 +91,6 @@ export const PropertySchemaMap: Record<string, FieldDef[]> = {
     { key: 'image', label: 'Imagem', kind: 'image' },
   ],
 
-  'question-hero': [
-    { key: 'title', label: 'Título', kind: 'text' },
-    { key: 'subtitle', label: 'Subtítulo', kind: 'text' },
-    { key: 'image', label: 'Imagem', kind: 'image' },
-  ],
-
   // ============================================================================
   // TRANSITION BLOCKS
   // ============================================================================
@@ -110,9 +104,6 @@ export const PropertySchemaMap: Record<string, FieldDef[]> = {
   ],
   'transition-title': [
     { key: 'text', label: 'Título', kind: 'text' },
-  ],
-  'transition-text': [
-    { key: 'text', label: 'Texto', kind: 'text' },
   ],
   'transition-button': [
     { key: 'text', label: 'Texto', kind: 'text' },
@@ -202,18 +193,6 @@ export const PropertySchemaMap: Record<string, FieldDef[]> = {
     { key: 'currency', label: 'Moeda', kind: 'text' },
     { key: 'features', label: 'Recursos', kind: 'json' },
     { key: 'highlighted', label: 'Destacado', kind: 'boolean' },
-  ],
-  'offer-hero': [
-    { key: 'title', label: 'Título Principal', kind: 'text' },
-    { key: 'subtitle', label: 'Subtítulo', kind: 'text' },
-    { key: 'description', label: 'Descrição', kind: 'text' },
-    { key: 'image', label: 'Imagem de Fundo', kind: 'image' },
-  ],
-  'quiz-score-display': [
-    { key: 'score', label: 'Pontuação', kind: 'number' },
-    { key: 'maxScore', label: 'Pontuação Máxima', kind: 'number' },
-    { key: 'category', label: 'Categoria', kind: 'text' },
-    { key: 'title', label: 'Título', kind: 'text' },
   ],
   'guarantee': [
     { key: 'text', label: 'Texto da garantia', kind: 'text' },
