@@ -112,8 +112,8 @@ export default function EditorPage() {
             try {
                 appLogger.info('📂 Carregando quiz via ModernQuizEditor:', { funnelId });
 
-                // Carregar o JSON diretamente usando window.fetch para evitar "Illegal invocation"
-                const response = await window.fetch('/templates/quiz21-v4.json', {
+                // Carregar o JSON diretamente
+                const response = await fetch('/templates/quiz21-v4.json', {
                     cache: 'no-cache'
                 });
 
