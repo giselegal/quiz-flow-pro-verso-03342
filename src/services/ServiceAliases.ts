@@ -14,17 +14,46 @@
  */
 
 // ============================================================================
-// FUNNEL SERVICES - 8 serviços → 1 canônico
+// FUNNEL SERVICES - CONSOLIDAÇÃO FASE 1 (2025-12-01)
+// ============================================================================
+
+/**
+ * ⭐ SERVIÇO OFICIAL: src/services/funnel/FunnelService.ts (v4.1.0)
+ * 
+ * Responsabilidades:
+ * - loadFunnel(identifier) → carrega draft do Supabase OU template base
+ * - saveFunnel(quiz, funnelId) → salva no Supabase com versioning
+ * - duplicateFunnel(funnelId) → clona funil
+ * 
+ * MIGRAÇÃO:
+ * Código antigo usando src/services/funnelService.ts ou funnelService.refactored.ts
+ * deve migrar para o serviço oficial acima.
+ */
+export { funnelService, FunnelService } from './funnel/FunnelService';
+export type { Funnel, LoadFunnelResult, SaveFunnelResult } from './funnel/FunnelService';
+
+/**
+ * 🗂️ SERVICES LEGADOS (movidos para src/services/legacy/)
+ * 
+ * Mantidos apenas para compatibilidade temporária.
+ * Serão removidos na Fase 2.
+ */
+
+// Legacy FunnelService (HTTP API - localhost:3001)
+import { default as LegacyFunnelServiceClass } from './legacy/funnelService.legacy';
+/** @deprecated Use funnel/FunnelService (v4.1.0) - Service HTTP legado, movido para /legacy */
+export const LegacyFunnelService = LegacyFunnelServiceClass;
+
+// Refactored FunnelService (tentativa de integração Supabase)
+import { default as RefactoredFunnelServiceClass } from './legacy/funnelService.refactored';
+/** @deprecated Use funnel/FunnelService (v4.1.0) - Refactor incompleto, movido para /legacy */
+export const RefactoredFunnelService = RefactoredFunnelServiceClass;
+
+// ============================================================================
+// OUTROS ALIASES (mantidos do sistema antigo)
 // ============================================================================
 
 import { UnifiedCRUDService } from './UnifiedCRUDService';
-
-/** @deprecated Use UnifiedCRUDService - Alias mantido para compatibilidade */
-export const FunnelService = createDeprecatedAlias(
-  UnifiedCRUDService as any,
-  'FunnelService',
-  'UnifiedCRUDService',
-);
 
 /** @deprecated Use UnifiedCRUDService - Alias mantido para compatibilidade */
 export const EnhancedFunnelService = createDeprecatedAlias(

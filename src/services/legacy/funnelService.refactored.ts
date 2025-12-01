@@ -1,6 +1,9 @@
 /**
  * 🎯 FUNNEL SERVICE - Integração Real com Supabase
  * 
+ * ⚠️ DEPRECATED - Movido para /legacy em 2025-12-01
+ * Use: import { funnelService } from '@/services/funnel/FunnelService'
+ * 
  * Service refatorado com integração direta ao Supabase:
  * - CRUD completo de funnels
  * - Gerenciamento de páginas e blocos
@@ -10,9 +13,11 @@
  * SPRINT 2 - Substituição de localhost por Supabase real
  */
 
-import { supabase } from '@/services/integrations/supabase/client';
-import type { EditorStep } from '@/contexts/store/editorStore';
+import { supabase } from '@/lib/supabase';
 import { appLogger } from '@/lib/utils/appLogger';
+
+// Type stub (era importado de @/contexts/store/editorStore)
+type EditorStep = any;
 
 // ============================================================================
 // TYPES
@@ -363,5 +368,15 @@ class FunnelServiceRefactored {
 // EXPORT
 // ============================================================================
 
+/**
+ * @deprecated Este service foi movido para /legacy em 2025-12-01
+ * Tentativa de refactor com Supabase que não foi finalizada.
+ * Use: import { funnelService } from '@/services/funnel/FunnelService'
+ */
 export const funnelService = new FunnelServiceRefactored();
+
+/**
+ * @deprecated Este service foi movido para /legacy em 2025-12-01
+ * Use: import { funnelService } from '@/services/funnel/FunnelService'
+ */
 export default funnelService;

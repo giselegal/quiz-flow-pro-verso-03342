@@ -560,4 +560,14 @@ class FunnelService {
   }
 }
 
+/**
+ * @deprecated Este service foi movido para /legacy em 2025-12-01
+ * Use: import { funnelService } from '@/services/funnel/FunnelService'
+ */
 export const funnelApiService = new FunnelService();
+
+/**
+ * @deprecated Este service foi movido para /legacy em 2025-12-01
+ * Use: import { funnelService } from '@/services/funnel/FunnelService'
+ */
+export default funnelApiService;

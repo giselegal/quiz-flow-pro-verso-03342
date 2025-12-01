@@ -1,19 +1,60 @@
 /**
- * 🎯 FUNNEL SERVICE (V4.1-SAAS)
+ * 🎯 FUNNEL SERVICE (V4.1-SAAS) - SERVIÇO OFICIAL
  * 
- * Trata "funil" como ENTIDADE DE NEGÓCIO, não apenas JSON.
+ * ⚠️ ESTE É O ÚNICO FUNNEL SERVICE ATIVO DO SISTEMA
+ * Todos os outros foram movidos para src/services/legacy/
  * 
- * Resolve GARGALOS #1, #2, #4:
- * - Multi-funnel support real
- * - Persistência fechada (draft → save → reopen)
- * - Duplicação de funis
+ * Ver PLANO_CORRECAO_GARGALOS_ARQUITETURAIS.md (Fase 1)
  * 
- * Fluxo completo:
- * 1. loadFunnel(funnelId) → verifica Supabase → carrega draft OU template base
- * 2. saveFunnel(quiz, quizId) → salva no Supabase com versioning
- * 3. duplicateFunnel(funnelId) → cria cópia independente
+ * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
  * 
- * @since v4.1.0
+ * RESPONSABILIDADES:
+ * - ✅ Carregar funis (Supabase draft OU template base)
+ * - ✅ Salvar funis (Supabase com versioning)
+ * - ✅ Duplicar funis
+ * - ✅ Multi-funnel support real
+ * 
+ * NÃO FAZ (delegado para outros serviços):
+ * - ❌ Gerenciar templates base → use TemplateService
+ * - ❌ Cache → use CacheService
+ * - ❌ Validação de schema → use Zod (QuizSchemaZ)
+ * 
+ * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ * 
+ * FLUXO COMPLETO:
+ * 
+ * 1. LOAD:
+ *    URL → FunnelResolver → loadFunnel()
+ *    ├─ Existe draft no Supabase? → SIM: carrega draft
+ *    └─ NÃO: carrega template base de /templates/v4/
+ * 
+ * 2. SAVE:
+ *    Editor → saveFunnel(quiz, funnelId, draftId)
+ *    ├─ draftId existe? → UPDATE (optimistic lock)
+ *    └─ Novo: INSERT draft no Supabase
+ * 
+ * 3. DUPLICATE:
+ *    duplicateFunnel(funnelId) → cria cópia independente
+ * 
+ * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ * 
+ * MIGRATION GUIDE (para código usando services antigos):
+ * 
+ * ❌ ANTES:
+ *    import { funnelService } from '@/services/funnelService';
+ *    const funnel = await funnelService.getFunnelById(id);
+ * 
+ * ✅ DEPOIS:
+ *    import { funnelService } from '@/services/funnel/FunnelService';
+ *    const result = await funnelService.loadFunnel({ funnelId: id });
+ *    const funnel = result.funnel;
+ * 
+ * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ * 
+ * @version 4.1.0
+ * @status PRODUCTION-READY
+ * @since 2025-01-13
+ * @updated 2025-12-01 (Fase 1: Consolidação)
  */
 
 import { type QuizSchema } from '@/schemas/quiz-schema.zod';
