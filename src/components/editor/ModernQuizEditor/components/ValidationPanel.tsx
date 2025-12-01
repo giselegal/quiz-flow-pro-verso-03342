@@ -6,13 +6,17 @@ import React from 'react';
 import { useQuizStore } from '../store/quizStore';
 
 export default function ValidationPanel() {
-    const { error, validateQuiz } = useQuizStore((s) => ({
+    const { error, quiz } = useQuizStore((s) => ({
         error: s.error,
-        validateQuiz: s.validateQuiz,
+        quiz: s.quiz,
     }));
 
     const [showDetails, setShowDetails] = React.useState(false);
-    const validation = validateQuiz();
+
+    // ✅ CRITICAL: Use useMemo to cache validation result and prevent infinite loop
+    const validation = React.useMemo(() => {
+        return useQuizStore.getState().validateQuiz();
+    }, [quiz]);
 
     if (validation.valid && !error) return null;
 

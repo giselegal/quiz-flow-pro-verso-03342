@@ -12,10 +12,10 @@ export default function SavedSnapshotsPanel() {
         setLoading(true);
         setError(null);
         try {
-            const res = await fetch('/api/quiz/saved');
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
-            const data = await res.json();
-            setItems(data.files || []);
+            // ✅ TODO: Implementar API /api/quiz/saved quando backend estiver pronto
+            // Por enquanto, retornar lista vazia para evitar erro 404
+            console.warn('SavedSnapshotsPanel: API /api/quiz/saved não implementada ainda');
+            setItems([]);
         } catch (e: any) {
             setError(String(e?.message || e));
         } finally {
