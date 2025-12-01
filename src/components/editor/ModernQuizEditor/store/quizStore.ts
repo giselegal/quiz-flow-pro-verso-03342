@@ -161,7 +161,8 @@ export const useQuizStore = create<QuizStore>()(
       });
       
       // 🆕 Cache the quiz in all layers
-      const quizId = quiz?.metadata?.id || 'default';
+      // Use unique identifier to avoid cache collisions
+      const quizId = quiz?.metadata?.id || `quiz-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
       multiLayerCache.set('templates', cacheKeys.quiz(quizId), quiz, cacheTTL.quiz)
         .catch((err) => console.warn('⚠️ Failed to cache quiz:', err));
     },

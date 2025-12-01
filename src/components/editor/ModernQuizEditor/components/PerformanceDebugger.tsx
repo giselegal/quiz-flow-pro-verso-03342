@@ -24,6 +24,9 @@ interface PerformanceDebuggerProps {
   defaultVisible?: boolean;
 }
 
+// Only render in development - check at module level
+const isDev = process.env.NODE_ENV === 'development';
+
 export function PerformanceDebugger({
   position = 'bottom-right',
   defaultVisible = false,
@@ -31,12 +34,7 @@ export function PerformanceDebugger({
   const [isVisible, setIsVisible] = useState(defaultVisible);
   const [cacheMetrics, setCacheMetrics] = useState<any>(null);
   
-  // Only render in development
-  if (process.env.NODE_ENV !== 'development') {
-    return null;
-  }
-  
-  // Collect performance metrics
+  // Collect performance metrics (hooks must be called unconditionally)
   const editorMetrics = usePerformanceMonitor('ModernQuizEditor');
   const memoStats = useMemoizationStats();
   
@@ -45,6 +43,8 @@ export function PerformanceDebugger({
   
   // Update cache metrics periodically
   useEffect(() => {
+    if (!isDev) return;
+    
     const updateCacheMetrics = () => {
       setCacheMetrics(multiLayerCache.getMetrics());
     };
@@ -54,6 +54,11 @@ export function PerformanceDebugger({
     
     return () => clearInterval(interval);
   }, []);
+  
+  // Don't render anything in production
+  if (!isDev) {
+    return null;
+  }
   
   const positionClasses = {
     'bottom-left': 'bottom-4 left-4',

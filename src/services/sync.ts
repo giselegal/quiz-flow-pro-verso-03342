@@ -11,6 +11,7 @@
  */
 
 import { EditorDashboardSyncService } from '@/services/core/EditorDashboardSyncService';
+import type { UnifiedFunnelData } from '@/services/canonical';
 
 // ============================================================================
 // SINGLETON EXPORT
@@ -23,6 +24,22 @@ export const syncService = EditorDashboardSyncService;
 // ============================================================================
 
 export type { EditorSyncEvent, SyncNotification } from '@/services/core/EditorDashboardSyncService';
+
+// ============================================================================
+// INSTANCE INTERFACES
+// ============================================================================
+
+/** Interface for editor instance that can be connected to sync */
+export interface SyncableEditor {
+  refresh?: () => void;
+  [key: string]: unknown;
+}
+
+/** Interface for dashboard instance that can be connected to sync */
+export interface SyncableDashboard {
+  refresh?: () => void;
+  [key: string]: unknown;
+}
 
 // ============================================================================
 // CONVENIENCE FUNCTIONS
@@ -55,7 +72,7 @@ export function onSyncNotification(
  */
 export async function syncFunnelSave(
   funnelId: string,
-  funnelData: any
+  funnelData: Partial<UnifiedFunnelData>
 ): Promise<boolean> {
   return syncService.syncFunnelSave(funnelId, funnelData);
 }
@@ -65,7 +82,7 @@ export async function syncFunnelSave(
  */
 export async function syncFunnelPublish(
   funnelId: string,
-  funnelData: any
+  funnelData: Partial<UnifiedFunnelData>
 ): Promise<boolean> {
   return syncService.syncFunnelPublish(funnelId, funnelData);
 }
@@ -74,8 +91,8 @@ export async function syncFunnelPublish(
  * Sync funnel creation
  */
 export async function syncFunnelCreate(
-  funnelData: any
-): Promise<any | null> {
+  funnelData: Partial<UnifiedFunnelData>
+): Promise<UnifiedFunnelData | null> {
   return syncService.syncFunnelCreate(funnelData);
 }
 
@@ -112,7 +129,7 @@ export function getSyncStats() {
  * @param editorInstance - Editor instance reference
  * @returns Cleanup function
  */
-export function connectEditorToSync(editorInstance: any): () => void {
+export function connectEditorToSync(editorInstance: SyncableEditor): () => void {
   return syncService.connectEditor(editorInstance);
 }
 
@@ -121,7 +138,7 @@ export function connectEditorToSync(editorInstance: any): () => void {
  * @param dashboardInstance - Dashboard instance reference
  * @returns Cleanup function
  */
-export function connectDashboardToSync(dashboardInstance: any): () => void {
+export function connectDashboardToSync(dashboardInstance: SyncableDashboard): () => void {
   return syncService.connectDashboard(dashboardInstance);
 }
 

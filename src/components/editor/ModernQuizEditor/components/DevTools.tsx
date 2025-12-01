@@ -11,6 +11,9 @@ import React, { useState, memo } from 'react';
 import { Shield, X, ChevronDown, ChevronUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
+// Only render in development - check at module level
+const isDev = process.env.NODE_ENV === 'development';
+
 // Lazy load AccessibilityAuditor for code splitting
 const AccessibilityAuditor = React.lazy(() => 
   import('@/components/a11y/AccessibilityAuditor').then(m => ({ 
@@ -22,8 +25,8 @@ export const DevTools = memo(function DevTools() {
   const [showA11y, setShowA11y] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
 
-  // Only render in development
-  if (process.env.NODE_ENV !== 'development') {
+  // Only render in development - after hooks
+  if (!isDev) {
     return null;
   }
 
