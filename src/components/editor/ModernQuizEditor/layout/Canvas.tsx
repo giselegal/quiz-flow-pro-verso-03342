@@ -69,14 +69,22 @@ export function Canvas() {
             <div className="flex-1 overflow-y-auto p-6">
                 {!selectedStep ? (
                     <EmptyState message="Selecione uma etapa no painel esquerdo" />
-                ) : selectedStep.blocks?.length === 0 ? (
-                    <EmptyState message="Esta etapa não possui blocos. Arraste um bloco da biblioteca." />
+                ) : !selectedStep.blocks || selectedStep.blocks.length === 0 ? (
+                    (() => {
+                        console.log('⚠️ Step tem 0 blocos:', selectedStep.id);
+                        return <EmptyState message="Esta etapa não possui blocos. Arraste um bloco da biblioteca." />;
+                    })()
                 ) : (
-                    <div className="max-w-3xl mx-auto space-y-6">
-                        <ValidationPanel />
-                        <ResultPreview />
-                        <CanvasSortable stepId={selectedStep.id} blocks={selectedStep.blocks} selectedBlockId={selectedBlockId} onSelect={selectBlock} />
-                    </div>
+                    (() => {
+                        console.log('✅ Renderizando container de blocos para step:', selectedStep.id, 'com', selectedStep.blocks.length, 'blocos');
+                        return (
+                            <div className="max-w-3xl mx-auto space-y-6">
+                                <ValidationPanel />
+                                <ResultPreview />
+                                <CanvasSortable stepId={selectedStep.id} blocks={selectedStep.blocks} selectedBlockId={selectedBlockId} onSelect={selectBlock} />
+                            </div>
+                        );
+                    })()
                 )}
             </div>
         </div>
@@ -297,49 +305,55 @@ function ResultPreview() {
     const quiz = useQuizStore((s) => s.quiz);
     if (!quiz) return null;
 
-    // Derivar respostas reais dos blocos: busca por propriedades padrão de resposta
-    const answers: Answer[] = [];
-    const rules: Record<string, Rule> = {};
-    const config: CalculationConfig = {
-        categoryThresholds: [
-            { label: 'Baixo', min: 0, max: 10 },
-            { label: 'Médio', min: 11, max: 25 },
-            { label: 'Alto', min: 26, max: 100 },
-        ]
-    };
-    (quiz.steps || []).forEach((step: any) => {
-        (step.blocks || []).forEach((b: any) => {
-            const val = b.selectedOption?.value ?? b.value ?? b.answer ?? b.properties?.value ?? b.properties?.selectedOption?.value;
-            if (val !== undefined && val !== null) {
-                answers.push({ blockId: b.id, value: val });
-                // Usar regra configurada ou fallback padrão
-                if (b.calculationRule) {
-                    rules[b.id] = b.calculationRule;
-                } else if (typeof val === 'number') {
-                    rules[b.id] = { weight: 1, numericScale: { mul: 1 } };
-                } else {
-                    rules[b.id] = { weight: 1, pointsMap: { [String(val)]: 1 } };
+    try {
+        // Derivar respostas reais dos blocos: busca por propriedades padrão de resposta
+        const answers: Answer[] = [];
+        const rules: Record<string, Rule> = {};
+        const config: CalculationConfig = {
+            categoryThresholds: [
+                { label: 'Baixo', min: 0, max: 10 },
+                { label: 'Médio', min: 11, max: 25 },
+                { label: 'Alto', min: 26, max: 100 },
+            ]
+        };
+        (quiz.steps || []).forEach((step: any) => {
+            (step.blocks || []).forEach((b: any) => {
+                const val = b.selectedOption?.value ?? b.value ?? b.answer ?? b.properties?.value ?? b.properties?.selectedOption?.value;
+                if (val !== undefined && val !== null) {
+                    answers.push({ blockId: b.id, value: val });
+                    // Usar regra configurada ou fallback padrão
+                    if (b.calculationRule) {
+                        rules[b.id] = b.calculationRule;
+                    } else if (typeof val === 'number') {
+                        rules[b.id] = { weight: 1, numericScale: { mul: 1 } };
+                    } else {
+                        rules[b.id] = { weight: 1, pointsMap: { [String(val)]: 1 } };
+                    }
                 }
-            }
+            });
         });
-    });
 
-    const result = computeQuizResult(quiz as any, answers, rules, config);
+        const result = computeQuizResult(quiz as any, answers, rules, config);
+        console.log('✅ ResultPreview calculado:', result);
 
-    return (
-        <div className="bg-white border border-gray-200 rounded p-3 flex items-center justify-between">
-            <div className="text-sm text-gray-700">
-                <span className="font-medium">Resultado:</span>
-                <span className="ml-2">Score total {result.totalScore}</span>
-                {result.category && <span className="ml-2">• Categoria {result.category}</span>}
+        return (
+            <div className="bg-white border border-gray-200 rounded p-3 flex items-center justify-between">
+                <div className="text-sm text-gray-700">
+                    <span className="font-medium">Resultado:</span>
+                    <span className="ml-2">Score total {result.totalScore}</span>
+                    {result.category && <span className="ml-2">• Categoria {result.category}</span>}
+                </div>
+                <div className="flex items-center gap-2 text-xs text-gray-500">
+                    {result.byStep.map((s) => (
+                        <span key={s.stepId}>Etapa {s.stepId}: {s.score}</span>
+                    ))}
+                </div>
             </div>
-            <div className="flex items-center gap-2 text-xs text-gray-500">
-                {result.byStep.map((s) => (
-                    <span key={s.stepId}>Etapa {s.stepId}: {s.score}</span>
-                ))}
-            </div>
-        </div>
-    );
+        );
+    } catch (error) {
+        console.error('❌ Erro no ResultPreview:', error);
+        return null; // Falhar silenciosamente para não bloquear renderização
+    }
 }
 
 function CanvasSortable({ stepId, blocks, selectedBlockId, onSelect }: { stepId: string; blocks: any[]; selectedBlockId?: string | null; onSelect: (id: string) => void; }) {
