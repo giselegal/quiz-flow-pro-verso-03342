@@ -111,14 +111,16 @@ function normalizeAssetUrl(url) {
   if (!url) return null;
   if (url.startsWith('/quiz-assets/')) return url;
   
-  // Extrair filename do Cloudinary
+  // Extrair filename do Cloudinary (diversos formatos)
   if (url.includes('cloudinary.com')) {
-    const match = url.match(/\/([^\/]+\.webp)$/);
+    // Padrão: .../v1234567890/filename.webp
+    const match = url.match(/\/([^\/]+\.(webp|jpg|jpeg|png|gif|svg))$/i);
     if (match) {
       return `/quiz-assets/${match[1]}`;
     }
   }
   
+  // Fallback: retornar original se não conseguir extrair
   return url;
 }
 
@@ -192,6 +194,21 @@ quiz.steps.forEach((step, stepIdx) => {
         }
       }
     });
+
+    // Normalizar URLs em options também
+    if (block.content?.options) {
+      block.content.options.forEach((opt) => {
+        ['imageUrl', 'image'].forEach((field) => {
+          if (opt[field]) {
+            const normalized = normalizeAssetUrl(opt[field]);
+            if (normalized !== opt[field]) {
+              urlsNormalized++;
+              opt[field] = normalized;
+            }
+          }
+        });
+      });
+    }
   });
 });
 
