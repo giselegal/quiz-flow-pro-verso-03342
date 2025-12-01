@@ -51,11 +51,11 @@ export default function EditorPage() {
     // Capturar parâmetros da rota
     const [, paramsWithId] = useRoute<{ funnelId: string }>('/editor/:funnelId');
 
-    // 🆕 USAR FUNNELRESOLVER para parsear URL (memoizado para evitar loops)
+    // 🆕 USAR FUNNELRESOLVER para parsear URL (estável via useMemo)
     const funnelIdentifier = useMemo(() => {
         const searchParams = new URLSearchParams(window.location.search);
         return parseFunnelFromURL(searchParams);
-    }, [window.location.search]);
+    }, []); // Executar apenas uma vez no mount
 
     // Resolver funnelId final (memoizado)
     const resolvedFunnelId = useMemo(() =>
