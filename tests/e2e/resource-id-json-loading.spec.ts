@@ -1,18 +1,20 @@
 /**
- * 🧪 TESTE E2E CRÍTICO: Validar resourceId e Carregamento de JSON
+ * 🧪 TESTE E2E CRÍTICO: Validar FunnelService e Carregamento de JSON v4.1-saas
  * 
- * Valida que a correção do resourceId está funcionando:
- * 1. URL /editor?funnel=X passa resourceId correto
- * 2. resourceId não é undefined
- * 3. JSON quiz21-complete.json é carregado
- * 4. 21 steps são renderizados
+ * Valida que a nova arquitetura de funis está funcionando:
+ * 1. URL /editor?funnel=X usa FunnelService.loadFunnel()
+ * 2. JSON quiz21-v4-saas.json é carregado via FunnelResolver
+ * 3. EditorPage passa quizId para ModernQuizEditor
+ * 4. 21 steps são renderizados corretamente
+ * 
+ * @since v4.1.0 - Arquitetura de Funis Multi-Editor
  */
 
 import { test, expect } from '@playwright/test';
 
-const EDITOR_URL = '/editor?funnel=quiz21StepsComplete&template=quiz21StepsComplete';
+const EDITOR_URL = '/editor?funnel=quiz21StepsComplete';
 
-test.describe('ResourceId e Carregamento de JSON - Validação Crítica', () => {
+test.describe('FunnelService e Carregamento v4.1-saas - Validação Crítica', () => {
     test.beforeEach(async ({ page }) => {
         // Interceptar logs do console para validar
         page.on('console', msg => {
@@ -21,7 +23,7 @@ test.describe('ResourceId e Carregamento de JSON - Validação Crítica', () => 
         });
     });
 
-    test('CRÍTICO: resourceId não deve estar undefined', async ({ page }) => {
+    test('CRÍTICO: FunnelService deve carregar funnel corretamente', async ({ page }) => {
         // Interceptar console.log/info para capturar logs
         const logs: string[] = [];
         
@@ -29,34 +31,36 @@ test.describe('ResourceId e Carregamento de JSON - Validação Crítica', () => 
             logs.push(msg.text());
         });
 
-        // Acessar editor com template
+        // Acessar editor
         await page.goto(EDITOR_URL, { 
             waitUntil: 'domcontentloaded',
             timeout: 30000 
         });
 
-        // Aguardar um pouco para logs aparecerem
+        // Aguardar logs do FunnelService
         await page.waitForTimeout(3000);
 
-        // Validar que resourceId NÃO está undefined
-        const hasUndefinedError = logs.some(log => 
-            log.includes('resourceId está undefined') ||
-            log.includes('vaiCarregarJSON: false')
+        // Validar que FunnelService foi usado
+        const hasFunnelServiceLog = logs.some(log => 
+            log.includes('[EditorPage] Carregando funnel via FunnelService') ||
+            log.includes('[FunnelService] Loading funnel') ||
+            log.includes('[FunnelResolver] Resolving funnel')
         );
 
-        expect(hasUndefinedError).toBe(false);
+        expect(hasFunnelServiceLog).toBe(true);
 
-        // Validar que resourceId está OK
-        const hasResourceIdOk = logs.some(log => 
-            log.includes('resourceId OK') ||
-            log.includes('vaiCarregarJSON: true')
+        // Validar que funnel foi carregado com sucesso
+        const hasFunnelLoaded = logs.some(log => 
+            log.includes('[EditorPage] Funnel carregado') ||
+            log.includes('[FunnelService] Loaded from')
         );
 
-        console.log(`✅ resourceId OK encontrado: ${hasResourceIdOk}`);
+        console.log(`✅ FunnelService usado: ${hasFunnelServiceLog}`);
+        console.log(`✅ Funnel carregado: ${hasFunnelLoaded}`);
         console.log(`Total de logs capturados: ${logs.length}`);
     });
 
-    test('CRÍTICO: JSON quiz21-complete.json deve ser requisitado', async ({ page }) => {
+    test('CRÍTICO: JSON quiz21-v4-saas.json deve ser requisitado', async ({ page }) => {
         const requests: string[] = [];
         
         // Interceptar todas as requisições
@@ -73,15 +77,16 @@ test.describe('ResourceId e Carregamento de JSON - Validação Crítica', () => 
             timeout: 30000 
         });
 
-        // Validar que quiz21-complete.json foi requisitado
-        const hasQuiz21Json = requests.some(url => 
-            url.includes('quiz21-complete.json')
+        // Validar que quiz21-v4-saas.json foi requisitado (novo template padrão)
+        const hasV4SaasJson = requests.some(url => 
+            url.includes('quiz21-v4-saas.json')
         );
 
         console.log(`📊 Total de requisições JSON: ${requests.length}`);
-        console.log(`✅ quiz21-complete.json requisitado: ${hasQuiz21Json}`);
+        console.log(`✅ quiz21-v4-saas.json requisitado: ${hasV4SaasJson}`);
+        console.log(`📋 Requisições capturadas: ${requests.slice(0, 5).join(', ')}`);
 
-        expect(hasQuiz21Json).toBe(true);
+        expect(hasV4SaasJson).toBe(true);
     });
 
     test('CRÍTICO: Editor deve renderizar sidebar com steps', async ({ page }) => {
@@ -274,5 +279,55 @@ test.describe('Validação de Props - Inspeção Direta', () => {
         
         // resource deve ser o fallback de template
         console.log('✅ templateId extraído corretamente');
+    });
+});
+
+test.describe('🆕 FunnelService - Persistência de Drafts', () => {
+    test('Deve carregar template base quando não há draft', async ({ page }) => {
+        const logs: string[] = [];
+        
+        page.on('console', msg => {
+            logs.push(msg.text());
+        });
+
+        await page.goto('/editor?funnel=quiz21StepsComplete', {
+            waitUntil: 'networkidle',
+            timeout: 30000
+        });
+
+        await page.waitForTimeout(3000);
+
+        // Validar que carregou de template (não draft)
+        const loadedFromTemplate = logs.some(log => 
+            log.includes('Loaded from template') ||
+            log.includes('source: \'template\'')
+        );
+
+        console.log(`✅ Carregou de template: ${loadedFromTemplate}`);
+        expect(loadedFromTemplate).toBe(true);
+    });
+
+    test('Deve passar quizId para ModernQuizEditor', async ({ page }) => {
+        const logs: string[] = [];
+        
+        page.on('console', msg => {
+            logs.push(msg.text());
+        });
+
+        await page.goto('/editor?funnel=quiz21StepsComplete', {
+            waitUntil: 'networkidle',
+            timeout: 30000
+        });
+
+        await page.waitForTimeout(3000);
+
+        // Validar que ModernQuizEditor foi renderizado com dados
+        const hasEditorRender = logs.some(log => 
+            log.includes('Renderizando ModernQuizEditor com quiz') ||
+            log.includes('ModernQuizEditor rendering')
+        );
+
+        console.log(`✅ ModernQuizEditor renderizado: ${hasEditorRender}`);
+        expect(hasEditorRender).toBe(true);
     });
 });
