@@ -34,7 +34,8 @@ class NetworkMonitor {
     private isIntercepting = false;
 
     constructor() {
-        this.originalFetch = window.fetch;
+        // ✅ CRITICAL: Bind fetch to window to prevent "Illegal invocation"
+        this.originalFetch = window.fetch.bind(window);
     }
 
     /**

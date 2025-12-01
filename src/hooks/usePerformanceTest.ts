@@ -364,7 +364,8 @@ export function usePerformanceTest(
         const ENABLE = (import.meta as any)?.env?.VITE_ENABLE_PERF_NET_TRACKING === 'true';
         if (!ENABLE) return () => {};
 
-        const originalFetch = window.fetch;
+        // ✅ CRITICAL: Bind fetch to window to prevent "Illegal invocation"
+        const originalFetch = window.fetch.bind(window);
         window.fetch = async (...args) => {
             const start = performance.now();
             networkCallsRef.current.push({ start });

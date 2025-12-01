@@ -39,7 +39,8 @@ if (typeof window !== 'undefined' && (process.env.NODE_ENV === 'development' || 
         };
 
         // Interceptar fetch para APIs do Lovable (incluindo SDK)
-        const originalFetch = window.fetch;
+        // ✅ CRITICAL: Bind fetch to window to prevent "Illegal invocation"
+        const originalFetch = window.fetch.bind(window);
         window.fetch = function (url: RequestInfo | URL, options?: RequestInit) {
             // Normaliza Request/URL/string para capturar endpoints chamados via Request objects
             let urlString: string;
