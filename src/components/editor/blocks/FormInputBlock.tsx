@@ -5,6 +5,7 @@ import { userResponseService } from '@/services/userResponseService';
 import { StorageService } from '@/services/core/StorageService';
 import { unifiedQuizStorage } from '@/services/core/UnifiedQuizStorage';
 import { getFunnelSessionKey, getFunnelStepKey } from '@/lib/utils/funnelStorageKeys';
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface FormInputBlockProps extends InlineBlockProps {
   funnelId?: string;

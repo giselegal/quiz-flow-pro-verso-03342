@@ -3,6 +3,7 @@ import { Button as UIButton } from '@/components/ui/button';
 import { MousePointer } from 'lucide-react';
 import type { InlineBlockProps } from '@/types/InlineBlockProps';
 import React from 'react';
+import { appLogger } from '@/lib/utils/appLogger';
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 type MarginType = 'top' | 'bottom' | 'left' | 'right';

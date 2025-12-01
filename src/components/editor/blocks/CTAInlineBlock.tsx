@@ -3,6 +3,7 @@ import { cn } from '@/lib/utils';
 import InlineBaseWrapper from './base/InlineBaseWrapper';
 import InlineEditableText from './base/InlineEditableText';
 import type { InlineBlockProps } from '@/types/InlineBlockProps';
+import { appLogger } from '@/lib/utils/appLogger';
 import {
   getPersonalizedText,
   trackComponentView,

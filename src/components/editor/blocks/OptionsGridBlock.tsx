@@ -8,6 +8,7 @@ import { StorageService } from '@/services/core/StorageService';
 import { safePlaceholder } from '@/lib/utils/placeholder';
 import { templateService } from '@/services/canonical/TemplateService';
 import { useStepConfig } from '@/hooks/useStepConfig'; // ✅ USAR HOOK DE CONFIGURAÇÃO
+import { appLogger } from '@/lib/utils/appLogger';
 
 interface Option {
   id: string;

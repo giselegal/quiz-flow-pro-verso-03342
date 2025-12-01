@@ -1,6 +1,7 @@
 import { cn } from '@/lib/utils';
 import { Type, Settings } from 'lucide-react';
 import type { InlineBlockProps } from '@/types/InlineBlockProps';
+import { appLogger } from '@/lib/utils/appLogger';
 
 /**
  * HeadingInlineBlock - Componente modular inline horizontal
@@ -91,7 +92,7 @@ const HeadingInlineBlock: React.FC<InlineBlockProps> = ({
     backgroundColor = 'transparent',
     fontWeight = 'bold',
     maxWidth = 'full',
-  // responsive = true, // not used
+    // responsive = true, // not used
     // Fix: Extract margin properties from block
     marginTop = 0,
     marginBottom = 0,
@@ -99,12 +100,12 @@ const HeadingInlineBlock: React.FC<InlineBlockProps> = ({
     marginRight = 0,
   } = block?.properties || {};
 
-// 🛡️ GARANTIR QUE CONTENT É STRING E LER DE DIFERENTES FONTES
-const rawContent = (block as any)?.content?.text ?? (block as any)?.content?.content ?? content ?? (block as any)?.properties?.text ?? '';
-const safeContent =
-  typeof rawContent === 'string' || typeof rawContent === 'number'
-    ? String(rawContent)
-    : 'Título Principal';
+  // 🛡️ GARANTIR QUE CONTENT É STRING E LER DE DIFERENTES FONTES
+  const rawContent = (block as any)?.content?.text ?? (block as any)?.content?.content ?? content ?? (block as any)?.properties?.text ?? '';
+  const safeContent =
+    typeof rawContent === 'string' || typeof rawContent === 'number'
+      ? String(rawContent)
+      : 'Título Principal';
   // Tamanhos responsivos por nível
   const levelClasses = {
     h1: 'text-2xl sm:text-3xl md:text-4xl lg:text-5xl',
@@ -142,8 +143,8 @@ const safeContent =
     full: 'max-w-full',
   };
 
-const tagName = normalizeHeadingLevel(level as any);
-const HeadingTag = tagName as keyof JSX.IntrinsicElements;
+  const tagName = normalizeHeadingLevel(level as any);
+  const HeadingTag = tagName as keyof JSX.IntrinsicElements;
 
   return (
     <div

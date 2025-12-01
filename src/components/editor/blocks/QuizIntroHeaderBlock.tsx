@@ -3,6 +3,7 @@ import { cn } from '@/lib/utils';
 import type { InlineBlockProps } from '@/types/InlineBlockProps';
 import { ArrowLeft } from 'lucide-react';
 import { useImageWithFallback } from '@/hooks/useImageWithFallback';
+import { appLogger } from '@/lib/utils/appLogger';
 
 import { HeaderProperties } from '@/config/headerPropertiesMapping';
 
@@ -35,7 +36,7 @@ const QuizIntroHeaderBlock: FC<QuizIntroHeaderBlockProps> = ({
   if (isDev && verbose) {
     // Evitar logar em todo render: usa raf para coalescer
     requestAnimationFrame(() => {
-       
+
       appLogger.debug('🔍 [QuizIntroHeaderBlock] Propriedades recebidas', {
         properties: block.properties,
         id: block.id,
@@ -46,7 +47,7 @@ const QuizIntroHeaderBlock: FC<QuizIntroHeaderBlockProps> = ({
   // ✅ USAR useEffect para detectar mudanças nas propriedades
   useEffect(() => {
     if (isDev && verbose) {
-       
+
       appLogger.debug('🔄 [QuizIntroHeaderBlock] Propriedades atualizadas:', {
         blockId: block.id,
         logoUrl: block.properties?.logoUrl,
