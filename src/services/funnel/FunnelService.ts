@@ -207,33 +207,61 @@ export class FunnelService {
     try {
       appLogger.info('📂 [FunnelService] Loading template from file', { templatePath });
 
-      const response = await fetch(templatePath, {
-        cache: 'no-cache',
-      });
+      // ✅ SOLUÇÃO: Usar import dinâmico em vez de fetch para evitar problema de SPA fallback
+      // O Vite trata ?url como arquivo estático e import() como módulo ES
+      let data: any;
+      
+      try {
+        // Tentar carregar via fetch com ?raw query para forçar texto puro
+        const response = await fetch(`${templatePath}?raw`, {
+          headers: {
+            'Accept': 'application/json',
+          },
+          cache: 'no-cache',
+        });
 
-      console.log('🌐 [FunnelService] Fetch response:', {
-        status: response.status,
-        statusText: response.statusText,
-        contentType: response.headers.get('content-type'),
-        url: response.url,
-      });
+        console.log('🌐 [FunnelService] Fetch response:', {
+          status: response.status,
+          statusText: response.statusText,
+          contentType: response.headers.get('content-type'),
+          url: response.url,
+        });
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('❌ Response body (first 200 chars):', errorText.substring(0, 200));
-        throw new Error(`Failed to load template (${response.status}): ${response.statusText}`);
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+
+        // Check if response is HTML instead of JSON
+        const contentType = response.headers.get('content-type');
+        if (contentType?.includes('text/html')) {
+          console.warn('⚠️ Got HTML instead of JSON, trying alternative method...');
+          throw new Error('SPA fallback intercepted request');
+        }
+
+        data = await response.json();
+      } catch (fetchError) {
+        // Fallback: Tentar importar diretamente como módulo
+        console.warn('⚠️ Fetch failed, trying direct import:', fetchError);
+        
+        // Mapear caminhos conhecidos para imports diretos
+        if (templatePath.includes('quiz21-v4-saas.json')) {
+          data = await import('/public/templates/quiz21-v4-saas.json');
+          data = data.default || data;
+        } else if (templatePath.includes('quiz21-complete.json')) {
+          data = await import('/public/templates/quiz21-complete.json');
+          data = data.default || data;
+        } else if (templatePath.includes('quiz21-v4-gold.json')) {
+          data = await import('/public/templates/quiz21-v4-gold.json');
+          data = data.default || data;
+        } else if (templatePath.includes('quiz21-v4.json')) {
+          data = await import('/public/templates/quiz21-v4.json');
+          data = data.default || data;
+        } else {
+          throw new Error(`Unknown template path: ${templatePath}`);
+        }
+        
+        console.log('✅ Loaded via direct import');
       }
-
-      // Check if response is HTML instead of JSON
-      const contentType = response.headers.get('content-type');
-      if (contentType && !contentType.includes('application/json')) {
-        const responseText = await response.text();
-        console.error('❌ Expected JSON but got:', contentType);
-        console.error('Response preview:', responseText.substring(0, 200));
-        throw new Error(`Template returned ${contentType} instead of JSON. Check if file exists at: ${templatePath}`);
-      }
-
-      const data = await response.json();
 
       // Validate with Zod
       const { QuizSchemaZ } = await import('@/schemas/quiz-schema.zod');
