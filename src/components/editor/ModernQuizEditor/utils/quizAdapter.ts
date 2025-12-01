@@ -40,28 +40,26 @@ export function adaptLegacyQuizToV4(legacy: LegacyQuizFormat | QuizSchema): Quiz
       type: 'intro' as const,
       order: stepOrder,
       title: `Step ${stepOrder}`,
-      description: `Etapa ${stepOrder}`,
-      version: '1.0',
       blocks: blocks.map((block, blockIndex) => ({
         ...block,
         order: block.order ?? blockIndex,
+        metadata: block.metadata || {
+          editable: true,
+          reorderable: true,
+          reusable: true,
+          deletable: true,
+        },
       })),
       navigation: {
         allowBack: true,
         autoAdvance: false,
-        nextStepId: undefined,
-        prevStepId: undefined,
       },
       validation: {
         required: false,
         minBlocks: 0,
         customRules: [],
       },
-      metadata: {
-        isOptional: false,
-        canSkip: false,
-        tags: [],
-      },
+      version: 1,
     };
   });
 
