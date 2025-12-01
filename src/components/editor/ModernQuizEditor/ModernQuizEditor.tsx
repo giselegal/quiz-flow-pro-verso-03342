@@ -11,11 +11,15 @@
 import { useEffect } from 'react';
 import { EditorLayout } from './layout/EditorLayout';
 import { useQuizStore } from './store/quizStore';
+import { usePersistence, useAutoSave } from './hooks/usePersistence';
+import { SaveStatusIndicator } from './components/SaveStatusIndicator';
 import type { QuizSchema } from '@/schemas/quiz-schema.zod';
 
 export interface ModernQuizEditorProps {
     /** Quiz inicial para carregar no editor */
     initialQuiz?: QuizSchema;
+    /** ID do quiz (para update) */
+    quizId?: string;
     /** Callback quando o quiz é salvo */
     onSave?: (quiz: QuizSchema) => void;
     /** Callback quando ocorre um erro */
@@ -24,10 +28,28 @@ export interface ModernQuizEditorProps {
 
 export function ModernQuizEditor({
     initialQuiz,
+    quizId,
     onSave,
     onError,
 }: ModernQuizEditorProps) {
-    const { loadQuiz, quiz, isLoading, error, save } = useQuizStore();
+    const { loadQuiz, quiz, isLoading, error, isDirty } = useQuizStore();
+
+    // Hook de persistência
+    const persistence = usePersistence({
+        autoSaveDelay: 3000,
+        maxRetries: 3,
+        onSaveSuccess: (savedQuiz) => {
+            console.log('✅ Quiz salvo com sucesso via usePersistence');
+            if (onSave) onSave(savedQuiz);
+        },
+        onSaveError: (err) => {
+            console.error('❌ Erro ao salvar via usePersistence', err);
+            if (onError) onError(err);
+        },
+    });
+
+    // Auto-save quando quiz muda
+    useAutoSave(quiz, isDirty, persistence, 3000);
 
     // Carregar quiz inicial
     useEffect(() => {
@@ -36,25 +58,17 @@ export function ModernQuizEditor({
         }
     }, [initialQuiz, loadQuiz]);
 
-    // Notificar erro
+    // Notificar erro do store
     useEffect(() => {
         if (error && onError) {
             onError(new Error(error));
         }
     }, [error, onError]);
 
-    // Handler de save
+    // Handler de save manual
     const handleSave = async () => {
-        try {
-            const savedQuiz = await save();
-            if (onSave && savedQuiz) {
-                onSave(savedQuiz);
-            }
-        } catch (err) {
-            if (onError) {
-                onError(err instanceof Error ? err : new Error('Erro ao salvar'));
-            }
-        }
+        if (!quiz) return;
+        await persistence.saveQuiz(quiz, quizId);
     };
 
     // Loading state
@@ -104,9 +118,9 @@ export function ModernQuizEditor({
 
     // Editor principal
     return (
-        <div className="h-screen w-full overflow-hidden">
+        <div className="h-screen w-full overflow-hidden flex flex-col">
             {/* Barra superior com ações globais */}
-            <header className="bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between">
+            <header className="bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between shrink-0">
                 <div className="flex items-center gap-4">
                     <h1 className="text-xl font-bold text-gray-900">
                         {quiz.metadata.name || 'Quiz sem título'}
@@ -117,28 +131,34 @@ export function ModernQuizEditor({
                 </div>
 
                 <div className="flex items-center gap-2">
-                    {/* Status de salvamento */}
-                    <span className="text-sm text-gray-500">
-                        {useQuizStore.getState().isDirty ? '● Não salvo' : '✓ Salvo'}
-                    </span>
-
-                    {/* Botão de salvar */}
+                    {/* Botão de salvar manual */}
                     <button
                         onClick={handleSave}
-                        disabled={!useQuizStore.getState().isDirty}
+                        disabled={!isDirty || persistence.status === 'saving'}
                         className="
               px-4 py-2 bg-blue-600 text-white rounded-lg
               hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed
-              transition-colors
+              transition-colors text-sm font-medium
             "
                     >
-                        💾 Salvar
+                        💾 Salvar agora
                     </button>
                 </div>
             </header>
 
+            {/* Save Status Indicator */}
+            <SaveStatusIndicator
+                status={persistence.status}
+                error={persistence.error}
+                lastSaved={persistence.lastSaved}
+                onRetry={persistence.retry}
+                onClearError={persistence.clearError}
+            />
+
             {/* Layout com 4 colunas */}
-            <EditorLayout />
+            <div className="flex-1 overflow-hidden">
+                <EditorLayout />
+            </div>
         </div>
     );
 }
