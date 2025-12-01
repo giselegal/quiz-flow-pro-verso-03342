@@ -83,7 +83,11 @@ export function OptionsGrid({ block, onSelectionChange, maxSelections = 3 }: Opt
             
             <span className="option-label">{option.label}</span>
 
-            {isSelected && <CheckIcon className="check-icon" />}
+            {isSelected && (
+              <svg className="check-icon" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+              </svg>
+            )}
           </button>
         );
       })}
@@ -141,9 +145,15 @@ export function RichText({
   className = '',
   highlightClassName = 'font-semibold text-primary',
 }: RichTextProps) {
+  const blocks = renderRichText(content, highlightClassName);
+  
   return (
     <Component className={className}>
-      {renderRichText(content, highlightClassName)}
+      {blocks.map((block) => (
+        <span key={block.key} className={block.className}>
+          {block.value}
+        </span>
+      ))}
     </Component>
   );
 }

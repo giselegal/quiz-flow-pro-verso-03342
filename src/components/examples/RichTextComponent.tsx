@@ -23,15 +23,15 @@ export function RichText({
     className = '',
     highlightClassName = 'font-semibold text-primary',
 }: RichTextProps) {
-    // String simples → render direto
-    if (typeof content === 'string') {
-        return <Component className={className}>{content}</Component>;
-    }
+    const blocks = renderRichText(content, highlightClassName);
 
-    // Rich-text → render com highlights
     return (
         <Component className={className}>
-            {renderRichText(content, highlightClassName)}
+            {blocks.map((block) => (
+                <span key={block.key} className={block.className}>
+                    {block.value}
+                </span>
+            ))}
         </Component>
     );
 }

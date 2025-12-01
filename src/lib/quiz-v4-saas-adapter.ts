@@ -5,7 +5,7 @@
  * enquanto você migra gradualmente os componentes.
  */
 
-import type { QuizTemplateV4 } from '@/types/quiz-v4';
+import React from 'react';
 
 // ========================================
 // 1. OPTION ADAPTER
@@ -81,26 +81,23 @@ export interface RichTextContent {
 export type TextContent = string | RichTextContent;
 
 /**
- * Converte rich-text para React components
+ * Converte rich-text para estrutura de dados (não JSX)
+ * Use este helper em seu componente React para renderizar
  */
 export function renderRichText(
   content: TextContent,
   highlightClassName = 'font-semibold text-primary'
-): React.ReactNode {
+): Array<{ type: 'text' | 'highlight'; value: string; className?: string; key: number }> {
   if (typeof content === 'string') {
-    return content;
+    return [{ type: 'text', value: content, key: 0 }];
   }
 
-  return content.blocks.map((block, i) => {
-    if (block.type === 'highlight') {
-      return (
-        <span key={i} className={highlightClassName}>
-          {block.value}
-        </span>
-      );
-    }
-    return <span key={i}>{block.value}</span>;
-  });
+  return content.blocks.map((block, i) => ({
+    type: block.type,
+    value: block.value,
+    className: block.type === 'highlight' ? highlightClassName : undefined,
+    key: i,
+  }));
 }
 
 /**
@@ -236,7 +233,7 @@ export function resolveAssetUrl(
 /**
  * Hook para usar em componentes React
  */
-export function useQuizV4Adapter(template: QuizTemplateV4) {
+export function useQuizV4Adapter(template: any) {
   const settings = template.settings;
   const validationDefaults = settings.validation?.defaults || {};
 
