@@ -133,6 +133,14 @@ const TemplatesPage: React.FC<TemplatesPageProps> = ({ onTemplateSelect }) => {
                     <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
                         Escolha um template para começar ou crie seu funil do zero
                     </p>
+                    <div className="flex items-center justify-center gap-2 mt-4">
+                        <Badge variant="secondary" className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100">
+                            ✅ Modelo V4 Oficial
+                        </Badge>
+                        <Badge variant="outline">
+                            {filteredTemplates.length} templates disponíveis
+                        </Badge>
+                    </div>
                 </div>
 
                 {/* Category Filter */}
@@ -228,6 +236,48 @@ const TemplatesPage: React.FC<TemplatesPageProps> = ({ onTemplateSelect }) => {
                         <Settings className="h-5 w-5" />
                         Meus Funis
                     </Button>
+                </div>
+
+                {/* Info Footer */}
+                <div className="mt-16 max-w-4xl mx-auto">
+                    <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950 dark:to-indigo-950 border-blue-200 dark:border-blue-800">
+                        <CardContent className="pt-6">
+                            <div className="flex items-start gap-4">
+                                <div className="p-3 rounded-lg bg-blue-500 text-white">
+                                    <Sparkles className="h-6 w-6" />
+                                </div>
+                                <div className="flex-1">
+                                    <h3 className="text-lg font-semibold mb-2 text-blue-900 dark:text-blue-100">
+                                        🚀 Templates V4 - Estrutura Oficial
+                                    </h3>
+                                    <p className="text-sm text-blue-800 dark:text-blue-200 mb-3">
+                                        Todos os templates utilizam a estrutura V4 oficial com validação Zod,
+                                        schema consistente e otimização de performance.
+                                    </p>
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+                                        <div className="flex items-center gap-2">
+                                            <Badge variant="secondary" className="bg-blue-100 text-blue-800">
+                                                ✅ Validado
+                                            </Badge>
+                                            <span className="text-blue-700 dark:text-blue-300">Schema Zod</span>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <Badge variant="secondary" className="bg-green-100 text-green-800">
+                                                ⚡ Rápido
+                                            </Badge>
+                                            <span className="text-blue-700 dark:text-blue-300">Lazy Loading</span>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <Badge variant="secondary" className="bg-purple-100 text-purple-800">
+                                                🎯 Modular
+                                            </Badge>
+                                            <span className="text-blue-700 dark:text-blue-300">Estrutura Limpa</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
                 </div>
             </div>
 

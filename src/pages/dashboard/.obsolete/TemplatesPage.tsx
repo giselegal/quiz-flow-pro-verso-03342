@@ -99,7 +99,17 @@ export const TemplatesPage: React.FC = () => {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Biblioteca de Templates</h1>
+        <div>
+          <h1 className="text-2xl font-bold">Biblioteca de Templates</h1>
+          <div className="flex items-center gap-2 mt-2">
+            <Badge variant="secondary" className="bg-green-100 text-green-800">
+              ✅ V4 Oficial
+            </Badge>
+            <span className="text-sm text-muted-foreground">
+              Estrutura validada com Zod
+            </span>
+          </div>
+        </div>
         <div className="flex items-center space-x-2">
           <Button className="bg-blue-600 hover:bg-blue-700">
             <Plus className="w-4 h-4 mr-2" />

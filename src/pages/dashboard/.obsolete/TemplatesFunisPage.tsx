@@ -108,9 +108,20 @@ const TemplatesFunisPage: React.FC = () => {
                 <h1 className="text-3xl font-bold text-[#1A0F3D] mb-2">
                     Templates de Funis
                 </h1>
-                <p className="text-gray-600">
+                <p className="text-gray-600 mb-3">
                     Escolha um template para começar seu funil de conversão
                 </p>
+                <div className="flex items-center gap-2">
+                    <Badge variant="secondary" className="bg-green-100 text-green-800">
+                        ✅ Modelo V4
+                    </Badge>
+                    <Badge variant="outline">
+                        {filteredTemplates.length} templates disponíveis
+                    </Badge>
+                    <span className="text-xs text-muted-foreground">
+                        Estrutura oficial validada
+                    </span>
+                </div>
             </div>
 
             <div className="mb-6">
