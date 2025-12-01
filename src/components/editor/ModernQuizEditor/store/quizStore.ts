@@ -382,8 +382,31 @@ export const useQuizStore = create<QuizStore>()(
         const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
         const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
         
+        // ✅ FALLBACK: Se Supabase não configurado, salvar em localStorage
         if (!supabaseUrl || !supabaseKey) {
-          throw new Error('Configuração do Supabase não encontrada. Configure VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY');
+          console.warn('⚠️ Supabase não configurado. Salvando em localStorage...');
+          
+          const saveData = {
+            funnelId,
+            quiz: state.quiz,
+            metadata: {
+              savedAt: new Date().toISOString(),
+              validation: validation.valid ? 'passed' : 'failed',
+              errors: validation.valid ? [] : validation.errors,
+              source: 'editor-local',
+            },
+          };
+          
+          localStorage.setItem(`quiz-saved-${funnelId}`, JSON.stringify(saveData));
+          
+          set((s) => {
+            s.isDirty = false;
+            s.lastSaved = new Date();
+            if (validation.valid) s.error = null;
+          });
+          
+          console.log('✅ Quiz salvo em localStorage:', funnelId);
+          return;
         }
 
         const res = await fetch(`${supabaseUrl}/functions/v1/quiz-save`, {
