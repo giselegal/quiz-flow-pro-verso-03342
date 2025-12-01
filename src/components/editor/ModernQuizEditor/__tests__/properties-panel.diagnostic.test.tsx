@@ -97,6 +97,7 @@ describe('🔍 DIAGNÓSTICO: Painel de Propriedades', () => {
                     ],
                     navigation: { nextStep: null, conditions: [] },
                     validation: { required: true, rules: {} },
+                    version: 1,
                 },
             ],
         };

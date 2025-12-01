@@ -83,6 +83,7 @@ describe('🔗 DIAGNÓSTICO: Integração Completa', () => {
                     ],
                     navigation: { nextStep: null, conditions: [] },
                     validation: { required: true, rules: {} },
+                    version: 1,
                 },
             ],
         };
