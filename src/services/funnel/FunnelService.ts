@@ -203,45 +203,45 @@ export class FunnelService {
   /**
    * Load template from file
    * 
-   * ✅ SOLUÇÃO DEFINITIVA: Importar JSONs como módulos ES estáticos
-   * Vite tem suporte nativo para import de JSON com `?url` suffix
+   * ✅ SOLUÇÃO: Usar fetch com caminho absoluto da raiz do servidor
+   * Arquivos em /public são servidos na raiz do servidor Vite
    */
   private async loadTemplateFromFile(templatePath: string): Promise<QuizSchema> {
     try {
       appLogger.info('📂 [FunnelService] Loading template from file', { templatePath });
 
-      let data: any;
+      // Garantir que o caminho comece com /
+      const normalizedPath = templatePath.startsWith('/') ? templatePath : `/${templatePath}`;
+      
+      console.log('🌐 [FunnelService] Fetching template:', {
+        originalPath: templatePath,
+        normalizedPath,
+        fullUrl: `${window.location.origin}${normalizedPath}`
+      });
 
-      // Map template paths to static imports
-      // Vite will bundle these at build time and serve correctly in dev
-      if (templatePath.includes('quiz21-v4-saas')) {
-        const module = await import('/public/templates/quiz21-v4-saas.json?url');
-        const response = await fetch(module.default);
-        data = await response.json();
-      } else if (templatePath.includes('quiz21-complete')) {
-        const module = await import('/public/templates/quiz21-complete.json?url');
-        const response = await fetch(module.default);
-        data = await response.json();
-      } else if (templatePath.includes('quiz21-v4-gold')) {
-        const module = await import('/public/templates/quiz21-v4-gold.json?url');
-        const response = await fetch(module.default);
-        data = await response.json();
-      } else if (templatePath.includes('quiz21-v4') && !templatePath.includes('saas')) {
-        const module = await import('/public/templates/quiz21-v4.json?url');
-        const response = await fetch(module.default);
-        data = await response.json();
-      } else {
-        // Fallback: try direct fetch (may fail due to SPA routing)
-        console.warn('⚠️ Unknown template path, trying direct fetch:', templatePath);
-        const response = await fetch(templatePath);
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-        }
-        data = await response.json();
+      const response = await fetch(normalizedPath, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+        },
+        cache: 'no-store', // Force fresh request
+      });
+
+      console.log('📡 [FunnelService] Response:', {
+        status: response.status,
+        statusText: response.statusText,
+        contentType: response.headers.get('content-type'),
+        url: response.url,
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText} for ${normalizedPath}`);
       }
 
+      const data = await response.json();
+
       console.log('✅ Template loaded successfully:', {
-        path: templatePath,
+        path: normalizedPath,
         stepsCount: data?.steps?.length,
         metadata: data?.metadata?.name
       });
@@ -254,8 +254,13 @@ export class FunnelService {
     } catch (error) {
       appLogger.error('❌ [FunnelService] Error loading template', {
         templatePath,
-        error
+        error: error instanceof Error ? error.message : String(error)
       });
+      
+      // Re-throw with more context
+      if (error instanceof Error) {
+        throw new Error(`Failed to load template ${templatePath}: ${error.message}`);
+      }
       throw error;
     }
   }
