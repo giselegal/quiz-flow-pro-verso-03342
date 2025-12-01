@@ -220,7 +220,7 @@ export default function QuizApp({ funnelId, externalSteps }: QuizAppProps) {
                                 ...Object.fromEntries(Object.entries(unifiedQuizState.answers).map(([k, v]) => [`answers_${k}`, v])),
                                 selectedBlockId,
                             }}
-                            onUpdateSessionData={(key, value) => {
+                            onUpdateSessionData={(key: string, value: unknown) => {
                                 if (key === 'userName' && typeof value === 'string') setUserName(value);
                                 if (key.startsWith('answers_')) {
                                     const sid = key.replace('answers_', '');
