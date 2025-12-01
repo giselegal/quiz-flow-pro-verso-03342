@@ -327,6 +327,12 @@ export function useAutoSave(
   delay = 3000
 ) {
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const saveQuizRef = useRef(persistence.saveQuiz);
+  
+  // Atualizar ref sem causar re-render
+  useEffect(() => {
+    saveQuizRef.current = persistence.saveQuiz;
+  }, [persistence.saveQuiz]);
 
   useEffect(() => {
     // Limpar timer anterior
@@ -339,7 +345,7 @@ export function useAutoSave(
     if (quiz && isDirty && persistence.status !== 'saving') {
       timerRef.current = setTimeout(() => {
         console.log('💾 Auto-save disparado...');
-        persistence.saveQuiz(quiz);
+        saveQuizRef.current(quiz);
       }, delay);
     }
 
@@ -348,5 +354,5 @@ export function useAutoSave(
         clearTimeout(timerRef.current);
       }
     };
-  }, [quiz, isDirty, persistence, delay]);
+  }, [quiz, isDirty, persistence.status, delay]);
 }

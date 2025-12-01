@@ -79,7 +79,7 @@ export function ModernQuizEditor({
 
     // Auto-save quando quiz muda
     useAutoSave(quiz, isDirty, persistence, 3000);
-    // Carregar quiz inicial
+    // Carregar quiz inicial (sem loadQuiz nas deps para evitar loop)
     useEffect(() => {
         if (initialQuiz) {
             console.log('📂 Carregando quiz inicial (RAW):', {
@@ -119,7 +119,8 @@ export function ModernQuizEditor({
 
             loadQuiz(normalizedQuiz);
         }
-    }, [initialQuiz, loadQuiz]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [initialQuiz]);
     // ✅ CRITICAL: Auto-selecionar primeiro step quando quiz carregar
     useEffect(() => {
         console.log('🔍 useEffect[quiz] executado:', {

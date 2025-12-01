@@ -51,15 +51,19 @@ export default function EditorPage() {
     // Capturar parâmetros da rota
     const [, paramsWithId] = useRoute<{ funnelId: string }>('/editor/:funnelId');
 
-    // 🆕 USAR FUNNELRESOLVER para parsear URL
-    const searchParams = new URLSearchParams(window.location.search);
-    const funnelIdentifier = parseFunnelFromURL(searchParams);
+    // 🆕 USAR FUNNELRESOLVER para parsear URL (memoizado para evitar loops)
+    const funnelIdentifier = useMemo(() => {
+        const searchParams = new URLSearchParams(window.location.search);
+        return parseFunnelFromURL(searchParams);
+    }, [window.location.search]);
 
-    // Resolver funnelId final
-    const resolvedFunnelId =
+    // Resolver funnelId final (memoizado)
+    const resolvedFunnelId = useMemo(() =>
         paramsWithId?.funnelId ||
         funnelIdentifier.funnelId ||
-        'quiz21StepsComplete';
+        'quiz21StepsComplete',
+        [paramsWithId?.funnelId, funnelIdentifier.funnelId]
+    );
 
     // Atualizar estado quando resolver mudar
     useEffect(() => {
@@ -151,7 +155,9 @@ export default function EditorPage() {
         return () => {
             isMounted = false;
         };
-    }, [funnelId, funnelIdentifier.draftId]);    // 🆕 Handler de salvamento usando FunnelService
+    }, [funnelId, funnelIdentifier]);
+
+    // 🆕 Handler de salvamento usando FunnelService
     const handleSave = async (savedQuiz: QuizSchema) => {
         try {
             appLogger.info('💾 [EditorPage] Salvando funnel via FunnelService:', {
