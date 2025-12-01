@@ -31,7 +31,7 @@ const __dirname = dirname(__filename);
 const app = express();
 const server = createServer(app);
 
-const allowedOrigins = (process.env.CORS_ORIGINS || 'http://localhost:5173,https://seu-projeto.vercel.app')
+const allowedOrigins = (process.env.CORS_ORIGINS || 'http://localhost:8080,https://seu-projeto.vercel.app')
   .split(',')
   .map((s) => s.trim())
   .filter(Boolean);

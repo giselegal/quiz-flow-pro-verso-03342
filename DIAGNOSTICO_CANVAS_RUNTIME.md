@@ -30,7 +30,7 @@ npm run dev
 
 ### 2. Abrir navegador
 
-Acesse: **http://localhost:5173/editor**
+Acesse: **http://localhost:8080/editor**
 
 ### 3. Abrir DevTools (F12)
 
@@ -220,7 +220,7 @@ console.log('📝 Todos os steps:', quiz?.steps?.map(s => ({
 
 Use esta checklist enquanto executa os passos:
 
-- [ ] Servidor rodando em http://localhost:5173
+- [ ] Servidor rodando em http://localhost:8080
 - [ ] Navegador aberto em /editor
 - [ ] DevTools Console aberto
 - [ ] **Log 1 apareceu:** Quiz carregado no EditorPage

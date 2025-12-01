@@ -144,7 +144,7 @@ npm run dev
 
 ### 2️⃣ Acessar /editor no navegador
 
-Abra: `http://localhost:5173/editor`
+Abra: `http://localhost:8080/editor`
 
 ### 3️⃣ Verificar Console (DevTools F12)
 

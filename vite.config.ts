@@ -47,6 +47,7 @@ export default defineConfig({
             }
             if (id.includes('wouter') || id.includes('react-router')) {
               return 'vendor-router';
+
             }
             if (id.includes('@radix-ui')) {
               return 'vendor-ui';
