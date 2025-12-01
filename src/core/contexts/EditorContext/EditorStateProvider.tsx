@@ -546,15 +546,28 @@ export const EditorStateProvider: React.FC<EditorProviderProps> = ({
 // HOOK
 // ============================================================================
 
-export const useEditorState = (): EditorContextValue => {
+interface UseEditorOptions {
+    optional?: boolean;
+}
+
+export function useEditorState(): EditorContextValue;
+export function useEditorState(options: { optional: true }): EditorContextValue | null;
+export function useEditorState(options?: UseEditorOptions): EditorContextValue | null {
     const context = useContext(EditorContext);
 
     if (!context) {
+        if (options?.optional) {
+            return null;
+        }
         throw new Error('useEditorState deve ser usado dentro de um EditorStateProvider');
     }
 
     return context;
-};
+}
 
-// Alias canônico para novos consumidores
-export const useEditor = useEditorState;
+// Alias canônico para novos consumidores com mesma assinatura
+export function useEditor(): EditorContextValue;
+export function useEditor(options: { optional: true }): EditorContextValue | null;
+export function useEditor(options?: UseEditorOptions): EditorContextValue | null {
+    return useEditorState(options as any);
+}
