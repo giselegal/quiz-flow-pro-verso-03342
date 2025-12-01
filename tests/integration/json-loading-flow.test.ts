@@ -19,7 +19,7 @@ describe('Fluxo Completo de Carregamento JSON', () => {
 
         // Mock do quiz21-complete.json
         (global.fetch as any).mockImplementation((url: string) => {
-            if (url.includes('quiz21-complete.json')) {
+            if (url.includes('quiz21-v4-saas.json')) {
                 return Promise.resolve({
                     ok: true,
                     json: async () => ({

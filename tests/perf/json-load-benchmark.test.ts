@@ -8,11 +8,8 @@ interface LoadResult { pathTried: string[]; blocksCount: number; durationMs: num
 async function loadStepRaw(stepId: string): Promise<LoadResult> {
   const start = performance.now();
   const paths = [
-    `/templates/${stepId}-v3.json`,
-    `/templates/blocks/${stepId}.json`,
-    `/templates/quiz21-steps/${stepId}.json`,
-    `/templates/${stepId}-template.json`,
-    `/templates/quiz21-complete.json`,
+    `/templates/quiz21Steps/steps/${stepId}.json`,
+    `/templates/quiz21-v4-saas.json`,
   ];
   const tried: string[] = [];
   for (const url of paths) {

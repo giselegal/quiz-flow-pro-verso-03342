@@ -135,7 +135,7 @@ export async function validateTemplate(templatePath: string): Promise<Validation
 
 // Executar validação se chamado diretamente
 if (require.main === module) {
-  validateTemplate('public/templates/quiz21-complete.json')
+  validateTemplate('public/templates/quiz21-v4-saas.json')
     .then(results => {
       const hasErrors = results.some(r => !r.isValid);
       process.exit(hasErrors ? 1 : 0);

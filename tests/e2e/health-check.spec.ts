@@ -52,14 +52,14 @@ test.describe('Servidor - Health Check', () => {
     console.log('✅ localStorage funcionando');
   });
 
-  test('pode fazer fetch de JSON v3', async ({ page }) => {
-    const response = await page.request.get('http://localhost:8080/templates/step-01-v3.json');
+  test('pode fazer fetch de JSON v4 modular', async ({ page }) => {
+    const response = await page.request.get('http://localhost:8080/templates/quiz21Steps/steps/step-01.json');
     expect(response.ok()).toBeTruthy();
     
     const json = await response.json();
     expect(json).toHaveProperty('blocks');
     expect(Array.isArray(json.blocks)).toBeTruthy();
     
-    console.log('✅ JSON v3 acessível:', json.blocks.length, 'blocos');
+    console.log('✅ JSON v4 modular acessível:', json.blocks.length, 'blocos');
   });
 });

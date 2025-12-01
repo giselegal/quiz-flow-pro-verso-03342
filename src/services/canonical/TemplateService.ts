@@ -312,11 +312,12 @@ export class TemplateService extends BaseCanonicalService {
   // ============================================================================
 
   /**
-   * 🆕 FASE 1: Carregar template v4 com validação Zod
+   * 🆕 Carregar template V4 oficial (quiz21-v4-saas.json)
+   * Fonte única de verdade para templates consolidados
    */
   async loadV4Template(): Promise<ServiceResult<any>> {
     try {
-      this.log('📂 Loading quiz21-v4-saas.json...');
+      this.log('📂 Loading quiz21-v4-saas.json (modelo oficial V4)...');
 
       const response = await fetch('/templates/quiz21-v4-saas.json', {
         cache: 'no-cache'
@@ -930,11 +931,11 @@ export class TemplateService extends BaseCanonicalService {
   }
 
   /**
-   * 🔍 Detectar número de steps do template lendo arquivo consolidado
+   * 🔍 Detectar número de steps do template lendo arquivo consolidado V4
    */
   private async detectTemplateSteps(templateId: string): Promise<number> {
     try {
-      const masterPath = `/templates/quiz21-complete.json`;
+      const masterPath = `/templates/quiz21-v4-saas.json`;
       const response = await fetch(masterPath);
 
       if (!response.ok) {
