@@ -22,6 +22,16 @@ const cspDirectives = {
     'https://fonts.googleapis.com',
     'https://www.google-analytics.com',
     'https://www.googletagmanager.com',
+    'https://cdn.gpteng.co',
+  ],
+  'script-src-elem': [
+    "'self'",
+    "'unsafe-inline'",
+    'https://cdn.jsdelivr.net',
+    'https://unpkg.com',
+    'https://cdnjs.cloudflare.com',
+    'https://fonts.googleapis.com',
+    'https://cdn.gpteng.co',
   ],
   'style-src': [
     "'self'",
@@ -49,6 +59,12 @@ const cspDirectives = {
     'wss://*.supabase.co',
     'https://api.github.com',
     'https://api.openai.com',
+    'https://lovable.dev',
+  ],
+  'manifest-src': [
+    "'self'",
+    'https://lovable.dev',
+    'https://*.lovableproject.com',
   ],
   'media-src': [
     "'self'",
