@@ -40,6 +40,7 @@ export function buildFashionStyle21Steps(funnelId?: string): QuizStep[] {
       makeBlock('b1-4', 'button', 4, { action: 'next-step' }, { text: 'Começar' }),
     ],
     navigation: { nextStep: 'step-02' },
+    version: 1,
   });
 
   // 2-11) 10 perguntas principais (multiSelect, 3 seleções obrigatórias)
@@ -63,6 +64,7 @@ export function buildFashionStyle21Steps(funnelId?: string): QuizStep[] {
           { options: makeOptions(`p${i}-opt-`, 6, true) },
         ),
       ],
+      version: 1,
     });
   }
 
@@ -78,6 +80,7 @@ export function buildFashionStyle21Steps(funnelId?: string): QuizStep[] {
       makeBlock('b12-2', 'text', 2, { textAlign: 'center' }, { text: 'Agora algumas perguntas estratégicas para refinar seu resultado.' }),
       makeBlock('b12-3', 'button', 3, { action: 'next-step' }, { text: 'Continuar' }),
     ],
+    version: 1,
   });
 
   // 13-18) 6 perguntas estratégicas (1 seleção obrigatória)
@@ -101,6 +104,7 @@ export function buildFashionStyle21Steps(funnelId?: string): QuizStep[] {
           { options: makeOptions(`s${i}-opt-`, 4, false) },
         ),
       ],
+      version: 1,
     });
   }
 
@@ -115,6 +119,7 @@ export function buildFashionStyle21Steps(funnelId?: string): QuizStep[] {
       makeBlock('b19-1', 'heading', 1, { level: 2, textAlign: 'center' }, { text: 'Processando seu resultado...' }),
       makeBlock('b19-2', 'text', 2, { textAlign: 'center' }, { text: 'Levamos em conta suas preferências e combinamos com nosso mapa de estilos.' }),
     ],
+    version: 1,
   });
 
   // 20) Resultado
@@ -129,6 +134,7 @@ export function buildFashionStyle21Steps(funnelId?: string): QuizStep[] {
       makeBlock('b20-2', 'text', 2, { textAlign: 'center' }, { text: 'Seu estilo predominante é: {resultStyle}. Toque em continuar para ver uma oferta especial para você.' }),
       makeBlock('b20-3', 'button', 3, { action: 'next-step' }, { text: 'Ver oferta' }),
     ],
+    version: 1,
   });
 
   // 21) Oferta
@@ -143,6 +149,7 @@ export function buildFashionStyle21Steps(funnelId?: string): QuizStep[] {
       makeBlock('b21-2', 'text', 2, { textAlign: 'center' }, { text: 'Receba um guia completo com combinações, cores e peças-chave para seu estilo.' }),
       makeBlock('b21-3', 'button', 3, { action: 'open-url', url: 'https://example.com/checkout' }, { text: 'Quero meu guia' }),
     ],
+    version: 1,
   });
 
   // Retorna steps conforme schema
