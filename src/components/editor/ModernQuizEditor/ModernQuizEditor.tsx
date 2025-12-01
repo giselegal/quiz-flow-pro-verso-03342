@@ -32,6 +32,8 @@ export function ModernQuizEditor({
     onSave,
     onError,
 }: ModernQuizEditorProps) {
+    console.log('🎨 ModernQuizEditor rendering', { initialQuiz: !!initialQuiz, quizId });
+
     const { loadQuiz, quiz, isLoading, error, isDirty } = useQuizStore();
 
     // Hook de persistência

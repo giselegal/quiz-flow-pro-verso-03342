@@ -201,11 +201,18 @@ export default function EditorPage() {
                         </div>
                     </div>
                 ) : quiz ? (
-                    <ModernQuizEditor
-                        initialQuiz={quiz}
-                        onSave={handleSave}
-                        onError={handleError}
-                    />
+                    <>
+                        {console.log('🎯 Renderizando ModernQuizEditor com quiz:', {
+                            name: quiz.metadata?.name,
+                            steps: quiz.steps?.length,
+                            version: quiz.version
+                        })}
+                        <ModernQuizEditor
+                            initialQuiz={quiz}
+                            onSave={handleSave}
+                            onError={handleError}
+                        />
+                    </>
                 ) : (
                     <PageLoadingFallback message="Preparando editor..." />
                 )}
