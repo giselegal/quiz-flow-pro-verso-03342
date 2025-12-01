@@ -10,7 +10,7 @@
  * ✅ AUDIT: Optimized with React.memo and useCallback
  */
 
-import React, { memo, useCallback, useMemo } from 'react';
+import React, { memo, useCallback, useMemo, Suspense } from 'react';
 import { useQuizStore } from '../store/quizStore';
 import { useEditorStore } from '../store/editorStore';
 import type { QuizBlock } from '@/schemas/quiz-schema.zod';
@@ -19,6 +19,8 @@ import { useDroppable } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import ValidationPanel from '../components/ValidationPanel';
+import { LazyBlockRenderer } from '../../blocks/LazyBlockRenderer';
+import type { Block } from '@/types/editor';
 
 // ✅ AUDIT: Debug logging only in development
 const DEBUG = import.meta.env.DEV && true; // Set to true to enable debug logs
@@ -69,6 +71,15 @@ export const Canvas = memo(function Canvas() {
         selectBlock(blockId);
     }, [selectBlock]);
 
+    // 🆕 Handler para double-click abrir properties panel
+    const handleOpenProperties = useCallback((blockId: string) => {
+        selectBlock(blockId);
+        const { togglePropertiesPanel, isPropertiesPanelOpen } = useEditorStore.getState();
+        if (!isPropertiesPanelOpen) {
+            togglePropertiesPanel();
+        }
+    }, [selectBlock]);
+
     return (
         <div className="flex-1 bg-gray-50 flex flex-col overflow-hidden">
             {/* Toolbar do Canvas */}
@@ -89,6 +100,7 @@ export const Canvas = memo(function Canvas() {
                             blocks={selectedStep.blocks}
                             selectedBlockId={selectedBlockId}
                             onSelect={handleSelectBlock}
+                            onOpenProperties={handleOpenProperties}
                         />
                     </div>
                 )}
@@ -163,7 +175,7 @@ interface BlockPreviewProps {
     onClick: () => void;
 }
 
-const BlockPreview = memo(function BlockPreview({ block, isSelected, onClick }: BlockPreviewProps) {
+const BlockPreview = memo(function BlockPreview({ block, isSelected, onClick, onDoubleClick }: BlockPreviewProps & { onDoubleClick?: () => void }) {
     const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
         id: block.id,
         data: {
@@ -172,11 +184,28 @@ const BlockPreview = memo(function BlockPreview({ block, isSelected, onClick }: 
         },
     });
 
+    const selectedStepId = useEditorStore((state) => state.selectedStepId);
+    const updateBlock = useQuizStore((state) => state.updateBlock);
+
     const style = useMemo(() => ({
         transform: CSS.Transform.toString(transform),
         transition,
         opacity: isDragging ? 0.5 : 1,
     }), [transform, transition, isDragging]);
+
+    const handleUpdate = useCallback((blockId: string, updates: Partial<Block>) => {
+        if (!selectedStepId) return;
+        updateBlock(selectedStepId, blockId, updates);
+    }, [selectedStepId, updateBlock]);
+
+    // Converter QuizBlock para Block (compatibilidade)
+    const editorBlock: Block = useMemo(() => ({
+        ...block,
+        type: block.type,
+        id: block.id,
+        properties: block.properties || {},
+        order: block.order ?? 0,
+    }), [block]);
 
     return (
         <div
@@ -184,9 +213,10 @@ const BlockPreview = memo(function BlockPreview({ block, isSelected, onClick }: 
             style={style}
             {...attributes}
             onClick={onClick}
+            onDoubleClick={onDoubleClick}
             className={`
-        p-4 bg-white rounded-lg border-2 cursor-pointer
-        transition-all duration-150
+        bg-white rounded-lg border-2 cursor-pointer
+        transition-all duration-150 overflow-hidden
         ${isSelected
                     ? 'border-blue-500 shadow-lg ring-2 ring-blue-200'
                     : 'border-gray-200 hover:border-blue-300 hover:shadow-md'
@@ -197,25 +227,16 @@ const BlockPreview = memo(function BlockPreview({ block, isSelected, onClick }: 
             {/* Handle de Drag (só aparece quando hover) */}
             <div
                 {...listeners}
-                className="flex items-center gap-2 mb-2 opacity-0 hover:opacity-100 transition-opacity cursor-grab active:cursor-grabbing"
+                className="flex items-center gap-2 px-4 py-2 bg-gray-50 opacity-0 hover:opacity-100 transition-opacity cursor-grab active:cursor-grabbing"
             >
                 <div className="flex gap-1">
-                    <div className="w-1 h-4 bg-gray-300 rounded"></div>
-                    <div className="w-1 h-4 bg-gray-300 rounded"></div>
-                    <div className="w-1 h-4 bg-gray-300 rounded"></div>
+                    <div className="w-1 h-4 bg-gray-400 rounded"></div>
+                    <div className="w-1 h-4 bg-gray-400 rounded"></div>
+                    <div className="w-1 h-4 bg-gray-400 rounded"></div>
                 </div>
-                <span className="text-xs text-gray-400">Arrastar para reordenar</span>
-            </div>
-            {/* Header do bloco */}
-            <div className="flex items-start justify-between mb-3">
-                <div className="flex items-center gap-2">
-                    <span className="text-xs font-mono text-gray-400">{block.type}</span>
-                    {block.id && (
-                        <span className="text-xs text-gray-400">#{block.id}</span>
-                    )}
-                </div>
+                <span className="text-xs text-gray-500">Arrastar para reordenar</span>
                 {isSelected && (
-                    <span className="px-2 py-0.5 text-xs font-medium bg-blue-100 text-blue-700 rounded">
+                    <span className="ml-auto px-2 py-0.5 text-xs font-medium bg-blue-100 text-blue-700 rounded">
                         Selecionado
                     </span>
                 )}
@@ -223,67 +244,33 @@ const BlockPreview = memo(function BlockPreview({ block, isSelected, onClick }: 
 
             {/* Toolbar de ações quando selecionado */}
             {isSelected && (
-                <div className="mb-3 flex items-center gap-2">
+                <div className="px-4 py-2 bg-blue-50 border-b border-blue-100 flex items-center gap-2">
                     <BlockActions block={block} />
                 </div>
             )}
 
-            {/* Conteúdo do bloco (preview com suporte básico por tipo) */}
-            <div className="space-y-2">
-                {/* Título */}
-                {block.properties?.title && (
-                    <h3 className="text-base font-semibold text-gray-900">
-                        {block.properties.title}
-                    </h3>
-                )}
-
-                {/* Subtítulo */}
-                {block.properties?.subtitle && (
-                    <p className="text-sm text-gray-600">
-                        {block.properties.subtitle}
-                    </p>
-                )}
-
-                {/* Descrição */}
-                {block.properties?.description && (
-                    <p className="text-sm text-gray-500">
-                        {block.properties.description}
-                    </p>
-                )}
-
-                {/* Opções (para perguntas) */}
-                {block.properties?.options && Array.isArray(block.properties.options) && (
-                    <div className="mt-3 space-y-1">
-                        {block.properties.options.slice(0, 3).map((option: any, idx: number) => (
-                            <div key={idx} className="p-2 bg-gray-50 rounded text-sm text-gray-700">
-                                {option.label || option.text || 'Opção'}
-                            </div>
-                        ))}
-                        {block.properties.options.length > 3 && (
-                            <p className="text-xs text-gray-400">
-                                +{block.properties.options.length - 3} opções
-                            </p>
-                        )}
+            {/* 🎯 RENDERIZAÇÃO REAL DO BLOCO via LazyBlockRenderer */}
+            <div className="p-4">
+                <Suspense fallback={
+                    <div className="animate-pulse space-y-2">
+                        <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                        <div className="h-4 bg-gray-200 rounded w-1/2"></div>
                     </div>
-                )}
+                }>
+                    <LazyBlockRenderer
+                        block={editorBlock}
+                        isSelected={isSelected}
+                        isEditable={true}
+                        onUpdate={handleUpdate}
+                        onSelect={onClick}
+                    />
+                </Suspense>
+            </div>
 
-                {/* Imagem */}
-                {block.properties?.src && (
-                    <div className="mt-2">
-                        <img
-                            src={block.properties.src}
-                            alt={block.properties.alt || ''}
-                            className="max-w-full rounded"
-                        />
-                    </div>
-                )}
-
-                {/* Badge do tipo */}
-                <div className="pt-2 mt-2 border-t border-gray-100">
-                    <span className="text-xs text-gray-400">
-                        Ordem: {block.order}
-                    </span>
-                </div>
+            {/* Footer com metadados */}
+            <div className="px-4 py-2 bg-gray-50 border-t border-gray-100 flex items-center justify-between text-xs text-gray-400">
+                <span className="font-mono">{block.type}</span>
+                <span>Ordem: {block.order}</span>
             </div>
         </div>
     );
@@ -408,9 +395,10 @@ interface CanvasSortableProps {
     blocks: any[];
     selectedBlockId?: string | null;
     onSelect: (id: string) => void;
+    onOpenProperties?: (id: string) => void;
 }
 
-const CanvasSortable = memo(function CanvasSortable({ stepId, blocks, selectedBlockId, onSelect }: CanvasSortableProps) {
+const CanvasSortable = memo(function CanvasSortable({ stepId, blocks, selectedBlockId, onSelect, onOpenProperties }: CanvasSortableProps) {
     // ✅ AUDIT: Memoize block IDs array
     const blockIds = useMemo(() => blocks.map((block) => block.id), [blocks]);
 
@@ -430,6 +418,7 @@ const CanvasSortable = memo(function CanvasSortable({ stepId, blocks, selectedBl
                         block={block}
                         isSelected={selectedBlockId === block.id}
                         onClick={() => onSelect(block.id)}
+                        onDoubleClick={() => onOpenProperties?.(block.id)}
                     />
                 ))}
             </div>
