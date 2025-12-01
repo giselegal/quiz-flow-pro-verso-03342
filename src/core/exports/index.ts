@@ -100,19 +100,16 @@ export { default as EventEmitter } from '@/lib/utils/EventEmitter';
 // ============================================================================
 
 /**
- * Tipos do editor
+ * Tipos do editor - Schema Zod
  */
 export type {
-  Block,
   QuizStep,
   QuizBlock,
   BlockType
 } from '@/schemas/quiz-schema.zod';
 
 /**
- * Tipos do core
+ * Tipos do core - Editor State e Actions
  */
-export type {
-  EditorState,
-  EditorActions
-} from '@/types/editor';
+export type { EditorState } from '@/types/editorTypes';
+export type { EditorActions } from '@/types/editorActions';
