@@ -13,7 +13,7 @@ import { useQuizStore } from '../store/quizStore';
 import { useEditorStore } from '../store/editorStore';
 import type { QuizBlock } from '@/schemas/quiz-schema.zod';
 import { computeQuizResult, type Answer, type Rule, type CalculationConfig } from '../utils/calculationEngine';
-import { DndContext, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
+import { useDroppable } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import ValidationPanel from '../components/ValidationPanel';
@@ -73,13 +73,28 @@ export function Canvas() {
     );
 }
 
-// Estado vazio
+// Estado vazio (com drop zone)
 function EmptyState({ message }: { message: string }) {
+    const { setNodeRef, isOver } = useDroppable({
+        id: 'empty-canvas-drop-zone',
+    });
+
     return (
-        <div className="h-full flex items-center justify-center">
+        <div
+            ref={setNodeRef}
+            className={`
+                h-full flex items-center justify-center
+                transition-all duration-200
+                ${isOver ? 'bg-blue-50 border-2 border-dashed border-blue-400' : ''}
+            `}
+        >
             <div className="text-center">
-                <div className="text-6xl mb-4">📋</div>
-                <p className="text-gray-500">{message}</p>
+                <div className="text-6xl mb-4">
+                    {isOver ? '📥' : '📋'}
+                </div>
+                <p className={`text-gray-500 ${isOver ? 'text-blue-600 font-medium' : ''}`}>
+                    {isOver ? 'Solte aqui para adicionar' : message}
+                </p>
             </div>
         </div>
     );
@@ -309,48 +324,21 @@ function ResultPreview() {
 }
 
 function CanvasSortable({ stepId, blocks, selectedBlockId, onSelect }: { stepId: string; blocks: any[]; selectedBlockId?: string | null; onSelect: (id: string) => void; }) {
-    const reorderBlocks = useQuizStore((s) => s.reorderBlocks);
-    const sensors = useSensors(useSensor(PointerSensor));
-    return (
-        <DndContext
-            sensors={sensors}
-            collisionDetection={closestCenter}
-            onDragEnd={(event) => {
-                const { active, over } = event;
-                if (!over || active.id === over.id) return;
-                const from = Number(active.id);
-                const to = Number(over.id);
-                reorderBlocks(stepId, from, to);
-            }}
-        >
-            <SortableContext items={blocks.map((_, i) => i)} strategy={verticalListSortingStrategy}>
-                <div className="max-w-3xl mx-auto space-y-4">
-                    {blocks.map((block: any, idx: number) => (
-                        <SortableBlock key={block.id} id={idx}>
-                            <BlockPreview
-                                block={block}
-                                isSelected={selectedBlockId === block.id}
-                                onClick={() => onSelect(block.id)}
-                            />
-                        </SortableBlock>
-                    ))}
-                </div>
-            </SortableContext>
-        </DndContext>
-    );
-}
+    // Usar IDs dos blocos para o SortableContext
+    const blockIds = blocks.map((block) => block.id);
 
-function SortableBlock({ id, children }: { id: number; children: React.ReactNode }) {
-    const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
-    const style = {
-        transform: CSS.Transform.toString(transform),
-        transition,
-        boxShadow: isDragging ? '0 8px 24px rgba(0,0,0,0.12)' : undefined,
-        opacity: isDragging ? 0.98 : 1,
-    } as React.CSSProperties;
     return (
-        <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-            {children}
-        </div>
+        <SortableContext items={blockIds} strategy={verticalListSortingStrategy}>
+            <div className="space-y-4">
+                {blocks.map((block: any) => (
+                    <BlockPreview
+                        key={block.id}
+                        block={block}
+                        isSelected={selectedBlockId === block.id}
+                        onClick={() => onSelect(block.id)}
+                    />
+                ))}
+            </div>
+        </SortableContext>
     );
 }
