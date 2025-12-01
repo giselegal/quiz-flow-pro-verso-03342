@@ -1751,8 +1751,13 @@ export class TemplateService extends BaseCanonicalService {
   async getAllSteps(): Promise<Record<string, any>> {
     const allSteps: Record<string, any> = {};
 
-    // Determinar templateId baseado no activeFunnelId ou usar padrão
-    let templateId = this.activeFunnelId || 'quiz21StepsComplete';
+    // ⚠️ REQUER activeFunnelId definido - não fazer fallback automático
+    if (!this.activeFunnelId) {
+      this.log('⚠️ getAllSteps: activeFunnelId não definido, retornando vazio');
+      return allSteps;
+    }
+
+    let templateId = this.activeFunnelId;
 
     // Normalizar IDs legados para o ID do template JSON
     if (templateId === 'quiz-estilo-21-steps' || templateId === 'quiz-estilo-completo') {
