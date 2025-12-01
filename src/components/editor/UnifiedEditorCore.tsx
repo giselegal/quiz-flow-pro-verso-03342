@@ -311,6 +311,7 @@ export const UnifiedEditorCore: React.FC<UnifiedEditorCoreProps> = ({
   className = 'h-full w-full',
 }) => {
   const editor = useEditorCompat();
+  const adapter = useEditorAdapter();
   const [streamProgress, setStreamProgress] = React.useState(0);
 
   // Fallback when editor context is not available
@@ -318,7 +319,16 @@ export const UnifiedEditorCore: React.FC<UnifiedEditorCoreProps> = ({
     return <div className="flex items-center justify-center h-full">Loading editor...</div>;
   }
 
-  const { state, actions, blockActions, ensureStepLoaded: ensureLoaded } = editor;
+  const { state, blockActions, ensureStepLoaded: ensureLoaded } = editor;
+
+  // Criar wrapper de actions para compatibilidade
+  const actions = React.useMemo(() => ({
+    setCurrentStep: (step: number) => {
+      if (adapter?.actions?.setCurrentStep) {
+        adapter.actions.setCurrentStep(step);
+      }
+    },
+  }), [adapter]);
 
   React.useEffect(() => {
     Promise.all([
