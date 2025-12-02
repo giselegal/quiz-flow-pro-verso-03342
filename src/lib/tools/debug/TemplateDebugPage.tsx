@@ -36,7 +36,7 @@ const TemplateDebugPage: React.FC = () => {
 
         // 2. Verificar normalização
         if (rawTemplate && Object.keys(rawTemplate).length > 0) {
-            const normalized = normalizeStepBlocks(rawTemplate);
+            const normalized = normalizeStepBlocks(rawTemplate) as Record<string, any[]>;
             const normalizedData = {
                 normalizedKeys: Object.keys(normalized),
                 keyCount: Object.keys(normalized).length,

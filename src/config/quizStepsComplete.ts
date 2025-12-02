@@ -27,8 +27,10 @@ const quizSteps: Record<string, { blocks: Block[] }> = {
   'step-21': { blocks: [] },
 };
 
-export function normalizeStepBlocks(blocks: Block[] = []): Block[] {
-  return Array.isArray(blocks) ? blocks : [];
+export function normalizeStepBlocks(blocks: any = []): any {
+  if (Array.isArray(blocks)) return blocks as Block[];
+  if (blocks && typeof blocks === 'object') return blocks as Record<string, Block[]>;
+  return [] as Block[];
 }
 
 // Aceita (stepId) ou (stepNumber, stepBlocksMap) conforme chamadas legadas

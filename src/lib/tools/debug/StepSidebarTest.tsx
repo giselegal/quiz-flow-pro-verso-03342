@@ -70,11 +70,11 @@ const StepSidebarTest: React.FC = () => {
     const [currentStep, setCurrentStep] = useState(1);
 
     // Simular o que o EditorProvider faz
-    const stepBlocks = useMemo(() => {
+    const stepBlocks = useMemo<Record<string, any[]>>(() => {
         // 🔄 Ler do lazy loader cache se disponível
         const funnel = getLoadedFunnelSync('quiz21StepsComplete');
         const rawTemplate = funnel?.steps || {};
-        const normalized = normalizeStepBlocks(rawTemplate);
+        const normalized = normalizeStepBlocks(rawTemplate) as Record<string, any[]>;
         appLogger.info('🔍 StepSidebarTest normalized blocks:', {
             data: [{
                 keyCount: Object.keys(normalized).length,
