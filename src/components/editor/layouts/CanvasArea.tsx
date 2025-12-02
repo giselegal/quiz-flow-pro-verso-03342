@@ -5,6 +5,7 @@ import type { Block } from '@/types/editor';
 import { useCanvasContainerStyles } from '@/hooks/useCanvasContainerStyles';
 import StabilizedCanvas from '@/components/canvas/StabilizedCanvas';
 import PreviewModeRenderer from '@/components/editor/renderers/PreviewModeRenderer';
+import { useEditorCore } from '@/hooks/core/useEditorCore';
 
 // Removido LazyScalableQuizRenderer: StabilizedCanvas já encapsula preview com lazy interno
 
@@ -35,6 +36,7 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
 }) => {
   // Hook para aplicar estilos dinâmicos
   useCanvasContainerStyles();
+  const editorCore = useEditorCore();
 
   // Derivar bloco selecionado
   const selectedBlock: Block | null = useMemo(() => {
@@ -84,16 +86,33 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
             blocks={currentStepData as Block[]}
             selectedBlock={selectedBlock}
             currentStep={safeCurrentStep}
-            onSelectBlock={(id: string) => actions.setSelectedBlockId(id)}
-            onUpdateBlock={(blockId: string, updates: Partial<Block>) => actions.updateBlock(`step-${safeCurrentStep}`, blockId, updates)}
-            onDeleteBlock={(blockId: string) => actions.removeBlock(`step-${safeCurrentStep}`, blockId)}
+            onSelectBlock={(id: string) => {
+              if (editorCore?.actions?.selectBlock) editorCore.actions.selectBlock(id);
+              else actions.setSelectedBlockId?.(id);
+            }}
+            onUpdateBlock={(blockId: string, updates: Partial<Block>) => {
+              // Preferir core para bloco selecionado; fallback para actions
+              if (editorCore?.state?.selectedBlockId === blockId && editorCore?.actions?.updateSelectedBlock) {
+                editorCore.actions.updateSelectedBlock(updates);
+              } else {
+                actions.updateBlock?.(`step-${safeCurrentStep}`, blockId, updates);
+              }
+            }}
+            onDeleteBlock={(blockId: string) => {
+              if (editorCore?.state?.selectedBlockId === blockId && editorCore?.actions?.deleteSelectedBlock) {
+                editorCore.actions.deleteSelectedBlock();
+              } else {
+                actions.removeBlock?.(`step-${safeCurrentStep}`, blockId);
+              }
+            }}
             onReorderBlocks={(step: number, oldIndex: number, newIndex: number) => {
               const stepKey = `step-${step}`;
-              actions.reorderBlocks(stepKey, oldIndex, newIndex);
+              actions.reorderBlocks?.(stepKey, oldIndex, newIndex);
             }}
             isPreviewMode={false}
             onStepChange={(step: number) => {
-              actions.setCurrentStep(step);
+              if (editorCore?.actions?.setCurrentStep) editorCore.actions.setCurrentStep(step);
+              else actions.setCurrentStep?.(step);
             }}
             funnelId={funnelId}
           />
