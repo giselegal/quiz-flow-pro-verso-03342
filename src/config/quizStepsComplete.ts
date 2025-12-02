@@ -1,7 +1,7 @@
 // Compat shim para quizStepsComplete (Fase 0)
 // Exporta estrutura mínima para funções esperadas: default quizSteps, normalizeStepBlocks, getBlocksForStep
 
-type Block = { id?: string; type: string; properties?: Record<string, any> };
+import type { Block } from '@/types/editor';
 
 const quizSteps: Record<string, { blocks: Block[] }> = {
   'step-01': { blocks: [] },
@@ -31,8 +31,14 @@ export function normalizeStepBlocks(blocks: Block[] = []): Block[] {
   return Array.isArray(blocks) ? blocks : [];
 }
 
-export function getBlocksForStep(stepId: string): Block[] {
-  const entry = quizSteps[stepId];
+// Aceita (stepId) ou (stepNumber, stepBlocksMap) conforme chamadas legadas
+export function getBlocksForStep(step: string | number, stepBlocksMap?: Record<string, Block[]>): Block[] {
+  const stepKey = typeof step === 'number' ? `step-${String(step).padStart(2, '0')}` : step;
+  if (stepBlocksMap && typeof stepBlocksMap === 'object') {
+    const fromMap = stepBlocksMap[stepKey];
+    return normalizeStepBlocks(fromMap || []);
+  }
+  const entry = quizSteps[stepKey];
   return normalizeStepBlocks(entry?.blocks || []);
 }
 
