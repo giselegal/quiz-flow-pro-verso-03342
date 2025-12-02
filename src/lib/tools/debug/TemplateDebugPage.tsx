@@ -40,7 +40,7 @@ const TemplateDebugPage: React.FC = () => {
             const normalizedData = {
                 normalizedKeys: Object.keys(normalized),
                 keyCount: Object.keys(normalized).length,
-                stepBlocks: Object.entries(normalized).map(([k, v]) => [k, v.length]),
+                stepBlocks: Object.entries(normalized).map(([k, v]: [string, any]) => [k, v.length]),
                 specificSteps: {},
             };
 
@@ -51,7 +51,7 @@ const TemplateDebugPage: React.FC = () => {
                 (normalizedData.specificSteps as any)[i] = {
                     hasBlocks: !!blocks,
                     count: blocks?.length || 0,
-                    types: blocks?.slice(0, 3).map(b => b.type) || [],
+                    types: blocks?.slice(0, 3).map((b: any) => b.type) || [],
                 };
             }
 

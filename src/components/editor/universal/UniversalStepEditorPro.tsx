@@ -68,7 +68,7 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
         appLogger.debug('📊 currentStepData recalculado:', {
             safeCurrentStep,
             blocksCount: blocks.length,
-            blocks: blocks.map(b => ({ id: b.id, type: b.type, properties: Object.keys(b.properties || {}) })),
+            blocks: blocks.map((b: any) => ({ id: b.id, type: b.type, properties: Object.keys(b.properties || {}) })),
             stepBlocksRef: state.stepBlocks,
         });
         return blocks;

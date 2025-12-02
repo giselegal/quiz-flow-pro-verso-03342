@@ -1,4 +1,11 @@
-import type { BlockData } from './funnelService';
+export interface BlockData {
+  id: string;
+  type: string;
+  order: number;
+  content: Record<string, any>;
+  settings: Record<string, any>;
+  styles?: Record<string, any>;
+}
 import { getDefaultPageConfig } from '../data/defaultPageConfigs';
 import { appLogger } from '@/lib/utils/appLogger';
 
