@@ -1,15 +1,21 @@
 import { z } from 'zod';
 
-// Fonte canônica: esquema Zod
-export const BlockSchema = z.object({
+// Definição de tipo canônico
+export interface Block {
+  id: string;
+  type: string;
+  props: Record<string, unknown>;
+  children?: Block[];
+}
+
+// Esquema Zod (sem inferência recursiva direta para evitar erros de TS)
+export const BlockSchema: z.ZodType<Block> = z.object({
   id: z.string(),
   type: z.string(),
   props: z.record(z.unknown()).default({}),
-  children: z.array(z.lazy(() => BlockSchema)).optional(),
+  // Usa z.any() para crianças para evitar laço de tipo no inicializador
+  children: z.array(z.any()).optional(),
 });
-
-// Tipo derivado
-export type Block = z.infer<typeof BlockSchema>;
 
 // Props de componentes de bloco
 export interface BlockComponentProps<T = unknown> {

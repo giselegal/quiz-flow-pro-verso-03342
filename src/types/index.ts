@@ -4,8 +4,6 @@ export * from './editor.types';
 
 // TODO: adicionar quiz.types e funnel.types quando disponíveis
 
-// DEPRECATED (back-compat) - será removido em v5.0
-// Mantém importações antigas funcionando durante migração gradual
-export * from './Block';
-export * from './editor';
+// OBS: Evitamos reexportar arquivos legados aqui para não gerar ambiguidades.
+// Os módulos antigos ainda podem ser importados diretamente de '@/types/Block' e '@/types/editor' durante a migração.
 export * from './funnel';
