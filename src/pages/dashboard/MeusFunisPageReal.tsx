@@ -33,7 +33,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { supabase } from '@/services/integrations/supabase/customClient';
 import { useToast } from '@/hooks/use-toast';
-import { funnelService } from '@/services/funnel/FunnelService';
+import { funnelService } from '@/services/funnel/FunnelServiceLegacyAdapter';
 import { templateService } from '@/services/canonical/TemplateService';
 import { appLogger } from '@/lib/utils/appLogger';
 
