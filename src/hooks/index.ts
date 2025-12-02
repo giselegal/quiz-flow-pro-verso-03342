@@ -72,6 +72,7 @@ export { useAutoSave } from './useAutoSave';
 export { useHistory } from './useHistory';
 // export { useSupabase } from './useSupabase'; // TODO: Create if needed
 export { useSupabaseQuiz } from './useSupabaseQuiz';
+export { useFunnelActions } from './useFunnelActions';
 
 // Utilitários
 export { useToast } from './use-toast';

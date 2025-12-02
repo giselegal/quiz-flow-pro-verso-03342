@@ -34,7 +34,7 @@ export function normalizeStepBlocks(blocks: any = []): any {
 }
 
 // Aceita (stepId) ou (stepNumber, stepBlocksMap) conforme chamadas legadas
-export function getBlocksForStep(step: string | number, stepBlocksMap?: Record<string, Block[]>): Block[] {
+export function getBlocksForStep(step: string | number, stepBlocksMap?: Record<string, any[]>): any[] {
   const stepKey = typeof step === 'number' ? `step-${String(step).padStart(2, '0')}` : step;
   if (stepBlocksMap && typeof stepBlocksMap === 'object') {
     const fromMap = stepBlocksMap[stepKey];

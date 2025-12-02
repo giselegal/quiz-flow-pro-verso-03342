@@ -23,13 +23,23 @@ export const AVAILABLE_TEMPLATES: TemplateConfig[] = getUnifiedTemplates().map(t
 }));
 
 export const TemplateService = {
-  async getTemplate(id: string) {
+  getTemplate(id: string) {
     const all = getUnifiedTemplates();
-    const found = all.find(t => t.id === id);
+    const t: any = all.find(t => (t as any).id === id);
+    if (!t) return null;
+    const preview = t.image || t.preview || '';
+    const stepCount = typeof t.stepCount === 'number' ? t.stepCount : (Array.isArray(t.steps) ? t.steps.length : 21);
     return {
-      success: !!found,
-      data: found || null,
-    } as { success: boolean; data: any };
+      id: t.id,
+      name: t.name,
+      category: t.category ?? 'geral',
+      difficulty: t.difficulty ?? 'Médio',
+      stepCount,
+      description: t.description ?? '',
+      features: t.features ?? [],
+      editorUrl: t.editorUrl ?? '/editor',
+      preview,
+    } as any;
   },
 };
 
