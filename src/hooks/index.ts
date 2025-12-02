@@ -75,6 +75,8 @@ export { useSupabaseQuiz } from './useSupabaseQuiz';
 export { useFunnelActions } from './useFunnelActions';
 export { useEditorCore } from './core/useEditorCore';
 export { useStepSelection } from './useStepSelection';
+export { useFunnel } from './useFunnel';
+export { useFunnelController } from './useFunnelController';
 
 // Utilitários
 export { useToast } from './use-toast';

@@ -2,6 +2,9 @@
 /**
  * 🔄 HOOK DE CARREGAMENTO E VALIDAÇÃO DE FUNIL - REFATORADO
  * 
+ * @deprecated Use `useFunnel` (React Query) e/ou `useFunnelController` (ações + cache)
+ * Este hook permanece para compatibilidade temporária com consumidores legados.
+ * 
  * Hook que usa FunnelService Canonical para:
  * - Gerenciar estado de carregamento do funil
  * - Cache automático integrado
