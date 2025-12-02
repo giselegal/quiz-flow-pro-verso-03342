@@ -20,7 +20,8 @@
  * ```
  */
 
-import { useEditorCompat, useEditor } from '@/core/contexts/EditorContext';
+import { useEditor } from '@/core/contexts/EditorContext/EditorStateProvider';
+import { useEditorCompat } from '@/core/contexts/EditorContext/EditorCompatLayer';
 import type { EditorCompatAPI } from '@/core/contexts/EditorContext/EditorCompatLayer';
 import type { EditorContextValue } from '@/core/contexts/EditorContext/EditorStateProvider';
 
