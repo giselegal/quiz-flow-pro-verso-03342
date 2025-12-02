@@ -19,8 +19,30 @@
 import { FunnelService, type Funnel, type LoadFunnelResult } from './FunnelService';
 import { appLogger } from '@/lib/utils/appLogger';
 import type { QuizSchema } from '@/schemas/quiz-schema.zod';
+import type { FunnelMetadata } from '@/services/canonical/FunnelService';
+
+// Re-export tipos para compatibilidade
+export type { Funnel, LoadFunnelResult, SaveFunnelResult } from './FunnelService';
 
 type EventCallback = (...args: any[]) => void;
+
+/**
+ * Converte Funnel (novo) para FunnelMetadata (legado)
+ */
+export function funnelToMetadata(funnel: Funnel): FunnelMetadata {
+  return {
+    id: funnel.id,
+    name: funnel.quiz.metadata?.name || funnel.id,
+    type: 'quiz',
+    status: 'draft',
+    createdAt: funnel.createdAt || new Date().toISOString(),
+    updatedAt: funnel.updatedAt || new Date().toISOString(),
+    isActive: true,
+    templateId: funnel.templateId,
+    config: {},
+    metadata: funnel.quiz.metadata as any,
+  };
+}
 
 /**
  * Adapter que estende FunnelService com API legada

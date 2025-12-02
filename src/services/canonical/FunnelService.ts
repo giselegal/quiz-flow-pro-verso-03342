@@ -19,3 +19,7 @@ export type {
 
 // Export da classe também (para testes)
 export { CanonicalFunnelService } from '../legacy/FunnelService.canonical.legacy';
+
+// Export da instância singleton
+const canonicalInstance = CanonicalFunnelService.getInstance();
+export { canonicalInstance as funnelService };
