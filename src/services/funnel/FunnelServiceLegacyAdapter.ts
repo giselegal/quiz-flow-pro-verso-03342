@@ -52,12 +52,12 @@ export class FunnelServiceLegacyAdapter extends FunnelService {
 
   /**
    * LEGADO: getFunnel
-   * Mapeia para loadFunnel
+   * Mapeia para loadFunnel e retorna FunnelMetadata
    */
-  async getFunnel(funnelId: string): Promise<Funnel | null> {
+  async getFunnel(funnelId: string): Promise<FunnelMetadata | null> {
     try {
       const result = await this.loadFunnel({ funnelId });
-      return result.funnel;
+      return funnelToMetadata(result.funnel);
     } catch (error) {
       appLogger.error('[FunnelServiceAdapter] getFunnel error', { funnelId, error });
       return null;
@@ -66,13 +66,13 @@ export class FunnelServiceLegacyAdapter extends FunnelService {
 
   /**
    * LEGADO: createFunnel
-   * Mapeia para saveFunnel (novo draft)
+   * Mapeia para saveFunnel (novo draft) e retorna FunnelMetadata
    */
   async createFunnel(
     quiz: QuizSchema,
     funnelId?: string,
     userId?: string
-  ): Promise<Funnel | null> {
+  ): Promise<FunnelMetadata | null> {
     try {
       const id = funnelId || quiz.metadata?.id || `funnel-${Date.now()}`;
       const result = await this.saveFunnel(quiz, id, undefined, userId);
@@ -83,7 +83,7 @@ export class FunnelServiceLegacyAdapter extends FunnelService {
 
       // Carregar o funnel criado
       const loaded = await this.loadFunnel({ funnelId: id, draftId: result.draftId });
-      return loaded.funnel;
+      return funnelToMetadata(loaded.funnel);
     } catch (error) {
       appLogger.error('[FunnelServiceAdapter] createFunnel error', { funnelId, error });
       return null;
@@ -91,16 +91,35 @@ export class FunnelServiceLegacyAdapter extends FunnelService {
   }
 
   /**
-   * LEGADO: updateFunnel
-   * Mapeia para saveFunnel (update draft existente)
+   * LEGADO: updateFunnel (sobrecarga 1 - com Quiz completo)
+   * Mapeia para saveFunnel (update draft existente) e retorna FunnelMetadata
    */
   async updateFunnel(
     funnelId: string,
-    quiz: QuizSchema,
+    quizOrUpdates: QuizSchema | any,
     draftId?: string,
     userId?: string
-  ): Promise<Funnel | null> {
+  ): Promise<FunnelMetadata | null> {
     try {
+      // Se quizOrUpdates não tem estrutura de QuizSchema, é um update parcial
+      let quiz: QuizSchema;
+      
+      if (quizOrUpdates.metadata && quizOrUpdates.steps) {
+        // É um QuizSchema completo
+        quiz = quizOrUpdates;
+      } else {
+        // É um update parcial - carregar quiz atual e aplicar updates
+        const current = await this.loadFunnel({ funnelId, draftId });
+        quiz = {
+          ...current.funnel.quiz,
+          ...quizOrUpdates,
+          metadata: {
+            ...current.funnel.quiz.metadata,
+            ...quizOrUpdates.metadata,
+          },
+        };
+      }
+      
       const result = await this.saveFunnel(quiz, funnelId, draftId, userId);
       
       if (!result.success) {
@@ -109,7 +128,7 @@ export class FunnelServiceLegacyAdapter extends FunnelService {
 
       // Carregar o funnel atualizado
       const loaded = await this.loadFunnel({ funnelId, draftId: result.draftId });
-      return loaded.funnel;
+      return funnelToMetadata(loaded.funnel);
     } catch (error) {
       appLogger.error('[FunnelServiceAdapter] updateFunnel error', { funnelId, error });
       return null;
@@ -118,13 +137,23 @@ export class FunnelServiceLegacyAdapter extends FunnelService {
 
   /**
    * LEGADO: checkPermissions
-   * Temporariamente retorna sempre true
-   * TODO: Implementar verificação real de permissões
+   * Temporariamente retorna permissões completas
+   * TODO: Implementar verificação real de permissões com RLS
    */
-  async checkPermissions(funnelId: string, userId?: string): Promise<boolean> {
-    appLogger.debug('[FunnelServiceAdapter] checkPermissions (always true)', { funnelId, userId });
+  async checkPermissions(funnelId: string, userId?: string): Promise<{
+    canRead: boolean;
+    canEdit: boolean;
+    canDelete: boolean;
+    isOwner: boolean;
+  }> {
+    appLogger.debug('[FunnelServiceAdapter] checkPermissions (full access)', { funnelId, userId });
     // TODO: Implementar RLS real quando necessário
-    return true;
+    return {
+      canRead: true,
+      canEdit: true,
+      canDelete: true,
+      isOwner: true,
+    };
   }
 
   /**
