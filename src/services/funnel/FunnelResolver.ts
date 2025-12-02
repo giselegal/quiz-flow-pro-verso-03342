@@ -67,7 +67,9 @@ export const FUNNEL_TEMPLATE_MAP: Record<string, string> = {
   // V4.1 SaaS (ÚNICO TEMPLATE ATIVO)
   'quiz21StepsComplete': TEMPLATE_PATHS.V4_SAAS,
   'quiz21-v4-saas': TEMPLATE_PATHS.V4_SAAS,
+  'quiz21-v4-saas.json': TEMPLATE_PATHS.V4_SAAS, // Com extensão
   'quiz21-v4': TEMPLATE_PATHS.V4_SAAS, // Redirect v4 → v4-saas
+  'quiz-estilo-21-steps': TEMPLATE_PATHS.V4_SAAS, // Nome amigável
   
   // Legacy templates (OBSOLETOS - arquivos em /templates/.obsolete/)
   // ⚠️ Mantidos apenas para compatibilidade com drafts antigos
@@ -84,8 +86,9 @@ export const FUNNEL_TEMPLATE_MAP: Record<string, string> = {
  * 
  * Strategy:
  * 1. Check FUNNEL_TEMPLATE_MAP
- * 2. Try dynamic path patterns
- * 3. Fallback to default
+ * 2. Check if funnelId is already a valid template path
+ * 3. Try dynamic path patterns
+ * 4. Fallback to default
  */
 export function resolveFunnelTemplatePath(funnelId: string | null | undefined): string {
   if (!funnelId) {
@@ -109,7 +112,27 @@ export function resolveFunnelTemplatePath(funnelId: string | null | undefined): 
     return path;
   }
 
-  // 3. Try dynamic patterns
+  // 3. Check if funnelId is already a valid template path (starts with / or templates/)
+  if (funnelId.startsWith('/templates/') || funnelId.startsWith('templates/')) {
+    const normalizedPath = funnelId.startsWith('/') ? funnelId : `/${funnelId}`;
+    appLogger.info('🗺️ [FunnelResolver] FunnelId is already a path', { 
+      funnelId, 
+      normalizedPath 
+    });
+    return normalizedPath;
+  }
+
+  // 4. Check if funnelId looks like a filename (ends with .json)
+  if (funnelId.endsWith('.json')) {
+    const path = `/templates/${funnelId}`;
+    appLogger.info('🗺️ [FunnelResolver] FunnelId is a filename', { 
+      funnelId, 
+      path 
+    });
+    return path;
+  }
+
+  // 5. Try dynamic patterns for structured funnels
   const dynamicPatterns = [
     `/templates/funnels/${funnelId}/master.json`,
     `/templates/funnels/${funnelId}/quiz.json`,
