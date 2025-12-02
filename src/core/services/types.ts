@@ -191,7 +191,7 @@ export abstract class BaseCanonicalService implements ICanonicalService {
 // UnifiedFunnelData: tipo híbrido de transição que cobre tanto o formato
 // canônico (FunnelMetadata) quanto campos usados no runtime do editor
 // (UnifiedCRUDService). Evita dependências de serviços legados.
-import type { FunnelMetadata } from './FunnelService';
+import type { FunnelMetadata } from '@/services/canonical/FunnelService';
 import type { UnifiedStage } from '@/services/UnifiedCRUDService';
 import type { FunnelContext } from '@/core/contexts/FunnelContext';
 import { appLogger } from '@/lib/utils/appLogger';
