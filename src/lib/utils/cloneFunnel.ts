@@ -350,7 +350,7 @@ export function cloneFunnelTemplate(template: FunnelTemplate, customName?: strin
         templateSourceId: template.id,
         name: customName || template.name,
         description: template.description,
-        blocks: allBlocks.map((b: any) => ({
+        blocks: allBlocks.map((b) => ({
             id: generateBlockId(),
             type: b.type,
             properties: deepClone(b.properties || {}),
