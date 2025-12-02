@@ -7,7 +7,7 @@
  * @deprecated Estes tipos serão removidos na v5.0
  */
 
-// Re-export tipos legados
+// Re-export tipos centralizados
 export type {
   FunnelMetadata,
   CreateFunnelInput,
@@ -15,7 +15,7 @@ export type {
   ComponentInstance,
   FunnelWithComponents,
   UnifiedFunnelData
-} from '../legacy/FunnelService.canonical.legacy';
+} from '@/types/funnel';
 
 // Export da classe também (para testes)
 import { CanonicalFunnelService } from '../legacy/FunnelService.canonical.legacy';

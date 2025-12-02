@@ -40,66 +40,16 @@ import { FunnelContext } from '@/core/contexts/FunnelContext';
 import { appLogger } from '@/lib/utils/logger';
 
 // ============================================================================
-// TYPES
+// TYPES (centralizados)
 // ============================================================================
-
-export interface FunnelMetadata {
-  id: string;
-  name: string;
-  type: 'quiz' | 'lead-gen' | 'survey' | 'other';
-  category?: string;
-  context?: FunnelContext;
-  templateId?: string;
-  status: 'draft' | 'published' | 'archived';
-  config?: Record<string, any>;
-  metadata?: Record<string, any>;
-  createdAt: string;
-  updatedAt: string;
-  isActive: boolean;
-}
-
-export interface CreateFunnelInput {
-  name: string;
-  type?: FunnelMetadata['type'];
-  category?: string;
-  context?: FunnelContext;
-  templateId?: string;
-  status?: FunnelMetadata['status'];
-  config?: Record<string, any>;
-  metadata?: Record<string, any>;
-}
-
-export interface UpdateFunnelInput {
-  name?: string;
-  type?: FunnelMetadata['type'];
-  category?: string;
-  status?: FunnelMetadata['status'];
-  config?: Record<string, any>;
-  settings?: Record<string, any>; // Alias for config
-  metadata?: Record<string, any>;
-  isActive?: boolean;
-}
-
-export interface ComponentInstance {
-  id: string;
-  funnelId: string;
-  stepKey: string;
-  blockId: string;
-  blockType: string;
-  order: number;
-  properties: Record<string, any>;
-  content: Record<string, any>;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface FunnelWithComponents {
-  funnel: FunnelMetadata;
-  components: Record<string, Block[]>; // stepKey → blocks
-}
-
-// Alias de compatibilidade usado por serviços "contextual" e outros
-export type UnifiedFunnelData = FunnelWithComponents & { id: string; name: string };
+import type {
+  FunnelMetadata,
+  CreateFunnelInput,
+  UpdateFunnelInput,
+  ComponentInstance,
+  FunnelWithComponents,
+  UnifiedFunnelData,
+} from '@/types/funnel';
 
 // ============================================================================
 // SERVICE
