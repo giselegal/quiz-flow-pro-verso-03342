@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔍 Diagnóstico de Arquitetura - Quiz Flow Pro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            padding: 20px;
+            background: #0f172a;
+            color: #e2e8f0;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #38bdf8;
+            margin-bottom: 10px;
+            font-size: 2rem;
+        }
+
+        .subtitle {
+            color: #94a3b8;
+            margin-bottom: 30px;
+        }
+
+        .test-section {
+            background: #1e293b;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #334155;
+        }
+
+        .test-section h2 {
+            color: #38bdf8;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status.pending {
+            background: #475569;
+            color: #cbd5e1;
+        }
+
+        .status.running {
+            background: #f59e0b;
+            color: #fff;
+            animation: pulse 1.5s infinite;
+        }
+
+        .status.success {
+            background: #10b981;
+            color: #fff;
+        }
+
+        .status.error {
+            background: #ef4444;
+            color: #fff;
+        }
+
+        .status.warning {
+            background: #f59e0b;
+            color: #fff;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.7;
+            }
+        }
+
+        .test-item {
+            background: #0f172a;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 6px;
+            border-left: 4px solid #475569;
+        }
+
+        .test-item.success {
+            border-left-color: #10b981;
+        }
+
+        .test-item.error {
+            border-left-color: #ef4444;
+        }
+
+        .test-item.warning {
+            border-left-color: #f59e0b;
+        }
+
+        .test-item h3 {
+            color: #cbd5e1;
+            font-size: 1rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .test-details {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            margin-top: 8px;
+        }
+
+        .metric {
+            display: inline-block;
+            margin-right: 15px;
+            color: #38bdf8;
+            font-weight: 500;
+        }
+
+        .metric strong {
+            color: #e2e8f0;
+        }
+
+        button {
+            background: #38bdf8;
+            color: #0f172a;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-right: 10px;
+        }
+
+        button:hover {
+            background: #0ea5e9;
+            transform: translateY(-1px);
+        }
+
+        button:disabled {
+            background: #475569;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .actions {
+            margin: 20px 0;
+        }
+
+        pre {
+            background: #0f172a;
+            padding: 12px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 0.85rem;
+            color: #94a3b8;
+            margin-top: 8px;
+            border: 1px solid #334155;
+        }
+
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .summary-card {
+            background: #1e293b;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            text-align: center;
+        }
+
+        .summary-card .value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #38bdf8;
+            display: block;
+            margin: 10px 0;
+        }
+
+        .summary-card .label {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: #334155;
+            border-radius: 2px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #38bdf8, #0ea5e9);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .icon {
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🔍 Diagnóstico de Arquitetura</h1>
+        <p class="subtitle">Quiz Flow Pro - Análise completa de performance e gargalos</p>
+
+        <div class="summary" id="summary">
+            <div class="summary-card">
+                <span class="label">Status Geral</span>
+                <span class="value" id="overall-status">-</span>
+            </div>
+            <div class="summary-card">
+                <span class="label">Testes Executados</span>
+                <span class="value" id="tests-completed">0</span>
+            </div>
+            <div class="summary-card">
+                <span class="label">Tempo Total</span>
+                <span class="value" id="total-time">0ms</span>
+            </div>
+            <div class="summary-card">
+                <span class="label">Gargalos Encontrados</span>
+                <span class="value" id="bottlenecks">0</span>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button onclick="runAllTests()" id="run-all">▶️ Executar Todos os Testes</button>
+            <button onclick="exportResults()">📥 Exportar Resultados</button>
+            <button onclick="location.reload()">🔄 Resetar</button>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress"></div>
+        </div>
+
+        <!-- Teste 1: Carregamento de Templates -->
+        <div class="test-section">
+            <h2>
+                <span class="icon">📦</span>
+                Carregamento de Templates
+                <span class="status pending" id="status-templates">Pendente</span>
+            </h2>
+            <div id="templates-results"></div>
+        </div>
+
+        <!-- Teste 2: Services e Dependências -->
+        <div class="test-section">
+            <h2>
+                <span class="icon">🔧</span>
+                Services e Dependências
+                <span class="status pending" id="status-services">Pendente</span>
+            </h2>
+            <div id="services-results"></div>
+        </div>
+
+        <!-- Teste 3: Performance de Renderização -->
+        <div class="test-section">
+            <h2>
+                <span class="icon">⚡</span>
+                Performance de Renderização
+                <span class="status pending" id="status-performance">Pendente</span>
+            </h2>
+            <div id="performance-results"></div>
+        </div>
+
+        <!-- Teste 4: Imports e Bundle Size -->
+        <div class="test-section">
+            <h2>
+                <span class="icon">📊</span>
+                Imports e Bundle Size
+                <span class="status pending" id="status-imports">Pendente</span>
+            </h2>
+            <div id="imports-results"></div>
+        </div>
+
+        <!-- Teste 5: Cache e Storage -->
+        <div class="test-section">
+            <h2>
+                <span class="icon">💾</span>
+                Cache e Storage
+                <span class="status pending" id="status-cache">Pendente</span>
+            </h2>
+            <div id="cache-results"></div>
+        </div>
+
+        <!-- Teste 6: Network e API -->
+        <div class="test-section">
+            <h2>
+                <span class="icon">🌐</span>
+                Network e API
+                <span class="status pending" id="status-network">Pendente</span>
+            </h2>
+            <div id="network-results"></div>
+        </div>
+    </div>
+
+    <script>
+        const results = {
+            templates: [],
+            services: [],
+            performance: [],
+            imports: [],
+            cache: [],
+            network: []
+        };
+
+        let totalTests = 0;
+        let completedTests = 0;
+        let bottlenecksCount = 0;
+        const startTime = Date.now();
+
+        // ============================================================================
+        // TESTE 1: CARREGAMENTO DE TEMPLATES
+        // ============================================================================
+        async function testTemplates() {
+            updateStatus('templates', 'running');
+            const container = document.getElementById('templates-results');
+
+            const templates = [
+                '/templates/quiz21-v4-saas.json',
+                '/test.json',
+                '/templates/funnels/funil-emagrecimento.json'
+            ];
+
+            for (const path of templates) {
+                const testStart = performance.now();
+                try {
+                    const response = await fetch(path, {
+                        headers: { 'Accept': 'application/json' }
+                    });
+                    const testEnd = performance.now();
+                    const loadTime = (testEnd - testStart).toFixed(2);
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        const size = JSON.stringify(data).length;
+
+                        results.templates.push({
+                            path,
+                            status: 'success',
+                            loadTime,
+                            size,
+                            statusCode: response.status
+                        });
+
+                        addTestResult(container, 'success',
+                            `✅ ${path}`,
+                            `Tempo: ${loadTime}ms | Tamanho: ${(size / 1024).toFixed(2)}KB | Status: ${response.status}`
+                        );
+
+                        if (parseFloat(loadTime) > 500) {
+                            bottlenecksCount++;
+                            addWarning(container, `⚠️ Carregamento lento detectado: ${loadTime}ms`);
+                        }
+                    } else {
+                        throw new Error(`HTTP ${response.status}`);
+                    }
+                } catch (error) {
+                    results.templates.push({
+                        path,
+                        status: 'error',
+                        error: error.message
+                    });
+
+                    addTestResult(container, 'error',
+                        `❌ ${path}`,
+                        `Erro: ${error.message}`
+                    );
+                    bottlenecksCount++;
+                }
+                completedTests++;
+                updateProgress();
+            }
+
+            updateStatus('templates', hasErrors(results.templates) ? 'error' : 'success');
+        }
+
+        // ============================================================================
+        // TESTE 2: SERVICES E DEPENDÊNCIAS
+        // ============================================================================
+        async function testServices() {
+            updateStatus('services', 'running');
+            const container = document.getElementById('services-results');
+
+            const serviceTests = [
+                {
+                    name: 'FunnelService',
+                    test: async () => {
+                        const module = await import('/src/services/funnel/FunnelService.ts');
+                        return {
+                            exports: Object.keys(module),
+                            hasSingleton: !!module.funnelService,
+                            hasClass: !!module.FunnelService
+                        };
+                    }
+                },
+                {
+                    name: 'FunnelResolver',
+                    test: async () => {
+                        const module = await import('/src/services/funnel/FunnelResolver.ts');
+                        return {
+                            exports: Object.keys(module),
+                            hasResolveFunnel: !!module.resolveFunnel,
+                            hasParseFunnel: !!module.parseFunnelFromURL
+                        };
+                    }
+                },
+                {
+                    name: 'Template Paths Config',
+                    test: async () => {
+                        const module = await import('/src/config/template-paths.ts');
+                        return {
+                            exports: Object.keys(module),
+                            templateCount: Object.keys(module.TEMPLATE_PATHS || {}).length
+                        };
+                    }
+                }
+            ];
+
+            for (const serviceTest of serviceTests) {
+                const testStart = performance.now();
+                try {
+                    const result = await serviceTest.test();
+                    const testEnd = performance.now();
+                    const loadTime = (testEnd - testStart).toFixed(2);
+
+                    results.services.push({
+                        name: serviceTest.name,
+                        status: 'success',
+                        loadTime,
+                        result
+                    });
+
+                    addTestResult(container, 'success',
+                        `✅ ${serviceTest.name}`,
+                        `Tempo: ${loadTime}ms | Exports: ${result.exports?.join(', ')}`
+                    );
+
+                    if (parseFloat(loadTime) > 200) {
+                        bottlenecksCount++;
+                        addWarning(container, `⚠️ Import lento: ${serviceTest.name} (${loadTime}ms)`);
+                    }
+                } catch (error) {
+                    results.services.push({
+                        name: serviceTest.name,
+                        status: 'error',
+                        error: error.message
+                    });
+
+                    addTestResult(container, 'error',
+                        `❌ ${serviceTest.name}`,
+                        `Erro: ${error.message}`
+                    );
+                    bottlenecksCount++;
+                }
+                completedTests++;
+                updateProgress();
+            }
+
+            updateStatus('services', hasErrors(results.services) ? 'error' : 'success');
+        }
+
+        // ============================================================================
+        // TESTE 3: PERFORMANCE DE RENDERIZAÇÃO
+        // ============================================================================
+        async function testPerformance() {
+            updateStatus('performance', 'running');
+            const container = document.getElementById('performance-results');
+
+            // Teste de memória
+            const memoryTest = performance.memory ? {
+                usedJSHeapSize: (performance.memory.usedJSHeapSize / 1048576).toFixed(2) + 'MB',
+                totalJSHeapSize: (performance.memory.totalJSHeapSize / 1048576).toFixed(2) + 'MB',
+                jsHeapSizeLimit: (performance.memory.jsHeapSizeLimit / 1048576).toFixed(2) + 'MB'
+            } : { error: 'API de memória não disponível' };
+
+            addTestResult(container, 'success',
+                `💾 Uso de Memória`,
+                `Usada: ${memoryTest.usedJSHeapSize} | Total: ${memoryTest.totalJSHeapSize}`
+            );
+
+            // Teste de performance timing
+            const perfData = performance.getEntriesByType('navigation')[0];
+            if (perfData) {
+                const metrics = {
+                    dns: (perfData.domainLookupEnd - perfData.domainLookupStart).toFixed(2),
+                    tcp: (perfData.connectEnd - perfData.connectStart).toFixed(2),
+                    ttfb: (perfData.responseStart - perfData.requestStart).toFixed(2),
+                    download: (perfData.responseEnd - perfData.responseStart).toFixed(2),
+                    domInteractive: (perfData.domInteractive - perfData.fetchStart).toFixed(2),
+                    domComplete: (perfData.domComplete - perfData.fetchStart).toFixed(2)
+                };
+
+                addTestResult(container, 'success',
+                    `⚡ Métricas de Navegação`,
+                    `DNS: ${metrics.dns}ms | TCP: ${metrics.tcp}ms | TTFB: ${metrics.ttfb}ms | DOM: ${metrics.domInteractive}ms`
+                );
+
+                if (parseFloat(metrics.domComplete) > 3000) {
+                    bottlenecksCount++;
+                    addWarning(container, `⚠️ Carregamento DOM lento: ${metrics.domComplete}ms`);
+                }
+            }
+
+            completedTests++;
+            updateProgress();
+            updateStatus('performance', 'success');
+        }
+
+        // ============================================================================
+        // TESTE 4: IMPORTS E BUNDLE
+        // ============================================================================
+        async function testImports() {
+            updateStatus('imports', 'running');
+            const container = document.getElementById('imports-results');
+
+            // Contar recursos carregados
+            const resources = performance.getEntriesByType('resource');
+            const jsResources = resources.filter(r => r.name.includes('.js') || r.name.includes('.ts'));
+            const cssResources = resources.filter(r => r.name.includes('.css'));
+            const jsonResources = resources.filter(r => r.name.includes('.json'));
+
+            const totalSize = resources.reduce((acc, r) => acc + (r.transferSize || 0), 0);
+            const jsSize = jsResources.reduce((acc, r) => acc + (r.transferSize || 0), 0);
+
+            addTestResult(container, 'success',
+                `📦 Recursos Carregados`,
+                `Total: ${resources.length} | JS: ${jsResources.length} | CSS: ${cssResources.length} | JSON: ${jsonResources.length}`
+            );
+
+            addTestResult(container, 'success',
+                `📊 Tamanho de Bundle`,
+                `Total: ${(totalSize / 1024).toFixed(2)}KB | JS: ${(jsSize / 1024).toFixed(2)}KB`
+            );
+
+            if (jsResources.length > 50) {
+                bottlenecksCount++;
+                addWarning(container, `⚠️ Muitos arquivos JS: ${jsResources.length} (considere code splitting)`);
+            }
+
+            if (jsSize > 2 * 1024 * 1024) {
+                bottlenecksCount++;
+                addWarning(container, `⚠️ Bundle JS muito grande: ${(jsSize / 1048576).toFixed(2)}MB`);
+            }
+
+            // Verificar duplicações
+            const moduleUrls = jsResources.map(r => r.name);
+            const duplicates = moduleUrls.filter((url, idx) =>
+                moduleUrls.indexOf(url) !== idx
+            );
+
+            if (duplicates.length > 0) {
+                bottlenecksCount++;
+                addTestResult(container, 'warning',
+                    `⚠️ Módulos Duplicados Detectados`,
+                    `${duplicates.length} duplicações encontradas`
+                );
+            }
+
+            completedTests++;
+            updateProgress();
+            updateStatus('imports', duplicates.length > 0 ? 'warning' : 'success');
+        }
+
+        // ============================================================================
+        // TESTE 5: CACHE E STORAGE
+        // ============================================================================
+        async function testCache() {
+            updateStatus('cache', 'running');
+            const container = document.getElementById('cache-results');
+
+            // LocalStorage
+            const localStorageSize = new Blob(Object.values(localStorage)).size;
+            addTestResult(container, 'success',
+                `💾 LocalStorage`,
+                `Itens: ${localStorage.length} | Tamanho: ${(localStorageSize / 1024).toFixed(2)}KB`
+            );
+
+            // SessionStorage
+            const sessionStorageSize = new Blob(Object.values(sessionStorage)).size;
+            addTestResult(container, 'success',
+                `🔒 SessionStorage`,
+                `Itens: ${sessionStorage.length} | Tamanho: ${(sessionStorageSize / 1024).toFixed(2)}KB`
+            );
+
+            // IndexedDB
+            if ('indexedDB' in window) {
+                try {
+                    const dbs = await indexedDB.databases();
+                    addTestResult(container, 'success',
+                        `🗄️ IndexedDB`,
+                        `Databases: ${dbs.length} | Nomes: ${dbs.map(db => db.name).join(', ')}`
+                    );
+                } catch (error) {
+                    addTestResult(container, 'warning',
+                        `🗄️ IndexedDB`,
+                        `Não foi possível listar databases`
+                    );
+                }
+            }
+
+            completedTests++;
+            updateProgress();
+            updateStatus('cache', 'success');
+        }
+
+        // ============================================================================
+        // TESTE 6: NETWORK E API
+        // ============================================================================
+        async function testNetwork() {
+            updateStatus('network', 'running');
+            const container = document.getElementById('network-results');
+
+            // Connection info
+            if ('connection' in navigator) {
+                const conn = navigator.connection;
+                addTestResult(container, 'success',
+                    `🌐 Conexão`,
+                    `Tipo: ${conn.effectiveType} | Downlink: ${conn.downlink}Mbps | RTT: ${conn.rtt}ms`
+                );
+            }
+
+            // Teste de latência
+            const pingStart = performance.now();
+            try {
+                await fetch('/test.json', { method: 'HEAD' });
+                const pingEnd = performance.now();
+                const latency = (pingEnd - pingStart).toFixed(2);
+
+                addTestResult(container, 'success',
+                    `📡 Latência do Servidor`,
+                    `${latency}ms`
+                );
+
+                if (parseFloat(latency) > 100) {
+                    bottlenecksCount++;
+                    addWarning(container, `⚠️ Alta latência: ${latency}ms`);
+                }
+            } catch (error) {
+                addTestResult(container, 'error',
+                    `📡 Latência do Servidor`,
+                    `Erro ao medir latência`
+                );
+            }
+
+            completedTests++;
+            updateProgress();
+            updateStatus('network', 'success');
+        }
+
+        // ============================================================================
+        // HELPERS
+        // ============================================================================
+        function addTestResult(container, type, title, details) {
+            const div = document.createElement('div');
+            div.className = `test-item ${type}`;
+            div.innerHTML = `
+                <h3>${title}</h3>
+                <div class="test-details">${details}</div>
+            `;
+            container.appendChild(div);
+        }
+
+        function addWarning(container, message) {
+            const div = document.createElement('div');
+            div.className = 'test-item warning';
+            div.innerHTML = `<h3>${message}</h3>`;
+            container.appendChild(div);
+        }
+
+        function updateStatus(section, status) {
+            const el = document.getElementById(`status-${section}`);
+            el.className = `status ${status}`;
+            el.textContent = status === 'running' ? 'Executando...' :
+                status === 'success' ? 'Sucesso' :
+                    status === 'error' ? 'Erro' :
+                        status === 'warning' ? 'Aviso' : 'Pendente';
+        }
+
+        function updateProgress() {
+            const progress = (completedTests / totalTests) * 100;
+            document.getElementById('progress').style.width = progress + '%';
+            document.getElementById('tests-completed').textContent = `${completedTests}/${totalTests}`;
+        }
+
+        function hasErrors(results) {
+            return results.some(r => r.status === 'error');
+        }
+
+        async function runAllTests() {
+            const btn = document.getElementById('run-all');
+            btn.disabled = true;
+            btn.textContent = '⏳ Executando...';
+
+            totalTests = 9; // Ajustar baseado no número real de testes
+            completedTests = 0;
+            bottlenecksCount = 0;
+
+            try {
+                await testTemplates();
+                await testServices();
+                await testPerformance();
+                await testImports();
+                await testCache();
+                await testNetwork();
+
+                // Atualizar resumo
+                const totalTime = Date.now() - startTime;
+                document.getElementById('total-time').textContent = `${totalTime}ms`;
+                document.getElementById('bottlenecks').textContent = bottlenecksCount;
+                document.getElementById('overall-status').textContent = bottlenecksCount === 0 ? '✅' : '⚠️';
+                document.getElementById('overall-status').style.color = bottlenecksCount === 0 ? '#10b981' : '#f59e0b';
+
+                btn.textContent = '✅ Testes Concluídos';
+            } catch (error) {
+                console.error('Erro ao executar testes:', error);
+                btn.textContent = '❌ Erro nos Testes';
+                btn.style.background = '#ef4444';
+            }
+        }
+
+        function exportResults() {
+            const report = {
+                timestamp: new Date().toISOString(),
+                totalTime: Date.now() - startTime,
+                bottlenecks: bottlenecksCount,
+                results
+            };
+
+            const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `diagnostico-arquitetura-${Date.now()}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Auto-executar ao carregar
+        window.addEventListener('load', () => {
+            setTimeout(runAllTests, 500);
+        });
+    </script>
+</body>
+
+</html>

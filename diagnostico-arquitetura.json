@@ -1,0 +1,111 @@
+{
+  "timestamp": "2025-12-02T15:36:42.100Z",
+  "summary": {
+    "bottlenecks": 3,
+    "duplicates": 8,
+    "largeFiles": 1,
+    "importIssues": 348
+  },
+  "details": {
+    "duplicates": [
+      {
+        "name": "ITemplateService.ts",
+        "paths": [
+          "/workspaces/quiz-flow-pro-verso-03342/src/core/services/ITemplateService.ts",
+          "/workspaces/quiz-flow-pro-verso-03342/src/services/canonical/ITemplateService.ts"
+        ],
+        "count": 2
+      },
+      {
+        "name": "TemplateService.ts",
+        "paths": [
+          "/workspaces/quiz-flow-pro-verso-03342/src/core/services/TemplateService.ts",
+          "/workspaces/quiz-flow-pro-verso-03342/src/services/canonical/TemplateService.ts"
+        ],
+        "count": 2
+      },
+      {
+        "name": "TemplateServiceAdapter.ts",
+        "paths": [
+          "/workspaces/quiz-flow-pro-verso-03342/src/core/services/TemplateServiceAdapter.ts",
+          "/workspaces/quiz-flow-pro-verso-03342/src/services/canonical/TemplateServiceAdapter.ts"
+        ],
+        "count": 2
+      },
+      {
+        "name": "FunnelService.test.ts",
+        "paths": [
+          "/workspaces/quiz-flow-pro-verso-03342/src/core/services/__tests__/FunnelService.test.ts",
+          "/workspaces/quiz-flow-pro-verso-03342/src/services/canonical/__tests__/FunnelService.test.ts"
+        ],
+        "count": 2
+      },
+      {
+        "name": "ITemplateService.contract.test.ts",
+        "paths": [
+          "/workspaces/quiz-flow-pro-verso-03342/src/core/services/__tests__/ITemplateService.contract.test.ts",
+          "/workspaces/quiz-flow-pro-verso-03342/src/services/canonical/__tests__/ITemplateService.contract.test.ts"
+        ],
+        "count": 2
+      },
+      {
+        "name": "TemplateService.activeTemplate.test.ts",
+        "paths": [
+          "/workspaces/quiz-flow-pro-verso-03342/src/core/services/__tests__/TemplateService.activeTemplate.test.ts",
+          "/workspaces/quiz-flow-pro-verso-03342/src/services/canonical/__tests__/TemplateService.activeTemplate.test.ts"
+        ],
+        "count": 2
+      },
+      {
+        "name": "TemplateService.sync.test.ts",
+        "paths": [
+          "/workspaces/quiz-flow-pro-verso-03342/src/core/services/__tests__/TemplateService.sync.test.ts",
+          "/workspaces/quiz-flow-pro-verso-03342/src/services/canonical/__tests__/TemplateService.sync.test.ts"
+        ],
+        "count": 2
+      },
+      {
+        "name": "TemplateService.test.ts",
+        "paths": [
+          "/workspaces/quiz-flow-pro-verso-03342/src/core/services/__tests__/TemplateService.test.ts",
+          "/workspaces/quiz-flow-pro-verso-03342/src/services/canonical/__tests__/TemplateService.test.ts"
+        ],
+        "count": 2
+      }
+    ],
+    "largeFoles": [],
+    "circularDeps": [],
+    "unusedFiles": [],
+    "bottlenecks": [
+      {
+        "type": "Arquivos Duplicados",
+        "count": 8,
+        "severity": "high"
+      },
+      {
+        "type": "Arquivos Grandes",
+        "count": 1,
+        "severity": "medium"
+      },
+      {
+        "type": "Problemas de Import",
+        "count": 348,
+        "severity": "medium"
+      }
+    ],
+    "largeFiles": [
+      {
+        "path": "/src/config/blockPropertySchemas.ts",
+        "size": 119039,
+        "sizeKB": "116.25"
+      }
+    ]
+  },
+  "structure": {
+    "services": 231,
+    "components": 1388,
+    "hooks": 276,
+    "contexts": 67,
+    "pages": 101
+  }
+}
