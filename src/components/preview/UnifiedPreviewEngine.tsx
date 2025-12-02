@@ -9,6 +9,7 @@ import type { Block } from '@/types/block.types';
 import { StyleResult } from '@/types/quiz';
 import { useMemo } from 'react';
 import SortablePreviewBlockWrapper from './SortablePreviewBlockWrapper';
+import { toEditorBlock } from '@/types/blockAdapters';
 import { ProductionPreviewEngine, type ProductionPreviewEngineProps } from './ProductionPreviewEngine';
 import { getPreviewBlockKey } from '@/lib/utils/keys/previewKeys';
 
@@ -126,7 +127,7 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
       {blocks.map(block => (
         <SortablePreviewBlockWrapper
           key={getPreviewBlockKey(block)}
-          block={block}
+          block={toEditorBlock(block)}
           isSelected={selectedBlockId === block.id}
           isPreviewing={isPreviewing || false}
           primaryStyle={primaryStyle}
