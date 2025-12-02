@@ -171,7 +171,7 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
         } else {
             appLogger.warn('⚠️  Nenhum bloco selecionado para atualizar');
         }
-    }, [editorActions, currentStepKey, selectedBlockId, selectedBlock, editorState.stepBlocks]);
+    }, [editorActions, currentStepKey, selectedBlockId, selectedBlock, editorState.stepBlocks, safeCurrentStep]);
 
     const handleDeleteBlock = useCallback(() => {
         if (selectedBlockId) {
