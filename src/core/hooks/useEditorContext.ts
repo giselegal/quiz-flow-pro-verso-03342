@@ -32,7 +32,7 @@ import { useValidationResult } from '@/contexts/consolidated/ValidationResultPro
 import { useUX } from '@/contexts/consolidated/UXProvider';
 
 // Providers que permanecem separados
-import { useEditor as useEditorCanonical } from '@/core/contexts/EditorContext/EditorStateProvider';
+import { useEditor as useEditorCanonical, type EditorContextValue } from '@/core/contexts/EditorContext/EditorStateProvider';
 import { useFunnelData } from '@/contexts/funnel/FunnelDataProvider';
 import { useQuizState } from '@/contexts/quiz/QuizStateProvider';
 import { useVersioning } from '@/contexts/versioning/VersioningProvider';
@@ -47,7 +47,7 @@ export interface UnifiedEditorContext {
   ux: ReturnType<typeof useUX>;
 
   // Providers mantidos separados (4)
-  editor: ReturnType<typeof useEditorCanonical>;
+  editor: EditorContextValue;
   funnel: ReturnType<typeof useFunnelData>;
   quiz: ReturnType<typeof useQuizState>;
   versioning: ReturnType<typeof useVersioning>;
@@ -65,7 +65,7 @@ export interface UnifiedEditorContext {
 
   // Unified state (for compatibility)
   state: {
-    editor: ReturnType<typeof useEditorCanonical>['state'];
+    editor: EditorContextValue['state'];
     currentFunnel: ReturnType<typeof useFunnelData>['currentFunnel'];
   };
 
@@ -104,7 +104,7 @@ export function useEditorContext(): UnifiedEditorContext {
   const ux = useUX();
 
   // Providers separados
-  const editor = useEditorCanonical();
+  const editor = useEditorCanonical() as EditorContextValue;
   const funnel = useFunnelData();
   const quiz = useQuizState();
   const versioning = useVersioning();

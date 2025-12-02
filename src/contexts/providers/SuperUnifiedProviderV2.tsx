@@ -41,7 +41,7 @@ import { appLogger } from '@/lib/utils/appLogger';
 import { AuthProvider, useAuth } from '@/core/contexts/auth';
 import { ThemeProvider, useTheme } from '@/core/contexts/theme';
 import { EditorStateProvider } from '@/core/contexts/EditorContext/EditorStateProvider';
-import { useEditor } from '@/core/contexts/EditorContext/EditorLayer';
+import { useEditor } from '@/core/contexts/EditorContext/EditorStateProvider';
 import { FunnelDataProvider, useFunnelData } from '@/contexts/funnel/FunnelDataProvider';
 import { NavigationProvider, useNavigation } from '@/contexts/navigation/NavigationProvider';
 import { QuizStateProvider, useQuizState } from '@/contexts/quiz/QuizStateProvider';
@@ -149,7 +149,7 @@ export interface UnifiedContextValue {
     // Core
     auth: ReturnType<typeof useAuth>;
     theme: ReturnType<typeof useTheme>;
-    editor: ReturnType<typeof useEditorCompat>;
+    editor: ReturnType<typeof useEditor>;
     funnel: ReturnType<typeof useFunnelData>;
     // Extended
     navigation: ReturnType<typeof useNavigation>;
@@ -188,7 +188,7 @@ export interface UnifiedContextValue {
 export function useUnifiedContext(): UnifiedContextValue {
     const auth = useAuth();
     const theme = useTheme();
-        const editor = useEditor();
+    const editor = useEditor();
     const funnel = useFunnelData();
     const navigation = useNavigation();
     const quiz = useQuizState();
@@ -229,7 +229,7 @@ export function useUnifiedContext(): UnifiedContextValue {
 export {
     useAuth,
     useTheme,
-        useEditor as useEditorState,
+    useEditor as useEditorState,
     useFunnelData,
     useNavigation,
     useQuizState,

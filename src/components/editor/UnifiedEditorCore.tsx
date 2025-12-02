@@ -86,7 +86,7 @@ const ModeRenderer: React.FC<{
     return <div className="flex items-center justify-center h-full">Loading editor...</div>;
   }
 
-  const { state, deleteBlock, ensureStepLoaded, setSelectedBlockId, activeStageId, blockActions } = editor;
+  const { state } = editor as any;
 
   const totalSteps = useMemo(() => {
     return state.totalSteps || 21;
@@ -138,7 +138,11 @@ const ModeRenderer: React.FC<{
                     ) as Record<number, boolean>}
                     onSelectStep={(s) => {
                       actions.setCurrentStep(s);
-                      ensureStepLoaded(s);
+                      const load = (editor as any).actions?.loadStepBlocks as (id: string) => Promise<any> | undefined;
+                      if (load) {
+                        const key = `step-${String(s).padStart(2, '0')}`;
+                        load(key).catch(() => { });
+                      }
                     }}
                     getStepAnalysis={(step) => ({
                       icon: 'quiz',
@@ -174,7 +178,7 @@ const ModeRenderer: React.FC<{
                       []
                     }
                     selectedBlockId={adapter.selectedBlockId ?? state.selectedBlockId}
-                    onSelectBlock={(id) => setSelectedBlockId(id)}
+                    onSelectBlock={(id) => (editor as any).actions?.selectBlock ? (editor as any).actions.selectBlock(id) : undefined}
                     onUpdateBlock={adapter.actions.updateBlock}
                     onDeleteBlock={adapter.actions.deleteBlock}
                   />
@@ -253,7 +257,11 @@ const ModeRenderer: React.FC<{
                     ) as Record<number, boolean>}
                     onSelectStep={(s) => {
                       actions.setCurrentStep(s);
-                      ensureStepLoaded(s);
+                      const load = (editor as any).actions?.loadStepBlocks as (id: string) => Promise<any> | undefined;
+                      if (load) {
+                        const key = `step-${String(s).padStart(2, '0')}`;
+                        load(key).catch(() => { });
+                      }
                     }}
                     getStepAnalysis={(step) => ({
                       icon: 'quiz',
@@ -274,7 +282,7 @@ const ModeRenderer: React.FC<{
                       []
                     }
                     selectedBlockId={state.selectedBlockId}
-                    onSelectBlock={setSelectedBlockId}
+                    onSelectBlock={(id) => (editor as any).actions?.selectBlock ? (editor as any).actions.selectBlock(id) : undefined}
                     onUpdateBlock={adapter.actions.updateBlock}
                     onDeleteBlock={adapter.actions.deleteBlock}
                   />
