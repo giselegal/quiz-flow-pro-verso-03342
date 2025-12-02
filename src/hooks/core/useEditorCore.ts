@@ -19,6 +19,8 @@ export interface EditorCoreActions {
   getBlocksForStepNumber: (stepNumber: number) => Block[];
   addBlock: (stepNumber: number, block: Block) => void;
   reorderBlocks: (stepNumber: number, oldIndex: number, newIndex: number) => void;
+  addBlockAtIndex: (stepNumber: number, block: Block, index: number) => void;
+  setStepBlocks: (stepNumber: number, blocks: Block[]) => void;
 }
 
 export function useEditorCore(): { state: EditorCoreState; actions: EditorCoreActions } {
@@ -73,7 +75,15 @@ export function useEditorCore(): { state: EditorCoreState; actions: EditorCoreAc
       // Fallback final: mutação direta no estado (não ideal, apenas emergência)
       const current = ((editorState as any).stepBlocks?.[stepKey] || []) as Block[];
       const next = [...current, block];
-      editorActions?.setStepBlocks?.(stepKey, next);
+      // Tentar setStepBlocks com stepKey e com stepNumber
+      try {
+        editorActions?.setStepBlocks?.(stepKey, next);
+        return;
+      } catch {}
+      try {
+        editorActions?.setStepBlocks?.(stepNumber, next);
+        return;
+      } catch {}
     },
     reorderBlocks: (stepNumber: number, oldIndex: number, newIndex: number) => {
       const stepKey = `step-${stepNumber}`;
@@ -88,8 +98,63 @@ export function useEditorCore(): { state: EditorCoreState; actions: EditorCoreAc
       const [moved] = arr.splice(oldIndex, 1);
       if (moved) {
         arr.splice(newIndex, 0, moved);
-        editorActions?.setStepBlocks?.(stepKey, arr);
+        try {
+          editorActions?.setStepBlocks?.(stepKey, arr);
+          return;
+        } catch {}
+        try {
+          editorActions?.setStepBlocks?.(stepNumber, arr);
+          return;
+        } catch {}
       }
+    },
+    addBlockAtIndex: (stepNumber: number, block: Block, index: number) => {
+      const stepKey = `step-${stepNumber}`;
+      // Prefer addBlockAtIndex se existir
+      if (typeof (editorActions as any)?.addBlockAtIndex === 'function') {
+        try {
+          (editorActions as any).addBlockAtIndex(stepKey, block, index);
+          return;
+        } catch {}
+        try {
+          (editorActions as any).addBlockAtIndex(stepNumber, block, index);
+          return;
+        } catch {}
+      }
+      // Tentar addBlock com índice
+      if (typeof editorActions?.addBlock === 'function') {
+        try {
+          (editorActions as any).addBlock(stepKey, block, index);
+          return;
+        } catch {}
+        try {
+          (editorActions as any).addBlock(stepNumber, block, index);
+          return;
+        } catch {}
+      }
+      // Fallback: construir novo array e aplicar via setStepBlocks
+      const current = actions.getBlocksForStepNumber(stepNumber) || [];
+      const clamped = Math.max(0, Math.min(current.length, index));
+      const next = [...current.slice(0, clamped), block, ...current.slice(clamped)];
+      try {
+        (editorActions as any)?.setStepBlocks?.(stepKey, next);
+        return;
+      } catch {}
+      try {
+        (editorActions as any)?.setStepBlocks?.(stepNumber, next);
+        return;
+      } catch {}
+    },
+    setStepBlocks: (stepNumber: number, blocks: Block[]) => {
+      const stepKey = `step-${stepNumber}`;
+      try {
+        (editorActions as any)?.setStepBlocks?.(stepKey, blocks);
+        return;
+      } catch {}
+      try {
+        (editorActions as any)?.setStepBlocks?.(stepNumber, blocks);
+        return;
+      } catch {}
     },
   };
 

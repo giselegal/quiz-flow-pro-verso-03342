@@ -97,11 +97,16 @@ export function useEditorDragAndDrop({ currentStepData, currentStepKey, actions,
             const newBlock = createBlockFromComponent(dragData.blockType as any, currentStepData);
             if (overIsDropZone && overPosition != null && actions.addBlockAtIndex) {
               const index = Math.max(0, Math.min(currentStepData.length, overPosition));
-              actions.addBlockAtIndex(currentStepKey, newBlock, index);
+              // Preferir core quando disponível
+              const stepNum = Number(String(currentStepKey).replace(/[^0-9]/g, '')) || editorCore.state.currentStep;
+              if (editorCore?.actions?.addBlockAtIndex) editorCore.actions.addBlockAtIndex(stepNum, newBlock, index);
+              else actions.addBlockAtIndex(currentStepKey, newBlock, index);
             } else if (overId) {
               const insertIndex = currentStepData.findIndex(block => String(block.id) === overId);
               if (insertIndex >= 0 && actions.addBlockAtIndex) {
-                actions.addBlockAtIndex(currentStepKey, newBlock, insertIndex);
+                const stepNum = Number(String(currentStepKey).replace(/[^0-9]/g, '')) || editorCore.state.currentStep;
+                if (editorCore?.actions?.addBlockAtIndex) editorCore.actions.addBlockAtIndex(stepNum, newBlock, insertIndex);
+                else actions.addBlockAtIndex(currentStepKey, newBlock, insertIndex);
               } else {
                 // Preferir core
                 const stepNum = Number(String(currentStepKey).replace(/[^0-9]/g, '')) || editorCore.state.currentStep;
@@ -144,8 +149,13 @@ export function useEditorDragAndDrop({ currentStepData, currentStepKey, actions,
             ? Math.max(0, Math.min(currentStepData.length, overPosition))
             : (overId ? currentStepData.findIndex(b => String(b.id) === overId) : currentStepData.length);
 
-          if (actions.addBlockAtIndex) {
+          const stepNum = Number(String(currentStepKey).replace(/[^0-9]/g, '')) || editorCore.state.currentStep;
+          if (editorCore?.actions?.addBlockAtIndex) {
+            editorCore.actions.addBlockAtIndex(stepNum, block, Math.max(0, index));
+          } else if (actions.addBlockAtIndex) {
             actions.addBlockAtIndex(currentStepKey, block, Math.max(0, index));
+          } else if (editorCore?.actions?.addBlock) {
+            editorCore.actions.addBlock(stepNum, block);
           } else {
             actions.addBlock?.(currentStepKey, block);
           }
