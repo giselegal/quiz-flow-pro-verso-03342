@@ -242,6 +242,18 @@ export class FunnelServiceLegacyAdapter extends FunnelService {
     
     return result;
   }
+
+  /**
+   * Override duplicateFunnel para retornar FunnelMetadata
+   */
+  async duplicateFunnel(
+    sourceFunnelId: string,
+    newFunnelId: string,
+    userId?: string
+  ): Promise<FunnelMetadata> {
+    const result = await super.duplicateFunnel(sourceFunnelId, newFunnelId, userId);
+    return funnelToMetadata(result.funnel);
+  }
 }
 
 /**
