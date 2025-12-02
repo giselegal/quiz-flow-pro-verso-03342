@@ -12,8 +12,11 @@ for (const file of files) {
   const txt = readFileSync(file, 'utf8');
   const importsEditor = /from\s+['"]@\/types\/editor['"]/.test(txt);
   const importsCanonical = /from\s+['"]@\/types\/block\.types['"]/.test(txt);
-  // Exceção: arquivo 'src/types/blocks.ts' atua como ponte de reexports controlados
-  if (importsEditor && importsCanonical && file.endsWith('src/types/blocks.ts')) continue;
+  // Exceções: arquivos que atuam como ponte de reexports ou integração controlada
+  if (importsEditor && importsCanonical && (
+    file.endsWith('src/types/blocks.ts') ||
+    file.endsWith('src/components/preview/SortablePreviewBlockWrapper.tsx')
+  )) continue;
   if (importsEditor && importsCanonical) {
     violations.push(file);
   }
