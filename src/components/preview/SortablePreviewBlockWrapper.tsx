@@ -2,7 +2,9 @@ import React from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { cn } from '@/lib/utils';
-import { Block } from '@/types/editor';
+import type { Block as CanonBlock } from '@/types/block.types';
+import type { Block as EditorBlock } from '@/types/editor';
+import { toEditorBlock } from '@/types/blockAdapters';
 import { StyleResult } from '@/types/quiz';
 import { appLogger } from '@/lib/utils/appLogger';
 
@@ -17,7 +19,8 @@ type FunnelConfig = any;
 
 interface SortablePreviewBlockWrapperProps {
   id?: string;
-  block?: Block;
+  // Aceita tanto o tipo canônico quanto o legado
+  block?: CanonBlock | EditorBlock;
   children?: React.ReactNode;
   className?: string;
   isSelected?: boolean;
@@ -51,7 +54,9 @@ const SortablePreviewBlockWrapper: React.FC<SortablePreviewBlockWrapperProps> = 
   onAnswerSubmit,
   onFormSubmit,
 }) => {
-  const blockId = id || block?.id || 'unknown';
+  // Garante compatibilidade: converte para EditorBlock se vier como CanonBlock
+  const blockCompat: EditorBlock | undefined = block && 'content' in block ? block as EditorBlock : (block ? toEditorBlock(block as CanonBlock) : undefined);
+  const blockId = id || blockCompat?.id || 'unknown';
 
   const {
     attributes,
