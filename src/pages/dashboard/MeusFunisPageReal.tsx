@@ -33,8 +33,9 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { supabase } from '@/services/integrations/supabase/customClient';
 import { useToast } from '@/hooks/use-toast';
-import { funnelService } from '@/services/funnel/FunnelServiceLegacyAdapter';
 import { templateService } from '@/services/canonical/TemplateService';
+import { useFunnelController } from '@/hooks';
+import { ServiceRegistry } from '@/services/ServiceRegistry';
 import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
@@ -85,6 +86,14 @@ const MeusFunisPageReal: React.FC = () => {
     const [publishingDraftId, setPublishingDraftId] = useState<string | null>(null);
     const [confirmPublishId, setConfirmPublishId] = useState<string | null>(null);
     const { toast } = useToast();
+    // Controlador unificado de funis (ServiceRegistry + React Query)
+    const {
+        listFunnels,
+        createFunnel,
+        updateFunnel,
+        duplicateFunnel,
+        deleteFunnel,
+    } = useFunnelController();
 
     // persistir highlight via query param
     useEffect(() => {
@@ -145,8 +154,13 @@ const MeusFunisPageReal: React.FC = () => {
                 draftsData = [];
             }
 
-            // Buscar funis do tipo 'draft' usando FunnelService
-            const draftFunnels = await (funnelService as any).listFunnels('draft');
+            // Buscar funis do tipo 'draft' usando serviço canônico via controlador
+            // Preferimos o controlador para manter cache/coerência
+            const draftFunnels = await listFunnels({ status: 'draft' }).catch(async () => {
+                // Fallback direto ao serviço, se necessário
+                const service = ServiceRegistry.get('funnelService');
+                return service.listFunnels({ status: 'draft' });
+            });
 
             // Normalizar drafts do supabase e funnels em draft
             const supabaseDrafts = (draftsData || []).map((d: any) => ({
@@ -308,21 +322,8 @@ const MeusFunisPageReal: React.FC = () => {
             const originalFunil = funis.find(f => f.id === funilId);
             if (!originalFunil) return;
 
-            // Gerar ID único para o novo funil
-            const newId = `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-
-            const { error } = await (supabase as any)
-                .from('funnels')
-                .insert({
-                    id: newId,
-                    name: `${originalFunil.name} - Cópia`,
-                    description: originalFunil.description,
-                    user_id: originalFunil.user_id,
-                    config: originalFunil.config,
-                    status: 'draft',
-                });
-
-            if (error) throw error;
+            const newName = `${originalFunil.name} - Cópia`;
+            await duplicateFunnel(funilId, newName);
 
             toast({
                 title: 'Funil duplicado!',
@@ -346,12 +347,7 @@ const MeusFunisPageReal: React.FC = () => {
         }
 
         try {
-            const { error } = await supabase
-                .from('funnels')
-                .delete()
-                .eq('id', funilId);
-
-            if (error) throw error;
+            await deleteFunnel(funilId);
 
             toast({
                 title: 'Funil excluído!',
@@ -371,12 +367,8 @@ const MeusFunisPageReal: React.FC = () => {
 
     const handleTogglePublish = async (funilId: string, currentStatus: boolean) => {
         try {
-            const { error } = await (supabase as any)
-                .from('funnels')
-                .update({ status: !currentStatus ? 'published' : 'draft' })
-                .eq('id', funilId);
-
-            if (error) throw error;
+            const nextStatus = !currentStatus ? 'published' : 'draft';
+            await updateFunnel(funilId, { status: nextStatus });
 
             toast({
                 title: !currentStatus ? 'Funil publicado!' : 'Funil despublicado!',
@@ -458,8 +450,8 @@ const MeusFunisPageReal: React.FC = () => {
                 throw new Error('Template não encontrado');
             }
 
-            // Criar novo funnel em draft usando funnelService
-            const newFunnel = await funnelService.createFunnel({
+            // Criar novo funnel em draft via controlador/serviço canônico
+            const newFunnel = await createFunnel({
                 name: 'Quiz Estilo Pessoal - Rascunho',
                 type: 'quiz',
                 category: 'quiz',

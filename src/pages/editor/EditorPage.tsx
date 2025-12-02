@@ -29,7 +29,7 @@ import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 import { PageLoadingFallback } from '@/components/LoadingSpinner';
 import { appLogger } from '@/lib/utils/appLogger';
 import type { QuizSchema } from '@/schemas/quiz-schema.zod';
-import { funnelService } from '@/services/funnel/FunnelService';
+import { ServiceRegistry } from '@/services/ServiceRegistry';
 import { parseFunnelFromURL } from '@/services/funnel/FunnelResolver';
 
 // ✅ Novo editor moderno com arquitetura limpa
@@ -64,6 +64,9 @@ export default function EditorPage() {
         'quiz21StepsComplete',
         [paramsWithId?.funnelId, funnelIdentifier.funnelId]
     );
+
+    // Resolver serviço do editor via ServiceRegistry (desacoplado do import direto)
+    const editorFunnelService = useMemo(() => ServiceRegistry.get('editorFunnelService'), []);
 
     // Atualizar estado quando resolver mudar
     useEffect(() => {
@@ -104,7 +107,7 @@ export default function EditorPage() {
 
                 // 🆕 USAR FUNNELSERVICE.LOADFUNNEL
                 // Verifica draft no Supabase → carrega draft OU template base
-                const result = await funnelService.loadFunnel(funnelIdentifier);
+                const result = await editorFunnelService.loadFunnel(funnelIdentifier);
 
                 if (!isMounted) return;
 
@@ -167,7 +170,7 @@ export default function EditorPage() {
             });
 
             // 🆕 USAR FUNNELSERVICE.SAVEFUNNEL
-            const result = await funnelService.saveFunnel(
+            const result = await editorFunnelService.saveFunnel(
                 savedQuiz,
                 funnelId,
                 quizId // Passa quizId para UPDATE ou undefined para INSERT
