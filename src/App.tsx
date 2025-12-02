@@ -512,11 +512,28 @@ function AppCore() {
                                             <RedirectRoute to="/editor" />
                                         </Route>
 
-                                        {/* 📄 404 */}
+                                        {/* 📄 404 - Mas NÃO interceptar rotas de assets estáticos */}
                                         <Route>
-                                            <div data-testid="not-found-page">
-                                                <NotFound />
-                                            </div>
+                                            {() => {
+                                                const path = window.location.pathname;
+                                                // ✅ NÃO interceptar arquivos estáticos (templates, schemas, etc)
+                                                if (path.match(/\.(json|css|js|png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot|ico)$/i)) {
+                                                    // Deixar o servidor Vite servir o arquivo
+                                                    return null;
+                                                }
+                                                // ✅ NÃO interceptar diretórios de assets
+                                                if (path.startsWith('/templates/') ||
+                                                    path.startsWith('/schemas/') ||
+                                                    path.startsWith('/assets/') ||
+                                                    path.startsWith('/public/')) {
+                                                    return null;
+                                                }
+                                                return (
+                                                    <div data-testid="not-found-page">
+                                                        <NotFound />
+                                                    </div>
+                                                );
+                                            }}
                                         </Route>
                                     </Switch>
                                 </Suspense>
