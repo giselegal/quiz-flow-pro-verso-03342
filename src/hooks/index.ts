@@ -74,6 +74,7 @@ export { useHistory } from './useHistory';
 export { useSupabaseQuiz } from './useSupabaseQuiz';
 export { useFunnelActions } from './useFunnelActions';
 export { useEditorCore } from './core/useEditorCore';
+export { useStepSelection } from './useStepSelection';
 
 // Utilitários
 export { useToast } from './use-toast';
