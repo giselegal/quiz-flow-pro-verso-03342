@@ -4,7 +4,7 @@ import { z } from 'zod';
 export interface Block {
   id: string;
   type: string;
-  props: Record<string, unknown>;
+  props?: Record<string, unknown>;
   children?: Block[];
 }
 
@@ -12,7 +12,7 @@ export interface Block {
 export const BlockSchema: z.ZodType<Block> = z.object({
   id: z.string(),
   type: z.string(),
-  props: z.record(z.unknown()).default({}),
+  props: z.record(z.unknown()).optional(),
   // Usa z.any() para crianças para evitar laço de tipo no inicializador
   children: z.array(z.any()).optional(),
 });
@@ -26,5 +26,4 @@ export interface BlockComponentProps<T = unknown> {
 }
 
 // Re-exports para retrocompatibilidade
-export type { Block as BlockType };
 export type { BlockComponentProps as BlockProps };
