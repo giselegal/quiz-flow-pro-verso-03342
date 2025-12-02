@@ -266,6 +266,13 @@ export class FunnelService {
           'Accept': 'application/json',
         },
         cache: 'no-store', // Force fresh request
+      }).catch(fetchError => {
+        console.error('❌ [FunnelService] Fetch failed:', {
+          error: fetchError,
+          path: normalizedPath,
+          origin: window.location.origin
+        });
+        throw new Error(`Network error: Could not fetch ${normalizedPath}. Server may not be running on port 8080.`);
       });
 
       console.log('📡 [FunnelService] Response:', {
@@ -276,7 +283,8 @@ export class FunnelService {
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText} for ${normalizedPath}`);
+        const errorText = await response.text().catch(() => 'No error details');
+        throw new Error(`HTTP ${response.status}: ${response.statusText} for ${normalizedPath}. Details: ${errorText}`);
       }
 
       const data = await response.json();
@@ -295,7 +303,14 @@ export class FunnelService {
     } catch (error) {
       appLogger.error('❌ [FunnelService] Error loading template', {
         templatePath,
-        error: error instanceof Error ? error.message : String(error)
+        error: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined
+      });
+      
+      console.error('💥 [FunnelService] Template load failed:', {
+        templatePath,
+        error,
+        suggestion: 'Make sure the dev server is running: npm run dev'
       });
       
       // Re-throw with more context
