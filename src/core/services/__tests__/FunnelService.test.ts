@@ -7,7 +7,7 @@
  */
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { CanonicalFunnelService } from '../FunnelService';
+import { CanonicalFunnelService } from '@/services/canonical/FunnelService';
 
 describe('FunnelService - Canonical Service Tests', () => {
   let funnelService: CanonicalFunnelService;
@@ -120,7 +120,7 @@ describe('FunnelService - Canonical Service Tests', () => {
   describe('Tipos e Interfaces', () => {
     it('deve exportar tipo FunnelMetadata', () => {
       // Type check - will fail at compile time if not exported
-      const metadata: import('../FunnelService').FunnelMetadata = {
+      const metadata: import('@/services/canonical/FunnelService').FunnelMetadata = {
         id: 'test',
         name: 'Test Funnel',
         type: 'quiz',
@@ -134,7 +134,7 @@ describe('FunnelService - Canonical Service Tests', () => {
     });
 
     it('deve exportar tipo CreateFunnelInput', () => {
-      const input: import('../FunnelService').CreateFunnelInput = {
+      const input: import('@/services/canonical/FunnelService').CreateFunnelInput = {
         name: 'Test Funnel',
         type: 'quiz',
       };
@@ -143,7 +143,7 @@ describe('FunnelService - Canonical Service Tests', () => {
     });
 
     it('deve exportar tipo UpdateFunnelInput', () => {
-      const input: import('../FunnelService').UpdateFunnelInput = {
+      const input: import('@/services/canonical/FunnelService').UpdateFunnelInput = {
         name: 'Updated Name',
       };
       
