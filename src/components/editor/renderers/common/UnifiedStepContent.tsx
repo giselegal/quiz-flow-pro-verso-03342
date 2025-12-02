@@ -300,18 +300,20 @@ export const UnifiedStepContent: React.FC<UnifiedStepContentProps> = memo(({
         };
 
         // 2. Persistir no EditorStateManager para histórico e re-renderização
-        if (editor?.actions?.updateBlock && stepData?.id) {
+        if (editor && stepData?.id) {
             try {
-                // updateBlock takes (step, blockId, updates)
-                const currentStep = typeof step.id === 'number' ? step.id : parseInt(String(step.id).replace('step-', '')) || 1;
-                await editor.actions.updateBlock(currentStep, stepData.id, {
-                    metadata: {
-                        ...((stepData as any).metadata || {}),
-                        [field]: value,
-                    },
-                });
-                const stepKey = normalizeStepKey(step.id || '1');
-                appLogger.debug('✅ handleEdit persistido:', { field, value, stepKey, blockId: stepData.id });
+                const updateFn = (editor as any).actions?.updateBlock || (editor as any).updateBlock;
+                if (updateFn) {
+                    const currentStep = typeof step.id === 'number' ? step.id : parseInt(String(step.id).replace('step-', '')) || 1;
+                    await updateFn(currentStep, stepData.id, {
+                        metadata: {
+                            ...((stepData as any).metadata || {}),
+                            [field]: value,
+                        },
+                    });
+                    const stepKey = normalizeStepKey(step.id || '1');
+                    appLogger.debug('✅ handleEdit persistido:', { field, value, stepKey, blockId: stepData.id });
+                }
             } catch (err) {
                 appLogger.error('❌ Erro ao persistir edição:', err);
             }
@@ -323,14 +325,16 @@ export const UnifiedStepContent: React.FC<UnifiedStepContentProps> = memo(({
         await handleEdit('blockOrder', newOrder);
 
         // 2. Persistir ordem no EditorStateManager
-        if (!editor?.actions?.reorderBlocks || !editor?.state?.stepBlocks) {
+        const reorderFn = (editor as any)?.actions?.reorderBlocks || (editor as any)?.reorderBlocks;
+        const editorState = (editor as any)?.state || (editor as any);
+        if (!reorderFn || !editorState?.stepBlocks) {
             appLogger.debug('⏭️ Skip reorderBlocks: editor não disponível');
             return;
         }
 
         try {
             const normalizedKey = normalizeStepKey(stepId);
-            const blocks: any[] = (editor.state.stepBlocks as any)[normalizedKey] || [];
+            const blocks: any[] = editorState.stepBlocks?.[normalizedKey] || [];
 
             if (!Array.isArray(blocks) || blocks.length === 0) {
                 appLogger.debug('⏭️ Skip reorderBlocks: sem blocos no step', normalizedKey);
@@ -359,11 +363,11 @@ export const UnifiedStepContent: React.FC<UnifiedStepContentProps> = memo(({
 
             // Find source and destination indexes for reorder
             const currentStep = typeof step.id === 'number' ? step.id : parseInt(String(step.id).replace('step-', '')) || 1;
-            const currentBlocks: Block[] = (editor.state?.stepBlocks as any)?.[currentStep] || [];
+            const currentBlocks: Block[] = editorState?.stepBlocks?.[currentStep] || [];
             // Reordenar blocos com os IDs na ordem desejada
             const reorderedBlocks = desiredOrder.map(id => currentBlocks.find((b: Block) => b.id === id)).filter(Boolean) as Block[];
             if (reorderedBlocks.length > 0) {
-                await editor.actions.reorderBlocks(currentStep, reorderedBlocks);
+                await reorderFn(currentStep, reorderedBlocks);
             }
 
             appLogger.debug('✅ handleBlocksReorder concluído:', { stepId: normalizedKey, newOrder: desiredOrder });
