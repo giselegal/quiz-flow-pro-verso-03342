@@ -139,9 +139,9 @@ const ModeRenderer: React.FC<{
                     onSelectStep={(s) => {
                       actions.setCurrentStep(s);
                       const load = (editor as any).actions?.loadStepBlocks as (id: string) => Promise<any> | undefined;
-                      if (load) {
+                      if (typeof load === 'function') {
                         const key = `step-${String(s).padStart(2, '0')}`;
-                        load(key).catch(() => { });
+                        void Promise.resolve(load(key)).catch(() => { });
                       }
                     }}
                     getStepAnalysis={(step) => ({
@@ -258,9 +258,9 @@ const ModeRenderer: React.FC<{
                     onSelectStep={(s) => {
                       actions.setCurrentStep(s);
                       const load = (editor as any).actions?.loadStepBlocks as (id: string) => Promise<any> | undefined;
-                      if (load) {
+                      if (typeof load === 'function') {
                         const key = `step-${String(s).padStart(2, '0')}`;
-                        load(key).catch(() => { });
+                        void Promise.resolve(load(key)).catch(() => { });
                       }
                     }}
                     getStepAnalysis={(step) => ({
@@ -372,9 +372,9 @@ export const UnifiedEditorCore: React.FC<UnifiedEditorCoreProps> = ({
 
     // Ensure current step is loaded
     const load = editorActions?.loadStepBlocks;
-    if (load) {
+    if (typeof load === 'function') {
       const key = `step-${String(state.currentStep).padStart(2, '0')}`;
-      load(key).catch(() => { });
+      void Promise.resolve(load(key)).catch(() => { });
     }
   }, [initialStep, state.currentStep, editorActions, actions]);
 

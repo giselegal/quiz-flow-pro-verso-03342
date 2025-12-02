@@ -770,14 +770,15 @@ const MeusFunisPageReal: React.FC = () => {
 
                                 try {
                                     // Buscar o draft
-                                    const draftFunnel = await funnelService.getFunnel(draftId);
+                                    const service = ServiceRegistry.get('funnelService');
+                                    const draftFunnel = await service.getFunnel(draftId);
 
                                     if (!draftFunnel) {
                                         throw new Error('Draft não encontrado');
                                     }
 
                                     // Atualizar status para published
-                                    await funnelService.updateFunnel(draftId, {
+                                    await service.updateFunnel(draftId, {
                                         ...draftFunnel,
                                         status: 'published',
                                     });
