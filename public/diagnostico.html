@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧪 Diagnóstico do Editor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .test-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .test-card h2 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #555;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+
+        .status.loading {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status.success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status.error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .log {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            overflow-x: auto;
+            margin-top: 10px;
+        }
+
+        .log-item {
+            margin-bottom: 8px;
+        }
+
+        .log-item.success {
+            color: #86efac;
+        }
+
+        .log-item.error {
+            color: #fca5a5;
+        }
+
+        .log-item.info {
+            color: #93c5fd;
+        }
+
+        .button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .button:hover {
+            background: #2563eb;
+        }
+
+        .button:disabled {
+            background: #cbd5e1;
+            cursor: not-allowed;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🧪 Diagnóstico do Editor Quiz</h1>
+
+        <div class="test-card">
+            <h2>1. Template Base <span id="status-template" class="status loading">Testando...</span></h2>
+            <div id="log-template" class="log"></div>
+            <button class="button" onclick="testTemplate()">🔄 Testar Novamente</button>
+        </div>
+
+        <div class="test-card">
+            <h2>2. Supabase Connection <span id="status-supabase" class="status loading">Testando...</span></h2>
+            <div id="log-supabase" class="log"></div>
+            <button class="button" onclick="testSupabase()">🔄 Testar Novamente</button>
+        </div>
+
+        <div class="test-card">
+            <h2>3. FunnelService Load <span id="status-funnel" class="status loading">Aguardando...</span></h2>
+            <div id="log-funnel" class="log"></div>
+            <button class="button" onclick="testFunnelService()" id="btn-funnel" disabled>🔄 Testar
+                FunnelService</button>
+        </div>
+
+        <div class="test-card">
+            <h2>4. Abrir Editor Real</h2>
+            <p style="margin-bottom: 10px;">Se todos os testes acima passarem, o editor deve funcionar:</p>
+            <a href="/editor" class="button" style="display: inline-block; text-decoration: none;">
+                🚀 Abrir /editor
+            </a>
+        </div>
+    </div>
+
+    <script>
+        const log = (containerId, message, type = 'info') => {
+            const container = document.getElementById(containerId);
+            const div = document.createElement('div');
+            div.className = `log-item ${type}`;
+            div.textContent = message;
+            container.appendChild(div);
+        };
+
+        const setStatus = (statusId, state) => {
+            const el = document.getElementById(statusId);
+            el.className = `status ${state}`;
+            el.textContent = state === 'success' ? '✅ Passou' :
+                state === 'error' ? '❌ Falhou' :
+                    '⏳ Testando...';
+        };
+
+        const clearLog = (containerId) => {
+            document.getElementById(containerId).innerHTML = '';
+        };
+
+        // Test 1: Template Base
+        async function testTemplate() {
+            clearLog('log-template');
+            setStatus('status-template', 'loading');
+
+            log('log-template', '📥 Carregando /templates/quiz21-v4-saas.json...', 'info');
+
+            try {
+                const response = await fetch('/templates/quiz21-v4-saas.json');
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                log('log-template', '✅ Arquivo encontrado', 'success');
+
+                const data = await response.json();
+                log('log-template', '✅ JSON válido', 'success');
+                log('log-template', `📊 Version: ${data.version}`, 'info');
+                log('log-template', `📊 Steps: ${data.steps?.length || 0}`, 'info');
+                log('log-template', `📊 Name: ${data.metadata?.name || 'N/A'}`, 'info');
+
+                if (!data.steps || data.steps.length === 0) {
+                    throw new Error('Template sem steps!');
+                }
+
+                log('log-template', '🎉 Template OK!', 'success');
+                setStatus('status-template', 'success');
+
+                // Enable next test
+                document.getElementById('btn-funnel').disabled = false;
+
+            } catch (error) {
+                log('log-template', `❌ Erro: ${error.message}`, 'error');
+                setStatus('status-template', 'error');
+            }
+        }
+
+        // Test 2: Supabase
+        async function testSupabase() {
+            clearLog('log-supabase');
+            setStatus('status-supabase', 'loading');
+
+            log('log-supabase', '🔍 Verificando variáveis de ambiente...', 'info');
+
+            const supabaseUrl = import.meta.env?.VITE_SUPABASE_URL;
+            const supabaseKey = import.meta.env?.VITE_SUPABASE_ANON_KEY;
+
+            if (!supabaseUrl || !supabaseKey) {
+                log('log-supabase', '❌ Credenciais não encontradas', 'error');
+                log('log-supabase', 'Verifique .env: VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY', 'error');
+                setStatus('status-supabase', 'error');
+                return;
+            }
+
+            log('log-supabase', `✅ URL: ${supabaseUrl}`, 'success');
+            log('log-supabase', `✅ Key: ${supabaseKey.substring(0, 20)}...`, 'success');
+
+            log('log-supabase', '🔌 Testando conexão...', 'info');
+
+            try {
+                const response = await fetch(`${supabaseUrl}/rest/v1/`, {
+                    headers: {
+                        'apikey': supabaseKey,
+                        'Authorization': `Bearer ${supabaseKey}`
+                    }
+                });
+
+                if (response.ok) {
+                    log('log-supabase', '✅ Conexão OK!', 'success');
+                    setStatus('status-supabase', 'success');
+                } else {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+            } catch (error) {
+                log('log-supabase', `⚠️ Erro de conexão: ${error.message}`, 'error');
+                log('log-supabase', 'Supabase pode estar offline ou credenciais inválidas', 'error');
+                setStatus('status-supabase', 'error');
+            }
+        }
+
+        // Test 3: FunnelService (simulated)
+        async function testFunnelService() {
+            clearLog('log-funnel');
+            setStatus('status-funnel', 'loading');
+
+            log('log-funnel', '🎯 Simulando funnelService.loadFunnel()...', 'info');
+
+            // Step 1: Load template
+            log('log-funnel', '1️⃣ Carregando template base...', 'info');
+            try {
+                const response = await fetch('/templates/quiz21-v4-saas.json');
+                const data = await response.json();
+                log('log-funnel', '✅ Template carregado', 'success');
+
+                // Step 2: Normalize
+                log('log-funnel', '2️⃣ Normalizando formato...', 'info');
+                if (Array.isArray(data.steps)) {
+                    log('log-funnel', '✅ Steps é array (formato correto)', 'success');
+                } else {
+                    log('log-funnel', '⚠️ Steps não é array - pode precisar conversão', 'error');
+                }
+
+                // Step 3: Validate
+                log('log-funnel', '3️⃣ Validando schema...', 'info');
+                const hasMetadata = !!data.metadata;
+                const hasVersion = !!data.version;
+                const hasSteps = data.steps?.length > 0;
+
+                log('log-funnel', `   metadata: ${hasMetadata ? '✅' : '❌'}`, hasMetadata ? 'success' : 'error');
+                log('log-funnel', `   version: ${hasVersion ? '✅' : '❌'}`, hasVersion ? 'success' : 'error');
+                log('log-funnel', `   steps: ${hasSteps ? '✅' : '❌'} (${data.steps?.length || 0})`, hasSteps ? 'success' : 'error');
+
+                if (hasMetadata && hasVersion && hasSteps) {
+                    log('log-funnel', '🎉 FunnelService simulado OK!', 'success');
+                    log('log-funnel', '✨ Editor deve funcionar agora!', 'success');
+                    setStatus('status-funnel', 'success');
+                } else {
+                    throw new Error('Schema inválido');
+                }
+
+            } catch (error) {
+                log('log-funnel', `❌ Erro: ${error.message}`, 'error');
+                setStatus('status-funnel', 'error');
+            }
+        }
+
+        // Auto-run on load
+        window.addEventListener('load', () => {
+            setTimeout(testTemplate, 500);
+            setTimeout(testSupabase, 1000);
+        });
+    </script>
+</body>
+
+</html>
