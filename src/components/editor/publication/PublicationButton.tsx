@@ -14,7 +14,7 @@ import { Settings } from 'lucide-react';
 import { FunnelPublicationPanel } from '@/components/editor/publication/FunnelPublicationPanel';
 import { useFunnelPublication } from '@/hooks/useFunnelPublication';
 import { EditorDashboardSyncService } from '@/services/core/EditorDashboardSyncService';
-import { funnelService } from '@/services/canonical';
+import { ServiceRegistry } from '@/services/ServiceRegistry';
 
 interface PublicationSettingsButtonProps {
     funnelId: string;
@@ -47,7 +47,7 @@ export function PublicationSettingsButton({
             appLogger.debug('🚀 PublicationButton: Iniciando publicação com sincronização...');
 
             // 1. Buscar dados atuais do funil usando serviço canônico
-            const currentFunnel = await funnelService.getFunnel(funnelId);
+            const currentFunnel = await ServiceRegistry.get('funnelService').getFunnel(funnelId);
             if (!currentFunnel) {
                 throw new Error('Funil não encontrado');
             }
