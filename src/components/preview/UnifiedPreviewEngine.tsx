@@ -5,7 +5,7 @@
  */
 
 import { cn } from '@/lib/utils';
-import { Block } from '@/types/editor';
+import type { Block } from '@/types/block.types';
 import { StyleResult } from '@/types/quiz';
 import { useMemo } from 'react';
 import SortablePreviewBlockWrapper from './SortablePreviewBlockWrapper';

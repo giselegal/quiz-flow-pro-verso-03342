@@ -1,5 +1,5 @@
 import React from 'react';
-import { Block } from '@/types/editor';
+import type { Block } from '@/types/block.types';
 import { StyleResult } from '@/types/quiz';
 import { getPreviewBlockKey } from '@/lib/utils/keys/previewKeys';
 
