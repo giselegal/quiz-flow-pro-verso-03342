@@ -2,6 +2,11 @@
 
 import type { Block } from '@/types/editor';
 
+// Tipos para compatibilidade
+export type EditorBlock = Block;
+export type RawStepBlocks = Record<string | number, unknown>;
+export type StepBlocks = Record<string, Block[]>;
+
 /**
  * Extrai o número de uma chave de step.
  * Aceita: "step-1", "step-01", "1", 1, etc.
@@ -17,6 +22,43 @@ function parseStepKeyInternal(key: string | number): number | null {
     return Number.isFinite(num) ? num : null;
   }
   return null;
+}
+
+/**
+ * Gera chaves candidatas para um step.
+ */
+export function candidateKeysForStep(step: number | string): Array<string | number> {
+  const n = typeof step === 'number' ? step : parseInt(String(step), 10);
+  const keys: Array<string | number> = [];
+  if (!Number.isFinite(n) || Number.isNaN(n)) {
+    keys.push(String(step));
+    return keys;
+  }
+  keys.push(`step-${n}`);
+  keys.push(`step${n}`);
+  keys.push(String(n));
+  keys.push(n);
+  return keys;
+}
+
+/**
+ * Obtém blocos para um step específico de um mapa de stepBlocks.
+ */
+export function getBlocksForStep(step: number | string, stepBlocks?: RawStepBlocks | null): Block[] | undefined {
+  if (!stepBlocks) return undefined;
+
+  const candidates = candidateKeysForStep(step);
+
+  for (const key of candidates) {
+    const raw = (stepBlocks as Record<string, unknown>)[String(key)];
+    if (!raw) continue;
+
+    if (Array.isArray(raw)) {
+      return raw as Block[];
+    }
+  }
+
+  return undefined;
 }
 
 /**

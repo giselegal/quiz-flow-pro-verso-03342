@@ -9,7 +9,7 @@
  * - Isolamento completo entre instâncias
  */
 
-import { FunnelTemplate } from '@/config/funnelTemplates';
+import { FunnelTemplate } from '@/services/TemplateLoader';
 import { appLogger } from '@/lib/utils/appLogger';
 import { generateTimerId, generateBlockId, generatePageId, generateFunnelId } from '@/lib/utils/idGenerator';
 
@@ -342,16 +342,19 @@ export function cloneFunnelTemplate(template: FunnelTemplate, customName?: strin
 
     const cloned = cloneResult.cloned;
 
+    // Extrair todos os blocks de todos os steps
+    const allBlocks = template.steps?.flatMap(step => step.blocks || []) || [];
+    
     return {
         id: generateFunnelId(),
         templateSourceId: template.id,
         name: customName || template.name,
         description: template.description,
-        blocks: cloned.blocks?.map((b: any) => ({
+        blocks: allBlocks.map((b: any) => ({
             id: generateBlockId(),
             type: b.type,
             properties: deepClone(b.properties || {}),
-        })) || [],
+        })),
         createdAt: new Date().toISOString(),
     };
 }

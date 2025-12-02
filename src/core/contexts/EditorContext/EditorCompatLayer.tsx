@@ -18,6 +18,7 @@
 import React, { useMemo } from 'react';
 import { useEditor as useEditorCanonical, EditorContextValue } from './EditorStateProvider';
 import type { Block } from '@/types/editor';
+import type { ValidationError } from '@/types/editor/EditorState';
 
 export interface EditorCompatAPI {
     // State Extensions from EditorContextValue
@@ -38,7 +39,7 @@ export interface EditorCompatAPI {
     lastModified: number | null;
     lastSaved: number | null;
     modifiedSteps: Record<string, number>;
-    validationErrors: Array<{ blockId: string; message: string; type: string }>;
+    validationErrors: ValidationError[];
 
     // Ações do EditorContextValue
     setCurrentStep: (step: number) => void;
@@ -55,7 +56,7 @@ export interface EditorCompatAPI {
     reorderBlocks: (step: number, blocks: Block[]) => void;
     markSaved: () => void;
     markModified: (step: string) => void;
-    addValidationError: (error: { blockId: string; message: string; type: string }) => void;
+    addValidationError: (error: ValidationError) => void;
     clearValidationErrors: (blockId?: string) => void;
     resetEditor: () => void;
     getStepBlocks: (step: number) => Block[];

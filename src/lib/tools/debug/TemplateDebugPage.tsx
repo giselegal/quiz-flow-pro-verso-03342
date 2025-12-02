@@ -40,18 +40,18 @@ const TemplateDebugPage: React.FC = () => {
             const normalizedData = {
                 normalizedKeys: Object.keys(normalized),
                 keyCount: Object.keys(normalized).length,
-                stepBlocks: Object.entries(normalized).map(([k, v]) => [k, v.length]),
-                specificSteps: {},
+                stepBlocks: Object.entries(normalized).map(([k, v]) => [k, (v as unknown[]).length]),
+                specificSteps: {} as Record<number, { hasBlocks: boolean; count: number; types: string[] }>,
             };
 
             // Teste steps específicos
             for (let i = 1; i <= 5; i++) {
                 const stepKey = `step-${i}`;
-                const blocks = normalized[stepKey];
-                (normalizedData.specificSteps as any)[i] = {
+                const blocks = normalized[stepKey] as { type: string }[] | undefined;
+                normalizedData.specificSteps[i] = {
                     hasBlocks: !!blocks,
                     count: blocks?.length || 0,
-                    types: blocks?.slice(0, 3).map(b => b.type) || [],
+                    types: blocks?.slice(0, 3).map((b: { type: string }) => b.type) || [],
                 };
             }
 

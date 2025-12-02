@@ -7,7 +7,7 @@ import './UniversalStepEditorPro.css';
 import './UniversalStepEditorPro-premium.css';
 import { StepDndProvider } from '@/components/editor/dnd/StepDndProvider';
 import { useEditorDragAndDrop } from '@/hooks/editor/useEditorDragAndDrop';
-import { getBlocksForStep } from '@/config/quizStepsComplete';
+import { getBlocksForStep } from '@/lib/utils/stepKey';
 import StepSidebar from '@/components/editor/sidebars/StepSidebar';
 import ComponentsSidebar from '@/components/editor/sidebars/ComponentsSidebar';
 import PropertiesColumn from '@/components/editor/properties/PropertiesColumn';
@@ -68,7 +68,7 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
         appLogger.debug('📊 currentStepData recalculado:', {
             safeCurrentStep,
             blocksCount: blocks.length,
-            blocks: blocks.map(b => ({ id: b.id, type: b.type, properties: Object.keys(b.properties || {}) })),
+            blocks: blocks.map((b: { id: string; type: string; properties?: Record<string, unknown> }) => ({ id: b.id, type: b.type, properties: Object.keys(b.properties || {}) })),
             stepBlocksRef: state.stepBlocks,
         });
         return blocks;

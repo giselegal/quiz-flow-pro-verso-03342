@@ -3,7 +3,7 @@
  * Implements all 10 investigation points from the problem statement
  */
 
-import { getBlocksForStep } from '@/config/quizStepsComplete';
+import { getBlocksForStep } from '@/lib/utils/stepKey';
 import { getLoadedFunnelSync } from '@/templates/loaders/dynamic';
 import { appLogger } from '@/lib/utils/appLogger';
 
