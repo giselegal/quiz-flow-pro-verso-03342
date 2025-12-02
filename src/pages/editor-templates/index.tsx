@@ -55,7 +55,7 @@ const EditorTemplatesPage: React.FC = () => {
       };
 
       appLogger.info('🔄 Template data convertido para FunnelTemplate:', { data: [templateData] });
-      const clonedInstance = cloneFunnelTemplate(templateData, `${template.name} - Novo Funil`);
+      const clonedInstance = cloneFunnelTemplate(templateData as any, `${template.name} - Novo Funil`);
       appLogger.info('✅ Instância clonada:', { data: [clonedInstance] });
 
       // Salvar no localStorage como um funil

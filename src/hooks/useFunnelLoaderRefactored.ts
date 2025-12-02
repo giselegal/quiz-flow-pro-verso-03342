@@ -293,7 +293,8 @@ export function useFunnelLoader(
             appLogger.info('🔄 useFunnelLoader: Duplicando funil', { data: [sourceFunnelId] });
 
             const duplicatedFunnelMeta = await funnelService.duplicateFunnel(sourceFunnelId, targetName);
-            const duplicatedFunnel = adaptMetadataToUnified(duplicatedFunnelMeta);
+            const duplicatedFunnelMeta2 = (duplicatedFunnelMeta as unknown as import('@/services/canonical/FunnelService').FunnelMetadata);
+            const duplicatedFunnel = adaptMetadataToUnified(duplicatedFunnelMeta2);
 
             appLogger.info('✅ Funil duplicado:', { data: [duplicatedFunnel] });
             return duplicatedFunnel;

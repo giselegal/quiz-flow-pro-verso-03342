@@ -107,7 +107,7 @@ export type UnifiedFunnelData = FunnelWithComponents & { id: string; name: strin
 
 export class CanonicalFunnelService {
   private static instance: CanonicalFunnelService;
-  private cache: HybridCacheStrategy;
+  private cache: any;
   private eventListeners: Map<string, Set<Function>> = new Map();
 
   private constructor() {
@@ -202,7 +202,7 @@ export class CanonicalFunnelService {
     const startTime = performance.now();
 
     // Tentar cache
-    const cached = await this.cache.get<FunnelMetadata>(`funnel:${funnelId}`, {
+    const cached = await (this.cache as any).get(`funnel:${funnelId}`, {
       memoryStore: 'funnels',
       diskStore: 'funnels',
     });
@@ -417,7 +417,7 @@ export class CanonicalFunnelService {
     const cacheKey = `funnel:${funnelId}:${stepKey}`;
 
     // Tentar cache
-    const cached = await this.cache.get<Block[]>(cacheKey, {
+    const cached = await (this.cache as any).get(cacheKey, {
       memoryStore: 'blocks',
       diskStore: 'funnels',
     });

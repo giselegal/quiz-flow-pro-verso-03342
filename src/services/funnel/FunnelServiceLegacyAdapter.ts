@@ -86,9 +86,10 @@ export class FunnelServiceLegacyAdapter extends FunnelService {
         // É CreateFunnelInput (formato legado)
         id = quizOrInput.templateId || funnelId || `funnel-${Date.now()}`;
         
-        // Criar QuizSchema básico
+        // Criar QuizSchema básico alinhado ao schema atual
         quiz = {
           version: '4.0',
+          schemaVersion: '4.1',
           metadata: {
             name: quizOrInput.name || 'New Funnel',
             id: id,
@@ -105,11 +106,19 @@ export class FunnelServiceLegacyAdapter extends FunnelService {
               background: '#ffffff',
               secondary: '#6c757d',
             },
-            typography: {},
-            layout: {},
+            spacing: {},
+            fonts: {
+              body: 'Inter, system-ui, sans-serif',
+              heading: 'Inter, system-ui, sans-serif',
+            },
+            borderRadius: {},
           },
+          settings: {},
+          assets: {},
+          plugins: [],
           steps: [],
-        };
+          blockLibrary: {},
+        } as any;
       }
       
       const result = await this.saveFunnel(quiz, id, undefined, userId);

@@ -37,7 +37,7 @@ const TemplateDiagnosticPage: React.FC = () => {
             results.staticConfig = {
                 status: AVAILABLE_TEMPLATES.length > 0 ? 'success' : 'error',
                 count: AVAILABLE_TEMPLATES.length,
-                templates: AVAILABLE_TEMPLATES.map(t => ({ id: t.id, name: t.name })),
+                templates: AVAILABLE_TEMPLATES.map((t: any) => ({ id: t.id, name: t.name })),
                 error: null,
             };
 

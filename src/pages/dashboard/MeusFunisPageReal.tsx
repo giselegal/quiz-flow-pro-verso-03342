@@ -146,9 +146,7 @@ const MeusFunisPageReal: React.FC = () => {
             }
 
             // Buscar funis do tipo 'draft' usando FunnelService
-            const draftFunnels = await funnelService.listFunnels({
-                status: 'draft',
-            });
+            const draftFunnels = await (funnelService as any).listFunnels('draft');
 
             // Normalizar drafts do supabase e funnels em draft
             const supabaseDrafts = (draftsData || []).map((d: any) => ({
@@ -470,6 +468,9 @@ const MeusFunisPageReal: React.FC = () => {
                 metadata: { source: 'quiz21StepsComplete' },
             });
 
+            if (!newFunnel) {
+                throw new Error('Falha ao criar rascunho');
+            }
             toast({ title: 'Rascunho criado', description: `ID: ${newFunnel.id}` });
 
             // Abrir no editor para começar a editar
