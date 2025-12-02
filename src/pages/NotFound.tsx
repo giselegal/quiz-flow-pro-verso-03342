@@ -9,7 +9,7 @@
  */
 
 import React from 'react';
-import { Link } from 'wouter';
+import { Link, useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import {
@@ -30,6 +30,7 @@ const NotFound: React.FC<NotFoundProps> = ({
   showDebugInfo = process.env.NODE_ENV === 'development',
 }) => {
   const currentPath = typeof window !== 'undefined' ? window.location.pathname : '';
+  const [, setLocation] = useLocation();
 
   const suggestedRoutes = [
     { path: '/', label: 'Página Inicial', icon: Home },
@@ -59,7 +60,7 @@ const NotFound: React.FC<NotFoundProps> = ({
               <div className="text-sm text-muted-foreground space-y-1">
                 <p><strong>Rota atual:</strong> {currentPath}</p>
                 <p><strong>Timestamp:</strong> {new Date().toLocaleString()}</p>
-                <p><strong>User Agent:</strong> {typeof navigator !== 'undefined' ? `${navigator.userAgent.substring(0, 60)  }...` : 'N/A'}</p>
+                <p><strong>User Agent:</strong> {typeof navigator !== 'undefined' ? `${navigator.userAgent.substring(0, 60)}...` : 'N/A'}</p>
               </div>
             </CardContent>
           </Card>
@@ -73,12 +74,14 @@ const NotFound: React.FC<NotFoundProps> = ({
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {suggestedRoutes.map((route) => (
-                <Link key={route.path} href={route.path}>
-                  <a className="flex items-center space-x-3 p-3 rounded-lg border border-border hover:bg-accent transition-colors">
-                    <route.icon className="w-5 h-5 text-primary" />
-                    <span className="text-foreground font-medium">{route.label}</span>
-                  </a>
-                </Link>
+                <div
+                  key={route.path}
+                  onClick={() => setLocation(route.path)}
+                  className="flex items-center space-x-3 p-3 rounded-lg border border-border hover:bg-accent transition-colors cursor-pointer"
+                >
+                  <route.icon className="w-5 h-5 text-primary" />
+                  <span className="text-foreground font-medium">{route.label}</span>
+                </div>
               ))}
             </div>
           </CardContent>
@@ -95,12 +98,13 @@ const NotFound: React.FC<NotFoundProps> = ({
             <span>Voltar</span>
           </Button>
 
-          <Link href="/">
-            <Button className="flex items-center space-x-2">
-              <Home className="w-4 h-4" />
-              <span>Página Inicial</span>
-            </Button>
-          </Link>
+          <Button
+            onClick={() => setLocation('/')}
+            className="flex items-center space-x-2"
+          >
+            <Home className="w-4 h-4" />
+            <span>Página Inicial</span>
+          </Button>
         </div>
 
         {/* Additional Help */}
