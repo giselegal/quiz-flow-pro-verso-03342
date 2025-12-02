@@ -52,6 +52,32 @@ export function useSuperUnified() {
       '📖 Veja: src/hooks/useLegacySuperUnified.ts\n'
     );
   }
+  // Tentar preferir o core unificado de hooks se disponível
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const core = require('@/hooks/core/useEditorCore');
+    const useEditorCore = core?.useEditorCore as () => { actions: any; state: any };
+    if (typeof useEditorCore === 'function') {
+      const { actions } = useEditorCore();
+      return {
+        getStepBlocks: (step: number): Block[] => {
+          try { return actions?.getBlocksForStepNumber?.(step) as Block[] || []; } catch { return []; }
+        },
+        setStepBlocks: (step: number, blocks: Block[]): void => {
+          try { actions?.setStepBlocks?.(step, blocks); } catch (e) { appLogger.error('useSuperUnified.setStepBlocks (core) falhou', { data: [e] }); }
+        },
+        updateBlock: (step: number, blockId: string, updates: Partial<Block>): void => {
+          try {
+            if (actions?.selectBlock && actions?.updateSelectedBlock) {
+              actions.selectBlock(blockId);
+              actions.updateSelectedBlock(updates);
+            }
+          } catch (e) { appLogger.error('useSuperUnified.updateBlock (core) falhou', { data: [e] }); }
+        },
+      };
+    }
+  } catch { /* ignore */ }
+
   // Tentar delegar para o editor moderno (core)
   try {
     // Import dinâmico para evitar dependências duras em ambientes sem core

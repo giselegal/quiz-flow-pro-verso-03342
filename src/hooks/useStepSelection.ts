@@ -1,4 +1,5 @@
 import { useCallback, useRef } from 'react';
+import { useEditorCore } from '@/hooks/core/useEditorCore';
 import { useOptimizedScheduler } from './useOptimizedScheduler';
 
 /**
@@ -9,7 +10,7 @@ import { useOptimizedScheduler } from './useOptimizedScheduler';
 
 interface UseStepSelectionProps {
   stepNumber: number;
-  onSelectBlock: (blockId: string) => void;
+  onSelectBlock?: (blockId: string) => void;
   debounceMs?: number;
 }
 
@@ -18,6 +19,7 @@ export const useStepSelection = ({
   onSelectBlock,
   debounceMs = 100, // ✅ OTIMIZAÇÃO: Aumentado para 100ms para melhor performance (menos calls)
 }: UseStepSelectionProps) => {
+  const editorCore = useEditorCore();
   const { debounce } = useOptimizedScheduler();
   const lastSelectedRef = useRef<string | null>(null);
   const lastSelectionTimeRef = useRef<number>(0);
@@ -46,7 +48,10 @@ export const useStepSelection = ({
 
       const cleanup = debounce(
         stepKeyRef.current,
-        () => onSelectBlock(blockId),
+        () => {
+          if (onSelectBlock) onSelectBlock(blockId);
+          else editorCore?.actions?.setSelectedBlock?.(blockId);
+        },
         debounceMs + 50, // Debounce extra para clicks rápidos
       );
       return cleanup;
@@ -58,12 +63,15 @@ export const useStepSelection = ({
     // ✅ OTIMIZAÇÃO 4: Usar chave cached para evitar concatenation
     const cleanup = debounce(
       stepKeyRef.current,
-      () => onSelectBlock(blockId),
+      () => {
+        if (onSelectBlock) onSelectBlock(blockId);
+        else editorCore?.actions?.setSelectedBlock?.(blockId);
+      },
       debounceMs,
     );
 
     return cleanup;
-  }, [stepNumber, onSelectBlock, debounce, debounceMs]);
+  }, [stepNumber, onSelectBlock, debounce, debounceMs, editorCore?.actions]);
 
   // Limpar seleção quando trocar de etapa
   const clearSelection = useCallback(() => {
