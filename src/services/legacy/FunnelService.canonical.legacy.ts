@@ -35,7 +35,6 @@ import { supabase } from '@/lib/supabase';
 import { v4 as uuidv4 } from 'uuid';
 import { funnelComponentsService } from '@/services/funnelComponentsService';
 import { Block } from '@/types/editor';
-import { HybridCacheStrategy } from './core/HybridCacheStrategy';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 import { appLogger } from '@/lib/utils/logger';
 
@@ -111,7 +110,53 @@ export class CanonicalFunnelService {
   private eventListeners: Map<string, Set<Function>> = new Map();
 
   private constructor() {
-    this.cache = HybridCacheStrategy.getInstance();
+    // Implementação in-memory cache como fallback (Fase 0)
+    const memoryStores: Record<string, Map<string, any>> = {
+      funnels: new Map(),
+      blocks: new Map(),
+      default: new Map(),
+    };
+    const diskStores: Record<string, Map<string, any>> = {
+      funnels: new Map(),
+      blocks: new Map(),
+      default: new Map(),
+    };
+
+    this.cache = {
+      async get(key: string, opts?: { memoryStore?: string; diskStore?: string }) {
+        const memStore = memoryStores[opts?.memoryStore || 'default'];
+        if (memStore?.has(key)) return memStore.get(key);
+        const diskStore = diskStores[opts?.diskStore || 'default'];
+        if (diskStore?.has(key)) {
+          const val = diskStore.get(key);
+          memStore?.set(key, val);
+          return val;
+        }
+        return null;
+      },
+      async set(key: string, value: any, opts?: { memoryStore?: string; diskStore?: string; ttl?: number }) {
+        const memStore = memoryStores[opts?.memoryStore || 'default'];
+        const diskStore = diskStores[opts?.diskStore || 'default'];
+        memStore?.set(key, value);
+        diskStore?.set(key, value);
+        if (opts?.ttl) {
+          setTimeout(() => {
+            memStore?.delete(key);
+            diskStore?.delete(key);
+          }, opts.ttl);
+        }
+      },
+      async invalidate(key: string, opts?: { memoryStore?: string; diskStore?: string }) {
+        const memStore = memoryStores[opts?.memoryStore || 'default'];
+        const diskStore = diskStores[opts?.diskStore || 'default'];
+        memStore?.delete(key);
+        diskStore?.delete(key);
+      },
+      clear() {
+        Object.values(memoryStores).forEach(store => store.clear());
+        Object.values(diskStores).forEach(store => store.clear());
+      },
+    };
   }
 
   static getInstance(): CanonicalFunnelService {

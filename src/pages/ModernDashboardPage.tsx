@@ -33,7 +33,7 @@ const ParticipantsPage = lazy(() => import('./dashboard/ParticipantsPage'));
 const FacebookMetricsPage = lazy(() => import('./dashboard/FacebookMetricsPage'));
 const ModelosFunisPage = lazy(() => import('./dashboard/ModelosFunisPage'));
 const MeusFunisPageReal = lazy(() => import('./dashboard/MeusFunisPageReal'));
-const TemplatesPage = lazy(() => import('./dashboard/TemplatesPage'));
+const TemplatesPage = lazy(() => import('./dashboard/ModelosFunisPage'));
 const QuizFunnelsPage = lazy(() => import('./dashboard/QuizFunnelsPage'));
 const ABTestsPage = lazy(() => import('./dashboard/ABTestsPage'));
 const CreativesPage = lazy(() => import('./dashboard/CreativesPage'));

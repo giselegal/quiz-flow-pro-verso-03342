@@ -230,7 +230,7 @@ const diagnosticRoutes: RouteConfig[] = [
 const templateRoutes: RouteConfig[] = [
     {
         path: '/templates',
-        component: lazy(() => import('./TemplatesPage')),
+        component: lazy(() => import('./ModelosFunisPage')),
         name: 'Templates',
         group: 'public',
     },
