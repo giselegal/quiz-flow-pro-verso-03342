@@ -77,6 +77,10 @@ export interface EditorContextValue extends EditorState {
     getStepBlocks: (step: number) => Block[];
     isStepDirty: (step: number) => boolean;
     loadStepBlocks: (stepId: string) => Promise<Block[] | null>;
+    // ===== ALIASES DE COMPATIBILIDADE (legado) =====
+    setSelectedBlockId: (id: string | null) => void;
+    deleteBlock: (blockId: string) => void;
+    addBlockAtIndex: (step: number, block: Block, index: number) => void;
     // ===== CAMADA UNIFICADA (canonical) =====
     state: EditorState; // espelha o estado completo
     actions: {
@@ -100,6 +104,10 @@ export interface EditorContextValue extends EditorState {
         getStepBlocks: (step: number) => Block[];
         isStepDirty: (step: number) => boolean;
         loadStepBlocks: (stepId: string) => Promise<Block[] | null>;
+        // Aliases de compatibilidade
+        setSelectedBlockId: (id: string | null) => void;
+        deleteBlock: (blockId: string) => void;
+        addBlockAtIndex: (step: number, block: Block, index: number) => void;
     };
 }
 
@@ -380,6 +388,22 @@ export const EditorStateProvider: React.FC<EditorProviderProps> = ({
         dispatch({ type: 'REORDER_BLOCKS', payload: { step, blocks } });
     }, []);
 
+    // Aliases de compatibilidade
+    const setSelectedBlockId = useCallback((id: string | null) => {
+        selectBlock(id);
+    }, [selectBlock]);
+
+    const deleteBlock = useCallback((blockId: string) => {
+        const step = state.currentStep;
+        if (typeof step === 'number') {
+            removeBlock(step, blockId);
+        }
+    }, [state.currentStep, removeBlock]);
+
+    const addBlockAtIndex = useCallback((step: number, block: Block, index: number) => {
+        addBlock(step, block, index);
+    }, [addBlock]);
+
     const markSaved = useCallback(() => {
         dispatch({ type: 'MARK_SAVED', payload: Date.now() });
         appLogger.info('💾 Editor marcado como salvo');
@@ -502,6 +526,10 @@ export const EditorStateProvider: React.FC<EditorProviderProps> = ({
                 getStepBlocks,
                 isStepDirty,
                 loadStepBlocks,
+                // Aliases de compatibilidade
+                setSelectedBlockId,
+                deleteBlock,
+                addBlockAtIndex,
             };
             return {
                 ...state, // exposição flat (legado)
@@ -532,6 +560,9 @@ export const EditorStateProvider: React.FC<EditorProviderProps> = ({
             getStepBlocks,
             isStepDirty,
             loadStepBlocks,
+            setSelectedBlockId,
+            deleteBlock,
+            addBlockAtIndex,
         ]
     );
 
