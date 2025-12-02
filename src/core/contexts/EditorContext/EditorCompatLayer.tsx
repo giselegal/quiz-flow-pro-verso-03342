@@ -16,14 +16,53 @@
  */
 
 import React, { useMemo } from 'react';
-import { useEditor as useEditorCanonical } from './EditorStateProvider';
+import { useEditor as useEditorCanonical, EditorContextValue } from './EditorStateProvider';
 import type { Block } from '@/types/editor';
+import type { ValidationError } from '@/types/editor/EditorState';
 
-export interface EditorCompatAPI extends ReturnType<typeof useEditorCanonical> {
-    // API legada - State Extensions
-    state: ReturnType<typeof useEditorCanonical>['state'] & {
+export interface EditorCompatAPI {
+    // State Extensions from EditorContextValue
+    state: EditorContextValue['state'] & {
         blocks: Block[]; // Lista plana do step atual
     };
+
+    // Métodos do EditorContextValue
+    currentStep: number;
+    selectedBlockId: string | null;
+    isPreviewMode: boolean;
+    isEditing: boolean;
+    dragEnabled: boolean;
+    clipboardData: Block | null;
+    stepBlocks: Record<number, Block[]>;
+    dirtySteps: Record<number, boolean>;
+    isDirty: boolean;
+    lastModified: number | null;
+    lastSaved: number | null;
+    modifiedSteps: Record<string, number>;
+    validationErrors: ValidationError[];
+
+    // Ações do EditorContextValue
+    setCurrentStep: (step: number) => void;
+    selectBlock: (blockId: string | null) => void;
+    togglePreview: (enabled?: boolean) => void;
+    toggleEditing: (enabled?: boolean) => void;
+    toggleDrag: (enabled?: boolean) => void;
+    copyBlock: (block: Block) => void;
+    pasteBlock: (step: number, index?: number) => void;
+    setStepBlocks: (step: number, blocks: Block[]) => void;
+    updateBlock: (step: number, blockId: string, updates: Partial<Block>) => void;
+    addBlock: (step: number, block: Block, index?: number) => void;
+    removeBlock: (step: number, blockId: string) => void;
+    reorderBlocks: (step: number, blocks: Block[]) => void;
+    markSaved: () => void;
+    markModified: (step: string) => void;
+    addValidationError: (error: ValidationError) => void;
+    clearValidationErrors: (blockId?: string) => void;
+    resetEditor: () => void;
+    getStepBlocks: (step: number) => Block[];
+    isStepDirty: (step: number) => boolean;
+    loadStepBlocks: (stepId: string) => Promise<Block[] | null>;
+    actions: EditorContextValue['actions'];
 
     // API legada - Properties
     setSelectedBlockId: (id: string | null) => void;

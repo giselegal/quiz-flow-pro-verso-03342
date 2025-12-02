@@ -1,6 +1,9 @@
-import type { BlockData } from './funnelService';
+import type { Block } from '@/types/editor';
 import { getDefaultPageConfig } from '../data/defaultPageConfigs';
 import { appLogger } from '@/lib/utils/appLogger';
+
+// Tipo base para dados de blocos (alias para compatibilidade)
+type BlockData = Block;
 
 export interface PageStyles {
   backgroundColor?: string;

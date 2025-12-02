@@ -1,22 +1,38 @@
 /**
  * 👁️ TemplatePreviewPage
  * 
- * Página simples de preview para templates registrados em '@/config/templates'.
+ * Página simples de preview para templates registrados.
  * Exibe informações, imagem de preview e ações para usar o template no editor.
  */
 
-import React from 'react';
-import { TemplateService } from '@/config/templates';
+import React, { useState, useEffect } from 'react';
+import { getUnifiedTemplates, UnifiedTemplate } from '@/config/unifiedTemplatesRegistry';
 import { useRoute } from 'wouter';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, ExternalLink } from 'lucide-react';
+import { ArrowLeft, ExternalLink, Loader2 } from 'lucide-react';
 
 const TemplatePreviewPage: React.FC = () => {
     const [, params] = useRoute('/templates/preview/:id');
     const templateId = params?.id || '';
-    const template = TemplateService.getTemplate(templateId);
+    const [template, setTemplate] = useState<UnifiedTemplate | null>(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const templates = getUnifiedTemplates();
+        const found = templates.find((t: UnifiedTemplate) => t.id === templateId);
+        setTemplate(found || null);
+        setLoading(false);
+    }, [templateId]);
+
+    if (loading) {
+        return (
+            <div className="p-6 flex items-center justify-center">
+                <Loader2 className="w-8 h-8 animate-spin text-gray-500" />
+            </div>
+        );
+    }
 
     if (!template) {
         return (
@@ -39,10 +55,14 @@ const TemplatePreviewPage: React.FC = () => {
     const handleUseTemplate = () => {
         // Gera um novo funnelId e abre o editor com o template
         const newFunnelId = `funnel-${template.id}-${Date.now()}`;
-        const editorUrl = template.editorUrl || '/editor';
-        const url = `${editorUrl}${editorUrl.includes('?') ? '&' : '?'}funnel=${newFunnelId}`;
+        const editorUrl = '/editor';
+        const url = `${editorUrl}?funnel=${newFunnelId}&template=${template.id}`;
         window.location.href = url;
     };
+
+    const previewImage = template.image || 'https://placehold.co/400x240/EEE/999?text=Preview';
+    const category = template.category || 'quiz';
+    const stepCount = template.stepCount || 0;
 
     return (
         <div className="p-6">
@@ -58,7 +78,7 @@ const TemplatePreviewPage: React.FC = () => {
                         <div className="bg-gray-50 p-6 flex items-center justify-center">
                             {/* Preview image */}
                             <img
-                                src={typeof template.preview === 'string' ? template.preview : template.preview?.image || 'https://placehold.co/400x240/EEE/999?text=Preview'}
+                                src={previewImage}
                                 alt={`Preview ${template.name}`}
                                 className="rounded-lg shadow-md max-h-[320px] object-cover"
                                 onError={(e) => {
@@ -71,35 +91,33 @@ const TemplatePreviewPage: React.FC = () => {
                                 <div>
                                     <CardTitle className="text-2xl text-gray-900">{template.name}</CardTitle>
                                     <div className="flex items-center gap-2 mt-2">
-                                        <Badge variant="outline">{template.category}</Badge>
-                                        <Badge variant="outline">{template.difficulty}</Badge>
-                                        <span className="text-xs text-gray-500">{template.stepCount} etapas</span>
+                                        <Badge variant="outline">{category}</Badge>
+                                        {template.version && <Badge variant="outline">v{template.version}</Badge>}
+                                        <span className="text-xs text-gray-500">{stepCount} etapas</span>
                                     </div>
                                 </div>
                             </div>
 
                             <p className="text-gray-700 text-sm leading-relaxed">{template.description}</p>
 
-                            {template.features && template.features.length > 0 && (
+                            {template.tags && template.tags.length > 0 && (
                                 <div>
-                                    <p className="text-xs font-medium text-gray-700 mb-2">Diferenciais</p>
-                                    <ul className="list-disc pl-5 text-sm text-gray-600 space-y-1">
-                                        {template.features.slice(0, 6).map((f, i) => (
-                                            <li key={i}>{f}</li>
+                                    <p className="text-xs font-medium text-gray-700 mb-2">Tags</p>
+                                    <div className="flex flex-wrap gap-1">
+                                        {template.tags.slice(0, 6).map((tag: string, i: number) => (
+                                            <Badge key={i} variant="secondary" className="text-xs">{tag}</Badge>
                                         ))}
-                                    </ul>
+                                    </div>
                                 </div>
                             )}
 
                             <div className="flex gap-2 pt-2">
                                 <Button onClick={handleUseTemplate} className="bg-blue-600 hover:bg-blue-700">Usar este template</Button>
-                                {template.editorUrl && (
-                                    <a href={template.editorUrl} className="inline-flex">
-                                        <Button variant="outline">
-                                            Abrir no Editor <ExternalLink className="w-4 h-4 ml-2" />
-                                        </Button>
-                                    </a>
-                                )}
+                                <a href={`/editor?template=${template.id}`} className="inline-flex">
+                                    <Button variant="outline">
+                                        Abrir no Editor <ExternalLink className="w-4 h-4 ml-2" />
+                                    </Button>
+                                </a>
                             </div>
                         </div>
                     </div>

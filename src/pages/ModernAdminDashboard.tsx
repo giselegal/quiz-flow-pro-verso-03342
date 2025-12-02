@@ -10,6 +10,7 @@ import EditorModularProDashboard from './admin/EditorModularProDashboard';
 import { Route, Switch, useLocation } from 'wouter';
 import { UnifiedAdminLayout } from '@/components/admin/UnifiedAdminLayout';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { RedirectRoute } from '@/components/RedirectRoute';
 
 // Lazy loading das páginas do dashboard - PÁGINAS REAIS COM DADOS DO SUPABASE
 const AdminOverview = React.lazy(() => import('./admin/ConsolidatedOverviewPage'));
@@ -169,10 +170,10 @@ const ModernAdminDashboard: React.FC = () => {
 
             {/* ⚠️ TEMPLATES: Redirecionar para página principal /templates */}
             <Route path="/admin/templates">
-              <Redirect to="/templates" />
+              <RedirectRoute to="/templates" />
             </Route>
             <Route path="/admin/templates-funis">
-              <Redirect to="/templates" />
+              <RedirectRoute to="/templates" />
             </Route>
 
             {/* Modelos de Funis - Nova rota dedicada */}
@@ -239,7 +240,7 @@ const ModernAdminDashboard: React.FC = () => {
               <MeusFunisReal />
             </Route>
             <Route path="/admin/meus-templates">
-              <TemplatesReal />
+              <RedirectRoute to="/templates" />
             </Route>
             <Route path="/admin/leads">
               <ParticipantsPage />
