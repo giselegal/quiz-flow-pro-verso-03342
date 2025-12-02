@@ -189,7 +189,11 @@ export const UnifiedFunnelProvider: React.FC<UnifiedFunnelProviderProps> = ({
                 context,
                 userId,
                 ...options,
-            });
+            } as any);
+
+            if (!newFunnelMeta) {
+                throw new Error('Failed to create funnel');
+            }
 
             const newFunnel = adaptMetadataToUnified(newFunnelMeta);
             setFunnel(newFunnel);
