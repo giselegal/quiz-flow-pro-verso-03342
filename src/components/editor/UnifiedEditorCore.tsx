@@ -209,7 +209,7 @@ const ModeRenderer: React.FC<{
                   []
                 }
                 selectedBlockId={adapter.selectedBlockId ?? state.selectedBlockId}
-                onSelectBlock={(id) => setSelectedBlockId(id)}
+                onSelectBlock={(id) => (editor as any).actions?.selectBlock ? (editor as any).actions.selectBlock(id) : undefined}
                 onUpdateBlock={adapter.actions.updateBlock}
                 onDeleteBlock={adapter.actions.deleteBlock}
                 className="h-full border border-border rounded-lg"
@@ -327,7 +327,11 @@ export const UnifiedEditorCore: React.FC<UnifiedEditorCoreProps> = ({
     return <div className="flex items-center justify-center h-full">Loading editor...</div>;
   }
 
-  const { state, blockActions, ensureStepLoaded: ensureLoaded } = editor;
+  const { state } = editor as any;
+  const editorActions = (editor as any).actions as {
+    selectBlock?: (id: string) => void;
+    loadStepBlocks?: (stepKey: string) => Promise<void>;
+  } | undefined;
 
   // Criar wrapper de actions para compatibilidade
   const actions = React.useMemo(() => ({
@@ -367,10 +371,12 @@ export const UnifiedEditorCore: React.FC<UnifiedEditorCoreProps> = ({
     }
 
     // Ensure current step is loaded
-    if (ensureLoaded) {
-      ensureLoaded(state.currentStep);
+    const load = editorActions?.loadStepBlocks;
+    if (load) {
+      const key = `step-${String(state.currentStep).padStart(2, '0')}`;
+      load(key).catch(() => { });
     }
-  }, [initialStep, state.currentStep, ensureLoaded, actions]);
+  }, [initialStep, state.currentStep, editorActions, actions]);
 
   // 🎯 PERFORMANCE MONITORING
   const performanceStats = useMemo(() => ({
