@@ -10,8 +10,8 @@
  * - Event system para sincronização
  */
 
-import React, { createContext, useContext, ReactNode, useState, useEffect } from 'react';
-import { funnelService } from '@/services/funnel/FunnelServiceLegacyAdapter';
+import React, { createContext, useContext, ReactNode, useState, useEffect, useMemo } from 'react';
+import { ServiceRegistry } from '@/services/ServiceRegistry';
 import type { FunnelMetadata } from '@/types/funnel';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 import { appLogger } from '@/lib/utils/appLogger';
@@ -89,6 +89,7 @@ export const UnifiedFunnelProvider: React.FC<UnifiedFunnelProviderProps> = ({
     context = FunnelContext.EDITOR,
     debugMode = false,
 }) => {
+    const service = useMemo(() => ServiceRegistry.get('funnelService'), []);
     // Estados locais
     const [funnel, setFunnel] = useState<UnifiedFunnelData | null>(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -137,20 +138,16 @@ export const UnifiedFunnelProvider: React.FC<UnifiedFunnelProviderProps> = ({
             }
         };
 
-        // Registrar listeners (se funnelService suportar eventos)
-        if (funnelService.on) {
-            funnelService.on('updated', handleFunnelUpdated);
-            funnelService.on('deleted', handleFunnelDeleted);
-        }
+        // Registrar listeners do serviço canônico
+        service.on('funnel:updated', handleFunnelUpdated);
+        service.on('funnel:deleted', handleFunnelDeleted);
 
         // Cleanup
         return () => {
-            if (funnelService.off) {
-                funnelService.off('updated', handleFunnelUpdated);
-                funnelService.off('deleted', handleFunnelDeleted);
-            }
+            service.off('funnel:updated', handleFunnelUpdated);
+            service.off('funnel:deleted', handleFunnelDeleted);
         };
-    }, [funnelId]);
+    }, [funnelId, service]);
 
     // ========================================================================
     // FUNÇÕES AUXILIARES
@@ -164,17 +161,15 @@ export const UnifiedFunnelProvider: React.FC<UnifiedFunnelProviderProps> = ({
             appLogger.info('📖 UnifiedFunnelContext: Carregando funil (canônico)', { data: [id] });
 
             // Usar serviço canônico (mapeado para tipo unificado)
-            const canonical = await funnelService.getFunnel(id);
+            const canonical = await service.getFunnel(id);
             const loadedFunnel = canonical ? mapCanonicalToUnified(canonical) : null;
 
             if (loadedFunnel) {
                 setFunnel(loadedFunnel);
 
                 // Verificar permissões (se disponível)
-                if (funnelService.checkPermissions) {
-                    const perms = await funnelService.checkPermissions(id);
-                    setPermissions(perms);
-                }
+                const perms = await service.checkPermissions(id);
+                setPermissions(perms);
 
                 appLogger.info('✅ Funil carregado:', { data: [loadedFunnel] });
             } else {
@@ -203,7 +198,7 @@ export const UnifiedFunnelProvider: React.FC<UnifiedFunnelProviderProps> = ({
         try {
             appLogger.info('🎯 UnifiedFunnelContext: Criando funil (canônico)', { data: [name] });
 
-            const created = await funnelService.createFunnel({
+            const created = await service.createFunnel({
                 name,
                 type: options?.type ?? 'quiz',
                 category: options?.category ?? 'quiz',
@@ -253,7 +248,7 @@ export const UnifiedFunnelProvider: React.FC<UnifiedFunnelProviderProps> = ({
         try {
             appLogger.info('✏️ UnifiedFunnelContext: Atualizando funil (canônico)', { data: [funnelId] });
 
-            const updated = await funnelService.updateFunnel(funnelId, {
+            const updated = await service.updateFunnel(funnelId, {
                 name: updates?.name ?? funnel.name,
                 type: updates?.type ?? (funnel.settings as any)?.type,
                 category: updates?.category ?? (funnel as any).category,
@@ -288,12 +283,12 @@ export const UnifiedFunnelProvider: React.FC<UnifiedFunnelProviderProps> = ({
             appLogger.info('🔄 UnifiedFunnelContext: Duplicando funil', { data: [funnelId] });
 
             // funnelService pode não ter método duplicateFunnel, vamos criar manualmente
-            const original = await funnelService.getFunnel(funnelId);
+            const original = await service.getFunnel(funnelId);
             if (!original) {
                 throw new Error('Funil original não encontrado');
             }
 
-            const duplicated = await funnelService.createFunnel({
+            const duplicated = await service.createFunnel({
                 name: newName || `${original.name} (Cópia)`,
                 type: original.type,
                 category: original.category,
@@ -333,7 +328,7 @@ export const UnifiedFunnelProvider: React.FC<UnifiedFunnelProviderProps> = ({
         try {
             appLogger.info('🗑️ UnifiedFunnelContext: Deletando funil (canônico)', { data: [funnelId] });
 
-            const success = await funnelService.deleteFunnel(funnelId);
+            const success = await service.deleteFunnel(funnelId);
 
             if (success) {
                 setFunnel(null);
@@ -371,19 +366,15 @@ export const UnifiedFunnelProvider: React.FC<UnifiedFunnelProviderProps> = ({
     const reload = () => {
         if (funnelId) {
             // Limpar cache antes de recarregar (se disponível)
-            if (funnelService.clearCache) {
-                funnelService.clearCache();
-            }
+            service.clearCache();
             loadFunnel(funnelId);
         }
     };
 
     const validateFunnel = async (id: string) => {
         try {
-            if (funnelService.checkPermissions) {
-                const permissions = await funnelService.checkPermissions(id);
-                setPermissions(permissions);
-            }
+            const permissions = await service.checkPermissions(id);
+            setPermissions(permissions);
         } catch (err) {
             appLogger.error('❌ Erro na validação:', { data: [err] });
         }
