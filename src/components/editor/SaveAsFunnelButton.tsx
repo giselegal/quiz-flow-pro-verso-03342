@@ -79,13 +79,19 @@ export const SaveAsFunnelButton: React.FC = () => {
 
       // 3) Persistir blocos por etapa usando o caminho oficial (component_instances + bulk com fallback)
       const entries = Object.entries(allBlocks);
+      let totalBlocks = 0;
       for (const [stepKey, blocks] of entries) {
+        totalBlocks += Array.isArray(blocks) ? blocks.length : 0;
         await funnelService.saveStepBlocks(funnel.id, stepKey, blocks as any[]);
       }
 
       toast({
         title: '✅ Funil criado!',
-        description: `"${name}" foi salvo com sucesso`,
+        description: `"${name}" salvo (ID: ${funnel.id}). Blocos: ${totalBlocks}`,
+      });
+
+      appLogger.info('✅ [SaveAsFunnelButton] Funil criado e blocos salvos', {
+        data: [{ funnelId: funnel.id, steps: Object.keys(allBlocks).length, totalBlocks }],
       });
 
       // 3. Redirecionar para modo funnel
