@@ -81,6 +81,8 @@ const Phase2Dashboard = lazy(() => import('./pages/Phase2Dashboard'));
 const TemplatesPage = lazy(() => import('./pages/TemplatesPage'));
 const SystemDiagnosticPage = lazy(() => import('./pages/SystemDiagnosticPage'));
 const FunnelTypesPage = lazy(() => import('./pages/SimpleFunnelTypesPage'));
+// 🔧 DEBUG: Config Manager standalone
+const FunnelConfigManager = lazy(() => import('./components/funnels/config/FunnelConfigManager'));
 
 // 🧪 TESTES CRUD
 const TestsPage = lazy(() => import('./pages/TestsPage'));
@@ -352,6 +354,34 @@ function AppCore() {
                                             <div data-testid="tests-page">
                                                 <TestsPage />
                                             </div>
+                                        </Route>
+
+                                        {/* 🔧 DEBUG: FunnelConfigManager standalone */}
+                                        <Route path="/_debug/funnel-config">
+                                            <Suspense fallback={<PageLoadingFallback message="Carregando Config Manager..." />}>
+                                                {(() => {
+                                                    let funnelId: string | null = null;
+                                                    try {
+                                                        const params = new URLSearchParams(window.location.search);
+                                                        funnelId = params.get('funnelId') || params.get('funnel');
+                                                    } catch {}
+
+                                                    if (!funnelId) {
+                                                        return (
+                                                            <div className="p-6">
+                                                                <h2 className="text-lg font-semibold">FunnelConfig Debug</h2>
+                                                                <p className="text-sm text-muted-foreground mt-2">Adicione ?funnelId=SEU_ID à URL para carregar.</p>
+                                                            </div>
+                                                        );
+                                                    }
+
+                                                    return (
+                                                        <div className="p-6 max-w-5xl mx-auto">
+                                                            <FunnelConfigManager funnelId={funnelId} />
+                                                        </div>
+                                                    );
+                                                })()}
+                                            </Suspense>
                                         </Route>
 
                                         {/* 🎯 QUIZ - ROTAS ESPECÍFICAS PRIMEIRO */}
