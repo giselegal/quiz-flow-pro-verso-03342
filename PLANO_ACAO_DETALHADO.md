@@ -21,7 +21,7 @@ Este documento contém o plano de ação detalhado para corrigir os gargalos arq
 
 **Objetivo:** Restaurar build funcional  
 **Duração:** 1-2 dias  
-**Responsável:** Desenvoledor sênior
+**Responsável:** Desenvolvedor sênior
 
 ---
 
