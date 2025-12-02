@@ -176,9 +176,11 @@ export function useEditorContext(): UnifiedEditorContext {
       },
       saveStepBlocks: async (stepIndex: number) => {
         try {
-          const blocks = editor.getStepBlocks(stepIndex);
+          const getStepBlocksFn = (editor as any).actions?.getStepBlocks || (editor as any).getStepBlocks;
+          const markSavedFn = (editor as any).actions?.markSaved || (editor as any).markSaved;
+          const blocks = getStepBlocksFn ? getStepBlocksFn(stepIndex) : [];
           await funnel.updateFunnelStepBlocks(stepIndex, blocks);
-          editor.markSaved();
+          if (markSavedFn) markSavedFn();
           return { success: true };
         } catch (error) {
           return { 
@@ -189,10 +191,10 @@ export function useEditorContext(): UnifiedEditorContext {
       },
 
       // Undo/Redo (delegate to editor)
-      undo: editor.undo,
-      redo: editor.redo,
-      canUndo: editor.canUndo,
-      canRedo: editor.canRedo,
+      undo: (editor as any).actions?.undo || (editor as any).undo || (() => {}),
+      redo: (editor as any).actions?.redo || (editor as any).redo || (() => {}),
+      canUndo: (editor as any).actions?.canUndo || (editor as any).canUndo || false,
+      canRedo: (editor as any).actions?.canRedo || (editor as any).canRedo || false,
     };
   }, [
     authStorage,
