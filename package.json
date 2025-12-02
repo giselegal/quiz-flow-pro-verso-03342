@@ -87,6 +87,7 @@
     "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
     "migrate:logs": "node scripts/migrate-logs.mjs 'src/components/editor/**/*.tsx'",
     "guard:schemas": "node scripts/lint/forbid-expanded-schemas-import.mjs",
+    "guard:block-types": "node scripts/lint/forbid-mixed-block-types.mjs",
     "lint:fix": "eslint . --ext .ts,.tsx,.js,.jsx --fix",
     "check:architecture": "bash scripts/check-architecture.sh",
     "check:duplications": "echo '📚 Ver: ANALISE_ESTRUTURAS_DUPLICADAS.md' && npm run check:architecture",
