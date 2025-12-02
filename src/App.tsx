@@ -56,7 +56,6 @@ const PublishSuccessPage = lazy(() => import('./pages/PublishSuccessPage'));
 const ErrorPage = lazy(() => import('./pages/ErrorPage'));
 
 // 🔍 PÁGINAS DE DIAGNÓSTICO
-const TemplateDiagnosticPage = lazy(() => import('./pages/TemplateDiagnosticPage'));
 const PerformanceTestPage = lazy(() => import('./pages/PerformanceTestPage'));
 const AccessibilityAuditorPage = lazy(() => import('./components/a11y/AccessibilityAuditor'));
 
@@ -330,12 +329,7 @@ function AppCore() {
                                         </Route>
 
                                         {/* 🔍 PÁGINAS DE DIAGNÓSTICO */}
-                                        <Route path="/debug/templates">
-                                            <div data-testid="template-diagnostic-page">
-                                                <TemplateDiagnosticPage />
-                                            </div>
-                                        </Route>
-
+                                        {/* /debug/templates route removed - TemplateDiagnosticPage moved to .obsolete/ */}
                                         {/* /debug/editor-blocks route removed - EditorBlocksDiagnosticPage deleted */}
 
                                         <Route path="/debug/accessibility">
