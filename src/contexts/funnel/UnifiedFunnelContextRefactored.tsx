@@ -12,7 +12,7 @@
 
 import React, { createContext, useContext, ReactNode, useState, useEffect } from 'react';
 import { funnelService } from '@/services/funnel/FunnelServiceLegacyAdapter';
-import type { FunnelMetadata } from '@/services/canonical/FunnelService';
+import type { FunnelMetadata } from '@/types/funnel';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 import { appLogger } from '@/lib/utils/appLogger';
 

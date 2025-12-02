@@ -10,7 +10,8 @@
  * - FunnelOrchestrator
  */
 
-import { funnelService, FunnelMetadata } from '@/services/canonical/FunnelService';
+import { funnelService } from '@/services/canonical/FunnelService';
+import type { FunnelMetadata } from '@/types/funnel';
 import { Funnel } from '@/core/domains';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 import { appLogger } from '@/lib/utils/appLogger';

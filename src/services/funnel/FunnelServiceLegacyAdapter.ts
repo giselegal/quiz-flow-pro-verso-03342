@@ -19,7 +19,7 @@
 import { FunnelService, type Funnel, type LoadFunnelResult } from './FunnelService';
 import { appLogger } from '@/lib/utils/appLogger';
 import type { QuizSchema } from '@/schemas/quiz-schema.zod';
-import type { FunnelMetadata } from '@/services/canonical/FunnelService';
+import type { FunnelMetadata } from '@/types/funnel';
 
 // Re-export tipos para compatibilidade
 export type { Funnel, LoadFunnelResult, SaveFunnelResult } from './FunnelService';

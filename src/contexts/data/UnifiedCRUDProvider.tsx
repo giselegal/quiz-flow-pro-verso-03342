@@ -10,7 +10,8 @@
  */
 
 import React, { createContext, useContext, useCallback, useEffect, useState } from 'react';
-import { funnelService, type FunnelMetadata } from '@/services/canonical/FunnelService';
+import { funnelService } from '@/services/canonical/FunnelService';
+import type { FunnelMetadata } from '@/types/funnel';
 import type { UnifiedFunnelData } from '@/services/canonical/types';
 import { adaptMetadataToUnified } from '@/services/canonical/FunnelAdapter';
 import { normalizeFunnelId } from '@/lib/utils/funnelNormalizer';

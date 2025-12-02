@@ -2,7 +2,7 @@
  * Adapter para compatibilizar FunnelMetadata (canonical) com UnifiedFunnel (legacy)
  */
 
-import type { FunnelMetadata } from '@/services/canonical/FunnelService';
+import type { FunnelMetadata } from '@/types/funnel';
 import { UnifiedFunnel, UnifiedStage } from '@/services/UnifiedCRUDService';
 
 export function adaptMetadataToUnified(metadata: FunnelMetadata): UnifiedFunnel {
