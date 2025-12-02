@@ -41,16 +41,14 @@ export * from './ConfigService';
 export * from './HistoryService';
 export * from './EditorService';
 export * from './persistenceService';
-// FunnelService - exportação explícita para evitar conflito de UnifiedFunnelData com types.ts
-export { 
-  CanonicalFunnelService, 
+// FunnelService - Redirecionado para o serviço oficial V4.1
+// @deprecated Use import direto de '@/services/funnel/FunnelService'
+export {
   funnelService,
-  type FunnelMetadata,
-  type CreateFunnelInput,
-  type UpdateFunnelInput,
-  type ComponentInstance,
-  type FunnelWithComponents
-} from './FunnelService';
+  type Funnel as FunnelMetadata,
+  type LoadFunnelResult,
+  type SaveFunnelResult
+} from '@/services/funnel/FunnelService';
 export * from './monitoring';
 
 // TODO: Exportar quando implementados
