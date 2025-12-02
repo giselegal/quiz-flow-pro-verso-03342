@@ -417,14 +417,20 @@ const QuizEditorMode: React.FC<QuizEditorModeProps> = ({
                       const rawBlocks = (liveBlocks as any) || [];
                       const blocks = toBlockComponents(rawBlocks);
                       const stepType = getStepTypeKey(currentStep);
-                      const step = { id: stepId, type: stepType, order: currentStep, blocks } as any;
                       return (
                         <UnifiedStepRenderer
-                          step={step}
+                          stepId={stepId}
                           mode="preview"
-                          productionParityInEdit
-                          autoAdvanceInEdit
-                          sessionData={{ selectedBlockId }}
+                          stepProps={{
+                            productionParityInEdit: true,
+                            autoAdvanceInEdit: true,
+                            blocks
+                          }}
+                          quizState={{
+                            currentStep,
+                            answers: {},
+                            strategicAnswers: {},
+                          }}
                         />
                       );
                     })()}

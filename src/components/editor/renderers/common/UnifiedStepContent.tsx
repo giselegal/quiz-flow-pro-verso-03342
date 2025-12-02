@@ -250,27 +250,32 @@ export const UnifiedStepContent: React.FC<UnifiedStepContentProps> = memo(({
             } catch { /* noop */ }
         }
 
-        if (realId && editor?.actions?.selectBlock) {
-            editor.actions.selectBlock(realId);
+        if (realId && editor) {
+            // Suporta tanto API flat quanto API com actions
+            const selectFn = (editor as any).actions?.selectBlock || (editor as any).selectBlock;
+            if (selectFn) {
+                selectFn(realId);
+            }
             try {
                 if (!ui?.propertiesPanelOpen) {
                     togglePropertiesPanel();
                 }
             } catch { /* noop */ }
         }
-    }, [editor?.actions, resolveRealBlockId, editorState.stepBlocks, stepKey, ui?.propertiesPanelOpen, togglePropertiesPanel]);
+    }, [editor, resolveRealBlockId, editorState.stepBlocks, stepKey, ui?.propertiesPanelOpen, togglePropertiesPanel]);
 
     // Selecionar um bloco real diretamente (usado pelos steps modulares)
     const handleSelectBlock = useCallback((blockId: string) => {
         try {
-            if (editor?.actions?.selectBlock) {
-                editor.actions.selectBlock(blockId);
+            const selectFn = (editor as any)?.actions?.selectBlock || (editor as any)?.selectBlock;
+            if (selectFn) {
+                selectFn(blockId);
             }
             if (!ui?.propertiesPanelOpen) {
                 togglePropertiesPanel();
             }
         } catch { /* noop */ }
-    }, [editor?.actions, ui?.propertiesPanelOpen, togglePropertiesPanel]);
+    }, [editor, ui?.propertiesPanelOpen, togglePropertiesPanel]);
 
     // Helper: normalizar chave de step para formato step-XX
     const normalizeStepKey = useCallback((key: string | number): string => {

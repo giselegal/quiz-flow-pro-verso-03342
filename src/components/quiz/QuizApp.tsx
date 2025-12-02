@@ -213,19 +213,26 @@ export default function QuizApp({ funnelId, externalSteps }: QuizAppProps) {
                 <div className="bg-[#fefefe] text-[#5b4135] min-h-screen">
                     <div className={`max-w-6xl mx-auto px-4 ${useSharedHeader ? 'pt-4 pb-8' : 'py-8'}`}>
                         <UnifiedStepRenderer
-                            step={{ id: currentStepId, blocks: (currentStepData as any).blocks || [], ...currentStepData }}
+                            stepId={currentStepId}
                             mode="preview"
-                            sessionData={{
-                                userName: unifiedQuizState.userName,
-                                ...Object.fromEntries(Object.entries(unifiedQuizState.answers).map(([k, v]) => [`answers_${k}`, v])),
-                                selectedBlockId,
+                            stepProps={{
+                                blocks: (currentStepData as any).blocks || [],
+                                ...currentStepData
                             }}
-                            onUpdateSessionData={(key: string, value: unknown) => {
-                                if (key === 'userName' && typeof value === 'string') setUserName(value);
-                                if (key.startsWith('answers_')) {
-                                    const sid = key.replace('answers_', '');
-                                    if (Array.isArray(value)) addAnswer(sid, value);
-                                }
+                            quizState={{
+                                currentStep: unifiedQuizState.currentStep,
+                                userName: unifiedQuizState.userName,
+                                answers: unifiedQuizState.answers,
+                                strategicAnswers: {},
+                            }}
+                            onStepUpdate={(stepId: string, updates: Record<string, any>) => {
+                                if (updates.userName && typeof updates.userName === 'string') setUserName(updates.userName);
+                                Object.entries(updates).forEach(([key, value]) => {
+                                    if (key.startsWith('answer_') && Array.isArray(value)) {
+                                        const sid = key.replace('answer_', '');
+                                        addAnswer(sid, value);
+                                    }
+                                });
                             }}
                         />
                     </div>
