@@ -1,10 +1,44 @@
 // Utilitários padronizados para trabalhar com chaves de etapas ("step-<n>")
-// Mantém compatibilidade com a normalização já existente em quizStepsComplete.ts
 
-import quizSteps, { normalizeStepBlocks } from '@/config/quizStepsComplete';
-const parseStepKeyInternal = (quizSteps as any).parseStepKey as (
-  k: string | number
-) => number | null;
+import type { Block } from '@/types/editor';
+
+/**
+ * Extrai o número de uma chave de step.
+ * Aceita: "step-1", "step-01", "1", 1, etc.
+ */
+function parseStepKeyInternal(key: string | number): number | null {
+  if (typeof key === 'number') {
+    return Number.isFinite(key) ? Math.floor(key) : null;
+  }
+  // Tenta extrair número de formatos como "step-1", "step-01", "1", "01"
+  const match = String(key).match(/(\d{1,2})/);
+  if (match) {
+    const num = parseInt(match[1], 10);
+    return Number.isFinite(num) ? num : null;
+  }
+  return null;
+}
+
+/**
+ * Normaliza um mapa de blocos por step para chaves canônicas "step-N".
+ */
+export function normalizeStepBlocks(
+  raw?: Record<string | number, Block[]> | null
+): Record<string, Block[]> {
+  if (!raw) return {};
+  
+  const normalized: Record<string, Block[]> = {};
+  
+  for (const [key, blocks] of Object.entries(raw)) {
+    const stepNum = parseStepKeyInternal(key);
+    if (stepNum !== null && Array.isArray(blocks)) {
+      const canonicalKey = `step-${stepNum}`;
+      normalized[canonicalKey] = blocks;
+    }
+  }
+  
+  return normalized;
+}
 
 /**
  * Constrói a chave canônica da etapa.
@@ -35,11 +69,10 @@ export function getStepNumberFromKey(key: string | number): number {
 
 /**
  * Normaliza um mapa de stepBlocks para apenas chaves canônicas "step-<n>".
- * Wrapper fino sobre normalizeStepBlocks já existente.
  */
 export function normalizeStepBlocksMap(raw?: Record<string | number, unknown> | null) {
-  return normalizeStepBlocks(raw as any);
+  return normalizeStepBlocks(raw as Record<string | number, Block[]>);
 }
 
-// Reexporta a função de parsing canônica para usos avançados
+// Exporta a função de parsing canônica para usos avançados
 export { parseStepKeyInternal as parseStepKey };
