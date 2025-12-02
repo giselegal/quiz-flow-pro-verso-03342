@@ -66,15 +66,52 @@ export class FunnelServiceLegacyAdapter extends FunnelService {
 
   /**
    * LEGADO: createFunnel
-   * Mapeia para saveFunnel (novo draft) e retorna FunnelMetadata
+   * Aceita tanto QuizSchema quanto formato legado CreateFunnelInput
    */
   async createFunnel(
-    quiz: QuizSchema,
+    quizOrInput: QuizSchema | any,
     funnelId?: string,
     userId?: string
   ): Promise<FunnelMetadata | null> {
     try {
-      const id = funnelId || quiz.metadata?.id || `funnel-${Date.now()}`;
+      let quiz: QuizSchema;
+      let id: string;
+
+      // Detectar se é QuizSchema ou CreateFunnelInput
+      if (quizOrInput.steps && quizOrInput.metadata) {
+        // É QuizSchema
+        quiz = quizOrInput;
+        id = funnelId || quiz.metadata?.id || `funnel-${Date.now()}`;
+      } else {
+        // É CreateFunnelInput (formato legado)
+        id = quizOrInput.templateId || funnelId || `funnel-${Date.now()}`;
+        
+        // Criar QuizSchema básico
+        quiz = {
+          version: '4.0',
+          metadata: {
+            name: quizOrInput.name || 'New Funnel',
+            id: id,
+            description: quizOrInput.metadata?.description || '',
+            author: 'system',
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+          },
+          theme: {
+            colors: {
+              text: '#000000',
+              primary: '#007bff',
+              border: '#dee2e6',
+              background: '#ffffff',
+              secondary: '#6c757d',
+            },
+            typography: {},
+            layout: {},
+          },
+          steps: [],
+        };
+      }
+      
       const result = await this.saveFunnel(quiz, id, undefined, userId);
       
       if (!result.success) {
@@ -243,23 +280,24 @@ export class FunnelServiceLegacyAdapter extends FunnelService {
     return result;
   }
 
-  /**
-   * Override duplicateFunnel para retornar FunnelMetadata
-   */
-  async duplicateFunnel(
-    sourceFunnelId: string,
-    newFunnelId: string,
-    userId?: string
-  ): Promise<FunnelMetadata> {
-    const result = await super.duplicateFunnel(sourceFunnelId, newFunnelId, userId);
-    return funnelToMetadata(result.funnel);
-  }
 }
 
 /**
  * Singleton com adapter
  */
 export const funnelServiceAdapter = new FunnelServiceLegacyAdapter();
+
+// Wrapper para duplicateFunnel que retorna FunnelMetadata
+const originalDuplicate = funnelServiceAdapter.duplicateFunnel.bind(funnelServiceAdapter);
+(funnelServiceAdapter as any).duplicateFunnelOriginal = originalDuplicate;
+funnelServiceAdapter.duplicateFunnel = async function(
+  sourceFunnelId: string,
+  newFunnelId: string,
+  userId?: string
+): Promise<any> {
+  const result = await originalDuplicate(sourceFunnelId, newFunnelId, userId);
+  return funnelToMetadata(result.funnel);
+};
 
 /**
  * Export default para compatibilidade

@@ -285,13 +285,14 @@ export function useFunnelLoader(
         }
 
         const sourceFunnelId = funnelId; // Captura não-null value
+        const targetName = newName || `copy-of-${sourceFunnelId}`;
         setIsLoading(true);
         clearError();
 
         try {
             appLogger.info('🔄 useFunnelLoader: Duplicando funil', { data: [sourceFunnelId] });
 
-            const duplicatedFunnelMeta = await funnelService.duplicateFunnel(sourceFunnelId, newName);
+            const duplicatedFunnelMeta = await funnelService.duplicateFunnel(sourceFunnelId, targetName);
             const duplicatedFunnel = adaptMetadataToUnified(duplicatedFunnelMeta);
 
             appLogger.info('✅ Funil duplicado:', { data: [duplicatedFunnel] });

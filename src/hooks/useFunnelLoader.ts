@@ -12,7 +12,8 @@
  */
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { funnelService, type Funnel as FunnelMetadata } from '@/services/funnel/FunnelServiceLegacyAdapter';
+import { funnelService } from '@/services/funnel/FunnelServiceLegacyAdapter';
+import type { FunnelMetadata } from '@/services/canonical/FunnelService';
 import type { UnifiedFunnelData } from '@/services/canonical/types';
 import { adaptMetadataToUnified } from '@/services/canonical/FunnelAdapter';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
@@ -285,13 +286,14 @@ export function useFunnelLoader(
         }
 
         const sourceFunnelId = funnelId; // Captura não-null value
+        const targetName = newName || `copy-of-${sourceFunnelId}`;
         setIsLoading(true);
         clearError();
 
         try {
             appLogger.info('🔄 useFunnelLoader: Duplicando funil', { data: [sourceFunnelId] });
 
-            const duplicatedFunnelMeta = await funnelService.duplicateFunnel(sourceFunnelId, newName);
+            const duplicatedFunnelMeta = await funnelService.duplicateFunnel(sourceFunnelId, targetName) as unknown as FunnelMetadata;
             const duplicatedFunnel = adaptMetadataToUnified(duplicatedFunnelMeta);
 
             appLogger.info('✅ Funil duplicado:', { data: [duplicatedFunnel] });

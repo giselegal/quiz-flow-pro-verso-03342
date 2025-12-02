@@ -11,7 +11,8 @@
  */
 
 import React, { createContext, useContext, ReactNode, useState, useEffect } from 'react';
-import { funnelService, type Funnel as FunnelMetadata } from '@/services/funnel/FunnelServiceLegacyAdapter';
+import { funnelService } from '@/services/funnel/FunnelServiceLegacyAdapter';
+import type { FunnelMetadata } from '@/services/canonical/FunnelService';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 import { appLogger } from '@/lib/utils/appLogger';
 
@@ -212,6 +213,10 @@ export const UnifiedFunnelProvider: React.FC<UnifiedFunnelProviderProps> = ({
                 metadata: { ...(options?.metadata || {}), createdBy: 'UnifiedFunnelContext' },
             });
 
+            if (!created) {
+                throw new Error('Failed to create funnel');
+            }
+
             const newFunnel = mapCanonicalToUnified(created);
 
             setFunnel(newFunnel);
@@ -295,8 +300,12 @@ export const UnifiedFunnelProvider: React.FC<UnifiedFunnelProviderProps> = ({
                 context: original.context,
                 status: 'draft',
                 config: original.config,
-                metadata: { ...original.metadata, clonedFrom: funnelId },
+                metadata: { ...original.metadata, clonedFrom: funnelId } as any,
             });
+
+            if (!duplicated) {
+                throw new Error('Failed to duplicate funnel');
+            }
 
             const duplicatedFunnel = mapCanonicalToUnified(duplicated);
 

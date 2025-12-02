@@ -247,7 +247,7 @@ export const UnifiedFunnelProvider: React.FC<UnifiedFunnelProviderProps> = ({
         }
     };
 
-    const duplicateFunnel = async (newName: string): Promise<UnifiedFunnelData> => {
+    const duplicateFunnel = async (newName?: string): Promise<UnifiedFunnelData> => {
         if (!funnelId || !funnel) {
             throw new Error('Nenhum funil carregado para duplicar');
         }
@@ -259,8 +259,9 @@ export const UnifiedFunnelProvider: React.FC<UnifiedFunnelProviderProps> = ({
         try {
             appLogger.info('🔄 UnifiedFunnelContext: Duplicando funil', { data: [sourceFunnelId] });
 
-            const duplicatedFunnelMeta = await funnelService.duplicateFunnel(sourceFunnelId, newName);
-            const duplicatedFunnel = adaptMetadataToUnified(duplicatedFunnelMeta);
+            const targetName = newName || `copy-of-${sourceFunnelId}`;
+            const duplicatedFunnelMeta = await funnelService.duplicateFunnel(sourceFunnelId, targetName);
+            const duplicatedFunnel = adaptMetadataToUnified(duplicatedFunnelMeta as any);
 
             appLogger.info('✅ Funil duplicado:', { data: [duplicatedFunnel] });
             return duplicatedFunnel;
