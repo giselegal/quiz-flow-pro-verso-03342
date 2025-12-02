@@ -378,7 +378,8 @@ export const UnifiedStepContent: React.FC<UnifiedStepContentProps> = memo(({
 
     // Callback para adicionar novos blocos
     const handleAddBlock = useCallback(async (blockType: string, position?: number) => {
-        if (!editor?.actions?.addBlock) {
+        const addFn = (editor as any)?.actions?.addBlock || (editor as any)?.addBlock;
+        if (!addFn) {
             appLogger.warn('⏭️ Skip addBlock: editor não disponível');
             return;
         }
@@ -391,7 +392,7 @@ export const UnifiedStepContent: React.FC<UnifiedStepContentProps> = memo(({
                 content: {},
                 order: position ?? 999,
             };
-            await editor.actions.addBlock(currentStep, newBlock as Block, position);
+            await addFn(currentStep, newBlock as Block, position);
             appLogger.debug('✅ Bloco adicionado:', { blockType, position, step: currentStep });
         } catch (err) {
             appLogger.error('❌ Erro ao adicionar bloco:', err);

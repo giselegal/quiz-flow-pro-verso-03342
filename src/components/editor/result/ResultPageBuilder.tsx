@@ -14,9 +14,18 @@ export const ResultPageBuilder: React.FC<ResultPageBuilderProps> = ({ primarySty
   const { editor } = useEditorContext();
   const { state } = editor;
   const actions = {
-    addBlock: (step: number, block: any) => editor.addBlock(step, block),
-    updateBlock: (step: number, blockId: string, updates: any) => editor.updateBlock(step, blockId, updates),
-    removeBlock: (step: number, blockId: string) => editor.removeBlock(step, blockId),
+    addBlock: (step: number, block: any) => {
+      const addFn = (editor as any).actions?.addBlock || (editor as any).addBlock;
+      return addFn?.(step, block);
+    },
+    updateBlock: (step: number, blockId: string, updates: any) => {
+      const updateFn = (editor as any).actions?.updateBlock || (editor as any).updateBlock;
+      return updateFn?.(step, blockId, updates);
+    },
+    removeBlock: (step: number, blockId: string) => {
+      const removeFn = (editor as any).actions?.removeBlock || (editor as any).removeBlock;
+      return removeFn?.(step, blockId);
+    },
   };
   const [selectedComponent, setSelectedComponent] = React.useState<string | null>(null);
 
