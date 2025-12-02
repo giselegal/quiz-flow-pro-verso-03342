@@ -14,6 +14,8 @@ export interface EditorCoreState {
 export interface EditorCoreActions {
   setCurrentStep: (step: number) => void;
   selectBlock: (id: string | null) => void;
+  setSelectedBlock: (id: string | null) => void;
+  getSelectedBlock: () => Block | null;
   updateSelectedBlock: (updates: Partial<Block>) => void;
   deleteSelectedBlock: () => void;
   getBlocksForStepNumber: (stepNumber: number) => Block[];
@@ -40,6 +42,16 @@ export function useEditorCore(): { state: EditorCoreState; actions: EditorCoreAc
     selectBlock: (id: string | null) => {
       const fn = editorActions?.selectBlock || (() => {});
       fn(id);
+    },
+    setSelectedBlock: (id: string | null) => {
+      const fn = editorActions?.selectBlock || (() => {});
+      fn(id);
+    },
+    getSelectedBlock: () => {
+      const id = selectedBlockId;
+      if (!id) return null;
+      const list = actions.getBlocksForStepNumber(safeCurrentStep);
+      return list.find(b => (b as any)?.id === id) || null;
     },
     updateSelectedBlock: (updates: Partial<Block>) => {
       if (!selectedBlockId) return;
