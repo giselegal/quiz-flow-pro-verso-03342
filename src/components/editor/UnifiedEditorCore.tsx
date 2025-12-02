@@ -19,7 +19,7 @@
 import React, { Suspense, useMemo, useCallback } from 'react';
 import { appLogger } from '@/lib/utils/logger';
 import LazyBoundary from '@/components/common/LazyBoundary';
-import { useEditorCompat } from '@/core/contexts/EditorContext';
+import { useEditor as useEditorCanonical } from '@/core/contexts/EditorContext/EditorStateProvider';
 import { useEditorAdapter } from '@/hooks/editor/useEditorAdapter';
 import { logger } from '@/lib/utils/debugLogger';
 
@@ -78,7 +78,7 @@ const ModeRenderer: React.FC<{
   mode: 'visual' | 'headless' | 'production' | 'funnel';
   funnelId?: string;
 }> = ({ mode, funnelId }) => {
-  const editor = useEditorCompat();
+  const editor = useEditorCanonical();
   const adapter = useEditorAdapter();
 
   // Fallback when editor context is not available
@@ -310,7 +310,7 @@ export const UnifiedEditorCore: React.FC<UnifiedEditorCoreProps> = ({
   initialStep = 1,
   className = 'h-full w-full',
 }) => {
-  const editor = useEditorCompat();
+  const editor = useEditorCanonical();
   const adapter = useEditorAdapter();
   const [streamProgress, setStreamProgress] = React.useState(0);
 
