@@ -60,10 +60,10 @@
 import { type QuizSchema } from '@/schemas/quiz-schema.zod';
 import { appLogger } from '@/lib/utils/appLogger';
 import { supabase } from '@/lib/supabase';
-import { 
-  resolveFunnel, 
-  type FunnelIdentifier, 
-  type ResolvedFunnel 
+import {
+  resolveFunnel,
+  type FunnelIdentifier,
+  type ResolvedFunnel
 } from './FunnelResolver';
 
 /**
@@ -72,16 +72,16 @@ import {
 export interface Funnel {
   /** Business ID */
   id: string;
-  
+
   /** Template ID (base) */
   templateId: string;
-  
+
   /** Draft ID (Supabase) */
   draftId?: string;
-  
+
   /** Quiz data */
   quiz: QuizSchema;
-  
+
   /** Metadata */
   version: number;
   createdAt?: string;
@@ -135,7 +135,7 @@ export class FunnelService {
     // 2. Try loading from Supabase first (if not explicitly template-only)
     if (!identifier.templateId || identifier.draftId) {
       const draftResult = await this.loadDraftFromSupabase(resolved.funnelId, identifier.draftId);
-      
+
       if (draftResult) {
         appLogger.info('✅ [FunnelService] Loaded from Supabase draft', {
           funnelId: resolved.funnelId,
@@ -187,7 +187,7 @@ export class FunnelService {
    * - By funnel_id (latest version)
    */
   private async loadDraftFromSupabase(
-    funnelId: string, 
+    funnelId: string,
     draftId?: string
   ): Promise<Funnel | null> {
     try {
@@ -217,7 +217,7 @@ export class FunnelService {
       }
 
       // Parse quiz_data JSON
-      const quiz = typeof data.quiz_data === 'string' 
+      const quiz = typeof data.quiz_data === 'string'
         ? JSON.parse(data.quiz_data)
         : data.quiz_data;
 
@@ -253,14 +253,19 @@ export class FunnelService {
 
       // Garantir que o caminho comece com /
       const normalizedPath = templatePath.startsWith('/') ? templatePath : `/${templatePath}`;
-      
+
+      // ✅ ADICIONAR TIMESTAMP PARA BYPASS DE CACHE
+      const cacheBuster = `?t=${Date.now()}`;
+      const fullPath = `${normalizedPath}${cacheBuster}`;
+
       console.log('🌐 [FunnelService] Fetching template:', {
         originalPath: templatePath,
         normalizedPath,
-        fullUrl: `${window.location.origin}${normalizedPath}`
+        fullPath,
+        fullUrl: `${window.location.origin}${fullPath}`
       });
 
-      const response = await fetch(normalizedPath, {
+      const response = await fetch(fullPath, {
         method: 'GET',
         headers: {
           'Accept': 'application/json',
@@ -269,7 +274,7 @@ export class FunnelService {
       }).catch(fetchError => {
         console.error('❌ [FunnelService] Fetch failed:', {
           error: fetchError,
-          path: normalizedPath,
+          path: fullPath,
           origin: window.location.origin
         });
         throw new Error(`Network error: Could not fetch ${normalizedPath}. Server may not be running on port 8080.`);
@@ -306,13 +311,13 @@ export class FunnelService {
         error: error instanceof Error ? error.message : String(error),
         stack: error instanceof Error ? error.stack : undefined
       });
-      
+
       console.error('💥 [FunnelService] Template load failed:', {
         templatePath,
         error,
         suggestion: 'Make sure the dev server is running: npm run dev'
       });
-      
+
       // Re-throw with more context
       if (error instanceof Error) {
         throw new Error(`Failed to load template ${templatePath}: ${error.message}`);
@@ -489,9 +494,9 @@ export class FunnelService {
     }
 
     // 5. Return new funnel
-    return this.loadFunnel({ 
-      funnelId: newFunnelId, 
-      draftId: saveResult.draftId 
+    return this.loadFunnel({
+      funnelId: newFunnelId,
+      draftId: saveResult.draftId
     });
   }
 
@@ -538,7 +543,7 @@ export class FunnelService {
         id: draft.funnel_id,
         templateId: draft.template_id,
         draftId: draft.id,
-        quiz: typeof draft.quiz_data === 'string' 
+        quiz: typeof draft.quiz_data === 'string'
           ? JSON.parse(draft.quiz_data)
           : draft.quiz_data,
         version: draft.version,

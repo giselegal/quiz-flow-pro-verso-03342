@@ -67,9 +67,10 @@ export { EditorRuntimeProviders } from '@/contexts/editor/EditorRuntimeProviders
 // ============================================================================
 
 /**
- * Serviço de funnel unificado
+ * Serviço de funnel unificado (V4.1 - OFICIAL)
+ * @see /src/services/funnel/FunnelService.ts
  */
-export { default as funnelService } from '@/core/services/FunnelService';
+export { funnelService } from '@/services/funnel/FunnelService';
 
 /**
  * Serviço de template

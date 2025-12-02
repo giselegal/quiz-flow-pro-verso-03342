@@ -11,7 +11,7 @@
  */
 
 import React, { createContext, useContext, ReactNode, useState, useEffect } from 'react';
-import { funnelService, type FunnelMetadata } from '@/services/canonical/FunnelService';
+import { funnelService, type Funnel as FunnelMetadata } from '@/services/funnel/FunnelService';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 import { appLogger } from '@/lib/utils/appLogger';
 

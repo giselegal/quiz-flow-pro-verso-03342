@@ -149,13 +149,12 @@ export default defineConfig({
         secure: false,
       },
     },
-    // ✅ CRÍTICO: Desabilitar SPA fallback para arquivos .json
-    middlewareMode: false,
     fs: {
       strict: false,
       allow: ['..']
     },
   },
+  appType: 'spa', // ✅ Garante que arquivos estáticos em /public sejam servidos corretamente
   // ✅ CRÍTICO: Configurar publicDir corretamente
   publicDir: 'public',
   // ✅ OTIMIZAÇÃO: Pre-bundling de deps comuns
