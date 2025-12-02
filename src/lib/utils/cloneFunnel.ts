@@ -9,7 +9,7 @@
  * - Isolamento completo entre instâncias
  */
 
-import { FunnelTemplate } from '@/config/funnelTemplates';
+import type { FunnelTemplate } from '@/core/funnel/types';
 import { appLogger } from '@/lib/utils/appLogger';
 import { generateTimerId, generateBlockId, generatePageId, generateFunnelId } from '@/lib/utils/idGenerator';
 

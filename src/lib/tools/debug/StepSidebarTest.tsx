@@ -79,7 +79,7 @@ const StepSidebarTest: React.FC = () => {
             data: [{
                 keyCount: Object.keys(normalized).length,
                 keys: Object.keys(normalized),
-                blockCounts: Object.entries(normalized).map(([k, v]) => [k, v.length]),
+                blockCounts: Object.entries(normalized).map(([k, v]) => [k, (v as any[]).length]),
             }]
         });
         return normalized;

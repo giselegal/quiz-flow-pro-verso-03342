@@ -1,4 +1,4 @@
-import type { BlockData } from './funnelService';
+import type { BlockData } from '@/types/blockTypes';
 import { getDefaultPageConfig } from '../data/defaultPageConfigs';
 import { appLogger } from '@/lib/utils/appLogger';
 

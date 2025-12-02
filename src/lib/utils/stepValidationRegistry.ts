@@ -1,5 +1,5 @@
 import { StorageService } from '@/services/core/StorageService';
-import { getBlocksForStep, type RawStepBlocks } from '@/config/quizStepsComplete';
+import { getBlocksForStep } from '@/config/.obsolete/quizStepsComplete';
 
 export type ValidationResult = { valid: boolean; reason?: string; evidence?: Record<string, any> };
 
@@ -19,7 +19,7 @@ function blockLooksInteractive(block: any): boolean {
     return false;
 }
 
-export function validateStep(step: number, stepBlocks?: RawStepBlocks | null): ValidationResult {
+export function validateStep(step: number, stepBlocks?: any): ValidationResult {
     // Regra 1: Etapa 1 requer nome
     if (step === 1) {
         const answers = StorageService.safeGetJSON<Record<string, any>>('quizAnswers') || {};
@@ -78,7 +78,7 @@ export function validateStep(step: number, stepBlocks?: RawStepBlocks | null): V
     return { valid: false, reason: `Respostas obrigatórias ausentes: ${missing.join(', ')}`, evidence };
 }
 
-export function validateAllSteps(totalSteps = 21, stepBlocks?: RawStepBlocks | null): Record<number, boolean> {
+export function validateAllSteps(totalSteps = 21, stepBlocks?: any): Record<number, boolean> {
     const out: Record<number, boolean> = {};
     for (let i = 1; i <= totalSteps; i++) {
         out[i] = validateStep(i, stepBlocks).valid;

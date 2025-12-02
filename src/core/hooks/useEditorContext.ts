@@ -136,20 +136,20 @@ export function useEditorContext(): UnifiedEditorContext {
 
       // Unified state
       state: {
-        editor: editor.state,
+        editor: editor.state || editor,
         currentFunnel: funnel.currentFunnel,
       },
 
-      // Quick access methods (delegate to editor)
-      setCurrentStep: editor.setCurrentStep,
-      addBlock: editor.addBlock,
-      removeBlock: editor.removeBlock,
-      reorderBlocks: editor.reorderBlocks,
-      updateBlock: editor.updateBlock,
-      getStepBlocks: editor.getStepBlocks,
-      setStepBlocks: editor.setStepBlocks,
-      setSelectedBlock: editor.selectBlock, // Legacy method name
-      selectBlock: editor.selectBlock,
+      // Quick access methods (delegate to editor) - suporta ambas APIs
+      setCurrentStep: (editor as any).actions?.setCurrentStep || (editor as any).setCurrentStep,
+      addBlock: (editor as any).actions?.addBlock || (editor as any).addBlock,
+      removeBlock: (editor as any).actions?.removeBlock || (editor as any).removeBlock,
+      reorderBlocks: (editor as any).actions?.reorderBlocks || (editor as any).reorderBlocks,
+      updateBlock: (editor as any).actions?.updateBlock || (editor as any).updateBlock,
+      getStepBlocks: (editor as any).actions?.getStepBlocks || (editor as any).getStepBlocks,
+      setStepBlocks: (editor as any).actions?.setStepBlocks || (editor as any).setStepBlocks,
+      setSelectedBlock: (editor as any).actions?.selectBlock || (editor as any).selectBlock, // Legacy method name
+      selectBlock: (editor as any).actions?.selectBlock || (editor as any).selectBlock,
 
       // Persistence (delegate to funnel/editor)
       saveFunnel: async () => {
