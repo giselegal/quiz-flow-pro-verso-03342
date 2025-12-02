@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { getOptimizedContainerClasses } from '@/config/containerConfig';
 import React, { useState } from 'react';
+import { RichText } from '@/components/shared/RichText';
 import {
   Alignment,
   BlockComponentProps,

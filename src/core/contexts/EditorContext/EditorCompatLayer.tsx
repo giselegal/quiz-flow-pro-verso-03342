@@ -16,12 +16,12 @@
  */
 
 import React, { useMemo } from 'react';
-import { useEditor as useEditorCanonical } from './EditorStateProvider';
+import { useEditor as useEditorCanonical, type EditorContextValue } from './EditorStateProvider';
 import type { Block } from '@/types/editor';
 
-export interface EditorCompatAPI extends ReturnType<typeof useEditorCanonical> {
+export interface EditorCompatAPI extends EditorContextValue {
     // API legada - State Extensions
-    state: ReturnType<typeof useEditorCanonical>['state'] & {
+    state: EditorContextValue['state'] & {
         blocks: Block[]; // Lista plana do step atual
     };
 
