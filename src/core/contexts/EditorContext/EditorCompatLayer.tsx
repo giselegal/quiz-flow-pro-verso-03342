@@ -17,7 +17,7 @@
 
 import React, { useMemo } from 'react';
 import { useEditor as useEditorCanonical, type EditorContextValue } from './EditorStateProvider';
-import type { Block } from '@/types';
+import type { Block } from '@/types/block.types';
 
 export interface EditorCompatAPI extends EditorContextValue {
     // API legada - State Extensions

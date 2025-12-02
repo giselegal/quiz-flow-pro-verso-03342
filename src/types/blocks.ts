@@ -10,8 +10,8 @@ export type { AtomicBlockProps, UnifiedBlockProps } from '@/types/blockProps';
 // Re-export InlineBlockProps - interface canônica para componentes inline
 export type { InlineBlockProps, InlineBlockComponentProps } from '@/types/InlineBlockProps';
 // Preserve the historical `Block` name (many files / propTypes expect `Block`)
-export type { Block } from '@/types';
-export type { BlockType } from '@/types';
+export type { Block } from '@/types/block.types';
+export type { BlockType } from '@/types/editor';
 
 // Re-export helpers / factory functions from the canonical definitions
 export { asBlockComponent, createBlockComponent } from '@/types/core/BlockInterfaces';
@@ -19,7 +19,7 @@ export { asBlockComponent, createBlockComponent } from '@/types/core/BlockInterf
 // Convenience helper preserved for code that used createDefaultBlock
 import { generateSemanticId } from '@/lib/utils/semanticIdGenerator';
 import type { BlockData as CanonBlock } from '@/types/core/BlockInterfaces';
-import type { BlockType as CanonBlockType } from '@/types';
+import type { BlockType as CanonBlockType } from '@/types/editor';
 
 export const createDefaultBlock = (type: CanonBlockType | string, stageId?: string | null): CanonBlock => ({
   id: generateSemanticId({ context: stageId ?? 'default', type: 'block', identifier: String(type), index: 1 }),

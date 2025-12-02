@@ -3,7 +3,7 @@ export type { Block, BlockProps } from './block.types';
 export * from './editor.types';
 
 // Reexport específico para manter o tipo union de BlockType do legado
-export { BlockType } from './editor';
+export type { BlockType } from './editor';
 
 // TODO: adicionar quiz.types e funnel.types quando disponíveis
 
