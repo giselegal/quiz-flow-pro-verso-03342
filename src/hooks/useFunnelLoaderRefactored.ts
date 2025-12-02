@@ -11,8 +11,8 @@
  * - Error handling robusto
  */
 
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { funnelService } from '@/services/funnel/FunnelServiceLegacyAdapter';
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import { ServiceRegistry } from '@/services/ServiceRegistry';
 import type { UnifiedFunnelData } from '@/services/canonical/types';
 import { adaptMetadataToUnified } from '@/services/canonical/FunnelAdapter';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
@@ -72,6 +72,8 @@ export function useFunnelLoader(
         userId,
     } = options;
 
+    const service = useMemo(() => ServiceRegistry.get('funnelService'), []);
+
     // Estados locais
     const [isLoading, setIsLoading] = useState(false);
     const [isValidating, setIsValidating] = useState(false);
@@ -129,7 +131,7 @@ export function useFunnelLoader(
             appLogger.info('📖 useFunnelLoader: Carregando funil', { data: [id] });
 
             // Usar serviço unificado (com cache automático)
-            const loadedFunnelMeta = await funnelService.getFunnel(id);
+            const loadedFunnelMeta = await service.getFunnel(id);
             const loadedFunnel = loadedFunnelMeta ? adaptMetadataToUnified(loadedFunnelMeta) : null;
 
             if (loadedFunnel) {
@@ -138,7 +140,7 @@ export function useFunnelLoader(
                 currentFunnelIdRef.current = id;
 
                 // Verificar permissões
-                const perms = await funnelService.checkPermissions(id);
+                const perms = await service.checkPermissions(id);
                 setPermissions(perms);
 
                 appLogger.info('✅ Funil carregado:', { data: [loadedFunnel] });
@@ -181,7 +183,7 @@ export function useFunnelLoader(
         try {
             appLogger.info('🔍 useFunnelLoader: Validando funil', { data: [id] });
 
-            const perms = await funnelService.checkPermissions(id);
+            const perms = await service.checkPermissions(id);
             setPermissions(perms);
 
             if (!perms.canRead) {
@@ -212,7 +214,7 @@ export function useFunnelLoader(
         try {
             appLogger.info('🎯 useFunnelLoader: Criando funil', { data: [name] });
 
-            const newFunnelMeta = await funnelService.createFunnel({
+            const newFunnelMeta = await service.createFunnel({
                 name,
                 context,
                 userId,
@@ -262,7 +264,7 @@ export function useFunnelLoader(
         try {
             appLogger.info('✏️ useFunnelLoader: Atualizando funil', { data: [funnelId] });
 
-            const updatedFunnelMeta = await funnelService.updateFunnel(funnelId, updates);
+            const updatedFunnelMeta = await service.updateFunnel(funnelId, updates);
             const updatedFunnel = updatedFunnelMeta ? adaptMetadataToUnified(updatedFunnelMeta) : funnel!;
             setFunnel(updatedFunnel);
 
@@ -292,7 +294,7 @@ export function useFunnelLoader(
         try {
             appLogger.info('🔄 useFunnelLoader: Duplicando funil', { data: [sourceFunnelId] });
 
-            const duplicatedFunnelMeta = await funnelService.duplicateFunnel(sourceFunnelId, targetName);
+            const duplicatedFunnelMeta = await service.duplicateFunnel(sourceFunnelId, targetName);
             const duplicatedFunnelMeta2 = (duplicatedFunnelMeta as unknown as import('@/services/canonical/FunnelService').FunnelMetadata);
             const duplicatedFunnel = adaptMetadataToUnified(duplicatedFunnelMeta2);
 
@@ -320,7 +322,7 @@ export function useFunnelLoader(
         try {
             appLogger.info('🗑️ useFunnelLoader: Deletando funil', { data: [funnelId] });
 
-            const success = await funnelService.deleteFunnel(funnelId);
+            const success = await service.deleteFunnel(funnelId);
 
             if (success) {
                 setFunnel(null);
@@ -360,10 +362,10 @@ export function useFunnelLoader(
     const reload = useCallback(() => {
         if (funnelId) {
             // Limpar cache antes de recarregar
-            funnelService.clearCache();
+            service.clearCache();
             loadFunnel(funnelId);
         }
-    }, [funnelId, loadFunnel]);
+    }, [funnelId, loadFunnel, service]);
 
     // ========================================================================
     // EFFECTS
@@ -398,13 +400,13 @@ export function useFunnelLoader(
         };
 
         // Registrar listeners
-        funnelService.on('updated', handleFunnelUpdated);
-        funnelService.on('deleted', handleFunnelDeleted);
+        service.on('funnel:updated', handleFunnelUpdated);
+        service.on('funnel:deleted', handleFunnelDeleted);
 
         // Armazenar cleanup functions
         const cleanupFunctions = [
-            () => funnelService.off('updated', handleFunnelUpdated),
-            () => funnelService.off('deleted', handleFunnelDeleted),
+            () => service.off('funnel:updated', handleFunnelUpdated),
+            () => service.off('funnel:deleted', handleFunnelDeleted),
         ];
         eventListenersRef.current = cleanupFunctions;
 
@@ -412,7 +414,7 @@ export function useFunnelLoader(
         return () => {
             cleanupFunctions.forEach(cleanup => cleanup());
         };
-    }, [funnelId, enableEvents, loadFunnel]);
+    }, [funnelId, enableEvents, loadFunnel, service]);
 
     // Cleanup ao desmontar
     useEffect(() => {
