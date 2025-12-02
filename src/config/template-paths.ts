@@ -12,7 +12,7 @@
  */
 export const TEMPLATE_PATHS = {
   /** V4.1 SaaS - Production template with normalized options and RichText */
-  V4_SAAS: '/templates/quiz21-v4-saas.json',
+  V4_SAAS: '/templates/quiz21Steps/compiled/full.json',
   
   /** V4.0 - Previous production template (OBSOLETO - movido para .obsolete/) */
   V4_LEGACY: '/templates/.obsolete/quiz21-v4.json',
