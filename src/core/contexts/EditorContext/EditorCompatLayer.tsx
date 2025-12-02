@@ -43,6 +43,14 @@ export interface EditorCompatAPI extends EditorContextValue {
         duplicateBlock: (step: number, blockId: string) => void;
     };
 
+    // API unificada esperada por código moderno
+    actions: any;
+
+    // Aliases diretos para retrocompatibilidade
+    addBlock: (stepId: number, block: Block, index?: number) => void;
+    updateBlock: (stepId: number, blockId: string, updates: Partial<Block>) => void;
+    removeBlock: (stepId: number, blockId: string) => void;
+
     // API legada - Stages (multi-step)
     stages: Array<{
         id: string;
@@ -125,6 +133,20 @@ export function useEditorCompat(): EditorCompatAPI {
             },
         };
 
+        // API actions unificada
+        const actions: any = {
+            ...(editor as any).actions,
+            addBlock: (stepId: number, block: Block, index?: number) => editor.addBlock(stepId, block, index),
+            updateBlock: (stepId: number, blockId: string, updates: Partial<Block>) => editor.updateBlock(stepId, blockId, updates),
+            removeBlock: (stepId: number, blockId: string) => editor.removeBlock(stepId, blockId),
+            reorderBlocks: (stepId: number, blockIds: string[]) => (editor as any).reorderBlocks(stepId, blockIds),
+            getStepBlocks: (stepId: number) => editor.getStepBlocks(stepId) as Block[],
+            setStepBlocks: (stepId: number, blocks: Block[]) => (editor as any).setStepBlocks(stepId, blocks),
+            setCurrentStep: (step: number) => editor.setCurrentStep(step),
+            selectBlock: (blockId: string | null) => editor.selectBlock(blockId),
+            markSaved: (editor as any).markSaved,
+        };
+
         // Adapter: stages array (compatibilidade com código legado multi-step)
         const stages = Object.keys(editor.state.stepBlocks).map(stepNum => {
             const num = parseInt(stepNum);
@@ -157,6 +179,11 @@ export function useEditorCompat(): EditorCompatAPI {
             addBlockAtIndex,
             activeStageId,
             blockActions,
+            actions,
+            // Aliases diretos
+            addBlock: (stepId: number, block: Block, index?: number) => editor.addBlock(stepId, block, index),
+            updateBlock: (stepId: number, blockId: string, updates: Partial<Block>) => editor.updateBlock(stepId, blockId, updates),
+            removeBlock: (stepId: number, blockId: string) => editor.removeBlock(stepId, blockId),
             stages,
             stageActions,
             isPreviewing: editor.isPreviewMode,
