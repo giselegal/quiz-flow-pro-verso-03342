@@ -3,6 +3,7 @@ import { appLogger } from '@/lib/utils/logger';
 import LazyBoundary from '@/components/common/LazyBoundary';
 import { useNotification } from '@/components/ui/Notification';
 import { useEditorContext } from '@/core';
+import { useEditorCore } from '@/hooks/core/useEditorCore';
 import './UniversalStepEditorPro.css';
 import './UniversalStepEditorPro-premium.css';
 import { StepDndProvider } from '@/components/editor/dnd/StepDndProvider';
@@ -39,6 +40,7 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
     const editorState = (editor as any).state || editor;
     const editorActions = (editor as any).actions || editor;
     const notification = useNotification();
+    const editorCore = useEditorCore();
     const canvasRef = useRef<HTMLDivElement>(null);
 
     // Estados locais
@@ -136,7 +138,7 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
     }), []);
 
     // Extrair funções estáveis
-    const actionsSetCurrentStep = editorActions.setCurrentStep || ((s: number) => { });
+    const actionsSetCurrentStep = editorCore.actions.setCurrentStep || editorActions.setCurrentStep || ((s: number) => { });
 
     const handleStepSelect = useCallback((step: number) => {
         actionsSetCurrentStep(step);
@@ -156,10 +158,9 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
         });
 
         if (selectedBlockId) {
-            appLogger.debug('🚀 Chamando editorActions.updateBlock:', { currentStepKey, selectedBlockId, updates });
-            // updateBlock takes (step, blockId, updates)
-            const updateBlockFn = editorActions.updateBlock || (() => { });
-            updateBlockFn(safeCurrentStep, selectedBlockId, updates);
+            appLogger.debug('🚀 Chamando updateSelectedBlock (core):', { currentStepKey, selectedBlockId, updates });
+            const updateBlockCore = editorCore.actions.updateSelectedBlock || (() => { });
+            updateBlockCore(updates);
 
             // Verificar se o estado foi atualizado
             setTimeout(() => {
@@ -175,11 +176,8 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
 
     const handleDeleteBlock = useCallback(() => {
         if (selectedBlockId) {
-            // Use selectBlock para deselecionar e depois remover
-            const selectBlockFn = editorActions.selectBlock || (() => { });
-            const removeBlockFn = editorActions.removeBlock || (() => { });
-            selectBlockFn(null);
-            removeBlockFn(safeCurrentStep, selectedBlockId);
+            const del = editorCore.actions.deleteSelectedBlock || (() => {});
+            del();
         }
     }, [editorActions, selectedBlockId, safeCurrentStep]);
 

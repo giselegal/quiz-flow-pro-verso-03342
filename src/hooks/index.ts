@@ -73,6 +73,7 @@ export { useHistory } from './useHistory';
 // export { useSupabase } from './useSupabase'; // TODO: Create if needed
 export { useSupabaseQuiz } from './useSupabaseQuiz';
 export { useFunnelActions } from './useFunnelActions';
+export { useEditorCore } from './core/useEditorCore';
 
 // Utilitários
 export { useToast } from './use-toast';
