@@ -17,6 +17,8 @@ export interface EditorCoreActions {
   updateSelectedBlock: (updates: Partial<Block>) => void;
   deleteSelectedBlock: () => void;
   getBlocksForStepNumber: (stepNumber: number) => Block[];
+  addBlock: (stepNumber: number, block: Block) => void;
+  reorderBlocks: (stepNumber: number, oldIndex: number, newIndex: number) => void;
 }
 
 export function useEditorCore(): { state: EditorCoreState; actions: EditorCoreActions } {
@@ -53,6 +55,41 @@ export function useEditorCore(): { state: EditorCoreState; actions: EditorCoreAc
       const key = `step-${stepNumber}`;
       const list = (stepBlocks as any)?.[key] as Block[] | undefined;
       return Array.isArray(list) ? list : [];
+    },
+    addBlock: (stepNumber: number, block: Block) => {
+      const stepKey = `step-${stepNumber}`;
+      // Tentar assinatura (stepKey, block)
+      if (typeof editorActions?.addBlock === 'function') {
+        try {
+          editorActions.addBlock(stepKey, block);
+          return;
+        } catch {}
+        try {
+          // Fallback: algumas implementações aceitam (block, stepKey)
+          editorActions.addBlock(block, stepKey);
+          return;
+        } catch {}
+      }
+      // Fallback final: mutação direta no estado (não ideal, apenas emergência)
+      const current = ((editorState as any).stepBlocks?.[stepKey] || []) as Block[];
+      const next = [...current, block];
+      editorActions?.setStepBlocks?.(stepKey, next);
+    },
+    reorderBlocks: (stepNumber: number, oldIndex: number, newIndex: number) => {
+      const stepKey = `step-${stepNumber}`;
+      if (typeof editorActions?.reorderBlocks === 'function') {
+        try {
+          editorActions.reorderBlocks(stepKey, oldIndex, newIndex);
+          return;
+        } catch {}
+      }
+      // Fallback: calcular novo array e aplicar via setStepBlocks
+      const arr = [...(actions.getBlocksForStepNumber(stepNumber) || [])];
+      const [moved] = arr.splice(oldIndex, 1);
+      if (moved) {
+        arr.splice(newIndex, 0, moved);
+        editorActions?.setStepBlocks?.(stepKey, arr);
+      }
     },
   };
 

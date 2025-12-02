@@ -4,6 +4,7 @@ import { extractDragData, getDragFeedback, logDragEvent, normalizeOverId, valida
 import type { Block } from '@/types/editor';
 import { createBlockFromComponent } from '@/lib/utils/editorUtils';
 import { logger } from '@/lib/utils/debugLogger';
+import { useEditorCore } from '@/hooks/core/useEditorCore';
 
 export interface UseEditorDragAndDropParams {
   currentStepData: Block[];
@@ -25,6 +26,7 @@ export interface UseEditorDragAndDropParams {
 
 export function useEditorDragAndDrop({ currentStepData, currentStepKey, actions, notification }: UseEditorDragAndDropParams) {
   const [isDragging, setIsDragging] = useState(false);
+  const editorCore = useEditorCore();
 
   const handleDragStart = useCallback((event: DragStartEvent) => {
     const { active } = event;
@@ -101,10 +103,15 @@ export function useEditorDragAndDrop({ currentStepData, currentStepKey, actions,
               if (insertIndex >= 0 && actions.addBlockAtIndex) {
                 actions.addBlockAtIndex(currentStepKey, newBlock, insertIndex);
               } else {
-                actions.addBlock?.(currentStepKey, newBlock);
+                // Preferir core
+                const stepNum = Number(String(currentStepKey).replace(/[^0-9]/g, '')) || editorCore.state.currentStep;
+                if (editorCore?.actions?.addBlock) editorCore.actions.addBlock(stepNum, newBlock);
+                else actions.addBlock?.(currentStepKey, newBlock);
               }
             } else {
-              actions.addBlock?.(currentStepKey, newBlock);
+              const stepNum = Number(String(currentStepKey).replace(/[^0-9]/g, '')) || editorCore.state.currentStep;
+              if (editorCore?.actions?.addBlock) editorCore.actions.addBlock(stepNum, newBlock);
+              else actions.addBlock?.(currentStepKey, newBlock);
             }
             actions.setSelectedBlockId?.(newBlock.id);
             notification?.success?.(`Componente ${dragData.blockType} adicionado!`);
@@ -121,7 +128,9 @@ export function useEditorDragAndDrop({ currentStepData, currentStepKey, actions,
               if (idx !== -1) targetIndex = idx;
             }
             if (activeIndex !== -1 && targetIndex !== null && activeIndex !== targetIndex) {
-              actions.reorderBlocks?.(currentStepKey, activeIndex, targetIndex);
+              const stepNum = Number(String(currentStepKey).replace(/[^0-9]/g, '')) || editorCore.state.currentStep;
+              if (editorCore?.actions?.reorderBlocks) editorCore.actions.reorderBlocks(stepNum, activeIndex, targetIndex);
+              else actions.reorderBlocks?.(currentStepKey, activeIndex, targetIndex);
               notification?.info?.('Blocos reordenados');
             }
           }
