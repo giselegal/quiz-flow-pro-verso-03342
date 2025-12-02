@@ -333,4 +333,6 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
             {NotificationContainer && <NotificationContainer />}
         </>
     );
-}; export default UniversalStepEditorPro;
+};
+
+export default UniversalStepEditorPro;
