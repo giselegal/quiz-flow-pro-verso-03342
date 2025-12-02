@@ -217,7 +217,11 @@ export function useFunnelLoader(
                 context,
                 userId,
                 ...createOptions,
-            });
+            } as any);
+
+            if (!newFunnelMeta) {
+                throw new Error('Failed to create funnel');
+            }
 
             const newFunnel = adaptMetadataToUnified(newFunnelMeta);
 
@@ -280,13 +284,14 @@ export function useFunnelLoader(
             throw new Error('Nenhum funil carregado para duplicar');
         }
 
+        const sourceFunnelId = funnelId; // Captura não-null value
         setIsLoading(true);
         clearError();
 
         try {
-            appLogger.info('🔄 useFunnelLoader: Duplicando funil', { data: [funnelId] });
+            appLogger.info('🔄 useFunnelLoader: Duplicando funil', { data: [sourceFunnelId] });
 
-            const duplicatedFunnelMeta = await funnelService.duplicateFunnel(funnelId, newName);
+            const duplicatedFunnelMeta = await funnelService.duplicateFunnel(sourceFunnelId, newName);
             const duplicatedFunnel = adaptMetadataToUnified(duplicatedFunnelMeta);
 
             appLogger.info('✅ Funil duplicado:', { data: [duplicatedFunnel] });
