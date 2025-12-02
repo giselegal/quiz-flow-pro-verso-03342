@@ -16,7 +16,7 @@ export interface PageMetadata {
   ogImage?: string;
 }
 
-export interface ConfigBlock extends BlockData {
+export interface ConfigBlock extends Omit<BlockData, 'props'> {
   componentType?: string;
   props?: Record<string, any>;
   children?: ConfigBlock[];
@@ -170,6 +170,7 @@ class PageConfigService {
     return blocks.map(block => ({
       id: block.id,
       type: block.type,
+      component: this.getComponentType(block.type),
       order: block.order,
       content: block.content,
       settings: block.settings || {},

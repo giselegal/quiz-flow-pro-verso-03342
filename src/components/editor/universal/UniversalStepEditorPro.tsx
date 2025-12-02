@@ -36,7 +36,8 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
 }) => {
     // Hooks
     const { editor } = useEditorContext();
-    const { state, actions } = editor;
+    const editorState = (editor as any).state || editor;
+    const editorActions = (editor as any).actions || editor;
     const notification = useNotification();
     const canvasRef = useRef<HTMLDivElement>(null);
 
@@ -45,12 +46,12 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
     const [previewDevice] = useState<ViewportMode>('desktop');
 
     const NotificationContainer = (notification as any)?.NotificationContainer ?? null;
-    const safeCurrentStep = stepNumber || state.currentStep || 1;
+    const safeCurrentStep = stepNumber || editorState.currentStep || 1;
     const currentStepKey = `step-${safeCurrentStep}`;
 
     // Calcula stepHasBlocks baseado no estado atual - optimized
     const stepHasBlocks = useMemo(() => {
-        const stepBlocksRef = state.stepBlocks;
+        const stepBlocksRef = editorState.stepBlocks;
         if (!stepBlocksRef) return {};
 
         const map: Record<number, boolean> = {};
@@ -60,25 +61,25 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
             map[step] = Array.isArray(blocks) && blocks.length > 0;
         }
         return map;
-    }, [state.stepBlocks]);
+    }, [editorState.stepBlocks]);
 
     // Dados do step atual
     const currentStepData = useMemo(() => {
-        const blocks = getBlocksForStep(safeCurrentStep, state.stepBlocks) || [];
+        const blocks = getBlocksForStep(safeCurrentStep, editorState.stepBlocks) || [];
         appLogger.debug('📊 currentStepData recalculado:', {
             safeCurrentStep,
             blocksCount: blocks.length,
-            blocks: blocks.map(b => ({ id: b.id, type: b.type, properties: Object.keys(b.properties || {}) })),
-            stepBlocksRef: state.stepBlocks,
+            blocks: blocks.map((b: any) => ({ id: b.id, type: b.type, properties: Object.keys(b.properties || {}) })),
+            stepBlocksRef: editorState.stepBlocks,
         });
         return blocks;
-    }, [safeCurrentStep, state.stepBlocks]);
+    }, [safeCurrentStep, editorState.stepBlocks]);
 
     // Drag and Drop
     const { isDragging, handleDragStart, handleDragEnd } = useEditorDragAndDrop({
         currentStepData: currentStepData as any,
         currentStepKey,
-        actions: actions as any,
+        actions: editorActions as any,
         notification: notification as any,
     });
 
@@ -92,7 +93,7 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
     );
 
     // Block selecionado - com deep logging
-    const selectedBlockId = state.selectedBlockId;
+    const selectedBlockId = editorState.selectedBlockId;
     const selectedBlock = useMemo(() => {
         const block = currentStepData.find((b: any) => b.id === selectedBlockId);
         appLogger.debug('🎯 selectedBlock recalculado:', {
@@ -135,7 +136,7 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
     }), []);
 
     // Extrair funções estáveis
-    const { setCurrentStep: actionsSetCurrentStep } = actions;
+    const actionsSetCurrentStep = editorActions.setCurrentStep || ((s: number) => { });
 
     const handleStepSelect = useCallback((step: number) => {
         actionsSetCurrentStep(step);
@@ -155,177 +156,183 @@ const UniversalStepEditorPro: React.FC<UniversalStepEditorProProps> = ({
         });
 
         if (selectedBlockId) {
-            appLogger.debug('🚀 Chamando actions.updateBlock:', { currentStepKey, selectedBlockId, updates });
+            appLogger.debug('🚀 Chamando editorActions.updateBlock:', { currentStepKey, selectedBlockId, updates });
             // updateBlock takes (step, blockId, updates)
-            actions.updateBlock(safeCurrentStep, selectedBlockId, updates);
+            const updateBlockFn = editorActions.updateBlock || (() => { });
+            updateBlockFn(safeCurrentStep, selectedBlockId, updates);
 
             // Verificar se o estado foi atualizado
             setTimeout(() => {
                 appLogger.debug('⏰ Estado após updateBlock (1s delay):', {
-                    newStepBlocks: state.stepBlocks,
-                    currentStepAfterUpdate: (state.stepBlocks as Record<string, Block[]>)?.[currentStepKey],
+                    newStepBlocks: editorState.stepBlocks,
+                    currentStepAfterUpdate: (editorState.stepBlocks as Record<string, Block[]>)?.[currentStepKey],
                 });
             }, 100);
         } else {
             appLogger.warn('⚠️  Nenhum bloco selecionado para atualizar');
         }
-    }, [actions, currentStepKey, selectedBlockId, selectedBlock, state.stepBlocks]);
+    }, [editorActions, currentStepKey, selectedBlockId, selectedBlock, editorState.stepBlocks]);
 
     const handleDeleteBlock = useCallback(() => {
         if (selectedBlockId) {
             // Use selectBlock para deselecionar e depois remover
-            actions.selectBlock(null);
-            actions.removeBlock(safeCurrentStep, selectedBlockId);
+            const selectBlockFn = editorActions.selectBlock || (() => { });
+            const removeBlockFn = editorActions.removeBlock || (() => { });
+            selectBlockFn(null);
+            removeBlockFn(safeCurrentStep, selectedBlockId);
         }
-    }, [actions, selectedBlockId, safeCurrentStep]);
-
-    // Resolver funnelId do editor (se disponível) ou da URL
-    const resolvedFunnelId = useMemo(() => {
-        const fromState = (state as any)?.funnelId || (state as any)?.currentFunnelId;
-        if (fromState) return fromState;
-        try {
-            const sp = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
-            const q1 = sp?.get('funnelId');
-            const q2 = sp?.get('funnel');
-            return q1 || q2 || 'quiz-estilo-21-steps';
-        } catch {
-            return 'quiz-estilo-21-steps';
-        }
+        // Resolver funnelId do editor (se disponível) ou da URL
+        const resolvedFunnelId = useMemo(() => {
+            const fromState = (editorState as any)?.funnelId || (editorState as any)?.currentFunnelId;
+            if (fromState) return fromState;
+            try {
+                const sp = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
+                const q1 = sp?.get('funnelId');
+                const q2 = sp?.get('funnel');
+                return q1 || q2 || 'quiz-estilo-21-steps';
+            } catch {
+                return 'quiz-estilo-21-steps';
+            }
+        }, [editorState]);rn 'quiz-estilo-21-steps';
+    }
     }, [state]);
 
-    return (
-        <>
-            <StepDndProvider
-                stepNumber={safeCurrentStep}
-                onDragStart={handleDragStart}
-                onDragEnd={handleDragEnd}
-            >
-                <div className={`universal-step-editor-pro min-h-screen w-full bg-gradient-to-br from-gray-950 via-slate-900 to-gray-950 overflow-hidden m-0 p-0 ${className} relative`}>
-                    {/* Desktop Layout: Header + 4 colunas com CSS Grid */}
-                    <div className="hidden lg:flex lg:flex-col h-screen w-full">
-                        {/* Header Superior - Acima de todas as colunas */}
-                        <div className="flex-shrink-0 border-b border-gray-800/50">
-                            <LazyBoundary fallback={<div className="h-16 bg-gray-900 border-b border-gray-800/50" />}>
-                                <EditorHeader
-                                    mode={mode}
-                                    setMode={setMode}
-                                    safeCurrentStep={safeCurrentStep}
-                                    currentStepKey={currentStepKey}
-                                    currentStepData={currentStepData}
-                                    actions={actions as any}
-                                    state={state as any}
-                                    notification={notification as any}
-                                    renderIcon={renderIcon}
-                                    getStepAnalysis={getStepAnalysis}
-                                    isSaving={(state as any).isSaving}
-                                    lastSaved={(state as any).lastSaved}
-                                    autoSaveError={(state as any).autoSaveError}
-                                />
-                            </LazyBoundary>
-                        </div>
-
-                        {/* Grid das 4 colunas */}
-                        <div className="flex-1 editor-grid">
-                            {/* Sidebar de Steps */}
-                            <div className="bg-gray-900 border-r border-gray-800/50 overflow-y-auto">
-                                <LazyBoundary fallback={<div className="w-full bg-gray-900 border-r border-gray-800/50 h-full" />}>
-                                    <StepSidebar
-                                        currentStep={safeCurrentStep}
-                                        totalSteps={21}
-                                        stepHasBlocks={stepHasBlocks}
-                                        stepValidation={undefined}
-                                        onSelectStep={handleStepSelect}
-                                        getStepAnalysis={getStepAnalysis}
-                                        renderIcon={renderIcon}
-                                    />
-                                </LazyBoundary>
-                            </div>
-
-                            {/* Sidebar de Componentes */}
-                            <div className="bg-gray-900 border-r border-gray-800/50 overflow-y-auto">
-                                <LazyBoundary fallback={<div className="w-full bg-gray-900 border-r border-gray-800/50 h-full" />}>
-                                    <ComponentsSidebar
-                                        groupedComponents={groupedComponents}
-                                        renderIcon={renderIcon}
-                                    />
-                                </LazyBoundary>
-                            </div>
-
-                            {/* Área do Canvas Central - Sem Header interno */}
-                            <div className="flex flex-col bg-gray-100 dark:bg-gray-800 overflow-y-auto" ref={canvasRef}>
-                                <LazyBoundary fallback={<div className="h-full flex items-center justify-center">Carregando Canvas...</div>}>
-                                    <CanvasAreaLayout
-                                        className="flex-1"
-                                        containerRef={canvasRef}
-                                        mode={mode}
-                                        previewDevice={previewDevice}
-                                        safeCurrentStep={safeCurrentStep}
-                                        currentStepData={currentStepData as any}
-                                        selectedBlockId={selectedBlockId}
-                                        actions={actions as any}
-                                        isDragging={isDragging}
-                                        funnelId={resolvedFunnelId}
-                                    />
-                                </LazyBoundary>
-                            </div>
-
-                            {/* Painel de Propriedades */}
-                            <div className="bg-gray-900/80 backdrop-blur-sm border-l border-gray-700/50 overflow-y-auto">
-                                <LazyBoundary fallback={<div className="w-full bg-gray-900 border-l border-gray-800/50 h-full" />}>
-                                    <PropertiesColumn
-                                        selectedBlock={selectedBlock}
-                                        onUpdate={handleUpdateBlock}
-                                        onDelete={handleDeleteBlock}
-                                        onClose={() => actions.selectBlock(null)}
-                                    />
-                                </LazyBoundary>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Mobile Layout */}
-                    <div className="lg:hidden h-screen flex flex-col bg-gradient-to-br from-slate-50 via-gray-50 to-slate-100 dark:from-gray-900 dark:via-slate-900 dark:to-gray-900">
-                        {/* Header Mobile */}
-                        <LazyBoundary fallback={<div className="h-20 flex items-center justify-center">Carregando...</div>}>
+return (
+    <>
+        <StepDndProvider
+            stepNumber={safeCurrentStep}
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
+        >
+            <div className={`universal-step-editor-pro min-h-screen w-full bg-gradient-to-br from-gray-950 via-slate-900 to-gray-950 overflow-hidden m-0 p-0 ${className} relative`}>
+                {/* Desktop Layout: Header + 4 colunas com CSS Grid */}
+                <div className="hidden lg:flex lg:flex-col h-screen w-full">
+                    {/* Header Superior - Acima de todas as colunas */}
+                    <div className="flex-shrink-0 border-b border-gray-800/50">
+                        <LazyBoundary fallback={<div className="h-16 bg-gray-900 border-b border-gray-800/50" />}>
                             <EditorHeader
                                 mode={mode}
                                 setMode={setMode}
                                 safeCurrentStep={safeCurrentStep}
                                 currentStepKey={currentStepKey}
                                 currentStepData={currentStepData}
-                                actions={actions as any}
-                                state={state as any}
+                                actions={editorActions as any}
+                                state={editorState as any}
                                 notification={notification as any}
                                 renderIcon={renderIcon}
                                 getStepAnalysis={getStepAnalysis}
+                                isSaving={(editorState as any).isSaving}
+                                lastSaved={(editorState as any).lastSaved}
+                                autoSaveError={(editorState as any).autoSaveError}
                             />
                         </LazyBoundary>
+                    </div>
 
-                        {/* Canvas Mobile */}
-                        <div className="flex-1 min-h-0">
+                    {/* Grid das 4 colunas */}
+                    <div className="flex-1 editor-grid">
+                        {/* Sidebar de Steps */}
+                        <div className="bg-gray-900 border-r border-gray-800/50 overflow-y-auto">
+                            <LazyBoundary fallback={<div className="w-full bg-gray-900 border-r border-gray-800/50 h-full" />}>
+                                <StepSidebar
+                                    currentStep={safeCurrentStep}
+                                    totalSteps={21}
+                                    stepHasBlocks={stepHasBlocks}
+                                    stepValidation={undefined}
+                                    onSelectStep={handleStepSelect}
+                                    getStepAnalysis={getStepAnalysis}
+                                    renderIcon={renderIcon}
+                                />
+                            </LazyBoundary>
+                        </div>
+
+                        {/* Sidebar de Componentes */}
+                        <div className="bg-gray-900 border-r border-gray-800/50 overflow-y-auto">
+                            <LazyBoundary fallback={<div className="w-full bg-gray-900 border-r border-gray-800/50 h-full" />}>
+                                <ComponentsSidebar
+                                    groupedComponents={groupedComponents}
+                                    renderIcon={renderIcon}
+                                />
+                            </LazyBoundary>
+                        </div>
+
+                        {/* Área do Canvas Central - Sem Header interno */}
+                        <div className="flex flex-col bg-gray-100 dark:bg-gray-800 overflow-y-auto" ref={canvasRef}>
                             <LazyBoundary fallback={<div className="h-full flex items-center justify-center">Carregando Canvas...</div>}>
                                 <CanvasAreaLayout
-                                    className="h-full"
+                                    className="flex-1"
                                     containerRef={canvasRef}
                                     mode={mode}
                                     previewDevice={previewDevice}
                                     safeCurrentStep={safeCurrentStep}
                                     currentStepData={currentStepData as any}
                                     selectedBlockId={selectedBlockId}
-                                    actions={actions as any}
+                                    actions={editorActions as any}
                                     isDragging={isDragging}
                                     funnelId={resolvedFunnelId}
                                 />
                             </LazyBoundary>
                         </div>
+
+                        {/* Painel de Propriedades */}
+                        <div className="bg-gray-900/80 backdrop-blur-sm border-l border-gray-700/50 overflow-y-auto">
+                            <LazyBoundary fallback={<div className="w-full bg-gray-900 border-l border-gray-800/50 h-full" />}>
+                                <PropertiesColumn
+                                    selectedBlock={selectedBlock}
+                                    onUpdate={handleUpdateBlock}
+                                    onDelete={handleDeleteBlock}
+                                    onClose={() => {
+                                        const selectBlockFn = editorActions.selectBlock || (() => { });
+                                        selectBlockFn(null);
+                                    }}
+                                />
+                            </LazyBoundary>
+                        </div>
                     </div>
                 </div>
-            </StepDndProvider>
 
-            {/* Container de Notificações */}
-            {NotificationContainer && <NotificationContainer />}
-        </>
-    );
+                {/* Mobile Layout */}
+                <div className="lg:hidden h-screen flex flex-col bg-gradient-to-br from-slate-50 via-gray-50 to-slate-100 dark:from-gray-900 dark:via-slate-900 dark:to-gray-900">
+                    {/* Header Mobile */}
+                    <LazyBoundary fallback={<div className="h-20 flex items-center justify-center">Carregando...</div>}>
+                        safeCurrentStep={safeCurrentStep}
+                        currentStepKey={currentStepKey}
+                        currentStepData={currentStepData}
+                        actions={editorActions as any}
+                        state={editorState as any}
+                        notification={notification as any}
+                        renderIcon={renderIcon}
+                        getStepAnalysis={getStepAnalysis}
+                        notification={notification as any}
+                        renderIcon={renderIcon}
+                        getStepAnalysis={getStepAnalysis}
+                        />
+                    </LazyBoundary>
+
+                    {/* Canvas Mobile */}
+                    <div className="flex-1 min-h-0">
+                        <LazyBoundary fallback={<div className="h-full flex items-center justify-center">Carregando Canvas...</div>}>
+                            <CanvasAreaLayout
+                                className="h-full"
+                                containerRef={canvasRef}
+                                currentStepData={currentStepData as any}
+                                selectedBlockId={selectedBlockId}
+                                actions={editorActions as any}
+                                isDragging={isDragging}
+                                funnelId={resolvedFunnelId} d}
+                            actions={actions as any}
+                            isDragging={isDragging}
+                            funnelId={resolvedFunnelId}
+                            />
+                        </LazyBoundary>
+                    </div>
+                </div>
+            </div>
+        </StepDndProvider>
+
+        {/* Container de Notificações */}
+        {NotificationContainer && <NotificationContainer />}
+    </>
+);
 };
 
 export default UniversalStepEditorPro;

@@ -84,7 +84,7 @@ const TemplatePreviewPage: React.FC = () => {
                                 <div>
                                     <p className="text-xs font-medium text-gray-700 mb-2">Diferenciais</p>
                                     <ul className="list-disc pl-5 text-sm text-gray-600 space-y-1">
-                                        {template.features.slice(0, 6).map((f, i) => (
+                                        {template.features.slice(0, 6).map((f: any, i: number) => (
                                             <li key={i}>{f}</li>
                                         ))}
                                     </ul>

@@ -5,9 +5,9 @@
  * Substitui os dashboards fragmentados por uma interface unificada
  */
 
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import EditorModularProDashboard from './admin/EditorModularProDashboard';
-import { Route, Switch, useLocation, Redirect } from 'wouter';
+import { Route, Switch, useLocation } from 'wouter';
 import { UnifiedAdminLayout } from '@/components/admin/UnifiedAdminLayout';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 
@@ -26,6 +26,15 @@ const ABTestsPage = React.lazy(() => import('./dashboard/ABTestsPage'));
 const CreativesPage = React.lazy(() => import('./dashboard/CreativesPage'));
 const SettingsPage = React.lazy(() => import('./dashboard/SettingsPage'));
 // EditorPage será carregado diretamente quando necessário
+
+// Componente de redirecionamento customizado
+const Redirect: React.FC<{ to: string }> = ({ to }) => {
+  const [, setLocation] = useLocation();
+  useEffect(() => {
+    setLocation(to);
+  }, [to, setLocation]);
+  return null;
+};
 
 // ============================================================================
 // LOADING FALLBACK
