@@ -13,6 +13,7 @@ import { Block } from '@/types/editor';
 import { cn } from '@/lib/utils';
 import { SinglePropertiesPanel } from './SinglePropertiesPanel';
 import type { PropertiesPanelProps } from '@/types/editor/PropertiesPanelTypes';
+import { useEditorCore } from '@/hooks/core/useEditorCore';
 
 /**
  * Props canônicas para PropertiesColumn
@@ -46,6 +47,7 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
   onDuplicate,
   className = '',
 }) => {
+  const editorCore = useEditorCore();
   // Debug logs
   React.useEffect(() => {
     appLogger.debug('🏗️  PropertiesColumn renderizado:', {
@@ -61,13 +63,16 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
 
   const handleUpdate = React.useCallback((updates: Record<string, any>) => {
     appLogger.debug('🔄 PropertiesColumn -> SinglePropertiesPanel update:', updates);
+    // Preferir core; manter callback para compat
+    try { editorCore.actions.updateSelectedBlock?.(updates as any); } catch {}
     onUpdate(updates);
-  }, [onUpdate]);
+  }, [onUpdate, editorCore.actions]);
 
   const handleDelete = React.useCallback(() => {
     appLogger.debug('🗑️  PropertiesColumn -> Delete selected block');
+    try { editorCore.actions.deleteSelectedBlock?.(); } catch {}
     onDelete();
-  }, [onDelete]);
+  }, [onDelete, editorCore.actions]);
 
   const handleDuplicate = React.useCallback(() => {
     appLogger.debug('📋 PropertiesColumn -> Duplicate selected block');
