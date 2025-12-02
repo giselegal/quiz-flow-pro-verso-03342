@@ -106,8 +106,12 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
               }
             }}
             onReorderBlocks={(step: number, oldIndex: number, newIndex: number) => {
-              const stepKey = `step-${step}`;
-              actions.reorderBlocks?.(stepKey, oldIndex, newIndex);
+              if (editorCore?.actions?.reorderBlocks) {
+                editorCore.actions.reorderBlocks(step, oldIndex, newIndex);
+              } else {
+                const stepKey = `step-${step}`;
+                actions.reorderBlocks?.(stepKey, oldIndex, newIndex);
+              }
             }}
             isPreviewMode={false}
             onStepChange={(step: number) => {
