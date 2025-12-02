@@ -213,17 +213,20 @@ export default function QuizApp({ funnelId, externalSteps }: QuizAppProps) {
                 <div className="bg-[#fefefe] text-[#5b4135] min-h-screen">
                     <div className={`max-w-6xl mx-auto px-4 ${useSharedHeader ? 'pt-4 pb-8' : 'py-8'}`}>
                         <UnifiedStepRenderer
-                            stepId={currentStepId}
+                            step={{ id: currentStepId, blocks: (currentStepData as any).blocks || [], ...currentStepData }}
                             mode="preview"
-                            quizState={{
-                                currentStep: unifiedQuizState.currentStep,
+                            sessionData={{
                                 userName: unifiedQuizState.userName,
-                                answers: unifiedQuizState.answers,
-                                strategicAnswers: unifiedQuizState.strategicAnswers,
-                                resultStyle: unifiedQuizState.resultStyle,
-                                secondaryStyles: unifiedQuizState.secondaryStyles,
+                                ...Object.fromEntries(Object.entries(unifiedQuizState.answers).map(([k, v]) => [`answers_${k}`, v])),
+                                selectedBlockId,
                             }}
-                            onNameSubmit={(name: string) => setUserName(name)}
+                            onUpdateSessionData={(key: string, value: unknown) => {
+                                if (key === 'userName' && typeof value === 'string') setUserName(value);
+                                if (key.startsWith('answers_')) {
+                                    const sid = key.replace('answers_', '');
+                                    if (Array.isArray(value)) addAnswer(sid, value);
+                                }
+                            }}
                         />
                     </div>
                 </div>

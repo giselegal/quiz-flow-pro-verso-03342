@@ -32,7 +32,7 @@ const EditorTemplatesPage: React.FC = () => {
 
       // Clonar template para criar nova instância
       // Converter UnifiedTemplate para FunnelTemplate format
-      const templateData: any = {
+      const templateData = {
         id: template.id,
         name: template.name,
         description: template.description || '',

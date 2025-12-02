@@ -10,7 +10,6 @@ import {
 } from './types';
 import { appLogger } from '@/lib/utils/appLogger';
 import { sanitizeHtml } from '@/lib/utils/sanitizeHtml';
-import { RichText } from '@/components/shared/RichText';
 
 // Interface para estilos customizados
 interface CustomStyles {

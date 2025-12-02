@@ -1,7 +1,5 @@
 import { StorageService } from '@/services/core/StorageService';
-import { getBlocksForStep } from '@/config/quizStepsComplete';
-
-export type RawStepBlocks = Record<string, any[]>;
+import { getBlocksForStep, type RawStepBlocks } from '@/config/quizStepsComplete';
 
 export type ValidationResult = { valid: boolean; reason?: string; evidence?: Record<string, any> };
 

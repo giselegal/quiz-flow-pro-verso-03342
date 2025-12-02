@@ -19,54 +19,13 @@ import React, { useMemo } from 'react';
 import { useEditor as useEditorCanonical } from './EditorStateProvider';
 import type { Block } from '@/types/editor';
 
-export interface EditorCompatAPI {
-    // ===== STATE =====
-    state: {
-        currentStep: number;
-        selectedBlockId: string | null;
-        isPreviewMode: boolean;
-        isEditing: boolean;
-        dragEnabled: boolean;
-        clipboardData: Block | null;
-        stepBlocks: Record<number, Block[]>;
-        dirtySteps: Record<number, boolean>;
-        isDirty: boolean;
-        lastSaved: number | null;
-        lastModified: number | null;
-        modifiedSteps: Record<string, number>;
-        validationErrors: any[];
-        blocks: Block[];
-        totalSteps: number;
+export interface EditorCompatAPI extends ReturnType<typeof useEditorCanonical> {
+    // API legada - State Extensions
+    state: ReturnType<typeof useEditorCanonical>['state'] & {
+        blocks: Block[]; // Lista plana do step atual
     };
 
-    // ===== CORE PROPERTIES =====
-    currentStep: number;
-    selectedBlockId: string | null;
-    isPreviewMode: boolean;
-
-    // ===== ACTIONS (flat API) =====
-    setCurrentStep: (step: number) => void;
-    selectBlock: (blockId: string | null) => void;
-    togglePreview: (enabled?: boolean) => void;
-    toggleEditing: (enabled?: boolean) => void;
-    toggleDrag: (enabled?: boolean) => void;
-    copyBlock: (block: Block) => void;
-    pasteBlock: (step: number, index?: number) => void;
-    setStepBlocks: (step: number, blocks: Block[]) => void;
-    updateBlock: (step: number, blockId: string, updates: Partial<Block>) => void;
-    addBlock: (step: number, block: Block, index?: number) => void;
-    removeBlock: (step: number, blockId: string) => void;
-    reorderBlocks: (step: number, blocks: Block[]) => void;
-    markSaved: () => void;
-    markModified: (step: string) => void;
-    addValidationError: (error: any) => void;
-    clearValidationErrors: (blockId?: string) => void;
-    resetEditor: () => void;
-    getStepBlocks: (step: number) => Block[];
-    isStepDirty: (step: number) => boolean;
-    loadStepBlocks: (stepId: string) => Promise<Block[] | null>;
-
-    // ===== LEGACY ALIASES =====
+    // API legada - Properties
     setSelectedBlockId: (id: string | null) => void;
     deleteBlock: (blockId: string) => Promise<void>;
     ensureStepLoaded: (step: number) => Promise<void>;
@@ -76,30 +35,7 @@ export interface EditorCompatAPI {
     isLoading: boolean;
     save: () => void;
 
-    // ===== ACTIONS (grouped API) =====
-    actions: {
-        setCurrentStep: (step: number) => void;
-        selectBlock: (blockId: string | null) => void;
-        togglePreview: (enabled?: boolean) => void;
-        toggleEditing: (enabled?: boolean) => void;
-        toggleDrag: (enabled?: boolean) => void;
-        copyBlock: (block: Block) => void;
-        pasteBlock: (step: number, index?: number) => void;
-        setStepBlocks: (step: number, blocks: Block[]) => void;
-        updateBlock: (step: number, blockId: string, updates: Partial<Block>) => void;
-        addBlock: (step: number, block: Block, index?: number) => void;
-        removeBlock: (step: number, blockId: string) => void;
-        reorderBlocks: (step: number, blocks: Block[]) => void;
-        markSaved: () => void;
-        markModified: (step: string) => void;
-        addValidationError: (error: any) => void;
-        clearValidationErrors: (blockId?: string) => void;
-        resetEditor: () => void;
-        getStepBlocks: (step: number) => Block[];
-        isStepDirty: (step: number) => boolean;
-        loadStepBlocks: (stepId: string) => Promise<Block[] | null>;
-    };
-
+    // API legada - Actions
     blockActions: {
         addBlock: (step: number, block: Block, index?: number) => void;
         updateBlock: (step: number, blockId: string, updates: Partial<Block>) => void;
@@ -140,8 +76,7 @@ export function useEditorCompat(): EditorCompatAPI {
         const currentStepBlocks = editor.getStepBlocks(editor.currentStep);
         const compatState = {
             ...editor.state,
-            blocks: currentStepBlocks,
-            totalSteps: 21, // Default para quiz de 21 steps
+            blocks: currentStepBlocks, // Adiciona blocks como lista plana
         };
 
         // Adapter: setSelectedBlockId → selectBlock

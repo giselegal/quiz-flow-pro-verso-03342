@@ -7,7 +7,7 @@
 
 import React, { Suspense } from 'react';
 import EditorModularProDashboard from './admin/EditorModularProDashboard';
-import { Route, Switch, useLocation, Redirect } from 'wouter';
+import { Route, Switch, useLocation } from 'wouter';
 import { UnifiedAdminLayout } from '@/components/admin/UnifiedAdminLayout';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 
@@ -239,7 +239,7 @@ const ModernAdminDashboard: React.FC = () => {
               <MeusFunisReal />
             </Route>
             <Route path="/admin/meus-templates">
-              <Redirect to="/templates" />
+              <TemplatesReal />
             </Route>
             <Route path="/admin/leads">
               <ParticipantsPage />

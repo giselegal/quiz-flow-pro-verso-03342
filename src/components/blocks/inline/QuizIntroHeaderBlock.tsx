@@ -3,7 +3,6 @@ import type { InlineBlockProps } from '@/types/InlineBlockProps';
 import { ArrowLeft } from 'lucide-react';
 import React from 'react';
 import { useImageWithFallback } from '@/hooks/useImageWithFallback';
-import { RichText } from '@/components/shared/RichText';
 
 import { HeaderProperties } from '@/config/headerPropertiesMapping';
 import { appLogger } from '@/lib/utils/appLogger';
