@@ -10,7 +10,7 @@
  */
 
 import React, { createContext, useContext, useCallback, useEffect, useState } from 'react';
-import { funnelService } from '@/services/canonical/FunnelService';
+import { ServiceRegistry } from '@/services/ServiceRegistry';
 import type { FunnelMetadata } from '@/types/funnel';
 import type { UnifiedFunnelData } from '@/services/canonical/types';
 import { adaptMetadataToUnified } from '@/services/canonical/FunnelAdapter';
@@ -116,7 +116,7 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
         try {
             if (debug) logger.debug('unifiedCRUD', '🎯 UnifiedCRUDProvider: Creating funnel', { name });
 
-            const newFunnelMeta = await funnelService.createFunnel({
+            const newFunnelMeta = await ServiceRegistry.get('funnelService').createFunnel({
                 name,
                 type: options.type || 'quiz',
                 category: options.category || 'outros',
@@ -169,14 +169,14 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
 
             logger.debug('unifiedCRUD', '🔍 Normalizando funnelId', { original: id, normalized: searchId });
 
-            const funnelMeta = await funnelService.getFunnel(searchId);
+            const funnelMeta = await ServiceRegistry.get('funnelService').getFunnel(searchId);
 
             let funnel: UnifiedFunnelData;
 
             if (!funnelMeta) {
                 logger.warn('unifiedCRUD', '⚠️ Funil não encontrado com ID normalizado', { normalizedId: searchId, originalId: id });
                 // Criar funnel fallback
-                const fallbackMeta = await funnelService.createFunnel({
+                const fallbackMeta = await ServiceRegistry.get('funnelService').createFunnel({
                     name: `Funnel ${id}`,
                     type: 'quiz',
                     context,
@@ -223,7 +223,7 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
         try {
             if (debug) logger.debug('unifiedCRUD', '💾 UnifiedCRUDProvider: Saving funnel', { id: targetFunnel.id });
 
-            const updatedFunnelMeta = await funnelService.updateFunnel(targetFunnel.id, {
+            const updatedFunnelMeta = await ServiceRegistry.get('funnelService').updateFunnel(targetFunnel.id, {
                 name: targetFunnel.name,
                 settings: targetFunnel.settings,
                 metadata: {
@@ -258,7 +258,7 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
         try {
             if (debug) logger.debug('unifiedCRUD', '📋 UnifiedCRUDProvider: Duplicating funnel', { id });
 
-            const duplicatedFunnelMeta = await funnelService.duplicateFunnel(id, newName);
+            const duplicatedFunnelMeta = await ServiceRegistry.get('funnelService').duplicateFunnel(id, newName);
             const duplicatedFunnel = adaptMetadataToUnified(duplicatedFunnelMeta);
 
             // Atualizar listas
@@ -285,7 +285,7 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
         try {
             if (debug) logger.debug('unifiedCRUD', '🗑️ UnifiedCRUDProvider: Deleting funnel', { id });
 
-            const success = await funnelService.deleteFunnel(id);
+            const success = await ServiceRegistry.get('funnelService').deleteFunnel(id);
 
             if (success) {
                 // Remover da lista e limpar current se necessário
@@ -315,7 +315,7 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
         try {
             if (debug) logger.debug('unifiedCRUD', '🔄 UnifiedCRUDProvider: Refreshing funnels');
 
-            const funnelListMeta = await funnelService.listFunnels({
+            const funnelListMeta = await ServiceRegistry.get('funnelService').listFunnels({
                 context,
             });
 

@@ -12,7 +12,7 @@
  */
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { funnelService, type FunnelMetadata } from '@/services/canonical/FunnelService';
+import { ServiceRegistry } from '@/services/ServiceRegistry';
 import type { UnifiedFunnelData } from '@/services/canonical/types';
 import { adaptMetadataToUnified } from '@/services/canonical/FunnelAdapter';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
@@ -64,6 +64,7 @@ export function useFunnelLoader(
     initialFunnelId?: string,
     options: UseFunnelLoaderOptions = {},
 ): FunnelLoadingState {
+    const funnelService = ServiceRegistry.get('funnelService');
 
     const {
         context = FunnelContext.EDITOR,

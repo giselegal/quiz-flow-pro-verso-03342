@@ -10,7 +10,7 @@
  * - FunnelOrchestrator
  */
 
-import { funnelService } from '@/services/canonical/FunnelService';
+import { ServiceRegistry } from '@/services/ServiceRegistry';
 import type { FunnelMetadata } from '@/types/funnel';
 import { Funnel } from '@/core/domains';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
@@ -58,6 +58,7 @@ export interface UpdateFunnelInput {
 // ============================================================================
 
 export class FunnelServiceAdapter {
+  private funnelService = ServiceRegistry.get('funnelService');
   /**
    * Converter FunnelMetadata (canonical) → UnifiedFunnelData (legacy)
    */
@@ -105,7 +106,7 @@ export class FunnelServiceAdapter {
    */
   async createFunnel(input: CreateFunnelInput): Promise<UnifiedFunnelData> {
     try {
-      const metadata = await funnelService.createFunnel({
+      const metadata = await this.funnelService.createFunnel({
         name: input.name,
         type: 'quiz',
         category: input.category || 'outros',
@@ -130,11 +131,11 @@ export class FunnelServiceAdapter {
    */
   async getFunnel(id: string): Promise<UnifiedFunnelData | null> {
     try {
-      const metadata = await funnelService.getFunnel(id);
+      const metadata = await this.funnelService.getFunnel(id);
       if (!metadata) return null;
 
       // Carregar components/steps
-      const withComponents = await funnelService.getFunnelWithComponents(id);
+      const withComponents = await this.funnelService.getFunnelWithComponents(id);
       
       return this.toUnifiedFormat(metadata, withComponents?.components || {});
     } catch (error) {
@@ -161,7 +162,7 @@ export class FunnelServiceAdapter {
         };
       }
 
-      const metadata = await funnelService.updateFunnel(input.id, updates);
+      const metadata = await this.funnelService.updateFunnel(input.id, updates);
 
       // Se houver steps, atualizar components
       if (input.steps) {
@@ -185,7 +186,7 @@ export class FunnelServiceAdapter {
    */
   async deleteFunnel(id: string): Promise<boolean> {
     try {
-      return await funnelService.deleteFunnel(id);
+      return await this.funnelService.deleteFunnel(id);
     } catch (error) {
       appLogger.error('[FunnelServiceAdapter] Error deleting funnel:', { data: [error] });
       return false;
@@ -197,7 +198,7 @@ export class FunnelServiceAdapter {
    */
   async listUserFunnels(userId?: string): Promise<UnifiedFunnelData[]> {
     try {
-      const metadataList = await funnelService.listFunnels({
+      const metadataList = await this.funnelService.listFunnels({
         context: FunnelContext.EDITOR,
       });
 
@@ -213,7 +214,7 @@ export class FunnelServiceAdapter {
    */
   async publishFunnel(id: string): Promise<UnifiedFunnelData> {
     try {
-      const metadata = await funnelService.updateFunnel(id, { status: 'published' });
+      const metadata = await this.funnelService.updateFunnel(id, { status: 'published' });
       if (!metadata) {
         throw new Error('Failed to publish funnel');
       }

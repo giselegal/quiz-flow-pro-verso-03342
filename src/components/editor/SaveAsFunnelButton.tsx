@@ -19,13 +19,14 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { useEditorContext } from '@/core';
-// Agora usamos o serviço canônico para criar funil e salvar blocos por etapa
-import { funnelService } from '@/services/canonical/FunnelService';
+// Usar ServiceRegistry para acessar o serviço canônico
+import { ServiceRegistry } from '@/services/ServiceRegistry';
 import { Save } from 'lucide-react';
 import { templateService } from '@/services/canonical/TemplateService';
 import { appLogger } from '@/lib/utils/appLogger';
 
 export const SaveAsFunnelButton: React.FC = () => {
+  const funnelService = ServiceRegistry.get('funnelService');
   const [open, setOpen] = useState(false);
   const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
