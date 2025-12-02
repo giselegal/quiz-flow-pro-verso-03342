@@ -254,41 +254,46 @@ export class FunnelService {
       // Garantir que o caminho comece com /
       const normalizedPath = templatePath.startsWith('/') ? templatePath : `/${templatePath}`;
 
-      // ✅ ADICIONAR TIMESTAMP PARA BYPASS DE CACHE
-      const cacheBuster = `?t=${Date.now()}`;
-      const fullPath = `${normalizedPath}${cacheBuster}`;
-
       console.log('🌐 [FunnelService] Fetching template:', {
         originalPath: templatePath,
         normalizedPath,
-        fullPath,
-        fullUrl: `${window.location.origin}${fullPath}`
+        fullUrl: `${window.location.origin}${normalizedPath}`
       });
 
-      const response = await fetch(fullPath, {
+      const response = await fetch(normalizedPath, {
         method: 'GET',
         headers: {
           'Accept': 'application/json',
+          'Cache-Control': 'no-cache',
         },
-        cache: 'no-store', // Force fresh request
       }).catch(fetchError => {
         console.error('❌ [FunnelService] Fetch failed:', {
           error: fetchError,
-          path: fullPath,
-          origin: window.location.origin
+          path: normalizedPath,
+          origin: window.location.origin,
+          fetchError: fetchError.message
         });
-        throw new Error(`Network error: Could not fetch ${normalizedPath}. Server may not be running on port 8080.`);
+        throw new Error(`Network error: Could not fetch ${normalizedPath}. ${fetchError.message}`);
       });
 
-      console.log('📡 [FunnelService] Response:', {
+      console.log('📡 [FunnelService] Response received:', {
         status: response.status,
         statusText: response.statusText,
         contentType: response.headers.get('content-type'),
         url: response.url,
+        ok: response.ok,
+        headers: Array.from(response.headers.entries())
       });
 
       if (!response.ok) {
         const errorText = await response.text().catch(() => 'No error details');
+        console.error('🔥 [FunnelService] Response NOT OK:', {
+          status: response.status,
+          statusText: response.statusText,
+          errorText,
+          requestedPath: normalizedPath,
+          actualUrl: response.url
+        });
         throw new Error(`HTTP ${response.status}: ${response.statusText} for ${normalizedPath}. Details: ${errorText}`);
       }
 
