@@ -465,8 +465,8 @@ const MeusFunisPageReal: React.FC = () => {
             }
             toast({ title: 'Rascunho criado', description: `ID: ${newFunnel.id}` });
 
-            // Abrir no editor para começar a editar
-            window.location.href = `/editor?resource=${encodeURIComponent(newFunnel.id)}`;
+            // Abrir no editor para começar a editar (param padrão do EditorPage)
+            window.location.href = `/editor?funnel=${encodeURIComponent(newFunnel.id)}`;
         } catch (e: any) {
             appLogger.error('Erro ao criar rascunho padrão:', { data: [e] });
             toast({ title: 'Erro ao criar rascunho', description: String(e?.message || e), variant: 'destructive' });
