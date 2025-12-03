@@ -56,7 +56,6 @@ export { SimpleAppProvider, useSimpleApp } from './providers/SimpleAppProvider';
  */
 
 // 🆕 FASE 3: PureBuilder compatibility
-// NOTA: Import direto recomendado: import { usePureBuilder } from '@/hooks/usePureBuilderCompat'
 
 // ✏️ EDITOR
 // ⚠️ ATUALIZAÇÃO: EditorProvider duplicado removido de /contexts/providers/

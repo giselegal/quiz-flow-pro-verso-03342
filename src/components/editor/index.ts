@@ -26,7 +26,6 @@ export { SuperUnifiedProvider as EditorProviderUnified } from '@/contexts/provid
 // ❌ REMOVIDO: EditorProviderCanonical - Use SuperUnifiedProvider
 
 // 🆕 FASE 3: Compatibility hooks
-export { usePureBuilder, usePureBuilderCompat } from '@/hooks/usePureBuilderCompat';
 
 // ============================================================================
 // COMPONENTES ORIGINAIS
