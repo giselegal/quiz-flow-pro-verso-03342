@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { ServiceRegistry } from '@/services/ServiceRegistry';
+import { canonicalFunnelService } from '@/services/funnel/CanonicalFunnelService';
 import { useFunnel, useFunnelList, funnelKeys, type UseFunnelOptions } from './useFunnel';
 
 /**
@@ -8,7 +8,7 @@ import { useFunnel, useFunnelList, funnelKeys, type UseFunnelOptions } from './u
  *
  * Controlador unificado para operações de funil.
  * - Leitura com React Query (useFunnel/useFunnelList)
- * - Ações via serviço canônico (ServiceRegistry)
+ * - Ações via serviço canônico
  * - Invalidação de cache pós-mutações
  */
 export function useFunnelController(
@@ -16,7 +16,7 @@ export function useFunnelController(
   options: UseFunnelOptions = {}
 ) {
   const queryClient = useQueryClient();
-  const service = useMemo(() => ServiceRegistry.get('funnelService'), []);
+  const service = canonicalFunnelService;
 
   // Dados reativos do funil (quando ID fornecido)
   const funnelQuery = funnelId ? useFunnel(funnelId, options) : null;

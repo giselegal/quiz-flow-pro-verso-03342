@@ -12,7 +12,7 @@
  */
 
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
-import { ServiceRegistry } from '@/services/ServiceRegistry';
+import { canonicalFunnelService } from '@/services/funnel/CanonicalFunnelService';
 import type { FunnelMetadata } from '@/types/funnel';
 import type { UnifiedFunnelData } from '@/services/canonical/types';
 import { adaptMetadataToUnified } from '@/services/canonical/FunnelAdapter';
@@ -73,7 +73,7 @@ export function useFunnelLoader(
         userId,
     } = options;
 
-    const service = useMemo(() => ServiceRegistry.get('funnelService'), []);
+    const service = canonicalFunnelService;
 
     // Estados locais
     const [isLoading, setIsLoading] = useState(false);

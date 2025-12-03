@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
-import { ServiceRegistry } from '@/services/ServiceRegistry';
+import { canonicalFunnelService } from '@/services/funnel/CanonicalFunnelService';
 import type { CreateFunnelInput, UpdateFunnelInput, FunnelMetadata } from '@/types/funnel';
 
 type ActionState = { loading: boolean; error: string | null };
@@ -19,7 +19,7 @@ export function useFunnelActions() {
     }
   }, []);
 
-  const svc = ServiceRegistry.get('funnelService');
+  const svc = canonicalFunnelService;
   const get = useCallback((id: string) => run(() => svc.getFunnel(id)), [run, svc]);
   const list = useCallback((filters?: { type?: FunnelMetadata['type']; status?: FunnelMetadata['status']; isActive?: boolean }) => run(() => svc.listFunnels(filters)), [run, svc]);
   const create = useCallback((input: CreateFunnelInput) => run(() => svc.createFunnel(input)), [run, svc]);
