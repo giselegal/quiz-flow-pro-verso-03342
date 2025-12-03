@@ -15,7 +15,7 @@ import { useState, FormEvent } from 'react';
 import { useAuthStorage } from '@/contexts/consolidated/AuthStorageProvider';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'wouter';
 import { toast } from 'sonner';
 import { Loader2, LogIn, UserPlus, Mail, Lock, Sparkles } from 'lucide-react';
 import { appLogger } from '@/lib/utils/appLogger';
@@ -25,7 +25,7 @@ export default function AuthPage() {
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const [mode, setMode] = useState<'login' | 'signup'>('login');
-    const navigate = useNavigate();
+    const [, setLocation] = useLocation();
     const { login, signUp } = useAuthStorage();
 
     /**
@@ -64,7 +64,7 @@ export default function AuthPage() {
                 toast.success('Conta criada! Verifique seu email para confirmar.', { duration: 5000 });
                 // Em alguns setups, o Supabase pode autenticar automaticamente.
                 // Nosso provider atualizará o estado; seguimos para /admin.
-                navigate('/admin');
+                setLocation('/admin');
 
             } else {
                 // ========================================================================
@@ -75,7 +75,7 @@ export default function AuthPage() {
                 await login(email, password);
                 appLogger.info('Login realizado com sucesso (AuthStorage)');
                 toast.success('Login realizado com sucesso!');
-                navigate('/admin');
+                setLocation('/admin');
             }
 
         } catch (error: any) {
