@@ -10,7 +10,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { CanonicalFunnelService } from '../FunnelService';
 
 describe('FunnelService - Canonical Service Tests', () => {
-  let funnelService: CanonicalFunnelService;
+  let funnelService: ReturnType<typeof CanonicalFunnelService.getInstance>;
 
   beforeEach(() => {
     // Get fresh instance for each test

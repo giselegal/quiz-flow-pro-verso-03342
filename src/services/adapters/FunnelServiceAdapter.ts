@@ -202,7 +202,7 @@ export class FunnelServiceAdapter {
         context: FunnelContext.EDITOR,
       });
 
-      return metadataList.map(meta => this.toUnifiedFormat(meta));
+      return metadataList.map((meta: any) => this.toUnifiedFormat(meta));
     } catch (error) {
       appLogger.error('[FunnelServiceAdapter] Error listing funnels:', { data: [error] });
       return [];

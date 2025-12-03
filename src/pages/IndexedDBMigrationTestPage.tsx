@@ -74,7 +74,7 @@ const IndexedDBMigrationTestPage: React.FC = () => {
 
             addLog(`📊 Encontrados ${funnels?.length || 0} funis`);
             if (funnels && funnels.length > 0) {
-                funnels.forEach((funnel, index) => {
+                funnels.forEach((funnel: any, index: number) => {
                     addLog(`   ${index + 1}. ${funnel.name} (${funnel.id})`);
                 });
             }
