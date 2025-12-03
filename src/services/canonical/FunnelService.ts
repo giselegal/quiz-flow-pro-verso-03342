@@ -1,10 +1,10 @@
 /**
- * 🔄 TIPOS CANONICOS PARA MIGRAÇÃO
+ * 🔄 BARREL EXPORT CANÔNICO - FunnelService
  * 
- * Re-exporta tipos dos serviços legados para manter compatibilidade
- * durante a migração gradual
+ * Re-exporta o FunnelService oficial de src/services/funnel/FunnelService.ts
+ * para manter compatibilidade durante a migração
  * 
- * @deprecated Estes tipos serão removidos na v5.0
+ * @deprecated Use @/services/funnel/FunnelService diretamente
  */
 
 // Re-export tipos centralizados
@@ -17,10 +17,11 @@ export type {
   UnifiedFunnelData
 } from '@/types/funnel';
 
-// Export da classe também (para testes)
-import { CanonicalFunnelService } from '../legacy/FunnelService.canonical.legacy';
-export { CanonicalFunnelService };
+// Export do serviço oficial
+export { FunnelService as CanonicalFunnelService } from '../funnel/FunnelService';
+export type { Funnel, LoadFunnelResult, SaveFunnelResult } from '../funnel/FunnelService';
 
-// Export da instância singleton
-const canonicalInstance = CanonicalFunnelService.getInstance();
+// Export da instância default (compatibilidade)
+import { FunnelService } from '../funnel/FunnelService';
+const canonicalInstance = new FunnelService();
 export { canonicalInstance as funnelService };
