@@ -72,25 +72,10 @@ export const NoCodeEditorIntegration: React.FC<NoCodeEditorIntegrationProps> = (
 
       {/* Content */}
       <div className="flex-1 overflow-hidden">
-        {viewMode === 'simple' ? (
-          <NoCodePropertiesPanelClean
-            selectedBlock={selectedBlock}
-            activeStageId={activeStageId}
-            onUpdate={handleUpdate}
-            onDuplicate={onDuplicate}
-            onDelete={onDelete}
-            onReset={handleReset}
-          />
-        ) : (
-          <UniversalNoCodePanel
-            selectedBlock={selectedBlock}
-            activeStageId={activeStageId}
-            onUpdate={handleUpdate}
-            onDuplicate={onDuplicate}
-            onDelete={onDelete}
-            onReset={handleReset}
-          />
-        )}
+        <div className="p-4 text-center text-gray-500">
+          <p>DEPRECATED: UniversalNoCodePanel foi removido</p>
+          <p>Use SinglePropertiesPanel diretamente</p>
+        </div>
       </div>
     </Card>
   );

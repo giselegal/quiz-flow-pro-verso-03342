@@ -29,15 +29,11 @@ export const NoCodePropertiesPanelClean: React.FC<NoCodePropertiesPanelCleanProp
   onReset,
 }) => {
   return (
-    <div className="h-full w-full">
-      <UniversalNoCodePanel
-        selectedBlock={selectedBlock}
-        activeStageId={activeStageId}
-        onUpdate={onUpdate}
-        onDuplicate={onDuplicate}
-        onDelete={onDelete}
-        onReset={onReset}
-      />
+    <div className="h-full w-full p-4">
+      <div className="text-center text-gray-500">
+        <p>DEPRECATED: NoCodePropertiesPanel foi removido</p>
+        <p>Use SinglePropertiesPanel diretamente</p>
+      </div>
     </div>
   );
 };
