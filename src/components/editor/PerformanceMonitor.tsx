@@ -42,7 +42,7 @@ interface PerformanceMonitorProps {
 
 export function PerformanceMonitor({
     selectedBlockId = null,
-    selectedBlockType = null
+    selectedBlockType = null,
 }: PerformanceMonitorProps = {}) {
     const [metrics, setMetrics] = useState<PerformanceMetrics>({
         tti: 0,
@@ -96,7 +96,7 @@ export function PerformanceMonitor({
                         tti: updatedMetrics.tti,
                         cacheHitRate: updatedMetrics.cacheHitRate,
                         errors404: updatedMetrics.errors404,
-                    }]
+                    }],
                 });
                 (window as any).__perfCriticalNotified = true;
             }
@@ -107,7 +107,7 @@ export function PerformanceMonitor({
                     data: [{
                         errors404: updatedMetrics.errors404,
                         failedPaths: networkMonitor.getStats().failedPaths.slice(-5),
-                    }]
+                    }],
                 });
                 (window as any).__perf404Notified = true;
             }

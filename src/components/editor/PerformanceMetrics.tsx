@@ -49,7 +49,7 @@ export const PerformanceMetrics: React.FC = () => {
                     'text-sm font-medium',
                     isOpen
                         ? 'bg-indigo-600 text-white'
-                        : 'bg-white text-slate-700 hover:bg-slate-100'
+                        : 'bg-white text-slate-700 hover:bg-slate-100',
                 )}
             >
                 <Activity className="w-4 h-4" />

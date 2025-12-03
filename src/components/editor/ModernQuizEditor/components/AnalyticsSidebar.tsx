@@ -24,7 +24,7 @@ import {
   Tablet,
   RefreshCw,
   AlertCircle,
-  X
+  X,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -33,10 +33,10 @@ interface AnalyticsSidebarProps {
   onClose: () => void;
 }
 
-export const AnalyticsSidebar = memo(function AnalyticsSidebar({
+export const AnalyticsSidebar = memo(({
   isOpen,
   onClose,
-}: AnalyticsSidebarProps) {
+}: AnalyticsSidebarProps) => {
   const { 
     liveActivity, 
     liveStepStats,
@@ -81,11 +81,11 @@ export const AnalyticsSidebar = memo(function AnalyticsSidebar({
       {/* Connection Status */}
       <div className={cn(
         'px-4 py-2 text-sm flex items-center gap-2',
-        isConnected ? 'bg-green-50 text-green-700' : 'bg-yellow-50 text-yellow-700'
+        isConnected ? 'bg-green-50 text-green-700' : 'bg-yellow-50 text-yellow-700',
       )}>
         <div className={cn(
           'w-2 h-2 rounded-full',
-          isConnected ? 'bg-green-500 animate-pulse' : 'bg-yellow-500'
+          isConnected ? 'bg-green-500 animate-pulse' : 'bg-yellow-500',
         )} />
         {isConnected ? 'Conectado • Dados ao vivo' : 'Conectando...'}
       </div>
@@ -121,7 +121,7 @@ export const AnalyticsSidebar = memo(function AnalyticsSidebar({
                   'p-3 rounded-lg text-sm',
                   alert.severity === 'critical' ? 'bg-red-100 text-red-800' :
                   alert.severity === 'high' ? 'bg-orange-100 text-orange-800' :
-                  'bg-yellow-100 text-yellow-800'
+                  'bg-yellow-100 text-yellow-800',
                 )}
               >
                 <div className="font-medium">
@@ -209,13 +209,13 @@ interface MetricCardProps {
   color: 'blue' | 'green' | 'purple' | 'orange' | 'red';
 }
 
-const MetricCard = memo(function MetricCard({
+const MetricCard = memo(({
   title,
   value,
   subtitle,
   icon,
   color,
-}: MetricCardProps) {
+}: MetricCardProps) => {
   const colorClasses = {
     blue: 'bg-blue-50 text-blue-600',
     green: 'bg-green-50 text-green-600',

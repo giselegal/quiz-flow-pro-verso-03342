@@ -12,7 +12,7 @@ describe('AutoSaveIndicator', () => {
                 isSaving={true}
                 lastSaved={null}
                 error={null}
-            />
+            />,
         );
 
         expect(screen.getByText('Salvando...')).toBeInTheDocument();
@@ -26,7 +26,7 @@ describe('AutoSaveIndicator', () => {
                 isSaving={false}
                 lastSaved={lastSaved}
                 error={null}
-            />
+            />,
         );
 
         expect(screen.getByText(/Salvo/)).toBeInTheDocument();
@@ -40,7 +40,7 @@ describe('AutoSaveIndicator', () => {
                 isSaving={false}
                 lastSaved={null}
                 error={error}
-            />
+            />,
         );
 
         expect(screen.getByText('Erro ao salvar')).toBeInTheDocument();
@@ -52,7 +52,7 @@ describe('AutoSaveIndicator', () => {
                 isSaving={false}
                 lastSaved={null}
                 error={null}
-            />
+            />,
         );
 
         expect(screen.getByText('Auto-save ativo')).toBeInTheDocument();
@@ -66,7 +66,7 @@ describe('AutoSaveIndicator', () => {
                 isSaving={false}
                 lastSaved={lastSaved}
                 error={null}
-            />
+            />,
         );
 
         // Should show seconds
@@ -80,7 +80,7 @@ describe('AutoSaveIndicator', () => {
                 lastSaved={null}
                 error={null}
                 showText={false}
-            />
+            />,
         );
 
         expect(screen.queryByText('Salvando...')).not.toBeInTheDocument();
@@ -92,7 +92,7 @@ describe('AutoSaveIndicator', () => {
                 isSaving={false}
                 lastSaved={Date.now()}
                 error={null}
-            />
+            />,
         );
 
         // Compact version should not have text
@@ -105,7 +105,7 @@ describe('AutoSaveIndicator', () => {
                 isSaving={true}
                 lastSaved={null}
                 error={null}
-            />
+            />,
         );
 
         const status = container.querySelector('[role="status"]');
@@ -120,7 +120,7 @@ describe('AutoSaveIndicator', () => {
                 lastSaved={Date.now()}
                 error={null}
                 className="custom-class"
-            />
+            />,
         );
 
         expect(container.firstChild).toHaveClass('custom-class');
@@ -132,7 +132,7 @@ describe('AutoSaveIndicator', () => {
                 isSaving={false}
                 lastSaved={Date.now()}
                 error={null}
-            />
+            />,
         );
 
         // Tooltip variant should render compact version

@@ -231,7 +231,7 @@ describe('SinglePropertiesPanel - Indicadores de Estado', () => {
     if (applyNodes.length > 0) {
       const btn = applyNodes[0].closest('button');
       // DEBUG: log button text/disabled during tests (will be removed once behavior confirmed)
-      // eslint-disable-next-line no-console
+       
       console.log('applyNodes found:', applyNodes.length, 'closest button disabled=', btn?.hasAttribute('disabled'));
       expect(btn && btn.hasAttribute('disabled')).toBeTruthy();
     } else {

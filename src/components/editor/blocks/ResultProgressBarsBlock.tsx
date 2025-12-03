@@ -45,7 +45,7 @@ export default function ResultProgressBarsBlock({
         .map((style) => ({
           name: style.name,
           score: Math.round(style.percentage),
-          percentage: Math.round(style.percentage)
+          percentage: Math.round(style.percentage),
         }))
         .sort((a, b) => b.score - a.score)
         .slice(0, topCount);

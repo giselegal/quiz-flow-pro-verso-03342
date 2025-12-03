@@ -665,7 +665,7 @@ export class EditorCore {
             if (serializedState) {
                 // Tipagem explícita dos elementos restaurados para evitar Map<unknown, unknown>
                 const elements = new Map<string, EditorElement>(
-                    (serializedState.elements as [string, EditorElement][]) || []
+                    (serializedState.elements as [string, EditorElement][]) || [],
                 );
 
                 this.dispatch({

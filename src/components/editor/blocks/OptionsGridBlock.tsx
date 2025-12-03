@@ -231,7 +231,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
   // Resolver opções com fallback robusto: se properties.options existir porém vazio, usar content.options
   const propOptions = (block?.properties as any)?.options as Option[] | undefined;
   const contentOptions = (block as any)?.content?.options as Option[] | undefined;
-  let options = (
+  const options = (
     (Array.isArray(propOptions) && propOptions.length > 0)
       ? propOptions
       : (Array.isArray(contentOptions) && contentOptions.length > 0)

@@ -133,11 +133,11 @@ export const RichTextBlock: React.FC<RichTextBlockProps> = ({
     return DOMPurify.sanitize(html, {
       ALLOWED_TAGS: [
         'p', 'br', 'strong', 'em', 'u', 's', 'h1', 'h2', 'h3',
-        'ul', 'ol', 'li', 'a', 'img', 'span', 'div'
+        'ul', 'ol', 'li', 'a', 'img', 'span', 'div',
       ],
       ALLOWED_ATTR: [
         'href', 'src', 'alt', 'title', 'class', 'style',
-        'target', 'rel', 'width', 'height'
+        'target', 'rel', 'width', 'height',
       ],
       ALLOW_DATA_ATTR: false,
     });

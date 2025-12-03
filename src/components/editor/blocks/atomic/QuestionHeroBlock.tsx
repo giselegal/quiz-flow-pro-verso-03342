@@ -23,14 +23,14 @@ export default function QuestionHeroBlock({
     isSelected = false,
     isEditable = false,
     onSelect,
-    onOpenProperties
+    onOpenProperties,
 }: QuestionHeroBlockProps) {
     const { imageUrl, title, description } = block.properties || block.content || {};
     const {
         height = '200px',
         objectFit = 'cover',
         borderRadius = '8px',
-        backgroundColor = '#f8fafc'
+        backgroundColor = '#f8fafc',
     } = block.properties || block.content || {}; return (
         <div className="question-hero mb-6">
             {imageUrl ? (
@@ -40,7 +40,7 @@ export default function QuestionHeroBlock({
                         height,
                         borderRadius,
                         overflow: 'hidden',
-                        backgroundColor
+                        backgroundColor,
                     }}
                 >
                     <img
@@ -57,7 +57,7 @@ export default function QuestionHeroBlock({
                         height,
                         borderRadius,
                         backgroundColor,
-                        border: '2px dashed #d1d5db'
+                        border: '2px dashed #d1d5db',
                     }}
                 >
                     <span>Imagem Hero da Pergunta</span>

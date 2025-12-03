@@ -285,7 +285,7 @@ describe('🔍 DIAGNÓSTICO: Renderização de Blocos', () => {
         if (missingTypes.size > 0) {
             throw new Error(
                 `❌ BLOCOS SEM COMPONENTE: ${Array.from(missingTypes).join(', ')}\n\n` +
-                `Registre estes blocos em src/components/editor/blocks/blockRegistry.ts`
+                'Registre estes blocos em src/components/editor/blocks/blockRegistry.ts',
             );
         }
 
@@ -310,7 +310,7 @@ describe('🔍 DIAGNÓSTICO: Renderização de Blocos', () => {
 
                 expect(
                     blockElement,
-                    `Bloco ${block.type} (${block.id}) não foi renderizado no DOM`
+                    `Bloco ${block.type} (${block.id}) não foi renderizado no DOM`,
                 ).toBeTruthy();
             });
         }, { timeout: 5000 });

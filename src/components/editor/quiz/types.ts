@@ -19,7 +19,7 @@ import type {
   NavigationConfig,
   ValidationSchema,
   ResultsConfig,
-  BlockLibrary
+  BlockLibrary,
 } from '@/schemas/quiz-schema.zod';
 import { StepTypeZ } from '@/schemas/quiz-schema.zod';
 

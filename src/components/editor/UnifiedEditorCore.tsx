@@ -134,7 +134,7 @@ const ModeRenderer: React.FC<{
                         const idx = i + 1;
                         const valid = (state as any).stepValidation?.[idx]?.isValid;
                         return [idx, typeof valid === 'boolean' ? valid : undefined];
-                      })
+                      }),
                     ) as Record<number, boolean>}
                     onSelectStep={(s) => {
                       actions.setCurrentStep(s);
@@ -255,7 +255,7 @@ const ModeRenderer: React.FC<{
                         const idx = i + 1;
                         const valid = (state as any).stepValidation?.[idx]?.isValid;
                         return [idx, typeof valid === 'boolean' ? valid : undefined];
-                      })
+                      }),
                     ) as Record<number, boolean>}
                     onSelectStep={(s) => {
                       actions.setCurrentStep(s);

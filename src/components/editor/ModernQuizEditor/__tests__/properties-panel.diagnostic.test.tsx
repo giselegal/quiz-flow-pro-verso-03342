@@ -329,8 +329,8 @@ describe('🔍 DIAGNÓSTICO: Painel de Propriedades', () => {
         const selectedStep = quizState.quiz?.steps.find((s) => s.id === editorState.selectedStepId);
         selectedStep?.blocks.forEach((block, idx) => {
             console.log(`  ${idx + 1}. ${block.type} (${block.id})`);
-            console.log(`     Propriedades:`, Object.keys(block.properties || {}).length, 'campos');
-            console.log(`     Editável:`, block.metadata?.editable ?? true);
+            console.log('     Propriedades:', Object.keys(block.properties || {}).length, 'campos');
+            console.log('     Editável:', block.metadata?.editable ?? true);
         });
         console.log('');
         console.log('═══════════════════════════════════════');

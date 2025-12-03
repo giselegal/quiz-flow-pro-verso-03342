@@ -113,7 +113,7 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
 
       if (!validationResult.success) {
         const errors = validationResult.error.errors.map(err =>
-          `${err.path.join('.')}: ${err.message}`
+          `${err.path.join('.')}: ${err.message}`,
         );
         setValidationErrors(errors);
         appLogger.error('❌ Validação Zod falhou:', { data: [errors] });

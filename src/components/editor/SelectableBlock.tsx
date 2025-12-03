@@ -50,7 +50,7 @@ export const SelectableBlock: React.FC<SelectableBlockProps> = memo(({
         'selectable-block relative transition-all duration-150',
         isEditable && 'cursor-pointer hover:ring-2 hover:ring-primary/30',
         isSelected && 'ring-2 ring-primary',
-        className
+        className,
       )}
       onClick={handleClick}
       onDoubleClick={handleDoubleClick}

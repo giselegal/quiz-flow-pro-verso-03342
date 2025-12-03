@@ -34,7 +34,7 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 import { DragOverlay } from '@dnd-kit/core';
 
-export const PropertiesPanel = memo(function PropertiesPanel() {
+export const PropertiesPanel = memo(() => {
     const quiz = useQuizStore((state) => state.quiz);
     const selectedStepId = useEditorStore((state) => state.selectedStepId);
     const selectedBlockId = useEditorStore((state) => state.selectedBlockId);
@@ -77,7 +77,7 @@ export const PropertiesPanel = memo(function PropertiesPanel() {
 });
 
 // ✅ AUDIT: Memoized empty state
-const EmptyState = memo(function EmptyState() {
+const EmptyState = memo(() => {
     return (
         <div className="h-full flex items-center justify-center p-6 text-center">
             <div>
@@ -96,7 +96,7 @@ interface BlockPropertiesProps {
     stepId: string;
 }
 
-const BlockProperties = memo(function BlockProperties({ block, stepId }: BlockPropertiesProps) {
+const BlockProperties = memo(({ block, stepId }: BlockPropertiesProps) => {
     const updateBlock = useQuizStore((state) => state.updateBlock);
 
     // 🆕 PHASE 1: Debounced update handler for better performance
@@ -105,7 +105,7 @@ const BlockProperties = memo(function BlockProperties({ block, stepId }: BlockPr
         () => debounce((blockId: string, key: string, value: any) => {
             updateBlock(stepId, blockId, { [key]: value });
         }, 300),
-        [updateBlock, stepId]
+        [updateBlock, stepId],
     );
 
     // ✅ AUDIT: Memoize property change handler
@@ -191,7 +191,7 @@ interface PropertyRowProps {
     value: string;
 }
 
-const PropertyRow = memo(function PropertyRow({ label, value }: PropertyRowProps) {
+const PropertyRow = memo(({ label, value }: PropertyRowProps) => {
     return (
         <div className="flex items-start justify-between gap-2 py-1">
             <span className="text-xs font-medium text-gray-600 capitalize">

@@ -26,7 +26,7 @@ import {
   PropertyControlType,
   normalizeControlType as normalizeControlTypeFn,
   getInitialValueFromSchema,
-  safeParseJson
+  safeParseJson,
 } from '@/core/schema/propertyValidation';
 
 interface DynamicPropertyControlsProps {
@@ -63,8 +63,8 @@ export const DynamicPropertyControls: React.FC<DynamicPropertyControlsProps> = (
       elementType,
       hasSchema: !!schema,
       propertiesKeys: Object.keys(properties),
-      schemaPropertiesKeys: schema ? Object.keys(schema.properties) : []
-    }]
+      schemaPropertiesKeys: schema ? Object.keys(schema.properties) : [],
+    }],
   });
 
   if (!schema) {
@@ -144,7 +144,7 @@ const PropertyControl: React.FC<PropertyControlProps> = memo(({
   error,
   onChange,
   onJsonTextChange,
-  getJsonBuffer
+  getJsonBuffer,
 }) => {
   const label = schema.label || propertyKey;
   const description = schema.description;
@@ -178,8 +178,8 @@ const PropertyControl: React.FC<PropertyControlProps> = memo(({
         propertyKey,
         oldValue: value,
         newValue,
-        control: normalizedControl
-      }]
+        control: normalizedControl,
+      }],
     });
     onChange(newValue);
   }, [propertyKey, value, normalizedControl, onChange]);

@@ -17,7 +17,7 @@ import { useEditorStore } from '../store/editorStore';
 // ✅ AUDIT: Debug logging only in development
 const DEBUG = import.meta.env.DEV && false; // Set to true to enable debug logs
 
-export const StepPanel = memo(function StepPanel() {
+export const StepPanel = memo(() => {
     const quiz = useQuizStore((state) => state.quiz);
     const selectedStepId = useEditorStore((state) => state.selectedStepId);
     const selectStep = useEditorStore((state) => state.selectStep);
@@ -82,7 +82,7 @@ interface StepItemProps {
     onSelect: (stepId: string) => void;
 }
 
-const StepItem = memo(function StepItem({ step, isSelected, onSelect }: StepItemProps) {
+const StepItem = memo(({ step, isSelected, onSelect }: StepItemProps) => {
     const blockCount = step.blocks?.length || 0;
 
     const handleClick = useCallback(() => {

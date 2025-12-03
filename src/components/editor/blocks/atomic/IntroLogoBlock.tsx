@@ -29,7 +29,7 @@ export default function IntroLogoBlock({
         style={{
           height,
           maxWidth: '100%',
-          width: 'auto'
+          width: 'auto',
         }}
         className="object-contain"
         loading="eager"

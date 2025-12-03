@@ -94,14 +94,14 @@ export function AutoSaveIndicator({
                 className={cn(
                     'flex items-center gap-2 text-sm',
                     compact ? 'gap-1' : 'gap-2',
-                    className
+                    className,
                 )}
                 role="status"
                 aria-live="polite"
             >
                 <AlertCircle className={cn(
                     'text-red-500',
-                    compact ? 'h-4 w-4' : 'h-5 w-5'
+                    compact ? 'h-4 w-4' : 'h-5 w-5',
                 )} />
                 {showText && !compact && (
                     <span className="text-red-600 font-medium">
@@ -124,14 +124,14 @@ export function AutoSaveIndicator({
                 className={cn(
                     'flex items-center gap-2 text-sm',
                     compact ? 'gap-1' : 'gap-2',
-                    className
+                    className,
                 )}
                 role="status"
                 aria-live="polite"
             >
                 <Loader2 className={cn(
                     'animate-spin text-blue-500',
-                    compact ? 'h-4 w-4' : 'h-5 w-5'
+                    compact ? 'h-4 w-4' : 'h-5 w-5',
                 )} />
                 {showText && !compact && (
                     <span className="text-gray-600">
@@ -149,14 +149,14 @@ export function AutoSaveIndicator({
                 className={cn(
                     'flex items-center gap-2 text-sm',
                     compact ? 'gap-1' : 'gap-2',
-                    className
+                    className,
                 )}
                 role="status"
                 aria-live="polite"
             >
                 <CheckCircle2 className={cn(
                     'text-green-500',
-                    compact ? 'h-4 w-4' : 'h-5 w-5'
+                    compact ? 'h-4 w-4' : 'h-5 w-5',
                 )} />
                 {showText && !compact && (
                     <span className="text-gray-600">
@@ -173,13 +173,13 @@ export function AutoSaveIndicator({
             className={cn(
                 'flex items-center gap-2 text-sm text-gray-400',
                 compact ? 'gap-1' : 'gap-2',
-                className
+                className,
             )}
             role="status"
             aria-live="polite"
         >
             <Cloud className={cn(
-                compact ? 'h-4 w-4' : 'h-5 w-5'
+                compact ? 'h-4 w-4' : 'h-5 w-5',
             )} />
             {showText && !compact && (
                 <span>

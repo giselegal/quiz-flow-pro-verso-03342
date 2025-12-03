@@ -27,7 +27,7 @@ export const BlockSkeleton: React.FC<BlockSkeletonProps> = ({
       className={cn(
         'animate-pulse rounded-lg bg-muted/50 border border-muted',
         heights[variant],
-        className
+        className,
       )}
       aria-label="Loading block..."
     >

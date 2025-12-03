@@ -25,7 +25,7 @@ import type { Block } from '@/types/editor';
 // ✅ AUDIT: Debug logging only in development
 const DEBUG = import.meta.env.DEV && true; // Set to true to enable debug logs
 
-export const Canvas = memo(function Canvas() {
+export const Canvas = memo(() => {
     const quiz = useQuizStore((state) => state.quiz);
     const selectedStepId = useEditorStore((state) => state.selectedStepId);
     const selectedBlockId = useEditorStore((state) => state.selectedBlockId);
@@ -62,8 +62,8 @@ export const Canvas = memo(function Canvas() {
         '9_primeiroBloco': selectedStep?.blocks?.[0] ? {
             id: selectedStep.blocks[0].id,
             type: selectedStep.blocks[0].type,
-            hasProperties: !!selectedStep.blocks[0].properties
-        } : null
+            hasProperties: !!selectedStep.blocks[0].properties,
+        } : null,
     });
 
     // ✅ AUDIT: Memoize select handler
@@ -110,7 +110,7 @@ export const Canvas = memo(function Canvas() {
 });
 
 // ✅ AUDIT: Memoized toolbar component
-const CanvasToolbar = memo(function CanvasToolbar({ selectedStep }: { selectedStep: any }) {
+const CanvasToolbar = memo(({ selectedStep }: { selectedStep: any }) => {
     return (
         <div className="bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between">
             <div>
@@ -142,7 +142,7 @@ const CanvasToolbar = memo(function CanvasToolbar({ selectedStep }: { selectedSt
 });
 
 // ✅ AUDIT: Memoized empty state component
-const EmptyState = memo(function EmptyState({ message }: { message: string }) {
+const EmptyState = memo(({ message }: { message: string }) => {
     const { setNodeRef, isOver } = useDroppable({
         id: 'empty-canvas-drop-zone',
     });
@@ -175,7 +175,7 @@ interface BlockPreviewProps {
     onClick: () => void;
 }
 
-const BlockPreview = memo(function BlockPreview({ block, isSelected, onClick, onDoubleClick }: BlockPreviewProps & { onDoubleClick?: () => void }) {
+const BlockPreview = memo(({ block, isSelected, onClick, onDoubleClick }: BlockPreviewProps & { onDoubleClick?: () => void }) => {
     const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
         id: block.id,
         data: {
@@ -277,7 +277,7 @@ const BlockPreview = memo(function BlockPreview({ block, isSelected, onClick, on
 });
 
 // ✅ AUDIT: Memoized block actions component
-const BlockActions = memo(function BlockActions({ block }: { block: QuizBlock }) {
+const BlockActions = memo(({ block }: { block: QuizBlock }) => {
     const selectedStepId = useEditorStore((state) => state.selectedStepId);
     const deleteBlock = useQuizStore((s) => s.deleteBlock);
     const reorderBlocks = useQuizStore((s) => s.reorderBlocks);
@@ -326,7 +326,7 @@ const BlockActions = memo(function BlockActions({ block }: { block: QuizBlock })
 });
 
 // ✅ AUDIT: Memoized result preview component
-const ResultPreview = memo(function ResultPreview() {
+const ResultPreview = memo(() => {
     const quiz = useQuizStore((s) => s.quiz);
 
     // ✅ AUDIT: Memoize complex computation
@@ -342,7 +342,7 @@ const ResultPreview = memo(function ResultPreview() {
                     { label: 'Baixo', min: 0, max: 10 },
                     { label: 'Médio', min: 11, max: 25 },
                     { label: 'Alto', min: 26, max: 100 },
-                ]
+                ],
             };
 
             (quiz.steps || []).forEach((step: any) => {
@@ -398,7 +398,7 @@ interface CanvasSortableProps {
     onOpenProperties?: (id: string) => void;
 }
 
-const CanvasSortable = memo(function CanvasSortable({ stepId, blocks, selectedBlockId, onSelect, onOpenProperties }: CanvasSortableProps) {
+const CanvasSortable = memo(({ stepId, blocks, selectedBlockId, onSelect, onOpenProperties }: CanvasSortableProps) => {
     // ✅ AUDIT: Memoize block IDs array
     const blockIds = useMemo(() => blocks.map((block) => block.id), [blocks]);
 

@@ -549,5 +549,5 @@ export const useQuizStore = create<QuizStore>()(
         state.lastSaved = new Date();
       });
     },
-  }))
+  })),
 );

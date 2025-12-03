@@ -17,11 +17,11 @@ const isDev = process.env.NODE_ENV === 'development';
 // Lazy load AccessibilityAuditor for code splitting
 const AccessibilityAuditor = React.lazy(() => 
   import('@/components/a11y/AccessibilityAuditor').then(m => ({ 
-    default: m.AccessibilityAuditor || m.default 
-  }))
+    default: m.AccessibilityAuditor || m.default, 
+  })),
 );
 
-export const DevTools = memo(function DevTools() {
+export const DevTools = memo(() => {
   const [showA11y, setShowA11y] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -40,7 +40,7 @@ export const DevTools = memo(function DevTools() {
             'p-2 rounded-lg shadow-lg transition-colors',
             isExpanded 
               ? 'bg-gray-800 text-white' 
-              : 'bg-white text-gray-700 hover:bg-gray-100'
+              : 'bg-white text-gray-700 hover:bg-gray-100',
           )}
           title="Developer Tools"
         >
@@ -56,7 +56,7 @@ export const DevTools = memo(function DevTools() {
               onClick={() => setShowA11y(true)}
               className={cn(
                 'p-2 rounded-lg shadow-lg transition-colors flex items-center gap-2',
-                'bg-white text-gray-700 hover:bg-purple-50 hover:text-purple-700'
+                'bg-white text-gray-700 hover:bg-purple-50 hover:text-purple-700',
               )}
               title="Accessibility Audit"
             >

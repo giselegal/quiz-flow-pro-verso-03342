@@ -324,7 +324,7 @@ export function assertValidTemplate(template: any): asserts template is QuizSche
     const errorMessages = result.errors.map(e => `[${e.code}] ${e.path}: ${e.message}`).join('\n');
     throw new Error(
       `❌ TEMPLATE INVÁLIDO:\n\n${errorMessages}\n\n` +
-      `Use normalizeQuizFormat() ou adaptLegacyQuizToV4() para corrigir.`
+      'Use normalizeQuizFormat() ou adaptLegacyQuizToV4() para corrigir.',
     );
   }
 

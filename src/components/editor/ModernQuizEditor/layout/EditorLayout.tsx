@@ -16,14 +16,14 @@ import { Canvas } from './Canvas';
 import { PropertiesPanel } from './PropertiesPanel';
 import { useDndHandlers } from '../hooks/useDndHandlers';
 
-export const EditorLayout = memo(function EditorLayout() {
+export const EditorLayout = memo(() => {
     // ✅ AUDIT: Memoize sensor configuration to prevent recreation
     const sensors = useSensors(
         useSensor(PointerSensor, {
             activationConstraint: {
                 distance: 8, // 8px de movimento antes de ativar drag
             },
-        })
+        }),
     );
 
     // Handlers de Drag & Drop

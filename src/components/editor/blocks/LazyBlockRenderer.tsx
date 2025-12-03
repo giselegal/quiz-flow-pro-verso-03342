@@ -73,7 +73,7 @@ class BlockErrorBoundary extends React.Component<
         error: error.message,
         stack: error.stack,
         componentStack: errorInfo.componentStack,
-      }]
+      }],
     });
   }
 

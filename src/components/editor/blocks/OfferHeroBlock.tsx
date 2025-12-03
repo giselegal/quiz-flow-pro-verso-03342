@@ -44,7 +44,7 @@ const OfferHeroBlock: React.FC<OfferHeroBlockProps> = ({
         title = '',
         subtitle = '',
         description = '',
-        urgencyMessage = ''
+        urgencyMessage = '',
     } = content;
 
     // Interpolar variáveis dinâmicas se ResultContext disponível

@@ -125,7 +125,7 @@ function useDraftPropertiesAdapter(
         zodSchema?: any;
         initialProperties: Record<string, any>;
         onCommit: (properties: Record<string, any>) => void;
-    }
+    },
 ) {
     // Converter UnifiedBlock para Block (adicionar order se não existir)
     const coreBlock: Block = {
@@ -754,7 +754,7 @@ const BuilderDrivenPanel: React.FC<BuilderDrivenPanelProps & { externalSaving?: 
                                                     type="button"
                                                     className={cn(
                                                         'flex w-full items-center justify-between gap-3 rounded-lg px-4 py-3 text-left text-sm font-medium transition-colors',
-                                                        isOpen ? 'bg-muted/70' : 'hover:bg-muted/40'
+                                                        isOpen ? 'bg-muted/70' : 'hover:bg-muted/40',
                                                     )}
                                                 >
                                                     <div className="flex-1">
@@ -768,7 +768,7 @@ const BuilderDrivenPanel: React.FC<BuilderDrivenPanelProps & { externalSaving?: 
                                                     <ChevronDown
                                                         className={cn(
                                                             'h-4 w-4 shrink-0 transition-transform',
-                                                            isOpen ? 'rotate-180' : ''
+                                                            isOpen ? 'rotate-180' : '',
                                                         )}
                                                     />
                                                 </button>

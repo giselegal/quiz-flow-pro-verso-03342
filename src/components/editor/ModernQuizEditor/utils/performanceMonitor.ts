@@ -54,7 +54,7 @@ class PerformanceMonitor {
         name: string, 
         duration: number, 
         category: PerformanceMetric['category'] = 'load',
-        metadata?: Record<string, any>
+        metadata?: Record<string, any>,
     ): void {
         if (!this.enabled) return;
 
@@ -85,7 +85,7 @@ class PerformanceMonitor {
     async measureAsync<T>(
         name: string, 
         fn: () => Promise<T>,
-        category: PerformanceMetric['category'] = 'load'
+        category: PerformanceMetric['category'] = 'load',
     ): Promise<T> {
         if (!this.enabled) return fn();
 

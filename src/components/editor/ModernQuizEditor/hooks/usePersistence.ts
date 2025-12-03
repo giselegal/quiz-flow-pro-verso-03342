@@ -258,16 +258,16 @@ export function usePersistence(options: PersistenceOptions = {}): UsePersistence
         settings: content.settings || {
           scoring: { 
             enabled: false, 
-            method: 'sum' as const 
+            method: 'sum' as const, 
           },
           navigation: { 
             allowBack: true, 
             autoAdvance: false, 
-            showProgress: true 
+            showProgress: true, 
           },
           validation: { 
             required: true, 
-            strictMode: false 
+            strictMode: false, 
           },
         },
         steps: content.steps || [],
@@ -324,7 +324,7 @@ export function useAutoSave(
   quiz: QuizSchema | null,
   isDirty: boolean,
   persistence: UsePersistenceReturn,
-  delay = 3000
+  delay = 3000,
 ) {
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const saveQuizRef = useRef(persistence.saveQuiz);

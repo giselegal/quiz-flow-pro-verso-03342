@@ -424,7 +424,7 @@ const QuizEditorMode: React.FC<QuizEditorModeProps> = ({
                           stepProps={{
                             productionParityInEdit: true,
                             autoAdvanceInEdit: true,
-                            blocks
+                            blocks,
                           }}
                           quizState={{
                             currentStep,

@@ -114,7 +114,7 @@ export function ModernQuizEditor({
             console.log('📂 Quiz normalizado:', {
                 steps: normalizedQuiz.steps?.length,
                 firstStepId: normalizedQuiz.steps?.[0]?.id,
-                firstStepBlocks: normalizedQuiz.steps?.[0]?.blocks?.length
+                firstStepBlocks: normalizedQuiz.steps?.[0]?.blocks?.length,
             });
 
             loadQuiz(normalizedQuiz);
@@ -127,7 +127,7 @@ export function ModernQuizEditor({
             hasQuiz: !!quiz,
             hasSteps: !!quiz?.steps,
             stepsLength: quiz?.steps?.length,
-            firstStep: quiz?.steps?.[0]
+            firstStep: quiz?.steps?.[0],
         });
 
         if (quiz && quiz.steps && quiz.steps.length > 0) {
@@ -154,7 +154,7 @@ export function ModernQuizEditor({
         } else {
             console.warn('⚠️ Não foi possível auto-selecionar step:', {
                 quiz: !!quiz,
-                steps: quiz?.steps?.length || 0
+                steps: quiz?.steps?.length || 0,
             });
         }
     }, [quiz]);

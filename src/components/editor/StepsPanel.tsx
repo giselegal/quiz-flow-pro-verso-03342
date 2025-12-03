@@ -120,7 +120,7 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
 
         appLogger.debug(`✅ StepsPanel: ${serviceSteps.length} etapas de referência obtidas`);
         appLogger.debug(
-          '📊 StepsPanel: Estatísticas dos templates disponíveis'
+          '📊 StepsPanel: Estatísticas dos templates disponíveis',
         );
         return serviceSteps;
       }

@@ -119,5 +119,5 @@ export const useEditorStore = create<EditorStore>()(
         state.isPreviewMode = !state.isPreviewMode;
       });
     },
-  }))
+  })),
 );

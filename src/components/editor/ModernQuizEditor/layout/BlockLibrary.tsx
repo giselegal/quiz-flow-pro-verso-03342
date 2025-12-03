@@ -34,7 +34,7 @@ const BLOCK_TYPES = {
     ],
 } as const;
 
-export const BlockLibrary = memo(function BlockLibrary() {
+export const BlockLibrary = memo(() => {
     const isBlockLibraryOpen = useEditorStore((state) => state.isBlockLibraryOpen);
 
     // 🆕 PHASE 1: Throttled scroll handler for performance (max 10 calls/second)
@@ -44,7 +44,7 @@ export const BlockLibrary = memo(function BlockLibrary() {
             // const scrollTop = e.currentTarget.scrollTop;
             // console.debug('Library scroll position:', scrollTop);
         }, 100),
-        []
+        [],
     );
 
     if (!isBlockLibraryOpen) {
@@ -83,7 +83,7 @@ interface BlockCategoryProps {
     blocks: readonly { type: string; label: string; icon: string; description: string }[];
 }
 
-const BlockCategory = memo(function BlockCategory({ title, blocks }: BlockCategoryProps) {
+const BlockCategory = memo(({ title, blocks }: BlockCategoryProps) => {
     return (
         <div>
             <h3 className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2">
@@ -106,7 +106,7 @@ interface BlockCardProps {
     description: string;
 }
 
-const BlockCard = memo(function BlockCard({ type, label, icon, description }: BlockCardProps) {
+const BlockCard = memo(({ type, label, icon, description }: BlockCardProps) => {
     // Tornar o card draggable
     const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
         id: `new-block-${type}`,

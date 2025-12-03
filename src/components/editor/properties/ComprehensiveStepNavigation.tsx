@@ -284,7 +284,7 @@ export const ComprehensiveStepNavigation: React.FC<ComprehensiveStepNavigationPr
             } catch {
               return [stepId, []] as [string, Block[]];
             }
-          })
+          }),
         );
         if (!mounted) return;
         const map: Record<string, Block[]> = {};

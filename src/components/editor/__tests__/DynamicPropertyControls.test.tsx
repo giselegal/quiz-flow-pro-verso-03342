@@ -110,7 +110,7 @@ describe('DynamicPropertyControls', () => {
                 elementType="boolean-block"
                 properties={properties}
                 onChange={mockOnChange}
-            />
+            />,
         );
 
         const toggle = screen.getByRole('switch');
@@ -128,7 +128,7 @@ describe('DynamicPropertyControls', () => {
                 elementType="unknown-block"
                 properties={{}}
                 onChange={mockOnChange}
-            />
+            />,
         );
 
         expect(screen.getByText(/Schema não encontrado/i)).not.toBeNull();
@@ -168,7 +168,7 @@ describe('DynamicPropertyControls', () => {
                 elementType="test-block"
                 properties={properties}
                 onChange={mockOnChange}
-            />
+            />,
         );
 
         // Verifica se o label do título está presente
@@ -215,7 +215,7 @@ describe('DynamicPropertyControls', () => {
                 elementType="complex-block"
                 properties={properties}
                 onChange={mockOnChange}
-            />
+            />,
         );
 
         // Textarea
@@ -256,7 +256,7 @@ describe('DynamicPropertyControls', () => {
                 elementType="test-block"
                 properties={properties}
                 onChange={mockOnChange}
-            />
+            />,
         );
 
         const input = screen.getByLabelText('Título');

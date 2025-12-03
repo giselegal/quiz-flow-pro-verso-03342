@@ -428,7 +428,7 @@ export const EditorPropertiesPanel: React.FC<EditorPropertiesPanelProps> = ({
               placeholder={property.label}
               className={cn(
                 hasChanges && !error && 'border-blue-500',
-                error && 'border-red-500 focus-visible:ring-red-500'
+                error && 'border-red-500 focus-visible:ring-red-500',
               )}
             />
             {error && (
@@ -450,7 +450,7 @@ export const EditorPropertiesPanel: React.FC<EditorPropertiesPanelProps> = ({
               className={cn(
                 'min-h-[80px]',
                 hasChanges && !error && 'border-blue-500',
-                error && 'border-red-500 focus-visible:ring-red-500'
+                error && 'border-red-500 focus-visible:ring-red-500',
               )}
             />
             {error && (
@@ -473,7 +473,7 @@ export const EditorPropertiesPanel: React.FC<EditorPropertiesPanelProps> = ({
               max={property.validation?.max}
               className={cn(
                 hasChanges && !error && 'border-blue-500',
-                error && 'border-red-500 focus-visible:ring-red-500'
+                error && 'border-red-500 focus-visible:ring-red-500',
               )}
             />
             {error && (

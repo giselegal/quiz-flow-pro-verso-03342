@@ -50,7 +50,7 @@ export default function ResultCongratsBlock({
       style={{
         padding,
         marginBottom,
-        textAlign: 'center'
+        textAlign: 'center',
       }}
     >
       {showCelebration && celebrationEmoji && (
@@ -99,7 +99,7 @@ export default function ResultCongratsBlock({
           className="style-name text-4xl md:text-5xl lg:text-6xl font-bold mt-4"
           style={{
             color: styleNameColor,
-            fontFamily: '"Playfair Display", serif'
+            fontFamily: '"Playfair Display", serif',
           }}
         >
           {styleDisplay}

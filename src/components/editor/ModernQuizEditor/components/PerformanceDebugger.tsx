@@ -12,7 +12,7 @@ import React, { useState, useEffect } from 'react';
 import { 
   usePerformanceMonitor, 
   useMemoizationStats,
-  useMemoryLeakDetector 
+  useMemoryLeakDetector, 
 } from '@/hooks/usePerformanceMonitor';
 import { multiLayerCache, getCacheHitRate } from '@/config/cache.config';
 import { cn } from '@/lib/utils';
@@ -75,7 +75,7 @@ export function PerformanceDebugger({
         className={cn(
           'fixed z-50 p-2 bg-gray-800 text-white rounded-full shadow-lg',
           'hover:bg-gray-700 transition-colors',
-          positionClasses[position]
+          positionClasses[position],
         )}
         title="Show Performance Debugger"
       >
@@ -90,7 +90,7 @@ export function PerformanceDebugger({
         'fixed z-50 bg-gray-900/95 text-white p-4 rounded-lg shadow-2xl',
         'text-xs font-mono max-w-xs',
         'border border-gray-700',
-        positionClasses[position]
+        positionClasses[position],
       )}
     >
       {/* Header */}
@@ -203,7 +203,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 function MetricRow({ 
   label, 
   value, 
-  status = 'neutral' 
+  status = 'neutral', 
 }: { 
   label: string; 
   value: string;

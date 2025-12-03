@@ -24,7 +24,7 @@ import {
   Copy,
   RefreshCw,
   Calculator,
-  Layers
+  Layers,
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { appLogger } from '@/lib/utils/appLogger';
@@ -60,7 +60,7 @@ const DEFAULT_TEMPLATE = {
   settings: {
     minStages: 1,
     maxStages: 30,
-    allowDynamicStages: true
+    allowDynamicStages: true,
   },
 
   // Sistema de runtime compatível com o existente
@@ -78,8 +78,8 @@ const DEFAULT_TEMPLATE = {
       },
 
       // Peso geral de questões (compatível com ResultEngine)
-      weightQuestions: 1
-    }
+      weightQuestions: 1,
+    },
   },
 
   // Stages flexíveis (de 1 a 30)
@@ -97,16 +97,16 @@ const DEFAULT_TEMPLATE = {
           type: 'heading',
           content: {
             text: 'Bem-vindo ao Quiz!',
-            level: 1
-          }
-        }
+            level: 1,
+          },
+        },
       ],
       metadata: {
         // Peso desta etapa (usado por computeResult)
         scoring: {
-          weight: 1
-        }
-      }
+          weight: 1,
+        },
+      },
     },
     {
       id: 'step-02',
@@ -123,34 +123,34 @@ const DEFAULT_TEMPLATE = {
             options: [
               {
                 id: 'natural_confortavel',
-                text: 'Confortável e Natural'
+                text: 'Confortável e Natural',
               },
               {
                 id: 'classico_elegante',
-                text: 'Clássico e Elegante'
+                text: 'Clássico e Elegante',
               },
               {
                 id: 'contemporaneo_moderno',
-                text: 'Contemporâneo e Moderno'
-              }
-            ]
-          }
-        }
+                text: 'Contemporâneo e Moderno',
+              },
+            ],
+          },
+        },
       ],
       metadata: {
         scoring: {
-          weight: 1 // Peso desta pergunta no cálculo final
-        }
-      }
-    }
-  ]
+          weight: 1, // Peso desta pergunta no cálculo final
+        },
+      },
+    },
+  ],
 };
 
 export function JsonTemplateEditor({
   template,
   onTemplateChange,
   readOnly = false,
-  templateId
+  templateId,
 }: JsonTemplateEditorProps) {
   const { toast } = useToast();
 
@@ -203,7 +203,7 @@ export function JsonTemplateEditor({
         errors.push({
           path: 'templateId',
           message: 'Campo "templateId" é obrigatório',
-          severity: 'error'
+          severity: 'error',
         });
       }
 
@@ -211,7 +211,7 @@ export function JsonTemplateEditor({
         errors.push({
           path: 'name',
           message: 'Campo "name" é obrigatório',
-          severity: 'error'
+          severity: 'error',
         });
       }
 
@@ -219,7 +219,7 @@ export function JsonTemplateEditor({
         errors.push({
           path: 'stages',
           message: 'Campo "stages" deve ser um array',
-          severity: 'error'
+          severity: 'error',
         });
       } else {
         // Validar número de stages (1-30)
@@ -227,7 +227,7 @@ export function JsonTemplateEditor({
           errors.push({
             path: 'stages',
             message: 'Template deve ter pelo menos 1 stage',
-            severity: 'error'
+            severity: 'error',
           });
         }
 
@@ -235,7 +235,7 @@ export function JsonTemplateEditor({
           errors.push({
             path: 'stages',
             message: 'Template não pode ter mais de 30 stages',
-            severity: 'error'
+            severity: 'error',
           });
         }
 
@@ -245,7 +245,7 @@ export function JsonTemplateEditor({
             errors.push({
               path: `stages[${index}].id`,
               message: `Stage ${index + 1}: campo "id" é obrigatório`,
-              severity: 'error'
+              severity: 'error',
             });
           }
 
@@ -253,7 +253,7 @@ export function JsonTemplateEditor({
             errors.push({
               path: `stages[${index}].order`,
               message: `Stage ${index + 1}: campo "order" deve ser um número`,
-              severity: 'warning'
+              severity: 'warning',
             });
           }
 
@@ -261,7 +261,7 @@ export function JsonTemplateEditor({
             errors.push({
               path: `stages[${index}].blocks`,
               message: `Stage ${index + 1}: campo "blocks" deve ser um array`,
-              severity: 'error'
+              severity: 'error',
             });
           } else {
             // Validar blocos
@@ -270,7 +270,7 @@ export function JsonTemplateEditor({
                 errors.push({
                   path: `stages[${index}].blocks[${blockIndex}].id`,
                   message: `Stage ${index + 1}, Block ${blockIndex + 1}: "id" obrigatório`,
-                  severity: 'error'
+                  severity: 'error',
                 });
               }
 
@@ -278,7 +278,7 @@ export function JsonTemplateEditor({
                 errors.push({
                   path: `stages[${index}].blocks[${blockIndex}].type`,
                   message: `Stage ${index + 1}, Block ${blockIndex + 1}: "type" obrigatório`,
-                  severity: 'error'
+                  severity: 'error',
                 });
               }
             });
@@ -292,7 +292,7 @@ export function JsonTemplateEditor({
           errors.push({
             path: 'scoring.method',
             message: 'Método de pontuação é obrigatório quando scoring está habilitado',
-            severity: 'error'
+            severity: 'error',
           });
         }
 
@@ -300,7 +300,7 @@ export function JsonTemplateEditor({
           errors.push({
             path: 'scoring.categories',
             message: 'Categorias são obrigatórias para método "weighted"',
-            severity: 'error'
+            severity: 'error',
           });
         }
 
@@ -308,7 +308,7 @@ export function JsonTemplateEditor({
           errors.push({
             path: 'scoring.classifications',
             message: 'Pelo menos uma classificação de resultado é necessária',
-            severity: 'warning'
+            severity: 'warning',
           });
         }
       }
@@ -318,7 +318,7 @@ export function JsonTemplateEditor({
         errors.push({
           path: 'description',
           message: 'Recomendado adicionar descrição',
-          severity: 'warning'
+          severity: 'warning',
         });
       }
 
@@ -326,7 +326,7 @@ export function JsonTemplateEditor({
         errors.push({
           path: 'version',
           message: 'Recomendado adicionar versão',
-          severity: 'warning'
+          severity: 'warning',
         });
       }
 
@@ -334,7 +334,7 @@ export function JsonTemplateEditor({
       errors.push({
         path: 'root',
         message: `JSON inválido: ${error.message}`,
-        severity: 'error'
+        severity: 'error',
       });
     }
 
@@ -364,7 +364,7 @@ export function JsonTemplateEditor({
       toast({
         title: 'JSON inválido',
         description: 'Corrija os erros antes de aplicar',
-        variant: 'destructive'
+        variant: 'destructive',
       });
       return;
     }
@@ -391,7 +391,7 @@ export function JsonTemplateEditor({
       toast({
         title: 'Erro ao aplicar',
         description: error.message,
-        variant: 'destructive'
+        variant: 'destructive',
       });
     }
   }, [jsonText, isValid, hasChanges, onTemplateChange, toast]);
@@ -417,7 +417,7 @@ export function JsonTemplateEditor({
       toast({
         title: 'Erro ao exportar',
         description: error.message,
-        variant: 'destructive'
+        variant: 'destructive',
       });
     }
   }, [jsonText, toast]);
@@ -443,7 +443,7 @@ export function JsonTemplateEditor({
         toast({
           title: 'Erro ao importar',
           description: error.message,
-          variant: 'destructive'
+          variant: 'destructive',
         });
       }
     };
@@ -465,7 +465,7 @@ export function JsonTemplateEditor({
       toast({
         title: 'Erro ao formatar',
         description: 'JSON inválido',
-        variant: 'destructive'
+        variant: 'destructive',
       });
     }
   }, [jsonText, toast]);
@@ -485,7 +485,7 @@ export function JsonTemplateEditor({
       const parsed = JSON.parse(jsonText);
       const stages = parsed.stages || [];
       const totalBlocks = stages.reduce((sum: number, stage: any) =>
-        sum + (stage.blocks?.length || 0), 0
+        sum + (stage.blocks?.length || 0), 0,
       );
 
       const scoringEnabled = parsed.scoring?.enabled || false;
@@ -500,7 +500,7 @@ export function JsonTemplateEditor({
         numCategories,
         numClassifications,
         stagesRange: `${stages.length}/30 etapas`,
-        scoringMethod: parsed.scoring?.method || 'N/A'
+        scoringMethod: parsed.scoring?.method || 'N/A',
       };
     } catch {
       return {
@@ -511,7 +511,7 @@ export function JsonTemplateEditor({
         numCategories: 0,
         numClassifications: 0,
         stagesRange: '0/30 etapas',
-        scoringMethod: 'N/A'
+        scoringMethod: 'N/A',
       };
     }
   }, [jsonText]);

@@ -20,7 +20,7 @@ export default function QuestionTitleBlock({
     isSelected = false,
     isEditable = false,
     onSelect,
-    onUpdate
+    onUpdate,
 }: QuestionTitleBlockProps) {
 
     const { title = 'Título da Pergunta', subtitle } = data.props || {};
