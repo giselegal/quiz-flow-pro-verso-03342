@@ -374,10 +374,23 @@ export const AuthStorageProvider: React.FC<AuthStorageProviderProps> = ({
                 },
             });
 
-            if (error) throw error;
+            if (error) {
+                appLogger.error('❌ [AuthStorage] Erro OAuth:', { error: error.message, status: error.status });
+                
+                // Erro específico: provider não habilitado no Supabase
+                if (error.message?.includes('Provider') || error.message?.includes('not enabled')) {
+                    throw new Error('Google OAuth não está configurado. Configure no Supabase Dashboard: Authentication → Providers → Google');
+                }
+                throw error;
+            }
 
-            // OAuth redireciona automaticamente, não precisamos setar state aqui
-            appLogger.info('✅ [AuthStorage] Redirecionando para Google OAuth...');
+            if (data?.url) {
+                appLogger.info('✅ [AuthStorage] Redirecionando para:', data.url);
+                // Redirecionar imediatamente
+                window.location.href = data.url;
+            } else {
+                appLogger.warn('⚠️ [AuthStorage] OAuth não retornou URL de redirect');
+            }
         } catch (err: any) {
             const errorMsg = err.message || 'Erro no login com Google';
             setAuthState(prev => ({ ...prev, error: errorMsg }));

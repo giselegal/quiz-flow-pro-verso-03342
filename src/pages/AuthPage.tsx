@@ -44,10 +44,21 @@ const AuthPage: React.FC = () => {
 
     const handleGoogleLogin = async () => {
         try {
+            setLoading(true);
             await signInWithGoogle();
-            // OAuth redireciona automaticamente
+            // OAuth redireciona automaticamente se bem-sucedido
         } catch (error: any) {
-            toast.error(error?.message || 'Erro ao fazer login com Google');
+            const errorMessage = error?.message || 'Erro ao fazer login com Google';
+            
+            // Mensagem específica se OAuth não configurado
+            if (errorMessage.includes('não está configurado') || errorMessage.includes('not enabled')) {
+                toast.error('Google OAuth não configurado no servidor. Entre com email/senha.', { duration: 8000 });
+                appLogger.warn('⚠️ Google OAuth não configurado - usuário deve usar email/senha');
+            } else {
+                toast.error(errorMessage, { duration: 5000 });
+            }
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -223,6 +234,12 @@ const AuthPage: React.FC = () => {
                         <Chrome className="h-5 w-5 mr-2" />
                         Continuar com Google
                     </Button>
+                    
+                    {import.meta.env.DEV && (
+                        <p className="text-xs text-slate-400 text-center mt-2">
+                            ⚠️ Requer configuração no Supabase Dashboard
+                        </p>
+                    )}
 
                     <div className="relative my-6">
                         <div className="absolute inset-0 flex items-center">
