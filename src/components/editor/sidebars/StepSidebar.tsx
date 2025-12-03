@@ -7,6 +7,7 @@ export interface StepSidebarProps {
   stepHasBlocks: Record<number, boolean>;
   stepValidation?: Record<number, boolean>;
   onSelectStep: (step: number) => void;
+  onAddStep?: () => void;
   getStepAnalysis: (step: number) => { icon: string; label: string; desc: string };
   renderIcon: (name: string, className?: string) => React.ReactNode;
   className?: string;
@@ -19,6 +20,7 @@ const StepSidebarComponent: React.FC<StepSidebarProps> = ({
   stepHasBlocks,
   stepValidation,
   onSelectStep,
+  onAddStep,
   getStepAnalysis,
   renderIcon,
   className = '',
@@ -34,10 +36,22 @@ const StepSidebarComponent: React.FC<StepSidebarProps> = ({
       aria-label="Quiz Steps Navigation"
     >
       <div className="p-4 border-b border-gray-800/50 flex-shrink-0">
-        <h3 className="font-medium text-sm text-gray-200" id="steps-heading">Etapas do Quiz</h3>
-        <p className="text-xs text-gray-500 mt-1" aria-live="polite">
-          {totalSteps} steps {funnelId && <span>({funnelId})</span>}
-        </p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="font-medium text-sm text-gray-200" id="steps-heading">Etapas do Quiz</h3>
+            <p className="text-xs text-gray-500 mt-1" aria-live="polite">
+              {totalSteps} steps {funnelId && <span>({funnelId})</span>}
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => onAddStep?.()}
+            className="text-xs px-2 py-1 rounded bg-brand-brightBlue/20 text-brand-brightBlue hover:bg-brand-brightBlue/30 transition"
+            aria-label="Adicionar nova etapa"
+          >
+            + Etapa
+          </button>
+        </div>
       </div>
 
       <div className="flex-1 overflow-y-auto" role="list" aria-labelledby="steps-heading">
