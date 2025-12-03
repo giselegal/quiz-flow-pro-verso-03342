@@ -31,6 +31,7 @@ import { appLogger } from '@/lib/utils/appLogger';
 import type { QuizSchema } from '@/schemas/quiz-schema.zod';
 import { ServiceRegistry } from '@/services/ServiceRegistry';
 import { parseFunnelFromURL } from '@/services/funnel/FunnelResolver';
+import { Button } from '@/components/ui/button';
 
 // ✅ Novo editor moderno com arquitetura limpa
 const ModernQuizEditor = React.lazy(() =>
@@ -246,6 +247,37 @@ export default function EditorPage() {
                             >
                                 Tentar novamente
                             </button>
+                        </div>
+                    </div>
+                ) : (!quiz && (!funnelId || funnelId === '')) ? (
+                    <div className="h-screen flex items-center justify-center bg-gray-50">
+                        <div className="text-center max-w-md space-y-4">
+                            <div className="text-6xl">🧩</div>
+                            <h2 className="text-xl font-semibold text-gray-900">
+                                Comece um funil do zero
+                            </h2>
+                            <p className="text-gray-600">
+                                Defina um template padrão no `.env` com `VITE_DEFAULT_FUNNEL_ID`, ou escolha um funil existente.
+                            </p>
+                            <div className="flex items-center justify-center gap-2">
+                                <Button
+                                    variant="outline"
+                                    onClick={() => {
+                                        const defId = (import.meta as any).env?.VITE_DEFAULT_FUNNEL_ID as string | undefined;
+                                        const target = `/editor${defId ? `?funnel=${encodeURIComponent(defId)}` : ''}`;
+                                        window.location.href = target;
+                                    }}
+                                >
+                                    Abrir com Template Padrão
+                                </Button>
+                                <Button
+                                    onClick={() => {
+                                        window.location.href = '/dashboard/meus-funis';
+                                    }}
+                                >
+                                    Ver Meus Funis
+                                </Button>
+                            </div>
                         </div>
                     </div>
                 ) : quiz ? (
