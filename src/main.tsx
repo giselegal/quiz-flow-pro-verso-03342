@@ -228,14 +228,14 @@ if (import.meta.env.DEV) {
   }
 }
 
-// � Interceptor simples para bloquear logs externos em dev (Grafana/gpt-engineer)
+// 🛡️ Interceptor simples para bloquear logs externos em dev (Grafana)
 // Ativado somente com flag explícita para evitar efeitos colaterais em preview/prod
 if (typeof window !== 'undefined') {
   const ENABLE_NETWORK_INTERCEPTORS = (import.meta as any)?.env?.VITE_ENABLE_NETWORK_INTERCEPTORS === 'true';
-  const isDevOrPreview = import.meta.env.DEV || (typeof location !== 'undefined' && /lovable\.app|stackblitz\.io|codesandbox\.io/.test(location.hostname));
+  const isDevMode = import.meta.env.DEV;
 
   // Guard: só ativa interceptores quando flag estiver ligada
-  if (ENABLE_NETWORK_INTERCEPTORS && isDevOrPreview) {
+  if (ENABLE_NETWORK_INTERCEPTORS && isDevMode) {
     const originalFetch = window.fetch.bind(window);
     window.fetch = (input: RequestInfo | URL, init?: RequestInit) => {
       const url = typeof input === 'string' ? input : input.toString();
@@ -245,14 +245,13 @@ if (typeof window !== 'undefined') {
       } catch (error) {
         appLogger.warn('[main.tsx] Erro ao configurar Cloudinary flag:', { data: [error] });
       }
-      const isPreviewHost = typeof location !== 'undefined' && /lovable\.app|stackblitz\.io|codesandbox\.io/.test(location.hostname);
       // Bloqueia logs externos em dev
       if (url.includes('cloudfunctions.net/pushLogsToGrafana')) {
         // Simula sucesso e evita 500 no console
         return Promise.resolve(new Response(null, { status: 204 }));
       }
       // Silencia Sentry em dev para evitar 404/429 e ruído excessivo
-      if (/sentry\.io|ingest\.sentry\.io/.test(url) && (import.meta.env.DEV || isPreviewHost)) {
+      if (/sentry\.io|ingest\.sentry\.io/.test(url) && isDevMode) {
         try {
           appLogger.warn('🛑 Interceptado (Sentry desabilitado em dev):', { data: [url] });
         } catch (error) {
@@ -287,8 +286,7 @@ if (typeof window !== 'undefined') {
 
     // Também intercepta sendBeacon (Sentry usa esse transporte em prod)
     try {
-      const isPreviewHost = typeof location !== 'undefined' && /lovable\.app|stackblitz\.io|codesandbox\.io/.test(location.hostname);
-      if (navigator?.sendBeacon && (import.meta.env.DEV || isPreviewHost)) {
+      if (navigator?.sendBeacon && isDevMode) {
         const originalBeacon = navigator.sendBeacon.bind(navigator);
         (navigator as any).sendBeacon = (url: any, data?: any) => {
           try {
@@ -309,8 +307,7 @@ if (typeof window !== 'undefined') {
 
     // Intercepta XHR para evitar ruído em libs que não usam fetch
     try {
-      const isPreviewHost = typeof location !== 'undefined' && /lovable\.app|stackblitz\.io|codesandbox\.io/.test(location.hostname);
-      if ((import.meta.env.DEV || isPreviewHost) && typeof XMLHttpRequest !== 'undefined') {
+      if (isDevMode && typeof XMLHttpRequest !== 'undefined') {
         const OriginalXHR = XMLHttpRequest;
         // Properly typed XHR constructor patch
         function PatchedXHR(this: XMLHttpRequest) {
