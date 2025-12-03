@@ -2,6 +2,11 @@
  * 🎯 STORES INDEX - Central Exports
  * 
  * Exportações centralizadas de todas as stores Zustand
+ * 
+ * ARQUITETURA CONSOLIDADA:
+ * - editorStore: Estado do editor (blocos, steps, seleção)
+ * - quizStore: Estado do quiz em execução (respostas, progresso)
+ * - uiStore: Estado de UI (painéis, modais, notificações)
  */
 
 // Editor Store
@@ -37,3 +42,15 @@ export {
 } from './uiStore';
 
 export type { Notification, NotificationType, Modal } from './uiStore';
+
+// Re-export unified hooks
+export {
+  useEditor,
+  useQuiz,
+  useUI,
+  useEditorSelector,
+  useQuizSelector,
+  useUISelector,
+  usePreviewState,
+  useToast,
+} from '@/hooks/useUnifiedStore';
