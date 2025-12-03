@@ -56,9 +56,15 @@ describe('AuthPage', () => {
     it('permite criar conta e chama signUp()', async () => {
         const { container } = render(<AuthPage />);
 
-        // Usar texto exato para evitar duplicações
-        const toggleButton = screen.getByText('Criar nova conta');
+        // Encontrar o botão de toggle (não está dentro do form)
+        const toggleButtons = screen.getAllByText('Criar nova conta');
+        const toggleButton = toggleButtons[toggleButtons.length - 1]; // Pegar o último (fora do form)
         fireEvent.click(toggleButton);
+
+        // Aguardar mudança de modo
+        await waitFor(() => {
+            expect(screen.getByText('Criar Conta')).toBeInTheDocument();
+        });
 
         const emailInput = screen.getByPlaceholderText('seu@email.com');
         const passwordInput = screen.getByPlaceholderText('••••••••');
