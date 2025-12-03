@@ -448,6 +448,157 @@ const MeusFunisPageReal: React.FC = () => {
         paused: { label: 'Pausado', color: 'bg-yellow-500', textColor: 'text-yellow-700', bgColor: 'bg-yellow-50' },
     }), []);
 
+    // Card memoizado para reduzir re-render por lista grande
+    const FunnelCard = React.memo(({ funil }: { funil: RealFunnel }) => (
+        <Card key={funil.id} className="hover:shadow-lg transition-shadow" id={`funnel-card-${funil.id}`}>
+            <CardHeader className="pb-3">
+                <div className="flex justify-between items-start">
+                    <div className="flex-1">
+                        <CardTitle className="text-lg line-clamp-1 flex items-center gap-2">
+                            {funil.name}
+                            {typeof funil.version === 'number' && (
+                                <span className="text-[10px] px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-600 font-medium tracking-wide">v{funil.version}</span>
+                            )}
+                        </CardTitle>
+                        <CardDescription className="text-sm line-clamp-2 mt-1">
+                            {funil.description}
+                        </CardDescription>
+                    </div>
+
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="sm" className="ml-2">
+                                <MoreVertical className="w-4 h-4" />
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                            <DropdownMenuItem onClick={() => handleEditFunil(funil.id)}>
+                                <Edit className="w-4 h-4 mr-2" />
+                                Editar
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleDuplicateFunil(funil.id)}>
+                                <Copy className="w-4 h-4 mr-2" />
+                                Duplicar
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                                onClick={() => handleTogglePublish(funil.id, funil.status === 'published')}
+                            >
+                                {funil.status === 'published' ? (
+                                    <>
+                                        <Pause className="w-4 h-4 mr-2" />
+                                        Pausar
+                                    </>
+                                ) : (
+                                    <>
+                                        <Play className="w-4 h-4 mr-2" />
+                                        Publicar
+                                    </>
+                                )}
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem
+                                onClick={() => handleDeleteFunil(funil.id)}
+                                className="text-red-600"
+                            >
+                                <Trash2 className="w-4 h-4 mr-2" />
+                                Excluir
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </div>
+
+                {/* Status Badge */}
+                <div className="mt-3 flex items-center justify-between">
+                    <Badge
+                        variant="secondary"
+                        className={`${statusConfig[funil.uiStatus].bgColor} ${statusConfig[funil.uiStatus].textColor}`}
+                    >
+                        {statusConfig[funil.uiStatus].label}
+                    </Badge>
+                    <span className="text-xs text-gray-500">
+                        Atualizado {funil.updated_at ? new Date(funil.updated_at).toLocaleDateString('pt-BR') : 'N/A'}
+                    </span>
+                </div>
+            </CardHeader>
+
+            <CardContent className="pt-0">
+                {/* Métricas */}
+                <div className="grid grid-cols-3 gap-3 text-center mb-4">
+                    <div>
+                        <p className="text-lg font-semibold">{funil.sessions}</p>
+                        <p className="text-xs text-gray-500">Sessões</p>
+                    </div>
+                    <div>
+                        <p className="text-lg font-semibold">{funil.completions}</p>
+                        <p className="text-xs text-gray-500">Conversões</p>
+                    </div>
+                    <div>
+                        <p className="text-lg font-semibold">{funil.conversionRate}%</p>
+                        <p className="text-xs text-gray-500">Taxa</p>
+                    </div>
+                </div>
+
+                {/* Actions */}
+                <div className="flex space-x-2">
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        className="flex-1"
+                        onClick={() => handleEditFunil(funil.id)}
+                    >
+                        <Edit className="w-4 h-4 mr-2" />
+                        Editar
+                    </Button>
+                    {funil.status === 'draft' ? (
+                        <>
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                className="flex-1"
+                                onClick={() => window.open(`/quiz-estilo?draft=${encodeURIComponent(funil.id)}`, '_blank')}
+                                disabled={publishingDraftId === funil.id}
+                            >
+                                <Eye className="w-4 h-4 mr-2" />
+                                Preview
+                            </Button>
+                            <Button
+                                variant="default"
+                                size="sm"
+                                className="flex-1"
+                                onClick={() => setConfirmPublishId(funil.id)}
+                                disabled={publishingDraftId === funil.id}
+                            >
+                                {publishingDraftId === funil.id ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Play className="w-4 h-4 mr-2" />}
+                                {publishingDraftId === funil.id ? 'Publicando...' : 'Publicar'}
+                            </Button>
+                        </>
+                    ) : (
+                        <>
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                className="flex-1"
+                                onClick={() => window.open(`/quiz/${funil.id}`, '_blank')}
+                            >
+                                <Eye className="w-4 h-4 mr-2" />
+                                Preview (produção)
+                            </Button>
+                            <Button
+                                variant="secondary"
+                                size="sm"
+                                className="flex-1"
+                                onClick={() => window.open(`/quiz-estilo?draft=${encodeURIComponent(funil.id)}`, '_blank')}
+                            >
+                                <Eye className="w-4 h-4 mr-2" />
+                                Preview (rascunho)
+                            </Button>
+                        </>
+                    )}
+                </div>
+            </CardContent>
+        </Card>
+    ));
+
     if (isLoading) {
         return (
             <div className="p-6">
@@ -628,153 +779,7 @@ const MeusFunisPageReal: React.FC = () => {
             {/* Funis Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
                 {sortedFunis.map(funil => (
-                    <Card key={funil.id} className="hover:shadow-lg transition-shadow" id={`funnel-card-${funil.id}`}>
-                        <CardHeader className="pb-3">
-                            <div className="flex justify-between items-start">
-                                <div className="flex-1">
-                                    <CardTitle className="text-lg line-clamp-1 flex items-center gap-2">
-                                        {funil.name}
-                                        {typeof funil.version === 'number' && (
-                                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-600 font-medium tracking-wide">v{funil.version}</span>
-                                        )}
-                                    </CardTitle>
-                                    <CardDescription className="text-sm line-clamp-2 mt-1">
-                                        {funil.description}
-                                    </CardDescription>
-                                </div>
-
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger asChild>
-                                        <Button variant="ghost" size="sm" className="ml-2">
-                                            <MoreVertical className="w-4 h-4" />
-                                        </Button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent align="end">
-                                        <DropdownMenuItem onClick={() => handleEditFunil(funil.id)}>
-                                            <Edit className="w-4 h-4 mr-2" />
-                                            Editar
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem onClick={() => handleDuplicateFunil(funil.id)}>
-                                            <Copy className="w-4 h-4 mr-2" />
-                                            Duplicar
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem
-                                            onClick={() => handleTogglePublish(funil.id, funil.status === 'published')}
-                                        >
-                                            {funil.status === 'published' ? (
-                                                <>
-                                                    <Pause className="w-4 h-4 mr-2" />
-                                                    Pausar
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <Play className="w-4 h-4 mr-2" />
-                                                    Publicar
-                                                </>
-                                            )}
-                                        </DropdownMenuItem>
-                                        <DropdownMenuSeparator />
-                                        <DropdownMenuItem
-                                            onClick={() => handleDeleteFunil(funil.id)}
-                                            className="text-red-600"
-                                        >
-                                            <Trash2 className="w-4 h-4 mr-2" />
-                                            Excluir
-                                        </DropdownMenuItem>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
-                            </div>
-
-                            {/* Status Badge */}
-                            <div className="mt-3 flex items-center justify-between">
-                                <Badge
-                                    variant="secondary"
-                                    className={`${statusConfig[funil.uiStatus].bgColor} ${statusConfig[funil.uiStatus].textColor}`}
-                                >
-                                    {statusConfig[funil.uiStatus].label}
-                                </Badge>
-                                <span className="text-xs text-gray-500">
-                                    Atualizado {funil.updated_at ? new Date(funil.updated_at).toLocaleDateString('pt-BR') : 'N/A'}
-                                </span>
-                            </div>
-                        </CardHeader>
-
-                        <CardContent className="pt-0">
-                            {/* Métricas */}
-                            <div className="grid grid-cols-3 gap-3 text-center mb-4">
-                                <div>
-                                    <p className="text-lg font-semibold">{funil.sessions}</p>
-                                    <p className="text-xs text-gray-500">Sessões</p>
-                                </div>
-                                <div>
-                                    <p className="text-lg font-semibold">{funil.completions}</p>
-                                    <p className="text-xs text-gray-500">Conversões</p>
-                                </div>
-                                <div>
-                                    <p className="text-lg font-semibold">{funil.conversionRate}%</p>
-                                    <p className="text-xs text-gray-500">Taxa</p>
-                                </div>
-                            </div>
-
-                            {/* Actions */}
-                            <div className="flex space-x-2">
-                                <Button
-                                    variant="outline"
-                                    size="sm"
-                                    className="flex-1"
-                                    onClick={() => handleEditFunil(funil.id)}
-                                >
-                                    <Edit className="w-4 h-4 mr-2" />
-                                    Editar
-                                </Button>
-                                {funil.status === 'draft' ? (
-                                    <>
-                                        <Button
-                                            variant="outline"
-                                            size="sm"
-                                            className="flex-1"
-                                            onClick={() => window.open(`/quiz-estilo?draft=${encodeURIComponent(funil.id)}`, '_blank')}
-                                            disabled={publishingDraftId === funil.id}
-                                        >
-                                            <Eye className="w-4 h-4 mr-2" />
-                                            Preview
-                                        </Button>
-                                        <Button
-                                            variant="default"
-                                            size="sm"
-                                            className="flex-1"
-                                            onClick={() => setConfirmPublishId(funil.id)}
-                                            disabled={publishingDraftId === funil.id}
-                                        >
-                                            {publishingDraftId === funil.id ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Play className="w-4 h-4 mr-2" />}
-                                            {publishingDraftId === funil.id ? 'Publicando...' : 'Publicar'}
-                                        </Button>
-                                    </>
-                                ) : (
-                                    <>
-                                        <Button
-                                            variant="outline"
-                                            size="sm"
-                                            className="flex-1"
-                                            onClick={() => window.open(`/quiz/${funil.id}`, '_blank')}
-                                        >
-                                            <Eye className="w-4 h-4 mr-2" />
-                                            Preview (produção)
-                                        </Button>
-                                        <Button
-                                            variant="secondary"
-                                            size="sm"
-                                            className="flex-1"
-                                            onClick={() => window.open(`/quiz-estilo?draft=${encodeURIComponent(funil.id)}`, '_blank')}
-                                        >
-                                            <Eye className="w-4 h-4 mr-2" />
-                                            Preview (rascunho)
-                                        </Button>
-                                    </>
-                                )}
-                            </div>
-                        </CardContent>
-                    </Card>
+                    <FunnelCard key={funil.id} funil={funil} />
                 ))}
             </div>
 
