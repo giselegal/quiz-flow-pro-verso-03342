@@ -20,6 +20,8 @@ import {
 import { useAuthStorage } from '@/contexts/consolidated/AuthStorageProvider';
 import { appLogger } from '@/lib/utils/appLogger';
 import { Helmet } from 'react-helmet-async';
+import { Hero } from '@/components/marketing/Hero';
+import { CTA } from '@/components/marketing/CTA';
 
 export const Home: React.FC = () => {
   appLogger.info('🏠 Home component rendering...');
@@ -251,128 +253,48 @@ export const Home: React.FC = () => {
       </header>
 
       <main>
-        {/* Hero Section */}
-        <section className="relative py-28 lg:py-32 overflow-hidden bg-neon-space">
-          <div className="absolute inset-0 bg-hero-soft"></div>
-
-          <div className="container mx-auto px-6 relative z-10">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center max-w-6xl mx-auto">
-              <div className="text-center lg:text-left">
-                <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.45 }}>
-                  <Badge className="mb-8 badge-translucent hover:bg-[#132036]/80 transition-colors px-4 py-2">
-                    <Sparkles className="h-4 w-4 mr-2" />
-                    QuizFlowPro
-                  </Badge>
-                </motion.div>
-
-                <motion.div variants={containerVariants} initial="hidden" animate="visible">
-                  <motion.h1 custom={0} variants={heroVariants} className="text-4xl md:text-6xl lg:text-7xl font-extrabold mb-8 text-white leading-[1.05] tracking-tight font-title">
-                    QuizFlowPro — quizzes que convertem
-                  </motion.h1>
-
-                  <motion.p custom={1} variants={heroVariants} className="text-lg md:text-xl text-slate-300/90 mb-12 leading-relaxed max-w-4xl mx-auto font-light">
-                    Crie quizzes interativos para captar leads qualificados, segmentar seu público e aumentar conversões — rápido, intuitivo e integrado às suas ferramentas de marketing.
-                  </motion.p>
-                </motion.div>
-
-                <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-16">
-                  <MotionButton
-                    size="lg"
-                    className="btn-neon text-white text-lg px-10 py-4 rounded-xl shadow-neon hover:shadow-neon transition-all"
-                    onClick={() => navigate(user ? '/dashboard' : '/criar-funil')}
-                    whileHover={{ scale: 1.03 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <Zap className="h-5 w-5 mr-2" />
-                    {user ? 'Ir para o Dashboard' : 'Iniciar teste gratuito'}
-                  </MotionButton>
-                  <MotionButton
-                    variant="outline"
-                    size="lg"
-                    className="text-lg px-10 py-4 border-2 border-slate-600 text-white hover:bg-slate-800 rounded-xl transition-all"
-                    onClick={() => navigate('/templates')}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <Target className="h-5 w-5 mr-2" />
-                    Ver Templates
-                  </MotionButton>
-                  <MotionButton
-                    variant="outline"
-                    size="lg"
-                    className="text-lg px-10 py-4 border-2 border-[#3bbef3] text-white hover:bg-slate-800 rounded-xl transition-all"
-                    onClick={() => setIsVslOpen(true)}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <Play className="h-5 w-5 mr-2" />
-                    Assistir VSL
-                  </MotionButton>
-                </div>
-
-                {/* Social Proof */}
-                <div className="flex flex-wrap items-center justify-center lg:justify-start gap-8 text-sm text-slate-400">
-                  <div className="flex items-center">
-                    <Star className="h-4 w-4 text-yellow-500 mr-1" />
-                    <span className="font-medium">4.9/5 avaliação</span>
-                  </div>
-                  <div className="flex items-center">
-                    <Users className="h-4 w-4 text-blue-600 mr-1" />
-                    <span className="font-medium">10.000+ usuários</span>
-                  </div>
-                  <div className="flex items-center">
-                    <CheckCircle className="h-4 w-4 text-green-500 mr-1" />
-                    <span className="font-medium">5 min configuração</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Hero Right - Inline VSL Preview */}
-              <div className="hidden lg:block">
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                  className="relative max-w-md ml-auto"
-                >
-                  <div className="absolute -inset-6 bg-gradient-to-tr from-[#3bbef3]/30 via-transparent to-[#ea7af6]/40 opacity-70 blur-3xl" />
-                  <div className="relative rounded-3xl overflow-hidden border-translucent shadow-soft">
-                    {!isInlineVideoReady && (
-                      <div className="absolute inset-0 bg-[#0a0f1f] flex items-center justify-center">
-                        <div className="animate-pulse w-20 h-20 rounded-full bg-white/10" />
-                      </div>
-                    )}
-                    <video
-                      src="/videos/vsl-quizflowpro.mp4"
-                      autoPlay={!prefersReducedMotion}
-                      muted
-                      loop={!prefersReducedMotion}
-                      playsInline
-                      preload="metadata"
-                      aria-label="Preview do vídeo VSL do QuizFlowPro"
-                      title="Preview VSL — QuizFlowPro"
-                      className="w-full h-full object-cover"
-                      onCanPlay={() => setIsInlineVideoReady(true)}
-                      onPlay={() => appLogger.info('▶️ Inline VSL playing')}
-                    />
-                    <div className="absolute bottom-3 left-3 flex items-center gap-2">
-                      <Badge className="bg-white/10 text-white border-white/20">Preview VSL</Badge>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="bg-white/10 text-white border-white/30 hover:bg-white/20"
-                        onClick={() => setIsVslOpen(true)}
-                      >
-                        <Play className="h-4 w-4 mr-1" />
-                        Assistir
-                      </Button>
-                    </div>
-                  </div>
-                </motion.div>
-              </div>
-            </div>
+        {/* Hero Section (componente de marketing) */}
+        <Hero
+          badge="QuizFlowPro"
+          title="QuizFlowPro — quizzes que convertem"
+          subtitle="Crie quizzes interativos para captar leads qualificados, segmentar seu público e aumentar conversões — rápido, intuitivo e integrado às suas ferramentas de marketing."
+          videoSrc="/videos/vsl-quizflowpro.mp4"
+        >
+          <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+            <MotionButton
+              size="lg"
+              className="btn-neon text-white text-lg px-10 py-4 rounded-xl shadow-neon hover:shadow-neon transition-all"
+              onClick={() => navigate(user ? '/dashboard' : '/criar-funil')}
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <Zap className="h-5 w-5 mr-2" />
+              {user ? 'Ir para o Dashboard' : 'Iniciar teste gratuito'}
+            </MotionButton>
+            <MotionButton
+              variant="outline"
+              size="lg"
+              className="text-lg px-10 py-4 border-2 border-slate-600 text-white hover:bg-slate-800 rounded-xl transition-all"
+              onClick={() => navigate('/templates')}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <Target className="h-5 w-5 mr-2" />
+              Ver Templates
+            </MotionButton>
+            <MotionButton
+              variant="outline"
+              size="lg"
+              className="text-lg px-10 py-4 border-2 border-[#3bbef3] text-white hover:bg-slate-800 rounded-xl transition-all"
+              onClick={() => setIsVslOpen(true)}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <Play className="h-5 w-5 mr-2" />
+              Assistir VSL
+            </MotionButton>
           </div>
-        </section>
+        </Hero>
 
         {/* Metrics - Modern & Clean */}
         <section className="py-28 lg:py-32 bg-neon-space">
@@ -568,29 +490,23 @@ export const Home: React.FC = () => {
           </div>
         </section>
 
-        {/* CTA Final */}
-        <section className="py-24" style={{ background: 'linear-gradient(90deg, #3bbef3, #ea7af6)' }}>
-          <div className="container mx-auto px-6 text-center">
-            <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-                Pronto Para Transformar Seu Negócio?
-              </h2>
-              <p className="text-xl text-white/80 mb-10 max-w-3xl mx-auto">
-                Junte-se a milhares de empresas já usando QuizFlow para aumentar engajamento e conversões
-              </p>
-            </motion.div>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <MotionButton size="lg" onClick={() => navigate(user ? '/dashboard' : '/criar-funil')} className="bg-white text-[#0a0f1f] hover:bg-slate-100 px-8 py-4 text-lg font-semibold" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                <Zap className="mr-2 h-5 w-5" />
-                Iniciar teste gratuito
-              </MotionButton>
-              <MotionButton variant="outline" size="lg" onClick={() => window.open('mailto:sales@quizflow.pro')} className="border-2 border-white text-white hover:bg-white hover:text-[#0a0f1f] px-8 py-4 text-lg font-semibold" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                <ArrowRight className="mr-2 h-5 w-5" />
-                Falar com Vendas
-              </MotionButton>
-            </div>
-          </div>
-        </section>
+        {/* CTA Final (componente de marketing) */}
+        <CTA
+          title="Pronto Para Transformar Seu Negócio?"
+          subtitle="Junte-se a milhares de empresas já usando QuizFlow para aumentar engajamento e conversões"
+          buttons={[
+            {
+              label: user ? 'Ir para o Dashboard' : 'Iniciar teste gratuito',
+              onClick: () => navigate(user ? '/dashboard' : '/criar-funil'),
+              variant: 'primary',
+            },
+            {
+              label: 'Falar com Vendas',
+              onClick: () => window.open('mailto:sales@quizflow.pro'),
+              variant: 'outline',
+            },
+          ]}
+        />
       </main>
 
       {/* VSL Modal */}
