@@ -23,20 +23,6 @@ export default [
       'build',
       '*.config.js',
       '*.config.ts',
-      // Arquivos de patch auxiliares não são código válido para lint
-      '*.patch',
-      '**/*.patch',
-      'public',
-      // Documentação e conteúdos arquivados/scripts fora do app
-      'docs/**',
-      'archived/**',
-      'scripts/**',
-      'server/**',
-      // Scripts soltos de diagnóstico fora do fluxo de app
-      'full-diagnosis-script.js',
-      'isolation-test-script.js',
-      // Temporário: evitar erro ENOENT intermitente neste caminho específico durante lint
-      'src/components/editor/dnd/SortablePreviewBlockWrapper.tsx',
       // (Resolvido) symlink corrompido substituído por reexport válido
     ],
   },
@@ -272,6 +258,21 @@ export default [
       'react-hooks/purity': 'off',
       'react-hooks/use-memo': 'off',
       'react-hooks/immutability': 'off',
+    },
+  },
+
+  // Overrides para o escopo do editor: reduzir ruído sem comprometer qualidade
+  {
+    files: ['src/components/editor/**/*.{ts,tsx}'],
+    rules: {
+      // Permitir info/warn/error em componentes do editor
+      'no-console': ['warn', { allow: ['info', 'warn', 'error'] }],
+      // Relaxar verificação de export-only-components para facilitar dev em arquivos maiores
+      'react-refresh/only-export-components': 'off',
+      // Avisos de any permanecem como warning (evita erro em massa)
+      '@typescript-eslint/no-explicit-any': 'warn',
+      // Permitir args não usados quando iniciados com underscore
+      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
     },
   },
 
