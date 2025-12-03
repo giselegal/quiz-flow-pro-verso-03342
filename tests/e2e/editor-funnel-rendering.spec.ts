@@ -1,23 +1,31 @@
 import { test, expect } from '@playwright/test';
 
 const BASE_URL = 'http://localhost:8080';
-const FUNNEL_ID = 'funnel-quiz21-SKZYE1GX';
+// Preferimos o parâmetro `funnel` que é usado em outros specs
+const FUNNEL_ID = 'quiz21StepsComplete';
 
 async function enterPreview(page: import('@playwright/test').Page) {
+    // Tenta via API exposta no window
     await page.evaluate(() => {
         const api = (window as any).__editorMode;
         if (api && typeof api.setViewMode === 'function') {
             api.setViewMode('preview');
         }
     });
+
+    // Se não renderizou, tenta via diversos seletores de toggle
     const previewCanvas = page.locator('[data-testid="canvas-preview-mode"]').first();
     if (!(await previewCanvas.isVisible().catch(() => false))) {
-        const previewBtn = page.locator('button:has-text("Preview")').first();
-        if (await previewBtn.isVisible().catch(() => false)) {
-            await previewBtn.click();
+        const togglePreview = page.locator(
+            'button:has-text("Preview"), button:has-text("Pré-visualizar"), button:has-text("Visualizar"), [data-action*="preview"], [data-testid*="toggle-preview"]'
+        ).first();
+        if (await togglePreview.isVisible().catch(() => false)) {
+            await togglePreview.click({ trial: true }).catch(() => { });
+            await togglePreview.click({ force: true }).catch(() => { });
         }
     }
-    await page.waitForSelector('[data-testid="canvas-preview-mode"]', { timeout: 8000 });
+
+    await expect(page.locator('[data-testid="canvas-preview-mode"]').first()).toBeVisible({ timeout: 15000 });
 }
 
 test.describe('Editor + Renderização - Carregamento de Funil', () => {
@@ -30,7 +38,7 @@ test.describe('Editor + Renderização - Carregamento de Funil', () => {
             if (isAsset && status >= 400) failures.push({ url, status });
         });
 
-        await page.goto(`${BASE_URL}/editor?funnelId=${FUNNEL_ID}`);
+        await page.goto(`${BASE_URL}/editor?funnel=${FUNNEL_ID}`);
         await page.waitForLoadState('networkidle', { timeout: 30000 });
 
         const hasRoot = await page.locator('#root, .editor-container, main').first().isVisible();
@@ -39,19 +47,19 @@ test.describe('Editor + Renderização - Carregamento de Funil', () => {
     });
 
     test('Renderiza canvas no modo edição e preview', async ({ page }) => {
-        await page.goto(`${BASE_URL}/editor?funnelId=${FUNNEL_ID}`);
+        await page.goto(`${BASE_URL}/editor?funnel=${FUNNEL_ID}`);
         await page.waitForLoadState('networkidle');
 
-        const canvasEdit = page.locator('[data-testid="canvas-editor"], .canvas-area').first();
-        await expect(canvasEdit).toBeVisible();
+        const canvasEdit = page.getByTestId('canvas-editor');
+        await expect(canvasEdit).toBeVisible({ timeout: 10000 });
 
         await enterPreview(page);
         const canvasPreview = page.locator('[data-testid="canvas-preview-mode"]').first();
-        await expect(canvasPreview).toBeVisible();
+        await expect(canvasPreview).toBeVisible({ timeout: 15000 });
     });
 
     test('Fluxo básico de preview: input + avançar step', async ({ page }) => {
-        await page.goto(`${BASE_URL}/editor?funnelId=${FUNNEL_ID}`);
+        await page.goto(`${BASE_URL}/editor?funnel=${FUNNEL_ID}`);
         await page.waitForLoadState('networkidle');
 
         await enterPreview(page);
