@@ -28,6 +28,7 @@ import {
 import React, { useEffect, useState } from 'react';
 import { Link } from 'wouter';
 import { appLogger } from '@/lib/utils/appLogger';
+import { HealthCheckResult } from '@/services/core/UnifiedServiceManager';
 
 interface DashboardData {
     funnelSummary: {
@@ -85,6 +86,7 @@ const ConsolidatedOverviewPage: React.FC = () => {
         },
     });
     const [loading, setLoading] = useState(true);
+    const [health, setHealth] = useState<Record<string, HealthCheckResult> | null>(null);
 
     // 🆕 SINCRONIZAR MÉTRICAS DO HOOK COM O STATE LOCAL
     useEffect(() => {
@@ -110,6 +112,15 @@ const ConsolidatedOverviewPage: React.FC = () => {
                 // Registrar services no UnifiedServiceManager
                 serviceManager.registerService(consolidatedFunnelService);
                 serviceManager.registerService(realDataAnalyticsService);
+
+                // Health check das integrações (Supabase/serviços canônicos)
+                try {
+                    const results = await serviceManager.healthCheckAll();
+                    setHealth(results as any);
+                    appLogger.info('🩺 Health check services:', { data: [results] });
+                } catch (e) {
+                    appLogger.warn('⚠️ Health check falhou', { data: [e] });
+                }
 
                 // Carregar dados reais do Supabase
                 const [funnelSummary, realMetrics] = await Promise.all([
@@ -149,6 +160,35 @@ const ConsolidatedOverviewPage: React.FC = () => {
                     <p className="text-blue-700">Carregando dados...</p>
                 </div>
             </div>
+
+            {/* Status das Integrações */}
+            {health && (
+                <div className="space-y-4">
+                    <h2 className="text-xl font-semibold text-blue-700">Status das Integrações</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        {Object.entries(health).map(([key, result]) => (
+                            <Card key={key}>
+                                <CardHeader className="pb-2">
+                                    <CardTitle className="text-sm font-medium">{key}</CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="flex items-center justify-between">
+                                        <Badge className={result.ok ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}>
+                                            {result.ok ? 'OK' : 'Erro'}
+                                        </Badge>
+                                        {result.latencyMs !== undefined && (
+                                            <span className="text-xs text-muted-foreground">{result.latencyMs}ms</span>
+                                        )}
+                                    </div>
+                                    {result.message && (
+                                        <p className="text-xs mt-2 text-muted-foreground">{result.message}</p>
+                                    )}
+                                </CardContent>
+                            </Card>
+                        ))}
+                    </div>
+                </div>
+            )}
         );
     }
 
