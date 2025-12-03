@@ -362,3 +362,27 @@ npm test -- *.diagnostic.test.tsx --run
 > - Campos não definidos
 
 **Use os validadores e testes para detectar problemas antes de produção!**
+
+---
+
+## ✅ Smoke Tests pós-migração de hooks (2025-12-03)
+
+- **DnD (dnd-kit):**
+  - Arrastar blocos no `CanvasDropZone.simple.tsx` funciona.
+  - Ordenação persiste visualmente sem erros de console.
+- **Criação de blocos:**
+  - `EmptyCanvasInterface` cria primeira etapa via `editor.actions.createFirstStep`.
+  - `AIStepGenerator` adiciona blocos gerados pela IA com `editor.actions.addBlock(step, block)`.
+- **Seleção e navegação:**
+  - Seleção de bloco reflete em `DynamicPropertiesPanel*` (estado `editor.state.selectedBlockId`).
+  - Navegação entre etapas via controles e eventos globais atualiza `currentStep`.
+- **Persistência:**
+  - Auto-save ativo (Supabase/IndexedDB) não gera erros; alterações básicas são salvas.
+- **Feature flags:**
+  - Flags carregam e podem ser alternadas (localStorage/env) sem quebrar UI.
+- **Import sanity:**
+  - Nenhuma referência a `usePureBuilder` ou `usePureBuilderCompat` restante.
+
+Observações:
+- Build: ✅ passando (23.56s). Chunking apresenta avisos >500k (planejado tratar).
+- Próximo: adicionar testes manuais de criar/editar/remover bloco e validar auto-save em tempo real.

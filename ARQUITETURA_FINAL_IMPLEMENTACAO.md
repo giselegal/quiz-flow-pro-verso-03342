@@ -134,6 +134,32 @@ export function useStepBlocksLoader({
 
 ## ⏳ Próximas Ações (Fase 2)
 
+### 5. Estado do Editor e Hooks (Atualizado)
+
+- Hook canônico: `useEditor` em `src/core/contexts/EditorContext/EditorStateProvider.tsx`.
+- Removido: `usePureBuilderCompat` (compat layer) — arquivo deletado e zero referências restantes.
+- Padrões de uso:
+  - Estado: `const editor = useEditor(); editor.state.currentStep`.
+  - Ações: `editor.actions.addBlock(step, block)` e `editor.actions.setCurrentStep(n)`.
+- Benefícios:
+  - API consistente com steps numéricos (não mais strings tipo `"step_1"`).
+  - Menos acoplamento e eliminação de warnings de deprecação.
+  - Re-render controlado e isolamento da lógica do editor.
+
+Componentes atualizados para `useEditor`:
+- `src/components/editor/EmptyCanvasInterface.tsx`
+- `src/components/editor/AIStepGenerator.tsx`
+- `src/components/editor/canvas/CanvasDropZone.simple.tsx`
+- `src/components/editor/blocks/OptionsGridBlock.tsx`
+- `src/core/editor/DynamicPropertiesPanel.tsx`
+- `src/core/editor/DynamicPropertiesPanel-fixed.tsx`
+- `src/core/editor/DynamicPropertiesPanelImproved.tsx`
+
+Diretrizes de migração:
+- Substituir `usePureBuilder` por `useEditor`.
+- Mapear `state`/`actions` para `editor.state`/`editor.actions`.
+- Usar `useEditor({ optional: true })` quando o provider pode não estar presente.
+
 ### 6. Integrar `useStepBlocksLoader` no Editor ⏳
 **Arquivo**: `src/components/editor/quiz/QuizModularEditor/index.tsx`  
 **Linhas**: ~945-1125 (substituir useEffect atual)

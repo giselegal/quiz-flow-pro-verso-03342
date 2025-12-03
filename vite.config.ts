@@ -90,6 +90,11 @@ export default defineConfig({
 
           // 🎯 CODE SPLITTING POR DOMÍNIO DE APLICAÇÃO
 
+          // ModernQuizEditor dedicado (subdividir app-editor) — avaliar primeiro
+          if (id.includes('/src/components/editor/ModernQuizEditor/')) {
+            return 'modern-quiz-editor';
+          }
+
           // Editor (300-400 KB)
           if (id.includes('/src/pages/editor/') ||
             id.includes('/src/components/editor/') ||
@@ -138,6 +143,8 @@ export default defineConfig({
     minify: 'esbuild',
     sourcemap: false,
     chunkSizeWarningLimit: 500, // Warning para chunks > 500KB
+    // Ajuste fino: permitir até 700KB para reduzir ruído enquanto refinamos splits
+    // chunkSizeWarningLimit: 700,
   },
   server: {
     host: '0.0.0.0',
