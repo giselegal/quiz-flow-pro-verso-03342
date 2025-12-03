@@ -20,13 +20,13 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { useEditorContext } from '@/core';
 // Usar ServiceRegistry para acessar o serviço canônico
-import { ServiceRegistry } from '@/services/ServiceRegistry';
+import { canonicalFunnelService } from '@/services/funnel/CanonicalFunnelService';
 import { Save } from 'lucide-react';
 import { templateService } from '@/services/canonical/TemplateService';
 import { appLogger } from '@/lib/utils/appLogger';
 
 export const SaveAsFunnelButton: React.FC = () => {
-  const funnelService = ServiceRegistry.get('funnelService');
+  const funnelService = canonicalFunnelService;
   const [open, setOpen] = useState(false);
   const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);

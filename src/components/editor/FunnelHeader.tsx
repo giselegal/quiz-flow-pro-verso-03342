@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { appLogger } from '@/lib/utils/logger';
 import { getFunnelIdFromEnvOrStorage } from '@/lib/utils/funnelIdentity';
-import { ServiceRegistry } from '@/services/ServiceRegistry';
+import { canonicalFunnelService } from '@/services/funnel/CanonicalFunnelService';
 import type { FunnelMetadata } from '@/types/funnel';
 // Removendo dependência de schemaDrivenFunnelService legacy - usar UnifiedFunnelData minimal
 import type { UnifiedFunnelData as SchemaDrivenFunnelData } from '@/services/canonical/types';
@@ -80,7 +80,7 @@ export const FunnelHeader: React.FC<FunnelHeaderProps> = ({
           });
         } else {
           // Para funis personalizados, buscar no Supabase
-          const funnelData = await ServiceRegistry.get('funnelService').getFunnel(currentFunnelId);
+          const funnelData = await canonicalFunnelService.getFunnel(currentFunnelId);
           if (funnelData) {
             setCurrentFunnel(funnelData);
           } else {

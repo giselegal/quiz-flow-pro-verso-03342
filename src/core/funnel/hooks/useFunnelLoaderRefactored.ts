@@ -15,7 +15,7 @@
  */
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { ServiceRegistry } from '@/services/ServiceRegistry';
+import { canonicalFunnelService } from '@/services/funnel/CanonicalFunnelService';
 import type { UnifiedFunnelData } from '@/services/canonical/types';
 import { adaptMetadataToUnified } from '@/services/canonical/FunnelAdapter';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
@@ -67,7 +67,7 @@ export function useFunnelLoader(
     initialFunnelId?: string,
     options: UseFunnelLoaderOptions = {},
 ): FunnelLoadingState {
-    const funnelService = ServiceRegistry.get('funnelService');
+    const funnelService = canonicalFunnelService;
 
     const {
         context = FunnelContext.EDITOR,

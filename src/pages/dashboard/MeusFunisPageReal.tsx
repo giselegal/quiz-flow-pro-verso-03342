@@ -35,7 +35,7 @@ import { supabase } from '@/services/integrations/supabase/customClient';
 import { useToast } from '@/hooks/use-toast';
 import { templateService } from '@/services/canonical/TemplateService';
 import { useFunnelController } from '@/hooks';
-import { ServiceRegistry } from '@/services/ServiceRegistry';
+import { canonicalFunnelService } from '@/services/funnel/CanonicalFunnelService';
 import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
@@ -161,7 +161,7 @@ const MeusFunisPageReal: React.FC = () => {
             // Preferimos o controlador para manter cache/coerência
             const draftFunnels = await listFunnels({ status: 'draft' }).catch(async () => {
                 // Fallback direto ao serviço, se necessário
-                const service = ServiceRegistry.get('funnelService');
+                const service = canonicalFunnelService;
                 return service.listFunnels({ status: 'draft' });
             });
 
@@ -799,7 +799,7 @@ const MeusFunisPageReal: React.FC = () => {
 
                                 try {
                                     // Buscar o draft
-                                    const service = ServiceRegistry.get('funnelService');
+                                    const service = canonicalFunnelService;
                                     const draftFunnel = await service.getFunnel(draftId);
 
                                     if (!draftFunnel) {

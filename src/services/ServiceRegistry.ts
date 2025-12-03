@@ -1,8 +1,8 @@
-import { funnelServiceCompat } from '@/services/adapters/FunnelServiceCompatAdapter';
+import { canonicalFunnelService } from '@/services/funnel/CanonicalFunnelService';
 import { funnelService as editorFunnelService } from '@/services/funnel/FunnelService';
 
 export type ServiceMap = {
-  funnelService: typeof funnelServiceCompat;
+  funnelService: typeof canonicalFunnelService;
   editorFunnelService: typeof editorFunnelService;
 };
 
@@ -11,7 +11,7 @@ class ServiceRegistryImpl {
 
   constructor() {
     this.services = {
-      funnelService: funnelServiceCompat,
+      funnelService: canonicalFunnelService,
       editorFunnelService,
     };
   }

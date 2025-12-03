@@ -11,7 +11,7 @@
  */
 
 import React, { createContext, useContext, ReactNode, useState, useEffect, useMemo } from 'react';
-import { ServiceRegistry } from '@/services/ServiceRegistry';
+import { canonicalFunnelService } from '@/services/funnel/CanonicalFunnelService';
 import type { FunnelMetadata } from '@/types/funnel';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 import { appLogger } from '@/lib/utils/appLogger';
@@ -89,7 +89,7 @@ export const UnifiedFunnelProvider: React.FC<UnifiedFunnelProviderProps> = ({
     context = FunnelContext.EDITOR,
     debugMode = false,
 }) => {
-    const service = useMemo(() => ServiceRegistry.get('funnelService'), []);
+    const service = canonicalFunnelService;
     // Estados locais
     const [funnel, setFunnel] = useState<UnifiedFunnelData | null>(null);
     const [isLoading, setIsLoading] = useState(false);

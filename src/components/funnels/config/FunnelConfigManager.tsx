@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Save, Loader2, Settings, Copy, RefreshCw } from 'lucide-react';
 
-import { ServiceRegistry } from '@/services/ServiceRegistry';
+import { canonicalFunnelService } from '@/services/funnel/CanonicalFunnelService';
 import {
     FunnelConfig,
     FunnelSEOOverrides,
@@ -45,7 +45,7 @@ export default function FunnelConfigManager({
     const [activeTab, setActiveTab] = useState('seo');
     const [error, setError] = useState<string | null>(null);
 
-    const persistenceService = ServiceRegistry.get('funnelService');
+    const persistenceService = canonicalFunnelService;
 
     // =================== Carregar configuração ===================
     const loadConfiguration = useCallback(async () => {

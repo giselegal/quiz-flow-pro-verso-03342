@@ -10,7 +10,7 @@
  * - FunnelOrchestrator
  */
 
-import { ServiceRegistry } from '@/services/ServiceRegistry';
+import { canonicalFunnelService } from '@/services/funnel/CanonicalFunnelService';
 import type { FunnelMetadata } from '@/types/funnel';
 import { Funnel } from '@/core/domains';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
@@ -58,7 +58,7 @@ export interface UpdateFunnelInput {
 // ============================================================================
 
 export class FunnelServiceAdapter {
-  private funnelService = ServiceRegistry.get('funnelService');
+  private funnelService = canonicalFunnelService;
   /**
    * Converter FunnelMetadata (canonical) → UnifiedFunnelData (legacy)
    */
