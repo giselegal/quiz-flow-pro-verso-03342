@@ -125,14 +125,18 @@ export const UnifiedFunnelProvider: React.FC<UnifiedFunnelProviderProps> = ({
             }
         };
 
-        // Registrar listeners
-        service.on('funnel:updated', handleFunnelUpdated);
-        service.on('funnel:deleted', handleFunnelDeleted);
+        // Registrar listeners (guard para ambientes sem event bus real)
+        if (typeof (service as any).on === 'function') {
+            (service as any).on('funnel:updated', handleFunnelUpdated);
+            (service as any).on('funnel:deleted', handleFunnelDeleted);
+        }
 
         // Cleanup
         return () => {
-            service.off('funnel:updated', handleFunnelUpdated);
-            service.off('funnel:deleted', handleFunnelDeleted);
+            if (typeof (service as any).off === 'function') {
+                (service as any).off('funnel:updated', handleFunnelUpdated);
+                (service as any).off('funnel:deleted', handleFunnelDeleted);
+            }
         };
     }, [funnelId, service]);
 
