@@ -54,7 +54,7 @@ export default defineConfig({
 
     /* Run your local dev server before starting the tests */
     webServer: {
-        // Sobe backend (3001), frontend (5173) e redirect 8080 -> 5173, aguardando prontidão
+        // Sobe backend (3001), frontend (8080), aguardando prontidão
         command: 'npm run dev:stack:wait',
         url: 'http://localhost:8080',
         reuseExistingServer: !process.env.CI,

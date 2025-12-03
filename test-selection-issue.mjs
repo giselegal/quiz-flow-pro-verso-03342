@@ -36,7 +36,7 @@ async function diagnose() {
     });
 
     console.log('📍 Navegando para o editor...');
-    await page.goto('http://localhost:8080/editor?funnel=quiz21StepsComplete&template=quiz21StepsComplete', {
+    await page.goto('http://localhost:8081/editor?funnel=quiz21StepsComplete&template=quiz21StepsComplete', {
         waitUntil: 'networkidle',
         timeout: 30000
     });

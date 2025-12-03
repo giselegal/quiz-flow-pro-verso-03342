@@ -161,7 +161,7 @@ export async function navigateToRoute(
   } = {}
 ) {
   const { waitForLoad = true, validateUrl = true, timeout = TIMEOUTS.NAVIGATION, retries = 2 } = options;
-  const baseUrl = 'http://localhost:8080';
+  const baseUrl = 'http://localhost:8081';
   const fullUrl = `${baseUrl}${route}`;
   
   let lastError: Error | null = null;

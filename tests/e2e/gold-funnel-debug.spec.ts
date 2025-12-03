@@ -94,7 +94,7 @@ test.describe('Gold Funnel Debug Tests', () => {
     console.log('💾 Template ID no localStorage:', templateId);
 
     // Tentar ler o JSON diretamente (usar porta 8080 do Vite dev server)
-    const baseUrl = 'http://localhost:8080';
+    const baseUrl = 'http://localhost:8081';
     
     try {
       const goldJsonResponse = await page.request.get(`${baseUrl}/templates/quiz21-v4-gold.json`);

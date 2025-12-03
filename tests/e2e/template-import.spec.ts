@@ -12,7 +12,7 @@ import { test, expect } from '@playwright/test';
  */
 test.describe('Template Import and Customization', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('http://localhost:8080/admin/my-funnels');
+    await page.goto('http://localhost:8081/admin/my-funnels');
   });
 
   test('E2E-09: Deve importar e customizar template com sucesso', async ({ page }) => {
