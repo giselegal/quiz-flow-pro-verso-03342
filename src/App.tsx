@@ -114,6 +114,7 @@ const AdminCreativesPage = lazy(() => retryImport(() => import('./pages/admin/Cr
 const CanonicalAdoptionDashboard = lazy(() => retryImport(() => import('./pages/admin/CanonicalAdoptionDashboard')));
 
 // 🔐 PÁGINAS DE AUTENTICAÇÃO
+const AuthPage = lazy(() => retryImport(() => import('./pages/AuthPage')));
 const ResetPasswordPage = lazy(() => retryImport(() => import('./pages/ResetPasswordPage')));
 
 
@@ -463,14 +464,9 @@ function AppCore() {
 
                                         {/* 🔐 AUTENTICAÇÃO */}
                                         <Route path="/auth">
-                                            {() => {
-                                                const AuthPage = lazy(() => import('./pages/AuthPage'));
-                                                return (
-                                                    <Suspense fallback={<PageLoadingFallback message="Carregando autenticação..." />}>
-                                                        <AuthPage />
-                                                    </Suspense>
-                                                );
-                                            }}
+                                            <Suspense fallback={<PageLoadingFallback message="Carregando autenticação..." />}>
+                                                <AuthPage />
+                                            </Suspense>
                                         </Route>
 
                                         <Route path="/auth/reset-password">
