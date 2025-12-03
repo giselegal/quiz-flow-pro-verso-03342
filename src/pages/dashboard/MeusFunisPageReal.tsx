@@ -5,7 +5,7 @@
  * e exibe métricas reais de cada funil
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import {
     Edit,
     Copy,
@@ -114,8 +114,11 @@ const MeusFunisPageReal: React.FC = () => {
     // DATA LOADING
     // ========================================================================
 
+    const isLoadingRef = useRef(false);
     const loadFunis = async () => {
         try {
+            if (isLoadingRef.current) return;
+            isLoadingRef.current = true;
             setIsLoading(true);
 
             // buscar versão publicada
@@ -273,7 +276,8 @@ const MeusFunisPageReal: React.FC = () => {
             const sortDate = (d: any) => new Date(d.updated_at || d.created_at || 0).getTime();
             const orderedDrafts = [...draftFunis].sort((a, b) => sortDate(b) - sortDate(a));
             const orderedExisting = [...processedFunis].sort((a, b) => sortDate(b) - sortDate(a));
-            setFunis([...orderedDrafts, ...orderedExisting]);
+            const nextFunis = [...orderedDrafts, ...orderedExisting];
+            setFunis(nextFunis);
 
             // Calcular estatísticas gerais
             const merged = [...draftFunis, ...processedFunis];
@@ -300,6 +304,7 @@ const MeusFunisPageReal: React.FC = () => {
                 variant: 'destructive',
             });
         } finally {
+            isLoadingRef.current = false;
             setIsLoading(false);
         }
     };
@@ -307,6 +312,19 @@ const MeusFunisPageReal: React.FC = () => {
     useEffect(() => {
         loadFunis();
     }, []);
+
+    // Debounce de atualização manual para evitar múltiplos disparos
+    const refreshTimerRef = useRef<number | null>(null);
+    const triggerRefresh = () => {
+        if (refreshTimerRef.current !== null) return;
+        refreshTimerRef.current = window.setTimeout(() => {
+            loadFunis();
+            if (refreshTimerRef.current !== null) {
+                window.clearTimeout(refreshTimerRef.current);
+                refreshTimerRef.current = null;
+            }
+        }, 150);
+    };
 
     // ========================================================================
     // ACTIONS
@@ -392,37 +410,43 @@ const MeusFunisPageReal: React.FC = () => {
     // FILTERING AND SORTING
     // ========================================================================
 
-    const filteredFunis = funis.filter(funil => {
-        if (selectedStatus === 'todos') return true;
-        return funil.uiStatus === selectedStatus;
-    });
+    const filteredFunis = useMemo(() => {
+        if (selectedStatus === 'todos') return funis;
+        return funis.filter(f => f.uiStatus === selectedStatus);
+    }, [funis, selectedStatus]);
 
-    const sortedFunis = [...filteredFunis].sort((a, b) => {
+    const sortedFunis = useMemo(() => {
+        const arr = [...filteredFunis];
         switch (sortBy) {
             case 'name':
-                return a.name.localeCompare(b.name);
+                arr.sort((a, b) => a.name.localeCompare(b.name));
+                break;
             case 'created':
-                return (b.created_at && a.created_at) ?
-                    new Date(b.created_at).getTime() - new Date(a.created_at).getTime() : 0;
+                arr.sort((a, b) => (b.created_at && a.created_at)
+                    ? new Date(b.created_at).getTime() - new Date(a.created_at).getTime() : 0);
+                break;
             case 'sessions':
-                return b.sessions - a.sessions;
+                arr.sort((a, b) => b.sessions - a.sessions);
+                break;
             case 'conversion':
-                return b.conversionRate - a.conversionRate;
+                arr.sort((a, b) => b.conversionRate - a.conversionRate);
+                break;
             default: // updated
-                return (b.updated_at && a.updated_at) ?
-                    new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime() : 0;
+                arr.sort((a, b) => (b.updated_at && a.updated_at)
+                    ? new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime() : 0);
         }
-    });
+        return arr;
+    }, [filteredFunis, sortBy]);
 
     // ========================================================================
     // RENDER
     // ========================================================================
 
-    const statusConfig = {
+    const statusConfig = useMemo(() => ({
         active: { label: 'Ativo', color: 'bg-green-500', textColor: 'text-green-700', bgColor: 'bg-green-50' },
         draft: { label: 'Rascunho', color: 'bg-gray-500', textColor: 'text-gray-700', bgColor: 'bg-gray-50' },
         paused: { label: 'Pausado', color: 'bg-yellow-500', textColor: 'text-yellow-700', bgColor: 'bg-yellow-50' },
-    };
+    }), []);
 
     if (isLoading) {
         return (
@@ -485,7 +509,7 @@ const MeusFunisPageReal: React.FC = () => {
                         </p>
                     </div>
                     <div className="flex gap-2">
-                        <Button variant="outline" onClick={loadFunis}>
+                        <Button variant="outline" onClick={triggerRefresh}>
                             <RefreshCw className="w-4 h-4 mr-2" />
                             Atualizar
                         </Button>
