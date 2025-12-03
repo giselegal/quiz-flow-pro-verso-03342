@@ -93,6 +93,13 @@ export default function EditorPage() {
     useEffect(() => {
         let isMounted = true;
 
+        // Guardar ausência de serviço para evitar runtime error
+        if (!editorFunnelService) {
+            appLogger.error('❌ [EditorPage] editorFunnelService não encontrado no ServiceRegistry');
+            setLoadError('Serviço de funil indisponível. Tente recarregar a página.');
+            return;
+        }
+
         async function loadFunnel() {
             if (!funnelId) return;
 
@@ -126,7 +133,7 @@ export default function EditorPage() {
                     steps: funnel.quiz.steps?.length || 0
                 });
 
-                console.log('📦 Funnel completo carregado:', {
+                appLogger.info('📦 Funnel completo carregado:', {
                     metadata: funnel.quiz.metadata,
                     stepsCount: funnel.quiz.steps?.length,
                     allSteps: funnel.quiz.steps?.map(s => ({
@@ -158,7 +165,7 @@ export default function EditorPage() {
         return () => {
             isMounted = false;
         };
-    }, [funnelId, funnelIdentifier]);
+    }, [funnelId]);
 
     // 🆕 Handler de salvamento usando FunnelService
     const handleSave = async (savedQuiz: QuizSchema) => {
@@ -242,7 +249,7 @@ export default function EditorPage() {
                     </div>
                 ) : quiz ? (
                     <>
-                        {console.log('🎯 Renderizando ModernQuizEditor com quiz:', {
+                        {appLogger.info('🎯 Renderizando ModernQuizEditor com quiz:', {
                             name: quiz.metadata?.name,
                             steps: quiz.steps?.length,
                             version: quiz.version,
