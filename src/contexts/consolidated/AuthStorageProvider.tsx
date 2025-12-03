@@ -362,11 +362,15 @@ export const AuthStorageProvider: React.FC<AuthStorageProviderProps> = ({
     const signInWithGoogle = useCallback(async () => {
         try {
             appLogger.info('🔐 [AuthStorage] Iniciando login com Google...');
+            const params = new URLSearchParams(window.location.search);
+            const redirectParam = params.get('redirect');
+            const safeRedirectPath = (redirectParam && redirectParam.startsWith('/')) ? redirectParam : '/admin';
+            const redirectTo = `${window.location.origin}${safeRedirectPath}`;
 
             const { data, error } = await supabase.auth.signInWithOAuth({
                 provider: 'google',
                 options: {
-                    redirectTo: `${window.location.origin}/admin`,
+                    redirectTo,
                     queryParams: {
                         access_type: 'offline',
                         prompt: 'consent',
@@ -376,7 +380,7 @@ export const AuthStorageProvider: React.FC<AuthStorageProviderProps> = ({
 
             if (error) {
                 appLogger.error('❌ [AuthStorage] Erro OAuth:', { error: error.message, status: error.status });
-                
+
                 // Erro específico: provider não habilitado no Supabase
                 if (error.message?.includes('Provider') || error.message?.includes('not enabled')) {
                     throw new Error('Google OAuth não está configurado. Configure no Supabase Dashboard: Authentication → Providers → Google');

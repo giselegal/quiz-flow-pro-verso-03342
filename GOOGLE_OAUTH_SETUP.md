@@ -8,7 +8,24 @@ O Google OAuth requer configuração no **Supabase Dashboard** e **Google Cloud 
 
 ## 📋 Passo a Passo Completo
 
-### **1. Google Cloud Console (Criar OAuth Client)**
+### 0) Variáveis de ambiente (DEV/PROD)
+
+Crie um arquivo `.env.local` (ou `.env`) na raiz do projeto com suas credenciais do Supabase:
+
+```bash
+VITE_SUPABASE_URL=https://SEU_PROJECT_ID.supabase.co
+VITE_SUPABASE_ANON_KEY=SEU_ANON_KEY
+```
+
+Alternativa rápida (sem mexer no .env): com o app rodando, passe as credenciais pela URL para salvar no localStorage e recarregar automaticamente:
+
+```
+http://localhost:8080/?sbUrl=https://SEU_PROJECT_ID.supabase.co&sbKey=SEU_ANON_KEY
+```
+
+Observação: Em dev, sem URL/KEY válidos, o cliente Supabase usa um mock e o Google OAuth não funciona (botão ficará desabilitado).
+
+### 1) Google Cloud Console (Criar OAuth Client)
 
 1. Acesse: https://console.cloud.google.com/
 2. Crie ou selecione um projeto
@@ -32,7 +49,7 @@ O Google OAuth requer configuração no **Supabase Dashboard** e **Google Cloud 
 
 ---
 
-### **2. Supabase Dashboard (Habilitar Provider)**
+### 2) Supabase Dashboard (Habilitar Provider)
 
 1. Acesse: https://supabase.com/dashboard/project/txqljpitotmcxntprxiu
 2. Menu lateral → **Authentication** → **Providers**
@@ -45,7 +62,7 @@ O Google OAuth requer configuração no **Supabase Dashboard** e **Google Cloud 
 
 ---
 
-### **3. Testar a Integração**
+### 3) Testar a Integração
 
 1. Reinicie o servidor de desenvolvimento se necessário:
    ```bash
@@ -58,7 +75,7 @@ O Google OAuth requer configuração no **Supabase Dashboard** e **Google Cloud 
 
 4. Deve abrir popup/redirect do Google para login
 
-5. Após login, será redirecionado para `/admin`
+5. Após login, será redirecionado para `/admin` (ou para o caminho em `?redirect=/alguma-rota`)
 
 ---
 
@@ -78,9 +95,9 @@ O Google OAuth requer configuração no **Supabase Dashboard** e **Google Cloud 
 - ✅ Configure a tela de consentimento OAuth no Google Cloud Console
 - ✅ Adicione seu email como usuário de teste (se app em desenvolvimento)
 
-### OAuth funciona mas não redireciona para /admin
-- ✅ Verifique o `redirectTo` em `AuthStorageProvider.tsx` (linha ~367)
-- ✅ Certifique-se que a URL está correta: `${window.location.origin}/admin`
+### OAuth funciona mas não redireciona corretamente
+- ✅ Agora o app preserva `?redirect=` automaticamente (ex.: `/auth?redirect=/editor`)
+- ✅ Confirme que a URL construída é do mesmo domínio do app (segurança)
 
 ---
 
@@ -105,4 +122,6 @@ Se não quiser configurar OAuth agora, pode remover/comentar o botão em `src/pa
 
 ---
 
-**Status Atual:** OAuth implementado no código ✅ | Configuração do servidor pendente ⏳
+**Status Atual:**
+- Código pronto ✅ (preserva redirect + botão desabilita sem SUPABASE_URL/KEY)
+- Configuração no Supabase/Google pendente ⏳ (se ainda não feita)

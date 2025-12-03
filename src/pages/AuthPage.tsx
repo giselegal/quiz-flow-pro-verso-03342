@@ -27,6 +27,16 @@ const AuthPage: React.FC = () => {
     const [, setLocation] = useLocation();
     const { login, signUp, resetPassword, signInWithGoogle } = useAuthStorage();
 
+    const isSupabaseConfigured = (() => {
+        const env = (import.meta as any)?.env ?? {};
+        const hasEnv = Boolean(env?.VITE_SUPABASE_URL && env?.VITE_SUPABASE_ANON_KEY);
+        let hasLs = false;
+        try {
+            hasLs = Boolean(localStorage.getItem('supabase:url') && localStorage.getItem('supabase:key'));
+        } catch { }
+        return hasEnv || hasLs;
+    })();
+
     const handleForgotPassword = async () => {
         const normalizedEmail = email.trim().toLowerCase();
         if (!normalizedEmail) {
@@ -49,7 +59,7 @@ const AuthPage: React.FC = () => {
             // OAuth redireciona automaticamente se bem-sucedido
         } catch (error: any) {
             const errorMessage = error?.message || 'Erro ao fazer login com Google';
-            
+
             // Mensagem específica se OAuth não configurado
             if (errorMessage.includes('não está configurado') || errorMessage.includes('not enabled')) {
                 toast.error('Google OAuth não configurado no servidor. Entre com email/senha.', { duration: 8000 });
@@ -227,17 +237,17 @@ const AuthPage: React.FC = () => {
                     <Button
                         type="button"
                         onClick={handleGoogleLogin}
-                        disabled={loading}
+                        disabled={loading || !isSupabaseConfigured}
                         variant="outline"
                         className="w-full bg-white/5 border-white/20 hover:bg-white/10 text-white font-medium py-6 transition-all duration-300"
                     >
                         <Chrome className="h-5 w-5 mr-2" />
                         Continuar com Google
                     </Button>
-                    
-                    {import.meta.env.DEV && (
-                        <p className="text-xs text-slate-400 text-center mt-2">
-                            ⚠️ Requer configuração no Supabase Dashboard
+
+                    {!isSupabaseConfigured && (
+                        <p className="text-xs text-red-300 text-center mt-2">
+                            ⚠️ Google OAuth indisponível: configure SUPABASE_URL/KEY no .env ou use ?sbUrl=&sbKey=
                         </p>
                     )}
 
