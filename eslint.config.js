@@ -165,6 +165,11 @@ export default [
               group: ['../*/*/*/*', '../../../*', '../../../../*'],
               message: '❌ Imports profundos não são permitidos. Use aliases @/ ao invés de ../../../. Exemplo: import { X } from "@/data/X"',
             },
+            // Restringir imports de camadas legadas
+            {
+              group: ['@/legacy/**'],
+              message: '❌ Imports de "@/legacy/**" são restritos. Use o editor moderno ou mantenha apenas em pontos de fallback explícitos.',
+            },
             // ===============================================================
             // AUDITORIA 2025-11-28: Bloquear registries legados
             // Use: @/core/registry/UnifiedBlockRegistry (925 LOC, fonte única)
