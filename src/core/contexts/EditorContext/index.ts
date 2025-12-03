@@ -29,8 +29,3 @@ export {
     type ValidationError,
 } from './EditorStateProvider';
 
-export {
-    // Hook com camada de compatibilidade (para código legado)
-    useEditorCompat,
-    type EditorCompatAPI,
-} from './EditorCompatLayer';

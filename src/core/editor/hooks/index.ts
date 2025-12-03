@@ -8,6 +8,5 @@ export { useEditorAdapter, useEditorAdapter as default } from './useEditorAdapte
 export { 
   useEditorUnified, 
   useEditorUnifiedOptional,
-  isEditorCompatAPI,
   type UseEditorUnifiedOptions 
 } from './useEditorUnified';

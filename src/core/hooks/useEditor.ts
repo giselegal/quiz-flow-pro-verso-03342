@@ -25,7 +25,6 @@
 export { 
     useEditor,
     useEditorState,
-    useEditorCompat,
 } from '@/core/contexts/EditorContext';
 
 export type {

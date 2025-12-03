@@ -18,7 +18,6 @@ export {
     EditorStateProvider as EditorProvider,
     useEditorState,
     useEditor,
-    useEditorCompat,
     type EditorContextValue,
     type EditorCompatAPI,
 } from './contexts/EditorContext';
