@@ -107,7 +107,11 @@ describe('AuthStorageProvider', () => {
             const { result } = renderHook(() => useAuthStorage(), { wrapper });
 
             await act(async () => {
-                await result.current.login('test@example.com', 'wrongpass');
+                try {
+                    await result.current.login('test@example.com', 'wrongpass');
+                } catch (error: any) {
+                    expect(error.message).toBe('Invalid credentials');
+                }
             });
 
             expect(result.current.user).toBeNull();

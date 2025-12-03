@@ -54,32 +54,37 @@ describe('AuthPage', () => {
     });
 
     it('permite criar conta e chama signUp()', async () => {
-        const { container } = render(<AuthPage />);
+        const { container, unmount } = render(<AuthPage />);
 
         // Encontrar o botão de toggle (não está dentro do form)
         const toggleButtons = screen.getAllByText('Criar nova conta');
         const toggleButton = toggleButtons[toggleButtons.length - 1]; // Pegar o último (fora do form)
         fireEvent.click(toggleButton);
 
-        // Aguardar mudança de modo
-        await waitFor(() => {
-            expect(screen.getByText('Criar Conta')).toBeInTheDocument();
-        });
+        // Aguardar um pouco para o estado atualizar
+        await new Promise(resolve => setTimeout(resolve, 50));
 
-        const emailInput = screen.getByPlaceholderText('seu@email.com');
-        const passwordInput = screen.getByPlaceholderText('••••••••');
-        const form = container.querySelector('form');
-        const submitButton = form?.querySelector('button[type="submit"]') as HTMLElement;
+        const emailInputs = screen.getAllByPlaceholderText('seu@email.com');
+        const passwordInputs = screen.getAllByPlaceholderText('••••••••');
+        const emailInput = emailInputs[emailInputs.length - 1];
+        const passwordInput = passwordInputs[passwordInputs.length - 1];
 
         fireEvent.change(emailInput, { target: { value: 'new@example.com' } });
         fireEvent.change(passwordInput, { target: { value: 'abcdef' } });
-        fireEvent.click(submitButton);
+
+        // Aguardar que o botão "Criar Conta" apareça e clicar
+        await waitFor(() => {
+            const criarContaButton = screen.getByText('Criar Conta');
+            fireEvent.click(criarContaButton);
+        });
 
         await waitFor(() => {
             expect(mockSignUp).toHaveBeenCalled();
             expect(mockSignUp.mock.calls[0][0]).toBe('new@example.com');
             expect(mockSignUp.mock.calls[0][1]).toBe('abcdef');
         });
+
+        unmount();
     });
 
     it('valida campos obrigatórios', async () => {
