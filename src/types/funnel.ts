@@ -97,6 +97,7 @@ export interface ContextualFunnelData {
 export interface FunnelMetadata {
   id: string;
   name: string;
+  userId?: string;
   type: 'quiz' | 'lead-gen' | 'survey' | 'other';
   category?: string;
   context?: FunnelContext;

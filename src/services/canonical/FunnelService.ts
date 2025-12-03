@@ -1,13 +1,17 @@
 /**
  * 🔄 BARREL EXPORT CANÔNICO - FunnelService
+/**
+ * 🔄 BARREL EXPORT PARA FUNNEL SERVICE
  * 
- * Re-exporta o FunnelService oficial de src/services/funnel/FunnelService.ts
- * para manter compatibilidade durante a migração
- * 
- * @deprecated Use @/services/funnel/FunnelService diretamente
+ * Re-exporta FunnelServiceCompatAdapter como FunnelService canônico
+ * Mantém compatibilidade com API antiga enquanto usa nova implementação
  */
 
-// Re-export tipos centralizados
+export { FunnelServiceCompatAdapter as CanonicalFunnelService } from '../adapters/FunnelServiceCompatAdapter';
+export { funnelServiceCompat as funnelService } from '../adapters/FunnelServiceCompatAdapter';
+
+// Re-export tipos da implementação original
+export type { Funnel, LoadFunnelResult, SaveFunnelResult } from '../funnel/FunnelService';
 export type {
   FunnelMetadata,
   CreateFunnelInput,
