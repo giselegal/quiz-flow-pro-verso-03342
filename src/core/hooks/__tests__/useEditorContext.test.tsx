@@ -26,37 +26,7 @@ vi.mock('@/contexts/theme/ThemeProvider', () => ({
         theme: 'light', // Compat alias
         setTheme: vi.fn(),
     }),
-})); vi.mock('@/core/contexts/EditorContext/EditorCompatLayer', () => ({
-    state: {
-        stepBlocks: {
-            1: [{ id: 'block-1', type: 'text', content: { text: 'Test' } }],
-        },
-        selectedBlockId: null,
-        isDirty: false,
-    },
-    currentStep: 1,
-    selectBlock: vi.fn(),
-    setCurrentStep: vi.fn(),
-    addBlock: vi.fn(),
-    removeBlock: vi.fn(),
-    updateBlock: vi.fn(),
-    reorderBlocks: vi.fn(),
-    getStepBlocks: vi.fn((step: number) => {
-        if (step === 1) {
-            return [{ id: 'block-1', type: 'text', content: { text: 'Test' } }];
-        }
-        return [];
-    }),
-    setStepBlocks: vi.fn(),
-    isPreviewMode: false,
-    markSaved: vi.fn(),
-    // Undo/Redo
-    undo: vi.fn(),
-    redo: vi.fn(),
-    canUndo: false,
-    canRedo: false,
-})
-});
+}));
 vi.mock('@/contexts/funnel/FunnelDataProvider', () => ({
     useFunnelData: () => ({
         currentFunnel: { id: 'test-funnel', name: 'Test Funnel' },
