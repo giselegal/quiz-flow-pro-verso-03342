@@ -1,6 +1,4 @@
 /**
- * 🔄 BARREL EXPORT CANÔNICO - FunnelService
-/**
  * 🔄 BARREL EXPORT PARA FUNNEL SERVICE
  * 
  * Re-exporta FunnelServiceCompatAdapter como FunnelService canônico
@@ -12,20 +10,14 @@ export { funnelServiceCompat as funnelService } from '../adapters/FunnelServiceC
 
 // Re-export tipos da implementação original
 export type { Funnel, LoadFunnelResult, SaveFunnelResult } from '../funnel/FunnelService';
+
+// Re-export tipos de funnel
 export type {
   FunnelMetadata,
   CreateFunnelInput,
   UpdateFunnelInput,
   ComponentInstance,
   FunnelWithComponents,
-  UnifiedFunnelData
+  UnifiedFunnelData,
 } from '@/types/funnel';
-
-// Export do serviço oficial
-export { FunnelService as CanonicalFunnelService } from '../funnel/FunnelService';
-export type { Funnel, LoadFunnelResult, SaveFunnelResult } from '../funnel/FunnelService';
-
-// Export da instância default (compatibilidade)
-import { FunnelService } from '../funnel/FunnelService';
-const canonicalInstance = new FunnelService();
-export { canonicalInstance as funnelService };
+  UnifiedFunnelData

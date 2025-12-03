@@ -198,9 +198,7 @@ export class FunnelServiceAdapter {
    */
   async listUserFunnels(userId?: string): Promise<UnifiedFunnelData[]> {
     try {
-      const metadataList = await this.funnelService.listFunnels({
-        context: FunnelContext.EDITOR,
-      });
+      const metadataList = await this.funnelService.listFunnels();
 
       return metadataList.map((meta: any) => this.toUnifiedFormat(meta));
     } catch (error) {

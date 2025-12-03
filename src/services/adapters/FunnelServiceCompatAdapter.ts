@@ -47,12 +47,8 @@ export class FunnelServiceCompatAdapter {
       
       // Aplicar filtros
       let filtered = funnels;
-      if (filters?.status) {
-        filtered = filtered.filter(f => f.quiz?.metadata?.status === filters.status);
-      }
-      if (filters?.type) {
-        filtered = filtered.filter(f => f.quiz?.metadata?.type === filters.type);
-      }
+      // Filtros customizados (status/type não fazem parte do QuizMetadata padrão)
+      // TODO: adicionar campos custom se necessário
 
       return filtered.map(f => this.toMetadata(f));
     } catch (error) {
@@ -84,8 +80,28 @@ export class FunnelServiceCompatAdapter {
    * Cria novo funil
    */
   async createFunnel(input: CreateFunnelInput): Promise<FunnelMetadata> {
+    // Criar estrutura de quiz com metadata
+    const quizConfig: any = input.config || {
+      version: '1.0.0',
+      metadata: {
+        name: input.name || 'Novo Funil',
+        id: input.name?.toLowerCase().replace(/\s+/g, '-') || 'novo-funil',
+        description: '',
+        author: 'system',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      },
+      theme: {
+        colors: { primary: '#000000', secondary: '#ffffff' },
+        fonts: { body: 'Inter', heading: 'Inter' },
+      },
+      schemaVersion: '1.0.0',
+      steps: [],
+      settings: {},
+    };
+
     const result = await this.service.saveFunnel(
-      input.config || { steps: [], metadata: {} },
+      quizConfig,
       input.name || 'Novo Funil',
       undefined // Criar novo draft
     );
@@ -131,7 +147,7 @@ export class FunnelServiceCompatAdapter {
   /**
    * Duplica um funil
    */
-  async duplicateFunnel(id: string, newName?: string): Promise<LoadFunnelResult> {
+  async duplicateFunnel(id: string, newName?: string): Promise<FunnelMetadata> {
     const original = await this.service.loadFunnel({ funnelId: id });
     
     const newQuiz = {
@@ -152,25 +168,27 @@ export class FunnelServiceCompatAdapter {
       throw new Error(result.error || 'Falha ao duplicar funil');
     }
 
-    return this.service.loadFunnel({ funnelId: result.draftId });
+    return this.getFunnel(result.draftId);
   }
 
   /**
    * Deleta um funil (não implementado no novo serviço)
    */
-  async deleteFunnel(id: string): Promise<void> {
+  async deleteFunnel(id: string): Promise<boolean> {
     appLogger.warn('deleteFunnel não implementado no novo serviço');
     // TODO: Implementar delete no FunnelService
+    return false;
   }
 
   /**
    * Verifica permissões (mock)
    */
-  async checkPermissions(id: string): Promise<{ canEdit: boolean; canDelete: boolean; canPublish: boolean }> {
+  async checkPermissions(id: string): Promise<{ canRead: boolean; canEdit: boolean; canDelete: boolean; isOwner: boolean }> {
     return {
+      canRead: true,
       canEdit: true,
       canDelete: true,
-      canPublish: true,
+      isOwner: true,
     };
   }
 
@@ -200,15 +218,26 @@ export class FunnelServiceCompatAdapter {
   }
 
   /**
+   * Busca blocos de um step específico (backward compatibility)
+   */
+  async getStepBlocks(funnelId: string, stepKey: string): Promise<any[]> {
+    const result = await this.service.loadFunnel({ funnelId });
+    const step = result.funnel.quiz?.steps?.find((s: any) => s.key === stepKey);
+    return step?.blocks || [];
+  }
+
+  /**
    * Converte Funnel para FunnelMetadata
    */
   private toMetadata(funnel: Funnel): FunnelMetadata {
+    // QuizMetadata só tem: id, name, description, author, createdAt, updatedAt, version, tags
+    const quizMeta = funnel.quiz?.metadata || {} as any;
     return {
       id: funnel.id,
-      name: funnel.quiz?.metadata?.name || funnel.id,
-      type: funnel.quiz?.metadata?.type || 'quiz',
-      status: funnel.quiz?.metadata?.status || 'draft',
-      isActive: funnel.quiz?.metadata?.status === 'published',
+      name: quizMeta.name || funnel.id,
+      type: 'quiz', // default
+      status: funnel.draftId ? 'draft' : 'published', // inferir do contexto
+      isActive: !funnel.draftId, // se não tem draftId, está publicado
       createdAt: funnel.createdAt || new Date().toISOString(),
       updatedAt: funnel.updatedAt || new Date().toISOString(),
       userId: funnel.userId,

@@ -315,9 +315,7 @@ export const UnifiedCRUDProvider: React.FC<UnifiedCRUDProviderProps> = ({
         try {
             if (debug) logger.debug('unifiedCRUD', '🔄 UnifiedCRUDProvider: Refreshing funnels');
 
-            const funnelListMeta = await ServiceRegistry.get('funnelService').listFunnels({
-                context,
-            });
+            const funnelListMeta = await ServiceRegistry.get('funnelService').listFunnels();
 
             const funnelList = funnelListMeta.map(adaptMetadataToUnified);
             setFunnels(funnelList);
