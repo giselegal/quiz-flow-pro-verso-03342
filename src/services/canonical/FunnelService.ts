@@ -20,4 +20,3 @@ export type {
   FunnelWithComponents,
   UnifiedFunnelData,
 } from '@/types/funnel';
-  UnifiedFunnelData
