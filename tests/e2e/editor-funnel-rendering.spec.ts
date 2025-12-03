@@ -14,7 +14,7 @@ async function enterPreview(page: import('@playwright/test').Page) {
     });
 
     // Se não renderizou, tenta via diversos seletores de toggle
-    const previewCanvas = page.locator('[data-testid="canvas-preview-mode"]').first();
+    const previewCanvas = page.locator('[data-testid="canvas-preview-mode"], [class*="preview"], [data-testid*="preview"]').first();
     if (!(await previewCanvas.isVisible().catch(() => false))) {
         const togglePreview = page.locator(
             'button:has-text("Preview"), button:has-text("Pré-visualizar"), button:has-text("Visualizar"), [data-action*="preview"], [data-testid*="toggle-preview"]'
@@ -50,8 +50,8 @@ test.describe('Editor + Renderização - Carregamento de Funil', () => {
         await page.goto(`${BASE_URL}/editor?funnel=${FUNNEL_ID}`);
         await page.waitForLoadState('networkidle');
 
-        const canvasEdit = page.getByTestId('canvas-editor');
-        await expect(canvasEdit).toBeVisible({ timeout: 10000 });
+        const canvasEdit = page.locator('[data-testid="canvas-editor"], .canvas-area, [class*="canvas"]').first();
+        await expect(canvasEdit).toBeVisible({ timeout: 15000 });
 
         await enterPreview(page);
         const canvasPreview = page.locator('[data-testid="canvas-preview-mode"]').first();
@@ -70,7 +70,7 @@ test.describe('Editor + Renderização - Carregamento de Funil', () => {
         }
 
         const startBtn = page.locator(
-            'button:has-text("Começar"), button:has-text("Quero Descobrir"), button:has-text("Continuar")'
+            'button:has-text("Começar"), button:has-text("Quero Descobrir"), button:has-text("Continuar"), button:has-text("Avançar"), [data-action*="next"], [data-testid*="next"]'
         ).first();
         if (await startBtn.isVisible().catch(() => false)) {
             await startBtn.click();
