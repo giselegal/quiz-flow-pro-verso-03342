@@ -1,12 +1,10 @@
 /**
- * 🔄 BARREL EXPORT PARA FUNNEL SERVICE
+ * 🎯 BARREL EXPORT PARA FUNNEL SERVICE (CANÔNICO)
  * 
- * Re-exporta FunnelServiceCompatAdapter como FunnelService canônico
- * Mantém compatibilidade com API antiga enquanto usa nova implementação
+ * Exporta a implementação canônica consolidada e sua instância única.
  */
 
-export { FunnelServiceCompatAdapter as CanonicalFunnelService } from '../adapters/FunnelServiceCompatAdapter';
-export { funnelServiceCompat as funnelService } from '../adapters/FunnelServiceCompatAdapter';
+export { CanonicalFunnelService, canonicalFunnelService as funnelService } from '../funnel/CanonicalFunnelService';
 
 // Re-export tipos da implementação original
 export type { Funnel, LoadFunnelResult, SaveFunnelResult } from '../funnel/FunnelService';
