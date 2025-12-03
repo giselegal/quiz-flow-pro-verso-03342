@@ -44,7 +44,10 @@ export default function EditorPage() {
     // Estado para quiz carregado
     const [quiz, setQuiz] = useState<QuizSchema | null>(null);
     const [quizId, setQuizId] = useState<string | undefined>(undefined); // 🆕 DRAFT ID
-    const [funnelId, setFunnelId] = useState<string>('quiz21StepsComplete');
+    const [funnelId, setFunnelId] = useState<string>(() => {
+        const envDefault = import.meta.env.VITE_DEFAULT_FUNNEL_ID as string | undefined;
+        return envDefault || '';
+    });
     const [isLoadingQuiz, setIsLoadingQuiz] = useState(false);
     const [loadError, setLoadError] = useState<string | null>(null);
 
@@ -58,12 +61,10 @@ export default function EditorPage() {
     }, []); // Executar apenas uma vez no mount
 
     // Resolver funnelId final (memoizado)
-    const resolvedFunnelId = useMemo(() =>
-        paramsWithId?.funnelId ||
-        funnelIdentifier.funnelId ||
-        'quiz21StepsComplete',
-        [paramsWithId?.funnelId, funnelIdentifier.funnelId]
-    );
+    const resolvedFunnelId = useMemo(() => {
+        const envDefault = import.meta.env.VITE_DEFAULT_FUNNEL_ID as string | undefined;
+        return paramsWithId?.funnelId || funnelIdentifier.funnelId || envDefault || '';
+    }, [paramsWithId?.funnelId, funnelIdentifier.funnelId]);
 
     // Resolver serviço do editor via ServiceRegistry (desacoplado do import direto)
     const editorFunnelService = useMemo(() => ServiceRegistry.get('editorFunnelService'), []);

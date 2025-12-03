@@ -224,7 +224,7 @@ const ModeRenderer: React.FC<{
         return (
           <LazyBoundary fallback={<ComponentLoadingFallback name="Quiz Renderer" />}>
             <ScalableQuizRenderer
-              funnelId={funnelId || 'quiz21StepsComplete'}
+              funnelId={funnelId ?? ''}
               mode="production"
               className="h-full"
             />

@@ -599,6 +599,8 @@ const MeusFunisPageReal: React.FC = () => {
         </Card>
     ));
 
+    const defaultId = (import.meta as any).env?.VITE_DEFAULT_FUNNEL_ID as string | undefined;
+
     if (isLoading) {
         return (
             <div className="p-6">
@@ -619,7 +621,8 @@ const MeusFunisPageReal: React.FC = () => {
     const handleCreateDefaultDraft = async () => {
         try {
             // Buscar template de 21 etapas usando templateService
-            const templateResult = await templateService.getTemplate('quiz21StepsComplete');
+            const defaultId = (import.meta as any).env?.VITE_DEFAULT_FUNNEL_ID as string | undefined;
+            const templateResult = await templateService.getTemplate(defaultId ?? '');
 
             if (!templateResult.success || !templateResult.data) {
                 throw new Error('Template não encontrado');
@@ -632,7 +635,7 @@ const MeusFunisPageReal: React.FC = () => {
                 category: 'quiz',
                 status: 'draft',
                 config: templateResult.data,
-                metadata: { source: 'quiz21StepsComplete' },
+                metadata: { source: defaultId ?? 'unknown' },
             });
 
             if (!newFunnel) {
@@ -848,7 +851,7 @@ const MeusFunisPageReal: React.FC = () => {
                     </p>
                     {selectedStatus === 'todos' && (
                         <div className="flex items-center justify-center gap-3">
-                            <Button variant="outline" onClick={() => window.location.href = '/editor?funnel=quiz21StepsComplete'}>
+                            <Button variant="outline" onClick={() => window.location.href = `/editor${defaultId ? `?funnel=${encodeURIComponent(defaultId)}` : ''}`}>
                                 <Plus className="w-4 h-4 mr-2" />
                                 Abrir Editor com Template
                             </Button>
