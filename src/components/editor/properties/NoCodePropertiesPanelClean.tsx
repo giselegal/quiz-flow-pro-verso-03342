@@ -18,6 +18,8 @@ interface NoCodePropertiesPanelCleanProps {
   onReset?: (blockId: string) => void;
 }
 
+// DEPRECATED: Componente desabilitado - depende de UniversalNoCodePanel que foi removido
+// Use SinglePropertiesPanel diretamente
 export const NoCodePropertiesPanelClean: React.FC<NoCodePropertiesPanelCleanProps> = ({
   selectedBlock,
   activeStageId,

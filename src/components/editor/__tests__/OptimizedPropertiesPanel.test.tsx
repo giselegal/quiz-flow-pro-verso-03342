@@ -1,3 +1,6 @@
+// DEPRECATED: Teste desabilitado - OptimizedPropertiesPanel foi removido
+// Use SinglePropertiesPanel.test.tsx ao invés deste
+/*
 import { render } from '@testing-library/react';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 // DEPRECATED: OptimizedPropertiesPanel foi removido - usar SinglePropertiesPanel
@@ -114,3 +117,4 @@ describe('OptimizedPropertiesPanel', () => {
         expect(onDelete).toBeDefined();
     });
 });
+*/
