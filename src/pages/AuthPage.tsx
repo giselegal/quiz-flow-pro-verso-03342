@@ -29,7 +29,11 @@ const AuthPage: React.FC = () => {
     const handleAuth = async (e: FormEvent) => {
         e.preventDefault();
 
-        if (!email || !password) {
+        if (loading) return; // evitar duplo envio
+
+        const normalizedEmail = email.trim().toLowerCase();
+
+        if (!normalizedEmail || !password) {
             toast.error('Preencha todos os campos');
             return;
         }
@@ -41,27 +45,30 @@ const AuthPage: React.FC = () => {
         setLoading(true);
         try {
             if (mode === 'signup') {
-                appLogger.info('Tentando criar nova conta', { email });
-                await signUp(email, password, {
+                appLogger.info('Tentando criar nova conta', { email: normalizedEmail });
+                await signUp(normalizedEmail, password, {
                     created_via: 'quiz_flow_pro',
                     onboarding_completed: false,
                 });
                 toast.success('Conta criada! Verifique seu email para confirmar.', { duration: 5000 });
-                setLocation('/admin');
+                const redirect = new URLSearchParams(window.location.search).get('redirect') || '/admin';
+                setLocation(redirect);
             } else {
-                appLogger.info('Tentando fazer login', { email });
-                await login(email, password);
+                appLogger.info('Tentando fazer login', { email: normalizedEmail });
+                await login(normalizedEmail, password);
                 toast.success('Login realizado com sucesso!');
-                setLocation('/admin');
+                const redirect = new URLSearchParams(window.location.search).get('redirect') || '/admin';
+                setLocation(redirect);
             }
         } catch (error: any) {
             let errorMessage = 'Erro na autenticação';
-            if (error?.message?.includes('Invalid login credentials')) errorMessage = 'Email ou senha incorretos';
-            else if (error?.message?.includes('Email not confirmed')) errorMessage = 'Confirme seu email antes de fazer login';
-            else if (error?.message?.includes('User already registered')) errorMessage = 'Este email já está cadastrado. Faça login.';
+            const msg = String(error?.message || '').toLowerCase();
+            if (msg.includes('invalid login credentials')) errorMessage = 'Email ou senha incorretos';
+            else if (msg.includes('email not confirmed')) errorMessage = 'Confirme seu email antes de fazer login';
+            else if (msg.includes('user already registered')) errorMessage = 'Este email já está cadastrado. Faça login.';
             else if (error?.message) errorMessage = error.message;
             toast.error(errorMessage, { duration: 5000 });
-            appLogger.error('Erro de autenticação', { error, mode, email });
+            appLogger.error('Erro de autenticação', { error, mode, email: normalizedEmail });
         } finally {
             setLoading(false);
         }
@@ -72,6 +79,8 @@ const AuthPage: React.FC = () => {
         setEmail('');
         setPassword('');
     };
+
+    const [showPassword, setShowPassword] = useState(false);
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-neon-space p-4 relative">
@@ -112,15 +121,23 @@ const AuthPage: React.FC = () => {
                                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
                                 <Input
                                     id="password"
-                                    type="password"
+                                    type={showPassword ? 'text' : 'password'}
                                     placeholder="••••••••"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                     required
                                     minLength={6}
                                     disabled={loading}
-                                    className="pl-10 bg-[#0a0f1f] text-white border-white/20 focus:border-neon-magenta focus:ring-0"
+                                    className="pl-10 pr-12 bg-[#0a0f1f] text-white border-white/20 focus:border-neon-magenta focus:ring-0"
                                 />
+                                <button
+                                    type="button"
+                                    aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
+                                    onClick={() => setShowPassword(v => !v)}
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-300 hover:text-white text-xs"
+                                >
+                                    {showPassword ? 'Ocultar' : 'Mostrar'}
+                                </button>
                             </div>
                             {mode === 'signup' && (
                                 <p className="text-xs text-slate-400">Mínimo de 6 caracteres</p>
