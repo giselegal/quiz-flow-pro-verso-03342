@@ -188,7 +188,11 @@ const ModeRenderer: React.FC<{
               {/* Sidebar Direita - Propriedades */}
               <div className="w-80 border-l border-border bg-card">
                 <LazyBoundary fallback={<ComponentLoadingFallback name="Propriedades" />}>
-                  <SinglePropertiesPanel />
+                  <SinglePropertiesPanel
+                    selectedBlock={state.selectedBlockId ?
+                      (state.stepBlocks as any)[state.currentStep]?.find((b: any) => b.id === state.selectedBlockId) || null
+                      : null}
+                  />
                 </LazyBoundary>
               </div>
             </div>
@@ -288,7 +292,11 @@ const ModeRenderer: React.FC<{
               </div>
               <div className="w-80 border-l border-border">
                 <LazyBoundary fallback={<ComponentLoadingFallback name="Propriedades" />}>
-                  <SinglePropertiesPanel />
+                  <SinglePropertiesPanel
+                    selectedBlock={state.selectedBlockId ?
+                      (state.stepBlocks as any)[state.currentStep]?.find((b: any) => b.id === state.selectedBlockId) || null
+                      : null}
+                  />
                 </LazyBoundary>
               </div>
             </div>
