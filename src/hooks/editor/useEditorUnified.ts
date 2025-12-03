@@ -21,8 +21,7 @@
  */
 
 import { useEditor } from '@/core/contexts/EditorContext/EditorStateProvider';
-import { useEditorCompat } from '@/core/contexts/EditorContext/EditorCompatLayer';
-import type { EditorCompatAPI } from '@/core/contexts/EditorContext/EditorCompatLayer';
+
 import type { EditorContextValue } from '@/core/contexts/EditorContext/EditorStateProvider';
 
 export interface UseEditorUnifiedOptions {
@@ -63,7 +62,7 @@ export function useEditorUnified(
 /**
  * Hook opcional que retorna null se nenhum contexto estiver disponível
  */
-export function useEditorUnifiedOptional(): EditorCompatAPI | EditorContextValue | null {
+export function useEditorUnifiedOptional(): EditorContextValue | null {
   return useEditorUnified({ optional: true });
 }
 

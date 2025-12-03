@@ -53,7 +53,7 @@ export function useEditorUnified(
 /**
  * Hook opcional que retorna null se nenhum contexto estiver disponível
  */
-export function useEditorUnifiedOptional(): EditorCompatAPI | EditorContextValue | null {
+export function useEditorUnifiedOptional(): EditorContextValue | null {
   return useEditorUnified({ optional: true });
 }
 

@@ -29,7 +29,7 @@ export {
 
 export type {
     EditorContextValue,
-    EditorCompatAPI,
+
 } from '@/core/contexts/EditorContext';
 
 // Nota: EditorState é exportado por @/core/contexts/EditorContext diretamente

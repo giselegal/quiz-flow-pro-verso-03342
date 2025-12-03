@@ -19,7 +19,7 @@ export {
     useEditorState,
     useEditor,
     type EditorContextValue,
-    type EditorCompatAPI,
+
 } from './contexts/EditorContext';
 
 export { FunnelContext, generateContextualId, extractContextFromId } from './contexts/FunnelContext';
