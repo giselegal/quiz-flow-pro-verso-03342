@@ -48,59 +48,73 @@ import { setSupabaseCredentials } from '@/services/integrations/supabase/client'
 // 🛡️ PHASE 2: Error Boundary from core
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 
+// 🔧 HELPER: Retry para imports dinâmicos com fallback
+const retryImport = <T,>(importFn: () => Promise<T>, retries = 3, delay = 1000): Promise<T> => {
+    return importFn().catch((err) => {
+        if (retries <= 0) {
+            appLogger.error('❌ Import falhou após múltiplas tentativas', { error: err.message });
+            throw err;
+        }
+        appLogger.warn(`⚠️ Import falhou, tentando novamente (${retries} tentativas restantes)...`);
+        return new Promise((resolve) => {
+            setTimeout(() => resolve(retryImport(importFn, retries - 1, delay)), delay);
+        });
+    });
+};
+
 // 🏠 PÁGINAS ESSENCIAIS
-const Home = lazy(() => import('./pages/Home'));
-const NotFound = lazy(() => import('./pages/NotFound'));
+const Home = lazy(() => retryImport(() => import('./pages/Home')));
+const NotFound = lazy(() => retryImport(() => import('./pages/NotFound')));
 
 // 🎉 PÁGINAS DE FEEDBACK (Publish Success, Error)
-const PublishSuccessPage = lazy(() => import('./pages/PublishSuccessPage'));
-const ErrorPage = lazy(() => import('./pages/ErrorPage'));
+const PublishSuccessPage = lazy(() => retryImport(() => import('./pages/PublishSuccessPage')));
+const ErrorPage = lazy(() => retryImport(() => import('./pages/ErrorPage')));
 
 // 🔍 PÁGINAS DE DIAGNÓSTICO
-const PerformanceTestPage = lazy(() => import('./pages/PerformanceTestPage'));
-const AccessibilityAuditorPage = lazy(() => import('./components/a11y/AccessibilityAuditor'));
+const PerformanceTestPage = lazy(() => retryImport(() => import('./pages/PerformanceTestPage')));
+const AccessibilityAuditorPage = lazy(() => retryImport(() => import('./components/a11y/AccessibilityAuditor')));
 
 // 🎯 EDITOR PRINCIPAL - Página unificada com normalização de URL
-const EditorPage = lazy(() => import('./pages/editor/EditorPage'));
+const EditorPage = lazy(() => retryImport(() => import('./pages/editor/EditorPage')));
 
 // 🧪 PÁGINAS DE QUIZ
-const QuizEstiloPessoalPage = lazy(() => import('./pages/QuizEstiloPessoalPage'));
-const QuizAIPage = lazy(() => import('./pages/QuizAIPage'));
-const QuizIntegratedPage = lazy(() => import('./pages/QuizIntegratedPage'));
+const QuizEstiloPessoalPage = lazy(() => retryImport(() => import('./pages/QuizEstiloPessoalPage')));
+const QuizAIPage = lazy(() => retryImport(() => import('./pages/QuizAIPage')));
+const QuizIntegratedPage = lazy(() => retryImport(() => import('./pages/QuizIntegratedPage')));
 
 // 🎯 FASE 1: Preview Sandbox (isolado)
-const PreviewSandbox = lazy(() => import('./pages/PreviewSandbox'));
+const PreviewSandbox = lazy(() => retryImport(() => import('./pages/PreviewSandbox')));
 // 📱 Live Preview por funnelId
-const LivePreviewPage = lazy(() => import('./pages/LivePreviewPage'));
+const LivePreviewPage = lazy(() => retryImport(() => import('./pages/LivePreviewPage')));
 
 // 🏢 DASHBOARDS
-const ModernDashboardPage = lazy(() => import('./pages/ModernDashboardPage'));
-const ModernAdminDashboard = lazy(() => import('./pages/ModernAdminDashboard'));
-const Phase2Dashboard = lazy(() => import('./pages/Phase2Dashboard'));
+const ModernDashboardPage = lazy(() => retryImport(() => import('./pages/ModernDashboardPage')));
+const ModernAdminDashboard = lazy(() => retryImport(() => import('./pages/ModernAdminDashboard')));
+const Phase2Dashboard = lazy(() => retryImport(() => import('./pages/Phase2Dashboard')));
 
 // 🎨 PÁGINAS DE TEMPLATES
-const TemplatesPage = lazy(() => import('./pages/TemplatesPage'));
-const SystemDiagnosticPage = lazy(() => import('./pages/SystemDiagnosticPage'));
-const FunnelTypesPage = lazy(() => import('./pages/SimpleFunnelTypesPage'));
+const TemplatesPage = lazy(() => retryImport(() => import('./pages/TemplatesPage')));
+const SystemDiagnosticPage = lazy(() => retryImport(() => import('./pages/SystemDiagnosticPage')));
+const FunnelTypesPage = lazy(() => retryImport(() => import('./pages/SimpleFunnelTypesPage')));
 // 🔧 DEBUG: Config Manager standalone
-const FunnelConfigManager = lazy(() => import('./components/funnels/config/FunnelConfigManager'));
+const FunnelConfigManager = lazy(() => retryImport(() => import('./components/funnels/config/FunnelConfigManager')));
 
 // 🧪 TESTES CRUD
-const TestsPage = lazy(() => import('./pages/TestsPage'));
-const SupabaseFixTestPage = lazy(() => import('./pages/SupabaseFixTestPage'));
-const IndexedDBMigrationTestPage = lazy(() => import('./pages/IndexedDBMigrationTestPage'));
+const TestsPage = lazy(() => retryImport(() => import('./pages/TestsPage')));
+const SupabaseFixTestPage = lazy(() => retryImport(() => import('./pages/SupabaseFixTestPage')));
+const IndexedDBMigrationTestPage = lazy(() => retryImport(() => import('./pages/IndexedDBMigrationTestPage')));
 
 // 🛠️ PÁGINAS ADMIN (lazy estáveis)
-const AdminAnalyticsPage = lazy(() => import('./pages/admin/AnalyticsPage'));
-const AdminParticipantsPage = lazy(() => import('./pages/admin/ParticipantsPage'));
-const AdminSettingsPage = lazy(() => import('./pages/admin/SettingsPage'));
-const AdminIntegrationsPage = lazy(() => import('./pages/admin/IntegrationsPage'));
-const AdminABTestsPage = lazy(() => import('./pages/admin/ABTestPage'));
-const AdminCreativesPage = lazy(() => import('./pages/admin/CreativesPage'));
-const CanonicalAdoptionDashboard = lazy(() => import('./pages/admin/CanonicalAdoptionDashboard'));
+const AdminAnalyticsPage = lazy(() => retryImport(() => import('./pages/admin/AnalyticsPage')));
+const AdminParticipantsPage = lazy(() => retryImport(() => import('./pages/admin/ParticipantsPage')));
+const AdminSettingsPage = lazy(() => retryImport(() => import('./pages/admin/SettingsPage')));
+const AdminIntegrationsPage = lazy(() => retryImport(() => import('./pages/admin/IntegrationsPage')));
+const AdminABTestsPage = lazy(() => retryImport(() => import('./pages/admin/ABTestPage')));
+const AdminCreativesPage = lazy(() => retryImport(() => import('./pages/admin/CreativesPage')));
+const CanonicalAdoptionDashboard = lazy(() => retryImport(() => import('./pages/admin/CanonicalAdoptionDashboard')));
 
 // 🔐 PÁGINAS DE AUTENTICAÇÃO
-const ResetPasswordPage = lazy(() => import('./pages/ResetPasswordPage'));
+const ResetPasswordPage = lazy(() => retryImport(() => import('./pages/ResetPasswordPage')));
 
 
 
@@ -214,10 +228,21 @@ function AppCore() {
                         {/* 🛡️ PHASE 2: Error Boundary para rotas principais */}
                         <ErrorBoundary
                             onError={(error, errorInfo) => {
-                                appLogger.error('🔴 Route crashed:', {
-                                    error: error.message,
-                                    componentStack: errorInfo.componentStack,
-                                });
+                                const isNetworkError = error.message?.includes('Failed to fetch') ||
+                                    error.message?.includes('ERR_NETWORK') ||
+                                    error.message?.includes('dynamically imported module');
+
+                                if (isNetworkError) {
+                                    appLogger.warn('⚠️ Erro de rede detectado - recarregando página...', { error: error.message });
+                                    setTimeout(() => {
+                                        window.location.reload();
+                                    }, 2000);
+                                } else {
+                                    appLogger.error('🔴 Route crashed:', {
+                                        error: error.message,
+                                        componentStack: errorInfo.componentStack,
+                                    });
+                                }
                             }}
                         >
 
