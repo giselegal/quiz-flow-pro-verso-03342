@@ -227,8 +227,26 @@ export function SkeletonTable({ rows = 10, columns = 5 }: { rows?: number; colum
  * Page loading fallback (mais completo)
  */
 export function PageLoadingFallback({ message = 'Carregando página...' }: { message?: string }) {
+    const [showRetry, setShowRetry] = React.useState(false);
+    const [retryCount, setRetryCount] = React.useState(0);
+
+    // Após 10 segundos, mostrar opção de retry
+    React.useEffect(() => {
+        const timer = setTimeout(() => {
+            setShowRetry(true);
+        }, 10000);
+
+        return () => clearTimeout(timer);
+    }, [retryCount]);
+
+    const handleRetry = () => {
+        setRetryCount(prev => prev + 1);
+        setShowRetry(false);
+        window.location.reload();
+    };
+
     return (
-        <div className="min-h-screen flex items-center justify-center">
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted/20">
             <div className="text-center space-y-6 max-w-md mx-auto px-4">
                 <LoadingSpinner size="lg" variant="spinner" message={message} />
 
@@ -236,6 +254,23 @@ export function PageLoadingFallback({ message = 'Carregando página...' }: { mes
                     <p>Otimizado com lazy loading</p>
                     <p className="text-[10px]">Apenas {Math.round(Math.random() * 50 + 50)} KB carregados</p>
                 </div>
+
+                {showRetry && (
+                    <div className="mt-8 space-y-3 p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
+                        <p className="text-sm text-yellow-800 dark:text-yellow-200">
+                            ⚠️ Carregamento demorado detectado
+                        </p>
+                        <p className="text-xs text-yellow-600 dark:text-yellow-300">
+                            Pode haver problemas de conexão. Tente recarregar a página.
+                        </p>
+                        <button
+                            onClick={handleRetry}
+                            className="mt-2 px-4 py-2 bg-primary text-primary-foreground rounded-md text-sm font-medium hover:bg-primary/90 transition-colors"
+                        >
+                            🔄 Recarregar página
+                        </button>
+                    </div>
+                )}
             </div>
         </div>
     );
