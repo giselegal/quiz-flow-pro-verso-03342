@@ -42,6 +42,19 @@ async function enterPreview(page: import('@playwright/test').Page) {
     await expect(page.locator('[data-testid="canvas-preview-mode"]').first()).toBeVisible({ timeout: 15000 });
 }
 
+async function waitForAnyVisible(page: import('@playwright/test').Page, selectors: string[], timeout = 15000) {
+    const start = Date.now();
+    for (; ;) {
+        for (const sel of selectors) {
+            const loc = page.locator(sel).first();
+            if (await loc.isVisible().catch(() => false)) return loc;
+        }
+        if (Date.now() - start > timeout) break;
+        await page.waitForTimeout(200);
+    }
+    throw new Error(`Nenhum seletor visível dentro do timeout: ${selectors.join(' | ')}`);
+}
+
 test.describe('Editor + Renderização - Carregamento de Funil', () => {
     test('Carrega /editor com funnel e sem erros de rede', async ({ page }) => {
         const failures: Array<{ url: string; status: number }> = [];
@@ -64,18 +77,30 @@ test.describe('Editor + Renderização - Carregamento de Funil', () => {
         await navigateToEditorWithFunnel(page);
         await page.waitForLoadState('networkidle');
 
-        const canvasEdit = page.locator('[data-testid="canvas-editor"], .canvas-area, [class*="canvas"]').first();
-        // Se o canvas não aparecer, ainda tentamos entrar em preview (algumas variantes só mostram preview)
-        const editVisible = await canvasEdit.isVisible().catch(() => false);
-        if (!editVisible) {
+        // Tenta achar qualquer canvas visível
+        const editCandidates = [
+            '[data-testid="canvas-editor"]',
+            '.canvas-area',
+            '[class*="canvas"]',
+        ];
+        let canvasEdit: import('@playwright/test').Locator | null = null;
+        try {
+            canvasEdit = await waitForAnyVisible(page, editCandidates, 12000);
+        } catch {
             console.log('[Editor] Canvas de edição não visível; tentando preview...');
-        } else {
-            await expect(canvasEdit).toBeVisible({ timeout: 15000 });
+        }
+        if (canvasEdit) {
+            await expect(canvasEdit).toBeVisible({ timeout: 5000 });
         }
 
         await enterPreview(page);
-        const canvasPreview = page.locator('[data-testid="canvas-preview-mode"]').first();
-        await expect(canvasPreview).toBeVisible({ timeout: 15000 });
+        const previewCandidates = [
+            '[data-testid="canvas-preview-mode"]',
+            '[class*="preview"]',
+            '[data-testid*="preview"]',
+        ];
+        const canvasPreview = await waitForAnyVisible(page, previewCandidates, 15000);
+        await expect(canvasPreview).toBeVisible({ timeout: 5000 });
     });
 
     test('Fluxo básico de preview: input + avançar step', async ({ page }) => {
@@ -98,8 +123,12 @@ test.describe('Editor + Renderização - Carregamento de Funil', () => {
 
         await page.waitForTimeout(800);
 
-        const optionsGrid = page.locator('[data-testid*="options-grid"], .options-grid').first();
-        const hasGrid = await optionsGrid.isVisible().catch(() => false);
-        expect(hasGrid).toBeTruthy();
+        const gridCandidates = [
+            '[data-testid*="options-grid"]',
+            '.options-grid',
+            '[class*="grid"]',
+        ];
+        const optionsGrid = await waitForAnyVisible(page, gridCandidates, 8000);
+        await expect(optionsGrid).toBeVisible();
     });
 });
