@@ -15,7 +15,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useLocation } from 'wouter';
 import { toast } from 'sonner';
-import { Loader2, LogIn, UserPlus, Mail, Lock, Sparkles } from 'lucide-react';
+import { Loader2, LogIn, UserPlus, Mail, Lock, Sparkles, Chrome } from 'lucide-react';
 import { appLogger } from '@/lib/utils/appLogger';
 
 const AuthPage: React.FC = () => {
@@ -23,8 +23,33 @@ const AuthPage: React.FC = () => {
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const [mode, setMode] = useState<'login' | 'signup'>('login');
+    const [showForgotPassword, setShowForgotPassword] = useState(false);
     const [, setLocation] = useLocation();
-    const { login, signUp } = useAuthStorage();
+    const { login, signUp, resetPassword, signInWithGoogle } = useAuthStorage();
+
+    const handleForgotPassword = async () => {
+        const normalizedEmail = email.trim().toLowerCase();
+        if (!normalizedEmail) {
+            toast.error('Digite seu email para recuperar a senha');
+            return;
+        }
+        try {
+            await resetPassword(normalizedEmail);
+            toast.success('Email de recuperação enviado! Verifique sua caixa de entrada.', { duration: 6000 });
+            setShowForgotPassword(false);
+        } catch (error: any) {
+            toast.error(error?.message || 'Erro ao enviar email de recuperação');
+        }
+    };
+
+    const handleGoogleLogin = async () => {
+        try {
+            await signInWithGoogle();
+            // OAuth redireciona automaticamente
+        } catch (error: any) {
+            toast.error(error?.message || 'Erro ao fazer login com Google');
+        }
+    };
 
     const handleAuth = async (e: FormEvent) => {
         e.preventDefault();
@@ -142,6 +167,17 @@ const AuthPage: React.FC = () => {
                             {mode === 'signup' && (
                                 <p className="text-xs text-slate-400">Mínimo de 6 caracteres</p>
                             )}
+                            {mode === 'login' && (
+                                <div className="flex justify-end">
+                                    <button
+                                        type="button"
+                                        onClick={handleForgotPassword}
+                                        className="text-xs text-neon-blue hover:text-white transition-colors"
+                                    >
+                                        Esqueci minha senha
+                                    </button>
+                                </div>
+                            )}
                         </div>
 
                         <Button type="submit" className="w-full btn-neon text-white font-medium py-6 transition-all duration-300" disabled={loading}>
@@ -167,6 +203,26 @@ const AuthPage: React.FC = () => {
                             )}
                         </Button>
                     </form>
+
+                    <div className="relative my-6">
+                        <div className="absolute inset-0 flex items-center">
+                            <div className="w-full border-t border-white/10" />
+                        </div>
+                        <div className="relative flex justify-center text-xs">
+                            <span className="bg-transparent px-2 text-slate-300">ou continue com</span>
+                        </div>
+                    </div>
+
+                    <Button
+                        type="button"
+                        onClick={handleGoogleLogin}
+                        disabled={loading}
+                        variant="outline"
+                        className="w-full bg-white/5 border-white/20 hover:bg-white/10 text-white font-medium py-6 transition-all duration-300"
+                    >
+                        <Chrome className="h-5 w-5 mr-2" />
+                        Continuar com Google
+                    </Button>
 
                     <div className="relative my-6">
                         <div className="absolute inset-0 flex items-center">

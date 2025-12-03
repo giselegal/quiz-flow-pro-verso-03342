@@ -99,6 +99,9 @@ const AdminABTestsPage = lazy(() => import('./pages/admin/ABTestPage'));
 const AdminCreativesPage = lazy(() => import('./pages/admin/CreativesPage'));
 const CanonicalAdoptionDashboard = lazy(() => import('./pages/admin/CanonicalAdoptionDashboard'));
 
+// 🔐 PÁGINAS DE AUTENTICAÇÃO
+const ResetPasswordPage = lazy(() => import('./pages/ResetPasswordPage'));
+
 
 
 function AppCore() {
@@ -443,6 +446,12 @@ function AppCore() {
                                                     </Suspense>
                                                 );
                                             }}
+                                        </Route>
+
+                                        <Route path="/auth/reset-password">
+                                            <Suspense fallback={<PageLoadingFallback message="Carregando..." />}>
+                                                <ResetPasswordPage />
+                                            </Suspense>
                                         </Route>
 
                                         {/* 🏢 ADMIN DASHBOARDS - CONSOLIDADO */}
