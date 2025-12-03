@@ -183,10 +183,6 @@ export default function QuizApp({ funnelId, externalSteps }: QuizAppProps) {
     const isResultOrOffer = numericCurrent >= 20; // 20,21
     const useSharedHeader = !isIntro && !isResultOrOffer; // 2..19
 
-    // Barra de progresso antiga agora só aparece se NÃO usamos header compartilhado
-    // (mantida apenas para compatibilidade futura se necessário)
-    const showLegacyProgressBar = false; // desativada por padrão para evitar duplicação
-
     return (
         <div className="min-h-screen">
             <div className="quiz-container mx-auto">
@@ -194,19 +190,6 @@ export default function QuizApp({ funnelId, externalSteps }: QuizAppProps) {
                 {/* Header Compartilhado (steps 2-19) */}
                 {useSharedHeader && (
                     <SharedProgressHeader progress={progress} />
-                )}
-
-                {/* (Opcional) Barra de Progresso Legada - atualmente desativada */}
-                {showLegacyProgressBar && !useSharedHeader && !isIntro && !isResultOrOffer && (
-                    <div className="mb-6 max-w-6xl mx-auto px-4 py-8" data-testid="legacy-progress-bar">
-                        <div className="w-full bg-gray-200 rounded-full h-2.5 mb-4">
-                            <div
-                                className="bg-[#deac6d] h-2.5 rounded-full transition-all duration-500"
-                                style={{ width: `${progress}%` }}
-                            ></div>
-                        </div>
-                        <p className="text-sm text-center mb-4">Progresso: {progress}%</p>
-                    </div>
                 )}
 
                 {/* 🎯 FASE 3: Renderização Unificada */}
