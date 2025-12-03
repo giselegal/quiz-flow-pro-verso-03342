@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Trash2, Plus, Settings, FileText, Palette, Globe, Rocket, AlertCircle, CheckCircle2 } from 'lucide-react';
 // Removendo dependência problemática do useHeadlessEditor
 // import { useHeadlessEditor } from './HeadlessEditorProvider';
-import { usePureBuilder } from '@/hooks/usePureBuilderCompat';
+import { useEditor } from '@/core/contexts/EditorContext/EditorStateProvider';
 import type { Block } from '@/types/editor';
 import { appLogger } from '@/lib/utils/appLogger';
 
@@ -19,7 +19,7 @@ export const DynamicPropertiesPanelImproved: React.FC = () => {
     const {
         state: builderState,
         actions: builderActions,
-    } = usePureBuilder();
+    } = useEditor();
 
     const [activeTab, setActiveTab] = useState<PanelTab>('step');
     const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);

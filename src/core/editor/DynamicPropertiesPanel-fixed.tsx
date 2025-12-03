@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useHeadlessEditor } from './HeadlessEditorProvider';
-import { usePureBuilder } from '@/hooks/usePureBuilderCompat';
+import { useEditor } from '@/core/contexts/EditorContext/EditorStateProvider';
 import { FunnelStep } from '../../types/quiz-schema';
 import type { Block } from '@/types/editor';
 import { appLogger } from '@/lib/utils/appLogger';
@@ -16,7 +16,7 @@ export const DynamicPropertiesPanel: React.FC = () => {
     const {
         state: builderState,
         actions: builderActions,
-    } = usePureBuilder();
+    } = useEditor();
 
     const [activeTab, setActiveTab] = useState<PanelTab>('step');
     const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
