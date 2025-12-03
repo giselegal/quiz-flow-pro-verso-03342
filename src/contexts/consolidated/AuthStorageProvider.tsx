@@ -166,14 +166,24 @@ export const AuthStorageProvider: React.FC<AuthStorageProviderProps> = ({
     const login = useCallback(async (email: string, password: string) => {
         setAuthState(prev => ({ ...prev, isLoading: true, error: null }));
         try {
-            appLogger.info('🔐 [AuthStorage] Fazendo login...');
+            appLogger.info('🔐 [AuthStorage] Iniciando login...', { email });
 
             const { data, error } = await supabase.auth.signInWithPassword({
                 email,
                 password,
             });
 
-            if (error) throw error;
+            if (error) {
+                appLogger.error('❌ [AuthStorage] Erro no login:', { error: error.message, status: error.status });
+                throw error;
+            }
+
+            if (!data?.user) {
+                appLogger.error('❌ [AuthStorage] Login retornou sem usuário');
+                throw new Error('Login falhou: sem dados de usuário');
+            }
+
+            appLogger.info('✅ [AuthStorage] Resposta do Supabase recebida:', { userId: data.user.id, hasSession: !!data.session });
 
             const user: User = {
                 id: data.user.id,
@@ -195,7 +205,7 @@ export const AuthStorageProvider: React.FC<AuthStorageProviderProps> = ({
             // Persist user data to storage
             persistUserData(user);
 
-            appLogger.info('✅ [AuthStorage] Login bem-sucedido');
+            appLogger.info('✅ [AuthStorage] Login bem-sucedido e estado atualizado');
         } catch (err: any) {
             const errorMsg = err.message || 'Erro ao fazer login';
             setAuthState({
@@ -545,9 +555,17 @@ export const AuthStorageProvider: React.FC<AuthStorageProviderProps> = ({
         // Check for existing session on mount
         const checkSession = async () => {
             try {
-                const { data: { session } } = await supabase.auth.getSession();
+                appLogger.info('🔍 [AuthStorage] Verificando sessão existente...');
+                const { data: { session }, error } = await supabase.auth.getSession();
+
+                if (error) {
+                    appLogger.error('❌ [AuthStorage] Erro ao obter sessão:', error);
+                    setAuthState(prev => ({ ...prev, isLoading: false, error: error.message }));
+                    return;
+                }
 
                 if (session?.user) {
+                    appLogger.info('✅ [AuthStorage] Sessão encontrada:', { userId: session.user.id, email: session.user.email });
                     const user: User = {
                         id: session.user.id,
                         email: session.user.email,
@@ -563,6 +581,7 @@ export const AuthStorageProvider: React.FC<AuthStorageProviderProps> = ({
                         error: null,
                     });
                 } else {
+                    appLogger.info('ℹ️ [AuthStorage] Nenhuma sessão ativa encontrada');
                     setAuthState(prev => ({ ...prev, isLoading: false }));
                 }
             } catch (err) {
@@ -574,7 +593,10 @@ export const AuthStorageProvider: React.FC<AuthStorageProviderProps> = ({
         checkSession();
 
         // Listen for auth changes
+        appLogger.info('👂 [AuthStorage] Iniciando listener de mudanças de autenticação');
         const { data: { subscription } } = supabase.auth.onAuthStateChange((event: any, session: any) => {
+            appLogger.info('🔔 [AuthStorage] Evento de auth:', { event, userId: session?.user?.id });
+
             if (session?.user) {
                 const user: User = {
                     id: session.user.id,
@@ -584,6 +606,7 @@ export const AuthStorageProvider: React.FC<AuthStorageProviderProps> = ({
                     app_metadata: session.user.app_metadata,
                 };
 
+                appLogger.info('✅ [AuthStorage] Usuário autenticado via evento:', { userId: user.id, event });
                 setAuthState({
                     user,
                     isAuthenticated: true,
@@ -591,6 +614,7 @@ export const AuthStorageProvider: React.FC<AuthStorageProviderProps> = ({
                     error: null,
                 });
             } else {
+                appLogger.info('ℹ️ [AuthStorage] Usuário desautenticado via evento:', { event });
                 setAuthState({
                     user: null,
                     isAuthenticated: false,
