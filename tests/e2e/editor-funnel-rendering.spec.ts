@@ -71,6 +71,17 @@ test.describe('Editor + Renderização - Carregamento de Funil', () => {
         const hasRoot = await page.locator('#root, .editor-container, main').first().isVisible();
         expect(hasRoot).toBe(true);
         expect(failures, `Falhas de assets:\n${failures.map(f => `${f.status} ${f.url}`).join('\n')}`).toHaveLength(0);
+
+        // Debug auxiliar: listar botões e atributos data-testid presentes
+        const debugInfo = await page.evaluate(() => {
+            const buttons = Array.from(document.querySelectorAll('button')).map(b => b.textContent?.trim() || '').filter(Boolean).slice(0, 10);
+            const testids = Array.from(document.querySelectorAll('[data-testid]')).map(el => (el as HTMLElement).getAttribute('data-testid')).filter(Boolean).slice(0, 15);
+            const classes = Array.from(document.querySelectorAll('[class]')).map(el => (el as HTMLElement).className).slice(0, 10);
+            return { buttons, testids, classes };
+        });
+        console.log('[Editor DEBUG] Botões:', debugInfo.buttons);
+        console.log('[Editor DEBUG] data-testid:', debugInfo.testids);
+        console.log('[Editor DEBUG] classes amostra:', debugInfo.classes);
     });
 
     test('Renderiza canvas no modo edição e preview', async ({ page }) => {
