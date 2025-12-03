@@ -88,7 +88,13 @@ const SortablePreviewBlockWrapper: React.FC<SortablePreviewBlockWrapperProps> = 
   const renderBlockContent = () => {
     if (!block) return null;
     const blockType = (block.type || '').toString().toLowerCase();
-    const content = (block.content ?? {}) as any;
+    // Garante que content existe, seja do tipo legado ou canônico
+    let content: any = {};
+    if ('content' in block && typeof (block as any).content === 'object' && (block as any).content !== null) {
+      content = (block as any).content;
+    } else if ('props' in block && typeof (block as any).props === 'object' && (block as any).props !== null) {
+      content = (block as any).props;
+    }
     const appliedStyle = primaryStyle || previewState?.calculatedResults;
 
     switch (blockType) {
@@ -323,8 +329,8 @@ const SortablePreviewBlockWrapper: React.FC<SortablePreviewBlockWrapperProps> = 
             <div className="text-sm font-medium mb-1">
               {block.type || 'Bloco Desconhecido'}
             </div>
-            {block.content?.text && (
-              <div className="text-xs mt-1">{block.content.text}</div>
+            {content?.text && (
+              <div className="text-xs mt-1">{content.text}</div>
             )}
           </div>
         );
