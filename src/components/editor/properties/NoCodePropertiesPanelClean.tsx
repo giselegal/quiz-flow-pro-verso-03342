@@ -5,7 +5,8 @@
  */
 
 import React from 'react';
-import { default as UniversalNoCodePanel } from '@/archive/legacy-panels/UniversalNoCodePanel';
+// DEPRECATED: UniversalNoCodePanel foi removido - usar SinglePropertiesPanel
+// import { default as UniversalNoCodePanel } from '@/archive/legacy-panels/UniversalNoCodePanel';
 import type { Block } from '@/types/editor';
 
 interface NoCodePropertiesPanelCleanProps {

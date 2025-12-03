@@ -28,7 +28,7 @@ const EditorToolbar = React.lazy(() => import('@/components/editor/toolbar/Edito
 const StepSidebar = React.lazy(() => import('@/components/editor/sidebars/StepSidebar'));
 const UnifiedComponentsPanel = React.lazy(() => import('@/components/editor/panels/UnifiedComponentsPanel'));
 const CanvasDropZone = React.lazy(() => import('@/components/editor/canvas/CanvasDropZone.simple'));
-const UltraUnifiedPropertiesPanel = React.lazy(() => import('@/archive/legacy-panels/UltraUnifiedPropertiesPanel'));
+const SinglePropertiesPanel = React.lazy(() => import('@/components/editor/properties/SinglePropertiesPanel').then(m => ({ default: m.SinglePropertiesPanel })));
 
 // 🎯 FALLBACK COMPONENTS (removed deprecated ModularEditorPro)
 // 💡 Produção (quiz renderer) declarado no topo para evitar recriações
@@ -188,9 +188,7 @@ const ModeRenderer: React.FC<{
               {/* Sidebar Direita - Propriedades */}
               <div className="w-80 border-l border-border bg-card">
                 <LazyBoundary fallback={<ComponentLoadingFallback name="Propriedades" />}>
-                  <UltraUnifiedPropertiesPanel
-                    onUpdate={() => { }}
-                  />
+                  <SinglePropertiesPanel />
                 </LazyBoundary>
               </div>
             </div>
@@ -290,9 +288,7 @@ const ModeRenderer: React.FC<{
               </div>
               <div className="w-80 border-l border-border">
                 <LazyBoundary fallback={<ComponentLoadingFallback name="Propriedades" />}>
-                  <UltraUnifiedPropertiesPanel
-                    onUpdate={() => { }}
-                  />
+                  <SinglePropertiesPanel />
                 </LazyBoundary>
               </div>
             </div>
@@ -347,7 +343,7 @@ export const UnifiedEditorCore: React.FC<UnifiedEditorCoreProps> = ({
       import('@/components/editor/sidebars/StepSidebar'),
       import('@/components/editor/panels/UnifiedComponentsPanel'),
       import('@/components/editor/canvas/CanvasDropZone.simple'),
-      import('@/components/editor/properties/UltraUnifiedPropertiesPanel'),
+      import('@/components/editor/properties/SinglePropertiesPanel'),
     ]).catch(() => { });
   }, []);
 

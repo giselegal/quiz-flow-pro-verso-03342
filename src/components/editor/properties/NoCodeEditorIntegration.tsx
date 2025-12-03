@@ -11,7 +11,8 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Settings, Eye, Code } from 'lucide-react';
-import { default as UniversalNoCodePanel } from '@/archive/legacy-panels/UniversalNoCodePanel';
+// DEPRECATED: UniversalNoCodePanel foi removido - usar SinglePropertiesPanel
+// import { default as UniversalNoCodePanel } from '@/archive/legacy-panels/UniversalNoCodePanel';
 import { NoCodePropertiesPanelClean } from './NoCodePropertiesPanelClean';
 import type { Block } from '@/types/editor';
 

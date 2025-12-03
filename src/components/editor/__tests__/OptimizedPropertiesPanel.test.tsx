@@ -1,6 +1,7 @@
 import { render } from '@testing-library/react';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
-import { default as OptimizedPropertiesPanel } from '@/archive/legacy-panels/OptimizedPropertiesPanel';
+// DEPRECATED: OptimizedPropertiesPanel foi removido - usar SinglePropertiesPanel
+// import { default as OptimizedPropertiesPanel } from '@/archive/legacy-panels/OptimizedPropertiesPanel';
 
 // Mock completo dos módulos UI para testes leves
 vi.mock('@/components/ui/button', () => ({
