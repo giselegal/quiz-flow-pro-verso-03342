@@ -44,7 +44,7 @@ const retryImport = <T,>(importFn: () => Promise<T>, retries = 3, delay = 1000):
 
 const LazyApp = lazy(() => retryImport(() => import('./App')));
 import ClientLayout from './components/ClientLayout';
-import './index.css';
+// CSS principal agora é carregado via <link> em index.html
 // 🔍 SENTRY: Error tracking e performance monitoring
 import { initSentry } from '@/lib/sentry';
 // Silenciador de logs em produção (pode ser desativado via VITE_DEBUG_LOGS=true)
