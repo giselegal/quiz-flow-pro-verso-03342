@@ -1,6 +1,14 @@
 // Canonical re-export of Supabase types
-// Source of truth: `shared/types/supabase.ts`
-export * from '../../shared/types/supabase';
+// FONTE DE VERDADE: src/integrations/supabase/types.ts (gerado do banco de dados)
+// Este arquivo mantém retrocompatibilidade para imports antigos
+export type { Database } from '@/services/integrations/supabase/types';
 
-// For backwards compatibility with previous imports
-export type { Database } from '../../shared/types/supabase';
+// Re-export de interfaces auxiliares do arquivo legado
+export type { 
+  AuthUser, 
+  AuthState, 
+  ApiResponse, 
+  PaginatedResponse, 
+  ValidationError, 
+  ValidationResult 
+} from '../../shared/types/supabase';
