@@ -2,6 +2,7 @@ import { Component, ErrorInfo, ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
 import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
 import { appLogger } from '@/lib/utils/appLogger';
+import { NetworkErrorFallback } from '@/components/NetworkErrorFallback';
 
 interface Props {
   children: ReactNode;
@@ -27,7 +28,7 @@ export class GlobalErrorBoundary extends Component<Props, State> {
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     appLogger.error('🚨 GlobalErrorBoundary caught an error:', { data: [error, errorInfo] });
-    
+
     this.setState({
       error,
       errorInfo,
@@ -59,6 +60,22 @@ export class GlobalErrorBoundary extends Component<Props, State> {
         return this.props.fallback;
       }
 
+      // Detectar erro de rede
+      const isNetworkError = this.state.error?.message?.includes('Failed to fetch') ||
+        this.state.error?.message?.includes('ERR_NETWORK') ||
+        this.state.error?.message?.includes('dynamically imported module') ||
+        this.state.error?.message?.includes('ERR_NETWORK_CHANGED');
+
+      // Se for erro de rede, usar componente específico
+      if (isNetworkError) {
+        return (
+          <NetworkErrorFallback
+            error={this.state.error}
+            resetErrorBoundary={this.handleReset}
+          />
+        );
+      }
+
       return (
         <div className="flex h-screen w-full items-center justify-center bg-background">
           <div className="text-center max-w-md mx-auto px-6">
@@ -86,7 +103,7 @@ export class GlobalErrorBoundary extends Component<Props, State> {
 
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               {this.props.showResetButton && (
-                <Button 
+                <Button
                   onClick={this.handleReset}
                   variant="outline"
                   className="flex items-center gap-2"
@@ -95,7 +112,7 @@ export class GlobalErrorBoundary extends Component<Props, State> {
                   Tentar Novamente
                 </Button>
               )}
-              <Button 
+              <Button
                 onClick={this.handleGoHome}
                 className="flex items-center gap-2"
               >
