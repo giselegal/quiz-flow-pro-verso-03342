@@ -1,0 +1,126 @@
+/* =============================================================
+   QuizFlowPro - Tema Neon Escuro (Azul/Magenta sobre Preto)
+   Paleta + utilitários para atmosfera futurista premium
+   ============================================================= */
+
+:root {
+    /* Fundo e superfícies */
+    --neon-black: #05070A;
+    /* Preto profundo */
+    --neon-space: #0A0F1F;
+    /* Navy escuro para seções */
+    --surface-dark: #0F1724;
+    /* Painéis escuros */
+
+    /* Paleta principal */
+    --neon-blue: #00A7FF;
+    /* Azul neon */
+    --neon-cyan: #3EEBFF;
+    /* Ciano luminoso */
+    --neon-magenta: #D600F9;
+    /* Magenta neon */
+    --neon-pink: #FF4EDC;
+    /* Rosa elétrico */
+    --neon-violet: #6E3BFF;
+    /* Violeta suave */
+
+    /* Gradientes assinatura */
+    --gradient-neon: linear-gradient(135deg, var(--neon-blue) 0%, var(--neon-violet) 45%, var(--neon-magenta) 100%);
+    --gradient-blue-pink: linear-gradient(135deg, #3bbef3 0%, #ea7af6 100%);
+    --gradient-hero-soft: radial-gradient(1200px 500px at 0% 20%, rgba(62, 235, 255, 0.25) 0%, transparent 60%),
+        radial-gradient(1000px 500px at 100% 30%, rgba(214, 0, 249, 0.25) 0%, transparent 65%);
+
+    /* Glows e sombras */
+    --glow-soft: 0 24px 80px rgba(15, 23, 42, 0.9);
+    --glow-neon: 0 12px 30px rgba(2, 6, 23, 0.6), 0 0 20px rgba(0, 167, 255, 0.25), 0 0 32px rgba(214, 0, 249, 0.2);
+
+    /* Tipografia (reforço) */
+    --font-title: 'Playfair Display', serif;
+    /* título serifado elegante */
+    --font-body: 'Inter', sans-serif;
+    /* texto complementar sem serifa */
+}
+
+/* Utilitários de background */
+.bg-neon-black {
+    background-color: var(--neon-black);
+}
+
+.bg-neon-space {
+    background-color: var(--neon-space);
+}
+
+.bg-surface-dark {
+    background-color: var(--surface-dark);
+}
+
+/* Utilitários de texto */
+.text-neon-blue {
+    color: var(--neon-blue);
+}
+
+.text-neon-magenta {
+    color: var(--neon-magenta);
+}
+
+.text-neon-pink {
+    color: var(--neon-pink);
+}
+
+.text-neon-cyan {
+    color: var(--neon-cyan);
+}
+
+/* Gradientes e efeitos */
+.bg-gradient-neon {
+    background: var(--gradient-neon);
+}
+
+.bg-gradient-blue-pink {
+    background: var(--gradient-blue-pink);
+}
+
+.bg-hero-soft {
+    background: var(--gradient-hero-soft);
+}
+
+.shadow-neon {
+    box-shadow: var(--glow-neon);
+}
+
+.shadow-soft {
+    box-shadow: var(--glow-soft);
+}
+
+/* Tipografia utilitária */
+.font-title {
+    font-family: var(--font-title);
+}
+
+.font-body {
+    font-family: var(--font-body);
+}
+
+/* Botões neon */
+.btn-neon {
+    background: var(--gradient-blue-pink);
+    color: #fff;
+    transition: all 0.25s ease;
+}
+
+.btn-neon:hover {
+    filter: brightness(1.05);
+    box-shadow: var(--glow-neon);
+}
+
+/* Borda translúcida para cartões sobre fundo escuro */
+.border-translucent {
+    border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* Badge translúcido */
+.badge-translucent {
+    background: rgba(19, 32, 54, 0.9);
+    color: var(--neon-blue);
+    border: 1px solid rgba(0, 167, 255, 0.3);
+}

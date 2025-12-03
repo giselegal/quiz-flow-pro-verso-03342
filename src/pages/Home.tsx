@@ -165,7 +165,7 @@ export const Home: React.FC = () => {
   const cardHover = { y: -6, boxShadow: '0 12px 30px rgba(2,6,23,0.5)', transition: { duration: 0.25 } };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-neon-black font-body">
       <Helmet>
         <title>QuizFlowPro — Crie quizzes que convertem | Gisele Galvão</title>
         <meta name="description" content="QuizFlowPro: crie quizzes interativos para captar leads qualificados, segmentar público e aumentar conversões — editor visual, templates prontos e integrações com CRMs." />
@@ -184,7 +184,7 @@ export const Home: React.FC = () => {
                 </div>
               </div>
               <div className="flex flex-col leading-tight">
-                <span className="text-[22px] font-extrabold bg-gradient-to-r from-[#3bbef3] to-[#ea7af6] bg-clip-text text-transparent tracking-tight">
+                <span className="text-[22px] font-extrabold bg-gradient-blue-pink bg-clip-text text-transparent tracking-tight font-title">
                   QuizFlowPro
                 </span>
                 <small className="text-[11px] text-slate-300 -mt-0.5">Quizzes que convertem</small>
@@ -252,21 +252,21 @@ export const Home: React.FC = () => {
 
       <main>
         {/* Hero Section */}
-        <section className="relative py-28 lg:py-32 overflow-hidden bg-[#0a0f1f]">
-          <div className="absolute inset-0 bg-gradient-to-br from-[#3bbef3]/25 via-transparent to-[#ea7af6]/25"></div>
+        <section className="relative py-28 lg:py-32 overflow-hidden bg-neon-space">
+          <div className="absolute inset-0 bg-hero-soft"></div>
 
           <div className="container mx-auto px-6 relative z-10">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center max-w-6xl mx-auto">
               <div className="text-center lg:text-left">
                 <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.45 }}>
-                  <Badge className="mb-8 bg-[#132036] text-[#3bbef3] border-[#3bbef3]/30 hover:bg-[#132036]/80 transition-colors px-4 py-2">
+                  <Badge className="mb-8 badge-translucent hover:bg-[#132036]/80 transition-colors px-4 py-2">
                     <Sparkles className="h-4 w-4 mr-2" />
                     QuizFlowPro
                   </Badge>
                 </motion.div>
 
                 <motion.div variants={containerVariants} initial="hidden" animate="visible">
-                  <motion.h1 custom={0} variants={heroVariants} className="text-4xl md:text-6xl lg:text-7xl font-extrabold mb-8 text-white leading-[1.05] tracking-tight">
+                  <motion.h1 custom={0} variants={heroVariants} className="text-4xl md:text-6xl lg:text-7xl font-extrabold mb-8 text-white leading-[1.05] tracking-tight font-title">
                     QuizFlowPro — quizzes que convertem
                   </motion.h1>
 
@@ -278,7 +278,7 @@ export const Home: React.FC = () => {
                 <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-16">
                   <MotionButton
                     size="lg"
-                    className="bg-gradient-to-r from-[#3bbef3] to-[#ea7af6] hover:from-[#38bdf8] hover:to-[#e879f9] text-white text-lg px-10 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all"
+                    className="btn-neon text-white text-lg px-10 py-4 rounded-xl shadow-neon hover:shadow-neon transition-all"
                     onClick={() => navigate(user ? '/dashboard' : '/criar-funil')}
                     whileHover={{ scale: 1.03 }}
                     whileTap={{ scale: 0.98 }}
@@ -336,7 +336,7 @@ export const Home: React.FC = () => {
                   className="relative max-w-md ml-auto"
                 >
                   <div className="absolute -inset-6 bg-gradient-to-tr from-[#3bbef3]/30 via-transparent to-[#ea7af6]/40 opacity-70 blur-3xl" />
-                  <div className="relative rounded-3xl overflow-hidden border border-white/12 shadow-[0_24px_80px_rgba(15,23,42,0.9)]">
+                  <div className="relative rounded-3xl overflow-hidden border-translucent shadow-soft">
                     {!isInlineVideoReady && (
                       <div className="absolute inset-0 bg-[#0a0f1f] flex items-center justify-center">
                         <div className="animate-pulse w-20 h-20 rounded-full bg-white/10" />
@@ -375,7 +375,7 @@ export const Home: React.FC = () => {
         </section>
 
         {/* Metrics - Modern & Clean */}
-        <section className="py-28 lg:py-32 bg-[#0a0f1f]">
+        <section className="py-28 lg:py-32 bg-neon-space">
           <div className="container mx-auto px-6">
             <div className="text-center mb-20">
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
@@ -396,7 +396,7 @@ export const Home: React.FC = () => {
                 >
                   <Card
                     key={index}
-                    className="text-center border border-slate-700/80 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-gradient-to-tr from-[#0f1724]/70 to-[#020617]/90 backdrop-blur-xl ring-1 ring-white/5"
+                    className="text-center border-translucent shadow-soft hover:shadow-neon transition-all duration-300 hover:-translate-y-1 bg-gradient-to-tr from-[#0f1724]/70 to-[#020617]/90 backdrop-blur-xl ring-1 ring-white/5"
                   >
                     <CardContent className="p-10">
                       <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner`} style={{ background: 'linear-gradient(135deg, #3bbef3 0%, #ea7af6 100%)' }}>
@@ -415,7 +415,7 @@ export const Home: React.FC = () => {
         </section>
 
         {/* Features */}
-        <section id="features" className="py-28 lg:py-32 bg-[#0a0f1f]">
+        <section id="features" className="py-28 lg:py-32 bg-neon-space">
           <div className="container mx-auto px-6">
             <div className="text-center mb-20">
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
@@ -429,9 +429,9 @@ export const Home: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {features.map((feature, index) => (
                 <motion.div key={index} initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.08 }}>
-                  <Card key={index} className="p-8 hover:shadow-2xl transition-all duration-300 border border-white/5 bg-gradient-to-tr from-[#0f1724]/60 to-[#020617]/90 hover:-translate-y-2 rounded-2xl">
+                  <Card key={index} className="p-8 hover:shadow-neon transition-all duration-300 border-translucent bg-gradient-to-tr from-[#0f1724]/60 to-[#020617]/90 hover:-translate-y-2 rounded-2xl">
                     <CardContent className="p-0">
-                      <div className={`w-14 h-14 rounded-xl flex items-center justify-center mb-6 shadow-sm`} style={{ background: 'linear-gradient(135deg, #3bbef3 0%, #ea7af6 100%)' }}>
+                      <div className={`w-14 h-14 rounded-xl flex items-center justify-center mb-6 shadow-neon bg-gradient-blue-pink`}>
                         <feature.icon className={`h-7 w-7 text-white`} />
                       </div>
                       <h3 className="text-xl font-bold text-white mb-3">{feature.title}</h3>
