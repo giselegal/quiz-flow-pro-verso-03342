@@ -27,7 +27,22 @@ if (import.meta.env.PROD && initializeSentry) {
 import React, { lazy, Suspense } from 'react';
 import { PageLoadingFallback } from '@/components/LoadingSpinner';
 import { createRoot } from 'react-dom/client';
-const LazyApp = lazy(() => import('./App'));
+
+// 🔧 HELPER: Retry para imports dinâmicos
+const retryImport = <T,>(importFn: () => Promise<T>, retries = 3, delay = 1000): Promise<T> => {
+  return importFn().catch((err) => {
+    if (retries <= 0) {
+      console.error('❌ Import falhou após múltiplas tentativas:', err.message);
+      throw err;
+    }
+    console.warn(`⚠️ Import falhou, tentando novamente (${retries} tentativas restantes)...`);
+    return new Promise((resolve) => {
+      setTimeout(() => resolve(retryImport(importFn, retries - 1, delay)), delay);
+    });
+  });
+};
+
+const LazyApp = lazy(() => retryImport(() => import('./App')));
 import ClientLayout from './components/ClientLayout';
 import './index.css';
 // 🔍 SENTRY: Error tracking e performance monitoring
