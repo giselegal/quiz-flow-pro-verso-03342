@@ -138,17 +138,25 @@ const ModeRenderer: React.FC<{
                     ) as Record<number, boolean>}
                     onAddStep={() => {
                       const addViaEditor = (editor as any).actions?.addStep as (() => Promise<void> | void) | undefined;
-                      const addViaAdapter = adapter?.actions?.addStep as (() => Promise<void> | void) | undefined;
+                      const addViaAdapter = (adapter as any)?.actions?.addStep as (() => Promise<void> | void) | undefined;
                       if (typeof addViaEditor === 'function') {
-                        void Promise.resolve(addViaEditor()).catch(() => {});
+                        void Promise.resolve(addViaEditor()).catch(() => { });
                         return;
                       }
                       if (typeof addViaAdapter === 'function') {
-                        void Promise.resolve(addViaAdapter()).catch(() => {});
+                        void Promise.resolve(addViaAdapter()).catch(() => { });
                         return;
                       }
                       // Fallback: avançar número total de steps e selecionar a nova etapa
                       const next = (totalSteps || 0) + 1;
+                      // Tentar atualizar totalSteps via editor/adapter se disponível
+                      const setTotalStepsEditor = (editor as any).actions?.setTotalSteps as ((n: number) => void) | undefined;
+                      const setTotalStepsAdapter = (adapter as any)?.actions?.setTotalSteps as ((n: number) => void) | undefined;
+                      if (typeof setTotalStepsEditor === 'function') {
+                        try { setTotalStepsEditor(next); } catch { }
+                      } else if (typeof setTotalStepsAdapter === 'function') {
+                        try { setTotalStepsAdapter(next); } catch { }
+                      }
                       actions.setCurrentStep(next);
                       const load = (editor as any).actions?.loadStepBlocks as (id: string) => Promise<any> | undefined;
                       if (typeof load === 'function') {
@@ -277,6 +285,33 @@ const ModeRenderer: React.FC<{
                         return [idx, typeof valid === 'boolean' ? valid : undefined];
                       }),
                     ) as Record<number, boolean>}
+                    onAddStep={() => {
+                      const addViaEditor = (editor as any).actions?.addStep as (() => Promise<void> | void) | undefined;
+                      const addViaAdapter = (adapter as any)?.actions?.addStep as (() => Promise<void> | void) | undefined;
+                      if (typeof addViaEditor === 'function') {
+                        void Promise.resolve(addViaEditor()).catch(() => { });
+                        return;
+                      }
+                      if (typeof addViaAdapter === 'function') {
+                        void Promise.resolve(addViaAdapter()).catch(() => { });
+                        return;
+                      }
+                      const next = (totalSteps || 0) + 1;
+                      // Tentar atualizar totalSteps via editor/adapter se disponível
+                      const setTotalStepsEditor = (editor as any).actions?.setTotalSteps as ((n: number) => void) | undefined;
+                      const setTotalStepsAdapter = (adapter as any)?.actions?.setTotalSteps as ((n: number) => void) | undefined;
+                      if (typeof setTotalStepsEditor === 'function') {
+                        try { setTotalStepsEditor(next); } catch { }
+                      } else if (typeof setTotalStepsAdapter === 'function') {
+                        try { setTotalStepsAdapter(next); } catch { }
+                      }
+                      actions.setCurrentStep(next);
+                      const load = (editor as any).actions?.loadStepBlocks as (id: string) => Promise<any> | undefined;
+                      if (typeof load === 'function') {
+                        const key = `step-${String(next).padStart(2, '0')}`;
+                        void Promise.resolve(load(key)).catch(() => { });
+                      }
+                    }}
                     onSelectStep={(s) => {
                       actions.setCurrentStep(s);
                       const load = (editor as any).actions?.loadStepBlocks as (id: string) => Promise<any> | undefined;
