@@ -85,6 +85,8 @@ export interface AuthStorageContextValue {
     updateUser: (updates: Partial<User>) => Promise<void>;
     refreshSession: () => Promise<void>;
     clearError: () => void;
+    resetPassword: (email: string) => Promise<void>;
+    signInWithGoogle: () => Promise<void>;
 
     // Storage methods
     set: <T = any>(key: string, value: T, options?: StorageOptions) => boolean;
@@ -339,6 +341,51 @@ export const AuthStorageProvider: React.FC<AuthStorageProviderProps> = ({
         setAuthState(prev => ({ ...prev, error: null }));
     }, []);
 
+    const resetPassword = useCallback(async (email: string) => {
+        try {
+            appLogger.info('🔑 [AuthStorage] Enviando email de reset de senha...');
+
+            const { error } = await supabase.auth.resetPasswordForEmail(email, {
+                redirectTo: `${window.location.origin}/auth/reset-password`,
+            });
+
+            if (error) throw error;
+
+            appLogger.info('✅ [AuthStorage] Email de reset enviado com sucesso');
+        } catch (err: any) {
+            const errorMsg = err.message || 'Erro ao enviar email de reset';
+            appLogger.error('❌ [AuthStorage] Erro no reset de senha:', err);
+            throw err;
+        }
+    }, []);
+
+    const signInWithGoogle = useCallback(async () => {
+        try {
+            appLogger.info('🔐 [AuthStorage] Iniciando login com Google...');
+
+            const { data, error } = await supabase.auth.signInWithOAuth({
+                provider: 'google',
+                options: {
+                    redirectTo: `${window.location.origin}/admin`,
+                    queryParams: {
+                        access_type: 'offline',
+                        prompt: 'consent',
+                    },
+                },
+            });
+
+            if (error) throw error;
+
+            // OAuth redireciona automaticamente, não precisamos setar state aqui
+            appLogger.info('✅ [AuthStorage] Redirecionando para Google OAuth...');
+        } catch (err: any) {
+            const errorMsg = err.message || 'Erro no login com Google';
+            setAuthState(prev => ({ ...prev, error: errorMsg }));
+            appLogger.error('❌ [AuthStorage] Erro no Google OAuth:', err);
+            throw err;
+        }
+    }, []);
+
     // ============================================================================
     // STORAGE METHODS
     // ============================================================================
@@ -556,6 +603,8 @@ export const AuthStorageProvider: React.FC<AuthStorageProviderProps> = ({
             updateUser,
             refreshSession,
             clearError,
+            resetPassword,
+            signInWithGoogle,
 
             // Storage
             set,
@@ -579,6 +628,8 @@ export const AuthStorageProvider: React.FC<AuthStorageProviderProps> = ({
             updateUser,
             refreshSession,
             clearError,
+            resetPassword,
+            signInWithGoogle,
             set,
             get,
             remove,
