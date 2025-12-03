@@ -417,18 +417,20 @@ export const quizSupabaseService = {
     conversionData?: any;
   }): Promise<string> {
     try {
-      // NOTA: Tabela quiz_conversions não existe no schema atual
-      // TODO: Criar migration ou usar tabela alternativa
-      appLogger.warn('recordConversion: Tabela quiz_conversions não implementada no schema');
+      appLogger.info('recordConversion: Registrando conversão', { sessionId: conversionData.sessionId });
       
-      const insertData: InsertQuizConversion = {
+      const insertData = {
         session_id: conversionData.sessionId,
+        conversion_type: conversionData.conversionType,
+        conversion_value: conversionData.conversionValue,
+        currency: conversionData.currency,
+        product_id: conversionData.productId,
+        product_name: conversionData.productName,
+        commission_rate: conversionData.commissionRate,
+        affiliate_id: conversionData.affiliateId,
+        conversion_data: conversionData.conversionData,
       };
 
-      // Mock implementation até a tabela ser criada
-      return `mock-conversion-${Date.now()}`;
-      
-      /*
       const { data, error } = await supabase
         .from('quiz_conversions')
         .insert([insertData])
@@ -437,7 +439,6 @@ export const quizSupabaseService = {
 
       if (error) throw error;
       return data.id;
-      */
     } catch (error) {
       appLogger.error('Erro ao registrar conversão:', { data: [error] });
       throw error;
