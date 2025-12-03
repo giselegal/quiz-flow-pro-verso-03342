@@ -13,7 +13,7 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { useCanvasContainerStyles } from '@/hooks/useCanvasContainerStyles';
 import { useGlobalEventManager } from '@/lib/utils/OptimizedGlobalEventManager';
 import { HookOrderDebugger } from '@/lib/tools/debug/HookOrderDebugger';
-import { usePureBuilder } from '@/hooks/usePureBuilderCompat';
+import { useEditor } from '@/core/contexts/EditorContext/EditorStateProvider';
 import EmptyCanvasInterface from '@/components/editor/EmptyCanvasInterface';
 
 // Componente de controles de navegação para aparecer no final dos blocos do editor
@@ -247,12 +247,12 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
   scopeId,
   onDeselectBlocks,
 }) => {
-  // 🆕 CANVAS VAZIO: Acesso ao estado do PureBuilder para verificar totalSteps
-  const { state } = usePureBuilder();
+  // 🆕 CANVAS VAZIO: Acesso ao estado do editor para verificar totalSteps
+  const editor = useEditor();
 
   // Calcular totalSteps com base nas stepBlocks disponíveis
   const totalSteps = React.useMemo(() => {
-    const stepKeys = Object.keys(state?.stepBlocks || {});
+    const stepKeys = Object.keys(editor.state?.stepBlocks || {});
     const stepNumbers = stepKeys
       .map(key => {
         const match = key.match(/step-(\d+)/);
@@ -261,7 +261,7 @@ const CanvasDropZoneBase: React.FC<CanvasDropZoneProps> = ({
       .filter(num => num > 0);
 
     return stepNumbers.length > 0 ? Math.max(...stepNumbers) : 0;
-  }, [state?.stepBlocks]);
+  }, [editor.state?.stepBlocks]);
 
   // 🚀 OTIMIZAÇÃO: Condicionar useRenderCount apenas no desenvolvimento e quando debug estiver ativo
   if (process.env.NODE_ENV === 'development' && (window as any).__DND_DEBUG === true) {

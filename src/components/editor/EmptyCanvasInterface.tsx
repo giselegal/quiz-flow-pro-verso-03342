@@ -2,7 +2,7 @@ import React from 'react';
 import { appLogger } from '@/lib/utils/logger';
 import { Button } from '@/components/ui/button';
 import { Plus, Zap, Wand2 } from 'lucide-react';
-import { usePureBuilder } from '@/hooks/usePureBuilderCompat';
+import { useEditor } from '@/core/contexts/EditorContext/EditorStateProvider';
 import { useNotification } from '@/components/ui/Notification';
 
 /**
@@ -20,12 +20,15 @@ export const EmptyCanvasInterface: React.FC<EmptyCanvasInterfaceProps> = ({
     onCreateFirstStep,
     className = '',
 }) => {
-    const { actions } = usePureBuilder();
+    const editor = useEditor();
     const { addNotification } = useNotification();
 
     const handleCreateFirstStep = async () => {
         try {
-            await actions.createFirstStep();
+            // Usa o método createFirstStep do editor canônico
+            if (editor.actions?.createFirstStep) {
+                await editor.actions.createFirstStep();
+            }
             addNotification('✅ Primeira etapa criada! Comece editando seu funil.', 'success');
 
             // Callback opcional para componente pai

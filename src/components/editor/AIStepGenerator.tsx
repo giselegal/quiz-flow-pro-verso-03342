@@ -12,7 +12,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAI } from '@/hooks/useAI';
-import { usePureBuilder } from '@/hooks/usePureBuilderCompat';
+import { useEditor } from '@/core/contexts/EditorContext/EditorStateProvider';
 import { Sparkles, Loader2, Wand2, Lightbulb } from 'lucide-react';
 import { useNotification } from '@/components/ui/Notification';
 
@@ -26,7 +26,7 @@ interface AIStepGeneratorProps {
  */
 export const AIStepGenerator: React.FC<AIStepGeneratorProps> = ({ onClose }) => {
     const { generateFunnel, isLoading, error, isConfigured } = useAI();
-    const { actions } = usePureBuilder();
+    const editor = useEditor();
     const { addNotification } = useNotification();
 
     const [prompt, setPrompt] = useState('');
@@ -63,23 +63,22 @@ Cada pergunta deve ter 3-4 opções com categorias para cálculo.
             if (generatedSteps) {
                 appLogger.debug('✅ AIStepGenerator: Steps gerados pela IA:', generatedSteps);
 
-                // Aplicar steps no PureBuilder usando o método disponível
-                // Como não temos applyAISteps, vamos usar os métodos básicos
+                // Aplicar steps no editor canônico
                 try {
                     // Para cada step gerado, adicionamos blocos
                     for (let i = 0; i < generatedSteps.length; i++) {
-                        const stepKey = `step_${i + 1}`;
+                        const step = i + 1;
                         if (generatedSteps[i].blocks) {
                             for (const block of generatedSteps[i].blocks) {
-                                await actions.addBlock(stepKey, block);
+                                editor.actions.addBlock(step, block);
                             }
                         }
                     }
 
                     addNotification(`✨ Funil gerado com sucesso! ${generatedSteps.length} etapas criadas`);
 
-                    // Voltar para etapa 1 usando setCurrentStep
-                    actions.setCurrentStep(1);
+                    // Voltar para etapa 1
+                    editor.actions.setCurrentStep(1);
 
                 } catch (error) {
                     appLogger.error('❌ Error applying AI steps:', error);
@@ -94,7 +93,7 @@ Cada pergunta deve ter 3-4 opções com categorias para cálculo.
             appLogger.error('❌ AIStepGenerator error:', error);
             addNotification('❌ Erro ao conectar com IA. Verifique sua configuração.');
         }
-    }, [prompt, businessType, targetAudience, generateFunnel, actions, addNotification, onClose]);
+    }, [prompt, businessType, targetAudience, generateFunnel, editor, addNotification, onClose]);
 
     if (!isConfigured) {
         return (
