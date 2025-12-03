@@ -1,107 +1,15 @@
 import React from 'react';
-import { appLogger } from '@/lib/utils/appLogger';
 
 /**
- * 🎯 BOTÃO PARA FORÇAR ABERTURA DA JANELA LOVABLE
+ * �� COMPONENTE DESATIVADO - Lovable integration removed
+ * 
+ * Este componente foi desativado como parte da remoção da integração
+ * com a plataforma Lovable. Agora retorna null (não renderiza nada).
+ * 
+ * @deprecated Lovable integration has been disabled
  */
 export const LovableWindowButton: React.FC = () => {
-  const forceOpenLovableWindow = () => {
-    // Executa o mesmo script de força
-    if (typeof window !== 'undefined') {
-      const projectId = (import.meta as any).env?.VITE_LOVABLE_PROJECT_ID as string | undefined;
-      if (!projectId) {
-        appLogger.warn('[Lovable] VITE_LOVABLE_PROJECT_ID ausente - botão não pode forçar janela');
-        return;
-      }
-      // Configuração global forçada
-      (window as any).LOVABLE_FORCE_WINDOW = true;
-      (window as any).LOVABLE_CONFIG = {
-        projectId,
-        apiBaseUrl: 'https://api.lovable.dev',
-        previewMode: true,
-        enableLivePreview: true,
-        autoRefresh: true,
-        windowMode: 'preview',
-        forceOpen: true,
-        timestamp: Date.now(),
-      };
-
-      // Meta tags forçadas
-      const forceMetaTags = [
-        { name: 'lovable-preview-enabled', content: 'true' },
-        { name: 'lovable-window-preview', content: 'active' },
-        { name: 'lovable-auto-open', content: 'true' },
-        { name: 'lovable-force-window', content: 'enabled' },
-        { name: 'lovable-project-id', content: projectId },
-      ];
-
-      forceMetaTags.forEach(({ name, content }) => {
-        let metaTag = document.querySelector(`meta[name="${name}"]`);
-        if (!metaTag) {
-          metaTag = document.createElement('meta');
-          metaTag.setAttribute('name', name);
-          document.head.appendChild(metaTag);
-        }
-        metaTag.setAttribute('content', content);
-      });
-
-      // Eventos massivos
-      const forceEvents = [
-        'lovable:preview:activate',
-        'lovable:window:open',
-        'lovable:force:open',
-        'lovable:preview:show',
-        'lovable:editor:active',
-        'lovable:window:activate',
-        'lovable:preview:window:show',
-        'lovable:force:window:open',
-        'lovable:auto:open',
-        'lovable:immediate:show',
-      ];
-
-      forceEvents.forEach(eventName => {
-        window.dispatchEvent(
-          new CustomEvent(eventName, {
-            detail: {
-              source: 'button-force',
-              timestamp: Date.now(),
-              action: 'force-open-window',
-              projectId,
-              forced: true,
-            },
-            bubbles: true,
-            cancelable: false,
-          }),
-        );
-      });
-
-      // Força com PostMessage
-      window.postMessage(
-        {
-          type: 'lovable-force-open',
-          data: {
-            projectId,
-            action: 'open-preview-window',
-            timestamp: Date.now(),
-            forced: true,
-          },
-        },
-        '*',
-      );
-
-      appLogger.info('🎯 BOTÃO LOVABLE ACIONADO - Janela deve abrir!');
-    }
-  };
-
-  return (
-    <button
-      onClick={forceOpenLovableWindow}
-      className="bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-white px-4 py-2 rounded-lg font-medium shadow-lg transition-all duration-200 transform hover:scale-105"
-      title="Clique para forçar abertura da janela Lovable"
-    >
-      🚀 Abrir Janela Lovable
-    </button>
-  );
+  return null;
 };
 
 export default LovableWindowButton;

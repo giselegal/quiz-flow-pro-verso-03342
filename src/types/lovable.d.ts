@@ -1,35 +1,20 @@
+/**
+ * 🚫 TIPOS DESATIVADOS - Lovable integration removed
+ * 
+ * Este arquivo de tipos foi mantido apenas para compatibilidade,
+ * mas a integração com Lovable foi removida do projeto.
+ * 
+ * @deprecated Lovable integration has been disabled
+ */
+
+// Tipos vazios mantidos para compatibilidade
 declare module '@lovable/react' {
   import React from 'react';
-
-  interface LovableProviderProps {
-    children: React.ReactNode;
-  }
-  export const LovableProvider: (props: LovableProviderProps) => JSX.Element;
-
-  // Assuming EditorScript takes no props
+  export const LovableProvider: (props: { children: React.ReactNode }) => JSX.Element;
   export const EditorScript: () => JSX.Element;
-
-  interface EditableProps {
-    id: string;
-    children: React.ReactNode;
-  }
-  export const Editable: (props: EditableProps) => JSX.Element;
+  export const Editable: (props: { id: string; children: React.ReactNode }) => JSX.Element;
 }
 
 declare module '@lovable/editor' {
-  // Caso precise de APIs específicas do editor
-}
-
-// Estende o objeto Window para incluir propriedades do Lovable
-interface LovableConfig {
-  projectId: string;
-  apiBaseUrl: string;
-  authToken?: string;
-  [key: string]: any;
-}
-
-declare global {
-  interface Window {
-    LOVABLE_CONFIG?: LovableConfig;
-  }
+  // Empty module
 }

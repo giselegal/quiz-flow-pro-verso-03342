@@ -2,18 +2,61 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 // @ts-ignore: Deno imports  
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+// @ts-ignore: Deno imports
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { 
   createCorsResponse, 
   createErrorResponse, 
   handleCorsPreflightRequest
 } from '../_shared/types.ts';
 
+/**
+ * AI Quiz Generator Edge Function
+ * 
+ * Generates quiz structures using OpenAI GPT models.
+ * Requires authentication (JWT verification enabled in config.toml).
+ * 
+ * Request body:
+ * - prompt: Description of the quiz to generate
+ * - quizType: Type of quiz (e.g., "personality", "knowledge", "lead")
+ */
 serve(async (req: Request) => {
   if (req.method === 'OPTIONS') {
     return handleCorsPreflightRequest();
   }
 
   try {
+    // ========================================================================
+    // AUTHENTICATION CHECK
+    // ========================================================================
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader) {
+      return createErrorResponse('Missing authorization header', 401);
+    }
+
+    // Verify the JWT token and get user info
+    const supabaseUrl = Deno.env.get('SUPABASE_URL');
+    const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY');
+    
+    if (!supabaseUrl || !supabaseAnonKey) {
+      console.error('Missing Supabase environment variables');
+      return createErrorResponse('Server configuration error', 500);
+    }
+
+    const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+      global: { headers: { Authorization: authHeader } }
+    });
+
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    
+    if (authError || !user) {
+      console.error('Auth error:', authError);
+      return createErrorResponse('Unauthorized - Invalid token', 401);
+    }
+
+    // ========================================================================
+    // PROCESS REQUEST
+    // ========================================================================
     const { prompt, quizType } = await req.json();
     const openaiKey = Deno.env.get('OPENAI_API_KEY');
 
@@ -86,6 +129,9 @@ Gere um quiz completo e otimizado.`;
     }
 
     const quizData = JSON.parse(jsonMatch[0]);
+
+    // Log successful request for monitoring
+    console.log(`AI quiz generation by user ${user.id}: type=${quizType}`);
 
     return createCorsResponse({ 
       success: true, 

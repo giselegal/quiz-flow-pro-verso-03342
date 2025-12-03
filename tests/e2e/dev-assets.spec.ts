@@ -1,10 +1,9 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Diagnóstico de assets (DEV)', () => {
-    test('Sem falhas 4xx/5xx em chunks JS/CSS e registro de anomalias', async ({ page }) => {
+    test('Sem falhas 4xx/5xx em chunks JS/CSS', async ({ page }) => {
         const failures: Array<{ url: string; status: number }> = [];
         const cssFailures: Array<{ url: string; status: number }> = [];
-        const blockedLovable: Array<{ url: string; status: number }> = [];
         const start = Date.now();
 
         page.on('response', (resp) => {
@@ -14,7 +13,6 @@ test.describe('Diagnóstico de assets (DEV)', () => {
             const isCss = /\.css(\?|$)/.test(url) || (resp.headers()['content-type'] || '').includes('text/css');
             if (isJs && status >= 400) failures.push({ url, status });
             if (isCss && status >= 400) cssFailures.push({ url, status });
-            if (url.includes('api.lovable.dev') && status >= 400) blockedLovable.push({ url, status });
         });
 
         await page.goto('/');
@@ -26,7 +24,5 @@ test.describe('Diagnóstico de assets (DEV)', () => {
 
         expect(failures, `Falhas JS:\n${failures.map(f => `${f.status} ${f.url}`).join('\n')}`).toHaveLength(0);
         expect(cssFailures, `Falhas CSS:\n${cssFailures.map(f => `${f.status} ${f.url}`).join('\n')}`).toHaveLength(0);
-        // Lovable deve ser neutralizado em DEV; status 200 ou não chamado
-        expect(blockedLovable, `Lovable retornou status de erro:\n${blockedLovable.map(f => `${f.status} ${f.url}`).join('\n')}`).toHaveLength(0);
     });
 });

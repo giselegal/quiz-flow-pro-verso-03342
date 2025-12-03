@@ -1,7 +1,24 @@
 project_id = "dgpbqhjktlnjiatcqheh"
 
+# ============================================================================
+# EDGE FUNCTIONS CONFIGURATION
+# ============================================================================
+# 
+# JWT Verification:
+# - verify_jwt = true: Requires valid Supabase auth token (RECOMMENDED for production)
+# - verify_jwt = false: No authentication required (useful for testing/development)
+#
+# For production deployments, ensure all functions have verify_jwt = true
+# unless they explicitly need to be publicly accessible.
+#
+# ============================================================================
+
 [functions.ai-optimization-engine]
-verify_jwt = false
+# AI-powered optimization suggestions for quiz funnels
+# Requires authentication as it accesses user-specific data
+verify_jwt = true
 
 [functions.ai-quiz-generator]
-verify_jwt = false
+# AI-powered quiz generation using OpenAI
+# Requires authentication to prevent abuse and track usage
+verify_jwt = true

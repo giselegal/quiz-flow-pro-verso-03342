@@ -2,6 +2,8 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 // @ts-ignore: Deno imports  
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+// @ts-ignore: Deno imports
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { 
   createCorsResponse, 
   createErrorResponse, 
@@ -12,12 +14,54 @@ import {
   type EdgeFunctionResponse
 } from '../_shared/types.ts';
 
+/**
+ * AI Optimization Engine Edge Function
+ * 
+ * Provides AI-powered optimization suggestions for quiz funnels.
+ * Requires authentication (JWT verification enabled in config.toml).
+ * 
+ * Actions:
+ * - optimize: Analyze funnel and suggest improvements
+ * - generate-variant: Create A/B test variants
+ * - analyze-performance: Analyze metrics and identify issues
+ */
 serve(async (req: Request) => {
   if (req.method === 'OPTIONS') {
     return handleCorsPreflightRequest();
   }
 
   try {
+    // ========================================================================
+    // AUTHENTICATION CHECK
+    // ========================================================================
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader) {
+      return createErrorResponse('Missing authorization header', 401);
+    }
+
+    // Verify the JWT token and get user info
+    const supabaseUrl = Deno.env.get('SUPABASE_URL');
+    const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY');
+    
+    if (!supabaseUrl || !supabaseAnonKey) {
+      console.error('Missing Supabase environment variables');
+      return createErrorResponse('Server configuration error', 500);
+    }
+
+    const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+      global: { headers: { Authorization: authHeader } }
+    });
+
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    
+    if (authError || !user) {
+      console.error('Auth error:', authError);
+      return createErrorResponse('Unauthorized - Invalid token', 401);
+    }
+
+    // ========================================================================
+    // PROCESS REQUEST
+    // ========================================================================
     const { action, funnelConfig, userBehaviorData } = await req.json();
     const openaiKey = Deno.env.get('OPENAI_API_KEY');
 
@@ -89,6 +133,9 @@ Identifique gargalos e oportunidades de melhoria.`;
 
     const data = await response.json();
     const suggestions = data.choices[0].message.content;
+
+    // Log successful request for monitoring
+    console.log(`AI optimization request by user ${user.id}: action=${action}`);
 
     return createCorsResponse({ 
       success: true, 

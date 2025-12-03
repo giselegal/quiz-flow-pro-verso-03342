@@ -1,10 +1,11 @@
-// Componentes marcados para edição no Lovable
-export const LOVABLE_COMPONENTS = {
-  QuizCover: '/src/components/quiz/QuizCover.tsx',
-  QuizQuestion: '/src/components/quiz/QuizQuestion.tsx',
-  QuizLogic: '/src/components/quiz/QuizLogic.tsx',
-  ResultPageEditor: '/src/components/quiz/ResultPageEditor.tsx',
-  EnchantedEffects: '/src/components/effects/EnchantedEffects.tsx',
-};
+/**
+ * 🚫 CONFIGURAÇÃO DESATIVADA - Lovable integration removed
+ * 
+ * Este arquivo foi desativado como parte da remoção da integração
+ * com a plataforma Lovable.
+ * 
+ * @deprecated Lovable integration has been disabled
+ */
+export const LOVABLE_COMPONENTS = {};
 
 export default LOVABLE_COMPONENTS;
