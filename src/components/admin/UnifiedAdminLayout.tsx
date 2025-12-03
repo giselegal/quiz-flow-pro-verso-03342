@@ -207,9 +207,8 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
 
     return (
         <div
-            className={`min-h-screen ${className}`}
+            className={`min-h-screen ${className} bg-gradient-to-br from-blue-50 via-purple-50 to-green-50`}
             style={{
-                background: theme.colors.background,
                 color: theme.colors.text,
             }}
         >
@@ -544,7 +543,7 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
                 <div
                     className="h-full backdrop-blur-sm"
                     style={{
-                        background: `linear-gradient(135deg, ${theme.colors.background}60, ${theme.colors.glowEffect}10)`,
+                        background: `linear-gradient(135deg, #ffffff80, ${theme.colors.glowEffect}10)`,
                     }}
                 >
                     <React.Suspense

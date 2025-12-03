@@ -44,11 +44,11 @@ const AnalyticsPage: React.FC = () => {
 
     if (loading && !funnelMetrics) {
         return (
-            <div className="flex items-center justify-center min-h-[600px]">
+            <div className="flex items-center justify-center min-h-[600px] bg-gradient-to-br from-blue-50 via-purple-50 to-green-50">
                 <div className="text-center">
-                    <div className="w-16 h-16 mx-auto mb-4 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
-                    <h3 className="text-lg font-semibold mb-2">Carregando Analytics</h3>
-                    <p className="text-muted-foreground">Processando dados do Supabase...</p>
+                    <div className="w-16 h-16 mx-auto mb-4 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+                    <h3 className="text-lg font-semibold mb-2 text-blue-700">Carregando Analytics</h3>
+                    <p className="text-blue-700">Processando dados do Supabase...</p>
                 </div>
             </div>
         );
@@ -69,11 +69,11 @@ const AnalyticsPage: React.FC = () => {
     }
 
     return (
-        <div className="space-y-6 p-6">
+        <div className="space-y-6 p-6 bg-gradient-to-br from-blue-50 via-purple-50 to-green-50">
             {/* Header */}
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-3xl font-bold bg-gradient-to-r from-[#432818] to-[#6B4F43] bg-clip-text text-transparent">
+                    <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                         Analytics Avançado
                     </h1>
                     <p className="text-muted-foreground mt-1">
@@ -230,8 +230,8 @@ const AnalyticsPage: React.FC = () => {
                                     <div key={step.stepNumber} className="flex items-center justify-between p-3 rounded-lg border">
                                         <div className="flex items-center gap-3">
                                             <div className={`w-2 h-2 rounded-full ${step.dropoffRate > 50 ? 'bg-red-500' :
-                                                    step.dropoffRate > 30 ? 'bg-yellow-500' :
-                                                        'bg-green-500'
+                                                step.dropoffRate > 30 ? 'bg-yellow-500' :
+                                                    'bg-green-500'
                                                 }`} />
                                             <div>
                                                 <div className="font-medium">Step {step.stepNumber}</div>

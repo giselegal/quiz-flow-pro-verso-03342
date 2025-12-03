@@ -27,6 +27,7 @@ import { GlobalErrorBoundary } from './components/error/GlobalErrorBoundary';
 import SentryErrorBoundary from './components/errors/SentryErrorBoundary'; // 🔍 G47 FIX
 import { Toaster } from './components/ui/toaster';
 import { RedirectRoute } from './components/RedirectRoute';
+import ProtectedRoute from '@/components/ProtectedRoute';
 import { QuizErrorBoundary } from './components/RouteErrorBoundary';
 import { PageLoadingFallback } from './components/LoadingSpinner';
 import { serviceManager } from './services/core/UnifiedServiceManager';
@@ -249,13 +250,17 @@ function AppCore() {
                                         {/* 🎯 EDITOR PRINCIPAL - Normalização de URL centralizada em EditorPage */}
                                         <Route path="/editor">
                                             <Suspense fallback={<PageLoadingFallback message="Carregando Editor..." />}>
-                                                <EditorPage />
+                                                <ProtectedRoute>
+                                                    <EditorPage />
+                                                </ProtectedRoute>
                                             </Suspense>
                                         </Route>
 
                                         <Route path="/editor/:funnelId">
                                             <Suspense fallback={<PageLoadingFallback message="Carregando Editor..." />}>
-                                                <EditorPage />
+                                                <ProtectedRoute>
+                                                    <EditorPage />
+                                                </ProtectedRoute>
                                             </Suspense>
                                         </Route>
 
@@ -364,7 +369,7 @@ function AppCore() {
                                                     try {
                                                         const params = new URLSearchParams(window.location.search);
                                                         funnelId = params.get('funnelId') || params.get('funnel');
-                                                    } catch {}
+                                                    } catch { }
 
                                                     if (!funnelId) {
                                                         return (
@@ -446,9 +451,11 @@ function AppCore() {
                                         </Route>
 
                                         <Route path="/admin">
-                                            <div data-testid="modern-admin-dashboard-page">
-                                                <ModernAdminDashboard />
-                                            </div>
+                                            <ProtectedRoute>
+                                                <div data-testid="modern-admin-dashboard-page">
+                                                    <ModernAdminDashboard />
+                                                </div>
+                                            </ProtectedRoute>
                                         </Route>
 
                                         <Route path="/dashboard">
@@ -479,13 +486,17 @@ function AppCore() {
                                         {/* 📊 PÁGINAS ADMINISTRATIVAS EXTRAS */}
                                         <Route path="/admin/analytics">
                                             <Suspense fallback={<PageLoadingFallback message="Carregando Analytics..." />}>
-                                                <AdminAnalyticsPage />
+                                                <ProtectedRoute>
+                                                    <AdminAnalyticsPage />
+                                                </ProtectedRoute>
                                             </Suspense>
                                         </Route>
 
                                         <Route path="/admin/participants">
                                             <Suspense fallback={<PageLoadingFallback message="Carregando Participantes..." />}>
-                                                <AdminParticipantsPage />
+                                                <ProtectedRoute>
+                                                    <AdminParticipantsPage />
+                                                </ProtectedRoute>
                                             </Suspense>
                                         </Route>
 
@@ -494,31 +505,41 @@ function AppCore() {
                                         {/* 📈 Adoção camada canônica (Dev) */}
                                         <Route path="/admin/canonical-adoption">
                                             <Suspense fallback={<PageLoadingFallback message="Carregando Adoção Canônica..." />}>
-                                                <CanonicalAdoptionDashboard />
+                                                <ProtectedRoute>
+                                                    <CanonicalAdoptionDashboard />
+                                                </ProtectedRoute>
                                             </Suspense>
                                         </Route>
 
                                         <Route path="/admin/settings">
                                             <Suspense fallback={<PageLoadingFallback message="Carregando Configurações..." />}>
-                                                <AdminSettingsPage />
+                                                <ProtectedRoute>
+                                                    <AdminSettingsPage />
+                                                </ProtectedRoute>
                                             </Suspense>
                                         </Route>
 
                                         <Route path="/admin/integrations">
                                             <Suspense fallback={<PageLoadingFallback message="Carregando Integrações..." />}>
-                                                <AdminIntegrationsPage />
+                                                <ProtectedRoute>
+                                                    <AdminIntegrationsPage />
+                                                </ProtectedRoute>
                                             </Suspense>
                                         </Route>
 
                                         <Route path="/admin/ab-tests">
                                             <Suspense fallback={<PageLoadingFallback message="Carregando Testes A/B..." />}>
-                                                <AdminABTestsPage />
+                                                <ProtectedRoute>
+                                                    <AdminABTestsPage />
+                                                </ProtectedRoute>
                                             </Suspense>
                                         </Route>
 
                                         <Route path="/admin/creatives">
                                             <Suspense fallback={<PageLoadingFallback message="Carregando Criativos..." />}>
-                                                <AdminCreativesPage />
+                                                <ProtectedRoute>
+                                                    <AdminCreativesPage />
+                                                </ProtectedRoute>
                                             </Suspense>
                                         </Route>
 

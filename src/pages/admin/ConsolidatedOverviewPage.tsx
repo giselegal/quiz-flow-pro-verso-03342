@@ -143,10 +143,10 @@ const ConsolidatedOverviewPage: React.FC = () => {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-[#FAF9F7] via-[#FEFEFE] to-[#F5F2E9] p-6 flex items-center justify-center">
+            <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-green-50 p-6 flex items-center justify-center">
                 <div className="text-center">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#B89B7A] mx-auto mb-4"></div>
-                    <p className="text-[#6B4F43]">Carregando dados...</p>
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                    <p className="text-blue-700">Carregando dados...</p>
                 </div>
             </div>
         );
@@ -155,7 +155,7 @@ const ConsolidatedOverviewPage: React.FC = () => {
     const { funnelSummary, realMetrics } = dashboardData;
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-[#FAF9F7] via-[#FEFEFE] to-[#F5F2E9] p-6 space-y-8">
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-green-50 p-6 space-y-8">
             {/* Header Consolidado */}
             <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
                 <div className="space-y-2">
@@ -164,18 +164,15 @@ const ConsolidatedOverviewPage: React.FC = () => {
                             <Zap className="h-6 w-6 text-white" />
                         </div>
                         <div>
-                            <h1 className="text-3xl font-bold bg-gradient-to-r from-[#432818] to-[#6B4F43] bg-clip-text text-transparent">
+                            <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                                 Dashboard Quiz Quest
                             </h1>
                             <div className="flex items-center space-x-2 mt-1">
-                                <Badge className="bg-gradient-to-r from-[#B89B7A]/20 to-[#432818]/20 text-[#432818] border-0 px-3 py-1">
+                                <Badge className="bg-blue-50 text-blue-700 border-0 px-3 py-1">
                                     <Crown className="h-3 w-3 mr-1" />
                                     Pro Analytics
                                 </Badge>
-                                <Badge
-                                    variant="outline"
-                                    className="border-[#B89B7A]/40 text-[#B89B7A] bg-[#B89B7A]/10"
-                                >
+                                <Badge variant="outline" className="border-green-400/40 text-green-700 bg-green-50">
                                     <Activity className="h-3 w-3 mr-1" />
                                     {realMetrics.activeUsersNow} usuários online
                                 </Badge>

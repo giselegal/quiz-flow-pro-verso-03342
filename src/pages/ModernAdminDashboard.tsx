@@ -41,10 +41,10 @@ const Redirect: React.FC<{ to: string }> = ({ to }) => {
 // ============================================================================
 
 const DashboardLoadingFallback = () => (
-  <div className="flex items-center justify-center min-h-[400px]">
+  <div className="flex items-center justify-center min-h-[400px] bg-gradient-to-br from-blue-50 via-purple-50 to-green-50">
     <div className="text-center">
-      <LoadingSpinner size="lg" color="#B89B7A" className="mx-auto mb-4" />
-      <p className="text-gray-600">Carregando dados do Supabase...</p>
+      <LoadingSpinner size="lg" color="#2563EB" className="mx-auto mb-4" />
+      <p className="text-blue-700">Carregando dados do Supabase...</p>
     </div>
   </div>
 );
@@ -133,7 +133,7 @@ const ModernAdminDashboard: React.FC = () => {
   const currentRoute = routeConfig[location as keyof typeof routeConfig] || routeConfig['/admin'];
 
   return (
-    <div className="min-h-screen bg-[#FAF9F7]">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-green-50">
       <UnifiedAdminLayout
         currentView="dashboard"
         funnelId={funnelId}
@@ -211,27 +211,7 @@ const ModernAdminDashboard: React.FC = () => {
 
             {/* Editor integrado */}
             <Route path="/admin/editor">
-              <div className="p-6">
-                <h1 className="text-2xl font-bold text-gray-900 mb-4">Editor de Funis</h1>
-                <p className="text-gray-600">Acesse o editor principal através da página de funis.</p>
-                <div className="mt-4">
-                  <a href="/editor" className="text-blue-600 hover:text-blue-800 underline">
-                    Ir para Editor Principal
-                  </a>
-                </div>
-                <div className="mt-2">
-                  <a href="/editor/modular" className="text-purple-700 hover:text-purple-900 underline">
-                    Abrir Editor Modular (experimental)
-                  </a>
-                  <span className="text-xs text-gray-500 ml-2">/editor/modular</span>
-                </div>
-                <div className="mt-1">
-                  <a href="/editor/modular?funnel=quiz21StepsComplete" className="text-purple-700 hover:text-purple-900 underline">
-                    Editor Modular com template 21 passos
-                  </a>
-                  <span className="text-xs text-gray-500 ml-2">com querystring</span>
-                </div>
-              </div>
+              <Redirect to="/editor" />
             </Route>
 
             {/* Rotas legacy - redirecionamentos */}

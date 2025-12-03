@@ -603,13 +603,13 @@ const MeusFunisPageReal: React.FC = () => {
 
     if (isLoading) {
         return (
-            <div className="p-6">
+            <div className="p-6 bg-gradient-to-br from-blue-50 via-purple-50 to-green-50">
                 <div className="flex justify-between items-center mb-8">
                     <div>
-                        <h1 className="text-3xl font-bold text-gray-900">Meus Funis</h1>
-                        <p className="text-gray-600">Carregando funis...</p>
+                        <h1 className="text-3xl font-bold text-blue-700">Meus Funis</h1>
+                        <p className="text-blue-700">Carregando funis...</p>
                     </div>
-                    <div className="animate-spin">
+                    <div className="animate-spin text-blue-600">
                         <RefreshCw className="w-6 h-6" />
                     </div>
                 </div>
@@ -650,7 +650,7 @@ const MeusFunisPageReal: React.FC = () => {
             toast({ title: 'Erro ao criar rascunho', description: String(e?.message || e), variant: 'destructive' });
         }
     }; return (
-        <div className="p-6">
+        <div className="p-6 bg-gradient-to-br from-blue-50 via-purple-50 to-green-50">
             {/* Header */}
             <div className="mb-8">
                 <div className="flex justify-between items-start mb-4">

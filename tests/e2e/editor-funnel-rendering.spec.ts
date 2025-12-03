@@ -96,7 +96,7 @@ test.describe('Editor + Renderização - Carregamento de Funil', () => {
 
         await enterPreview(page);
         // Entra em preview (se disponível) ou valida que blocos permanecem visíveis
-        await enterPreview(page).catch(() => {});
+        await enterPreview(page).catch(() => { });
         // Após tentar preview, pelo menos um bloco deve continuar acessível
         await expect(blockIntroHeader).toBeVisible({ timeout: 8000 });
     });
@@ -105,7 +105,7 @@ test.describe('Editor + Renderização - Carregamento de Funil', () => {
         await navigateToEditorWithFunnel(page);
         await page.waitForLoadState('networkidle');
 
-        await enterPreview(page).catch(() => {});
+        await enterPreview(page).catch(() => { });
 
         const nameInput = page.locator('[data-testid="block-intro-form"] input, input[placeholder*="nome"], input[name*="name"], input[type="text"]').first();
         if (await nameInput.isVisible().catch(() => false)) {

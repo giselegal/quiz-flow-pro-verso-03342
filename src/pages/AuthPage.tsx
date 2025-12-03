@@ -12,7 +12,7 @@
  */
 
 import { useState, FormEvent } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import { useAuthStorage } from '@/contexts/consolidated/AuthStorageProvider';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useNavigate } from 'react-router-dom';
@@ -26,6 +26,7 @@ export default function AuthPage() {
     const [loading, setLoading] = useState(false);
     const [mode, setMode] = useState<'login' | 'signup'>('login');
     const navigate = useNavigate();
+    const { login, signUp } = useAuthStorage();
 
     /**
      * Handler de autenticação (login ou signup)
@@ -54,39 +55,16 @@ export default function AuthPage() {
 
                 appLogger.info('Tentando criar nova conta', { email });
 
-                const { data, error } = await supabase.auth.signUp({
-                    email,
-                    password,
-                    options: {
-                        emailRedirectTo: `${window.location.origin}/admin`,
-                        data: {
-                            created_via: 'quiz_quest_pro',
-                            onboarding_completed: false
-                        }
-                    }
+                await signUp(email, password, {
+                    created_via: 'quiz_quest_pro',
+                    onboarding_completed: false,
                 });
 
-                if (error) {
-                    appLogger.error('Erro no signup', { error });
-                    throw error;
-                }
-
-                appLogger.info('Conta criada com sucesso', {
-                    userId: data.user?.id,
-                    email: data.user?.email
-                });
-
-                toast.success('Conta criada! Verifique seu email para confirmar.', {
-                    duration: 5000
-                });
-
-                // Se confirmação automática estiver habilitada, redirecionar
-                if (data.session) {
-                    appLogger.info('Confirmação automática ativa, redirecionando', {
-                        userId: data.user?.id
-                    });
-                    navigate('/admin');
-                }
+                appLogger.info('Conta criada com sucesso (AuthStorage)');
+                toast.success('Conta criada! Verifique seu email para confirmar.', { duration: 5000 });
+                // Em alguns setups, o Supabase pode autenticar automaticamente.
+                // Nosso provider atualizará o estado; seguimos para /admin.
+                navigate('/admin');
 
             } else {
                 // ========================================================================
@@ -94,22 +72,8 @@ export default function AuthPage() {
                 // ========================================================================
 
                 appLogger.info('Tentando fazer login', { email });
-
-                const { data, error } = await supabase.auth.signInWithPassword({
-                    email,
-                    password
-                });
-
-                if (error) {
-                    appLogger.error('Erro no login', { error });
-                    throw error;
-                }
-
-                appLogger.info('Login realizado com sucesso', {
-                    userId: data.user?.id,
-                    email: data.user?.email
-                });
-
+                await login(email, password);
+                appLogger.info('Login realizado com sucesso (AuthStorage)');
                 toast.success('Login realizado com sucesso!');
                 navigate('/admin');
             }
