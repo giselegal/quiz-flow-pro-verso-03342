@@ -29,10 +29,11 @@ export class CanonicalFunnelService {
 
   /**
    * Lista funis do usuário
+   * Aceita tanto `userId` (string) quanto objeto de filtros (compat)
    */
-  async listFunnels(userId?: string): Promise<FunnelMetadata[]> {
+  async listFunnels(userOrFilters?: string | Record<string, any>): Promise<FunnelMetadata[]> {
     try {
-      const effectiveUserId = userId || 'current-user'; // TODO: pegar do auth context
+      const effectiveUserId = typeof userOrFilters === 'string' ? userOrFilters : 'current-user'; // TODO: pegar do auth context
       const funnels = await this.service.listFunnels(effectiveUserId);
       return funnels.map(f => this.toMetadata(f));
     } catch (error) {
@@ -158,6 +159,27 @@ export class CanonicalFunnelService {
     // TODO: Implementar soft delete no FunnelService
     appLogger.warn('deleteFunnel ainda não implementado no FunnelService');
     return false;
+  }
+
+  /**
+   * Event emitter mock (compat): on/off
+   */
+  on(event: string, handler: (...args: any[]) => void): void {
+    // Noop por enquanto; integrar com sistema de eventos quando disponível
+    appLogger.debug?.(`canonicalFunnelService.on(${event}) registrado (noop)`);
+  }
+
+  off(event: string, handler: (...args: any[]) => void): void {
+    // Noop por enquanto
+    appLogger.debug?.(`canonicalFunnelService.off(${event}) removido (noop)`);
+  }
+
+  /**
+   * Limpeza de cache (compat): no-op até termos cache dedicado
+   */
+  clearCache(): void {
+    // Noop
+    appLogger.debug?.('canonicalFunnelService.clearCache() (noop)');
   }
 
   /**
