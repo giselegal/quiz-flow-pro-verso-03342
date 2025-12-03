@@ -16,19 +16,23 @@ import type { User } from '@supabase/supabase-js';
 const mockSignInWithPassword = vi.fn();
 const mockSignUp = vi.fn();
 const mockSignOut = vi.fn();
-const mockGetUser = vi.fn();
+const mockGetSession = vi.fn();
 const mockUpdateUser = vi.fn();
 const mockRefreshSession = vi.fn();
+const mockResetPasswordForEmail = vi.fn();
+const mockSignInWithOAuth = vi.fn();
 
-vi.mock('@/lib/supabase', () => ({
+vi.mock('@/services/integrations/supabase/customClient', () => ({
     supabase: {
         auth: {
             signInWithPassword: (...args: unknown[]) => mockSignInWithPassword(...args),
             signUp: (...args: unknown[]) => mockSignUp(...args),
             signOut: (...args: unknown[]) => mockSignOut(...args),
-            getUser: (...args: unknown[]) => mockGetUser(...args),
+            getSession: (...args: unknown[]) => mockGetSession(...args),
             updateUser: (...args: unknown[]) => mockUpdateUser(...args),
             refreshSession: (...args: unknown[]) => mockRefreshSession(...args),
+            resetPasswordForEmail: (...args: unknown[]) => mockResetPasswordForEmail(...args),
+            signInWithOAuth: (...args: unknown[]) => mockSignInWithOAuth(...args),
             onAuthStateChange: vi.fn(() => ({
                 data: { subscription: { unsubscribe: vi.fn() } },
             })),
@@ -44,10 +48,15 @@ const localStorageMock = (() => {
         setItem: (key: string, value: string) => { store[key] = value; },
         removeItem: (key: string) => { delete store[key]; },
         clear: () => { store = {}; },
+        get length() { return Object.keys(store).length; },
+        key: (index: number) => {
+            const keys = Object.keys(store);
+            return keys[index] || null;
+        },
     };
 })();
 
-Object.defineProperty(window, 'localStorage', { value: localStorageMock });
+Object.defineProperty(window, 'localStorage', { value: localStorageMock, writable: true });
 
 const wrapper = ({ children }: { children: React.ReactNode }) => (
     <AuthStorageProvider>{children}</AuthStorageProvider>
@@ -57,7 +66,7 @@ describe('AuthStorageProvider', () => {
     beforeEach(() => {
         vi.clearAllMocks();
         localStorageMock.clear();
-        mockGetUser.mockResolvedValue({ data: { user: null }, error: null });
+        mockGetSession.mockResolvedValue({ data: { session: null }, error: null });
     });
 
     describe('Auth: Login', () => {
@@ -153,6 +162,9 @@ describe('AuthStorageProvider', () => {
             expect(mockSignUp).toHaveBeenCalledWith({
                 email: 'newuser@example.com',
                 password: 'password123',
+                options: {
+                    data: {},
+                },
             });
 
             await waitFor(() => {

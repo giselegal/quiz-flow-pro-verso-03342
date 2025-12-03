@@ -37,11 +37,12 @@ describe('AuthPage', () => {
     });
 
     it('permite login com email e senha e chama login()', async () => {
-        render(<AuthPage />);
+        const { container } = render(<AuthPage />);
 
-        const emailInput = screen.getByLabelText(/email/i);
-        const passwordInput = screen.getByLabelText(/senha/i);
-        const submitButton = screen.getByRole('button', { name: /entrar/i });
+        const emailInput = screen.getByPlaceholderText('seu@email.com');
+        const passwordInput = screen.getByPlaceholderText('••••••••');
+        const form = container.querySelector('form');
+        const submitButton = form?.querySelector('button[type="submit"]') as HTMLElement;
 
         fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
         fireEvent.change(passwordInput, { target: { value: '123456' } });
@@ -53,14 +54,16 @@ describe('AuthPage', () => {
     });
 
     it('permite criar conta e chama signUp()', async () => {
-        render(<AuthPage />);
+        const { container } = render(<AuthPage />);
 
-        const toggleButton = screen.getByRole('button', { name: /criar nova conta/i });
+        // Usar texto exato para evitar duplicações
+        const toggleButton = screen.getByText('Criar nova conta');
         fireEvent.click(toggleButton);
 
-        const emailInput = screen.getByLabelText(/email/i);
-        const passwordInput = screen.getByLabelText(/senha/i);
-        const submitButton = screen.getByRole('button', { name: /criar conta/i });
+        const emailInput = screen.getByPlaceholderText('seu@email.com');
+        const passwordInput = screen.getByPlaceholderText('••••••••');
+        const form = container.querySelector('form');
+        const submitButton = form?.querySelector('button[type="submit"]') as HTMLElement;
 
         fireEvent.change(emailInput, { target: { value: 'new@example.com' } });
         fireEvent.change(passwordInput, { target: { value: 'abcdef' } });
@@ -74,8 +77,9 @@ describe('AuthPage', () => {
     });
 
     it('valida campos obrigatórios', async () => {
-        render(<AuthPage />);
-        const submitButton = screen.getByRole('button', { name: /entrar/i });
+        const { container } = render(<AuthPage />);
+        const form = container.querySelector('form');
+        const submitButton = form?.querySelector('button[type="submit"]') as HTMLElement;
         fireEvent.click(submitButton);
         // Deve exibir toast de erro; como toast é externo, validamos que login não foi chamado
         await waitFor(() => {
