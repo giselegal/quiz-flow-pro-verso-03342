@@ -17,7 +17,16 @@ import { cn } from '@/lib/utils';
 import { appLogger } from '@/lib/utils/appLogger';
 
 export const PerformanceMetrics: React.FC = () => {
-    const [metrics, setMetrics] = useState<any>(null);
+    type LoaderMetrics = {
+        cacheHitRate: number | string;
+        cacheHits: number;
+        cacheMisses: number;
+        avgLoadTime: number | string;
+        totalLoads: number;
+        prefetchCount: number;
+    } | null;
+
+    const [metrics, setMetrics] = useState<LoaderMetrics>(null);
     const [isOpen, setIsOpen] = useState(false);
 
     useEffect(() => {
@@ -26,8 +35,8 @@ export const PerformanceMetrics: React.FC = () => {
         const interval = setInterval(() => {
             try {
                 const loader = TemplateLoader.getInstance();
-                const m = loader.getMetrics();
-                setMetrics(m);
+                const m = loader.getMetrics() as LoaderMetrics;
+                setMetrics(m ?? null);
             } catch (error) {
                 appLogger.warn('[PerformanceMetrics] Erro ao obter métricas:', { data: [error] });
             }
@@ -68,7 +77,8 @@ export const PerformanceMetrics: React.FC = () => {
                             onClick={() => {
                                 const loader = TemplateLoader.getInstance();
                                 loader.resetMetrics();
-                                setMetrics(loader.getMetrics());
+                                const next = loader.getMetrics() as LoaderMetrics;
+                                setMetrics(next ?? null);
                             }}
                             className="text-xs text-slate-500 hover:text-slate-700"
                         >
@@ -86,7 +96,7 @@ export const PerformanceMetrics: React.FC = () => {
                                     {metrics.cacheHitRate}
                                 </div>
                                 <div className="text-xs text-slate-500">
-                                    {metrics.cacheHits} hits / {metrics.cacheHits + metrics.cacheMisses || 0} total
+                                    {metrics.cacheHits} hits / {(metrics.cacheHits + metrics.cacheMisses) || 0} total
                                 </div>
                             </div>
                         </div>
