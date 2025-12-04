@@ -3,27 +3,28 @@
  *
  * This index now exports the new unified hook system that consolidates
  * all fragmented hooks into a cohesive, type-safe, and performant architecture.
- *
- * BREAKING CHANGES:
- * - useEditor, useUnifiedEditor -> useUnifiedEditor (with compatibility layer)
- * - Multiple schema types -> Master unified schema
- * - Fragmented persistence -> Unified persistence service
- *
- * DEPRECATED HOOKS (marked for removal):
- * - All hooks with @ts-nocheck
- * - Duplicate/conflicting editor hooks
- * - Non-optimized performance hooks
  */
 
-// 🔥 NEW: Unified Core System (single source of truth)
+// ============================================================================
+// ✅ CANONICAL HOOKS (RECOMENDADO)
+// ============================================================================
+export {
+  useEditorCanonical,
+  useEditor,
+  useEditorOptional,
+  type EditorCanonicalState,
+  type EditorCanonicalActions,
+  type UseEditorCanonicalResult,
+} from './canonical';
+
+// ============================================================================
+// 🔄 CORE HOOKS
+// ============================================================================
 export {
   useUnifiedEditor,
-  // Note: useEditor legacy export removed - use EditorProvider.useEditor instead
 } from './core/useUnifiedEditor';
 
-// 🔥 NEW: Optimized Data Management
-export { useOptimizedQuizData } from './useOptimizedQuizData';
-// Removido: useUserName - arquivo '../context/UserDataContext' não existe
+export { useEditorCore } from './core/useEditorCore';
 
 // 🎯 NEW: Core Quiz Hooks (Checklist Implementation)
 export { useQuizState } from './useQuizState';
@@ -73,7 +74,7 @@ export { useHistory } from './useHistory';
 // export { useSupabase } from './useSupabase'; // TODO: Create if needed
 export { useSupabaseQuiz } from './useSupabaseQuiz';
 export { useFunnelActions } from './useFunnelActions';
-export { useEditorCore } from './core/useEditorCore';
+// useEditorCore já exportado em linha 27
 export { useStepSelection } from './useStepSelection';
 export { useFunnel } from './useFunnel';
 export { useFunnelController } from './useFunnelController';

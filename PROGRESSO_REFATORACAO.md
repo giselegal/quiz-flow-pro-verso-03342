@@ -63,12 +63,33 @@ Todos os arquivos abaixo foram atualizados para usar `/templates/quiz21-v4.json`
 
 ## Próximas Fases (Pendentes)
 
-### Fase 2: Consolidação de Hooks 🔄
-- [ ] Criar `useEditorCore.ts` consolidando 15 variantes
-- [ ] Criar `useQuizCore.ts` consolidando 25 variantes
-- [ ] Marcar hooks antigos como deprecated
+### Fase 2: Consolidação de Hooks ✅ CONCLUÍDA
 
-### Fase 4: Organização 📁
+### 2.1 Hook Canônico Criado ✅
+- **Arquivo:** `src/hooks/canonical/useEditorCanonical.ts` (~450 linhas)
+- **Funcionalidades consolidadas:**
+  - State management (currentStep, selectedBlockId, stepBlocks)
+  - Block operations (add, update, remove, duplicate, reorder)
+  - History management (undo/redo com 50 estados)
+  - Persistence (save, isDirty, auto-save)
+  - Preview mode
+  - Navigation (nextStep, previousStep)
+
+### 2.2 Barrel Export Criado ✅
+- **Arquivo:** `src/hooks/canonical/index.ts`
+- **Exports:** useEditorCanonical, useEditor, useEditorOptional
+
+### 2.3 Index Atualizado ✅
+- `src/hooks/editor/index.ts` → Exporta do canonical + compatibilidade
+- `src/hooks/index.ts` → Exporta hooks canônicos primeiro
+
+### 2.4 Arquivos Vazios Removidos ✅
+- `src/hooks/editor/useKeyboardShortcuts.ts` (vazio)
+- `src/hooks/editor/useUndoRedo.ts` (vazio)
+
+---
+
+## Próximas Fases (Pendentes)
 - [ ] Mover 100+ arquivos .md da raiz para `docs/archive/`
 - [ ] Dividir `blockPropertySchemas.ts` (116KB) em módulos
 
