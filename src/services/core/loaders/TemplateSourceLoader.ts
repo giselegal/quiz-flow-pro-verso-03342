@@ -123,26 +123,34 @@ export class TemplateSourceLoader {
 
   /**
    * Carregar template JSON local
-   * Usa importação dinâmica para carregar JSON apenas quando necessário
+   * Usa fetch para carregar JSON de public/templates
    */
-  async loadJSON(stepId: string, templateId: string = 'quiz21'): Promise<Block[]> {
+  async loadJSON(stepId: string, templateId: string = 'quiz21Steps'): Promise<Block[]> {
     try {
       // Normalizar stepId para formato step-XX
       const normalizedStepId = this.normalizeStepId(stepId);
       
-      // Tentar carregar JSON dinâmico
+      // Tentar carregar JSON via fetch (de public/)
       try {
-        const module = await import(`../../../templates/json/v3/${normalizedStepId}.json`);
-        const blocks = module.default?.blocks || module.blocks || [];
+        const jsonPath = `/templates/${templateId}/steps/${normalizedStepId}.json`;
+        const response = await fetch(jsonPath);
+        
+        if (!response.ok) {
+          appLogger.debug(`[TemplateSourceLoader] JSON não encontrado: ${jsonPath}`);
+          return this.loadFallbackJSON(normalizedStepId);
+        }
+        
+        const data = await response.json();
+        const blocks = data?.blocks || data || [];
         
         if (Array.isArray(blocks) && blocks.length > 0) {
           appLogger.info(`✅ [TemplateSourceLoader] JSON carregado: ${normalizedStepId} (${blocks.length} blocos)`);
           return blocks;
         }
-      } catch (importError) {
-        appLogger.debug('[TemplateSourceLoader] loadJSON: falha na importação dinâmica', {
+      } catch (fetchError) {
+        appLogger.debug('[TemplateSourceLoader] loadJSON: falha ao carregar via fetch', {
           stepId: normalizedStepId,
-          data: [importError]
+          data: [fetchError]
         });
       }
 
@@ -185,35 +193,30 @@ export class TemplateSourceLoader {
   }
 
   /**
-   * Carregar JSON de fallback (para steps conhecidos)
+   * Carregar JSON de fallback (tenta caminhos alternativos)
    */
   private async loadFallbackJSON(stepId: string): Promise<Block[]> {
-    try {
-      // Mapa de steps conhecidos com fallbacks
-      const knownSteps: Record<string, () => Promise<any>> = {
-        'step-01': () => import('../../../templates/json/v3/step-01.json'),
-        'step-02': () => import('../../../templates/json/v3/step-02.json'),
-        'step-03': () => import('../../../templates/json/v3/step-03.json'),
-        'step-04': () => import('../../../templates/json/v3/step-04.json'),
-        'step-05': () => import('../../../templates/json/v3/step-05.json'),
-        'step-06': () => import('../../../templates/json/v3/step-06.json'),
-        'step-07': () => import('../../../templates/json/v3/step-07.json'),
-        'step-08': () => import('../../../templates/json/v3/step-08.json'),
-        'step-09': () => import('../../../templates/json/v3/step-09.json'),
-        'step-10': () => import('../../../templates/json/v3/step-10.json'),
-      };
+    // Tentar caminhos alternativos conhecidos
+    const fallbackPaths = [
+      `/templates/quiz21Steps/steps/${stepId}.json`,
+      `/templates/quiz21StepsComplete/steps/${stepId}.json`,
+      `/templates/default/steps/${stepId}.json`,
+    ];
 
-      const loader = knownSteps[stepId];
-      if (loader) {
-        const module = await loader();
-        const blocks = module.default?.blocks || module.blocks || [];
-        return Array.isArray(blocks) ? blocks : [];
+    for (const path of fallbackPaths) {
+      try {
+        const response = await fetch(path);
+        if (response.ok) {
+          const data = await response.json();
+          const blocks = data?.blocks || data || [];
+          if (Array.isArray(blocks) && blocks.length > 0) {
+            appLogger.debug(`[TemplateSourceLoader] Fallback encontrado: ${path}`);
+            return blocks;
+          }
+        }
+      } catch {
+        // Continuar tentando próximo path
       }
-    } catch (error) {
-      appLogger.debug('[TemplateSourceLoader] loadFallbackJSON: falha', {
-        stepId,
-        data: [error]
-      });
     }
 
     return [];
