@@ -9,21 +9,25 @@
  * 
  * 🆕 PHASE 1: Added performance monitoring and memory leak detection
  * 🆕 PHASE 2: Added analytics sidebar integration
+ * 🆕 PHASE 3: Real-time collaboration with Supabase Realtime
  */
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { EditorLayout } from './layout/EditorLayout';
 import { useQuizStore } from './store/quizStore';
 import { useEditorStore } from './store/editorStore';
 import { usePersistence, useAutoSave } from './hooks/usePersistence';
+import { useSupabasePresence } from './hooks/useSupabasePresence';
 import { SaveStatusIndicator } from './components/SaveStatusIndicator';
 import { PerformanceDebugger } from './components/PerformanceDebugger';
 import { AnalyticsSidebar } from './components/AnalyticsSidebar';
 import { DevTools } from './components/DevTools';
 import { EditorModeToggle } from './components/EditorModeToggle';
+import { CollaboratorAvatars } from './components/CollaboratorAvatars';
 import { ExportTemplateButton } from '../ExportTemplateButton';
 import { ImportTemplateButton } from '../ImportTemplateButton';
 import { usePerformanceMonitor, useMemoryLeakDetector } from '@/hooks/usePerformanceMonitor';
+import { useAuthStore } from '@/stores/authStore';
 import { Activity } from 'lucide-react';
 import type { QuizSchema } from '@/schemas/quiz-schema.zod';
 import { normalizeQuizFormat } from './utils/quizAdapter';
@@ -65,6 +69,38 @@ export function ModernQuizEditor({
     }, [metrics]);
 
     const { loadQuiz, quiz, isLoading, error, isDirty } = useQuizStore();
+    const selectedStepId = useEditorStore((s) => s.selectedStepId);
+    
+    // 🆕 PHASE 3: Get current user for collaboration
+    const { user } = useAuthStore();
+    
+    // Generate stable user ID for anonymous users
+    const sessionUserId = useMemo(() => {
+        if (user?.id) return user.id;
+        // Use localStorage for persistent anonymous ID
+        const stored = localStorage.getItem('editor-anonymous-id');
+        if (stored) return stored;
+        const newId = `anon-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+        localStorage.setItem('editor-anonymous-id', newId);
+        return newId;
+    }, [user?.id]);
+
+    // 🆕 PHASE 3: Real-time collaboration with Supabase
+    const effectiveQuizId = quizId || quiz?.metadata?.id || 'default-quiz';
+    const { collaborators, isConnected, setEditingLocation } = useSupabasePresence({
+        quizId: effectiveQuizId,
+        userId: sessionUserId,
+        userName: user?.email?.split('@')[0] || 'Anônimo',
+        userEmail: user?.email,
+        userAvatar: undefined,
+    });
+
+    // 🆕 PHASE 3: Update presence when step selection changes
+    useEffect(() => {
+        if (selectedStepId) {
+            setEditingLocation(selectedStepId);
+        }
+    }, [selectedStepId, setEditingLocation]);
 
     // Hook de persistência
     const persistence = usePersistence({
@@ -235,6 +271,14 @@ export function ModernQuizEditor({
                     
                     {/* Toggle Visual/JSON */}
                     <EditorModeToggle />
+
+                    {/* 🆕 PHASE 3: Collaborator presence indicators */}
+                    <div className="border-l border-border pl-4 ml-2">
+                        <CollaboratorAvatars 
+                            collaborators={collaborators} 
+                            isConnected={isConnected} 
+                        />
+                    </div>
                 </div>
 
                 <div className="flex items-center gap-2">
