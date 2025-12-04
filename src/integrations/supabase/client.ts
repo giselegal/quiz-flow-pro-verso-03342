@@ -23,18 +23,19 @@ let supabaseInstance: SupabaseClient<Database> | null = null;
 
 // Mock client para quando variáveis não estão configuradas
 function createMockClient(): SupabaseClient<Database> {
-    const authError = new Error('Supabase não configurado. Configure VITE_SUPABASE_URL e VITE_SUPABASE_PUBLISHABLE_KEY.');
+    const authErrorMessage = 'Supabase não configurado. Configure VITE_SUPABASE_URL e VITE_SUPABASE_PUBLISHABLE_KEY.';
+    const authError = { message: authErrorMessage, status: 503, name: 'AuthApiError' };
 
     const mockAuth = {
         onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } }),
         getSession: async () => ({ data: { session: null }, error: null }),
         getUser: async () => ({ data: { user: null }, error: null }),
-        signInWithPassword: async () => { throw authError; },
-        signUp: async () => { throw authError; },
+        signInWithPassword: async () => ({ data: { user: null, session: null }, error: authError }),
+        signUp: async () => ({ data: { user: null, session: null }, error: authError }),
         signOut: async () => ({ error: null }),
-        resetPasswordForEmail: async () => { throw authError; },
-        signInWithOAuth: async () => { throw authError; },
-        updateUser: async () => { throw authError; },
+        resetPasswordForEmail: async () => ({ data: {}, error: authError }),
+        signInWithOAuth: async () => ({ data: { provider: '', url: '' }, error: authError }),
+        updateUser: async () => ({ data: { user: null }, error: authError }),
         refreshSession: async () => ({ data: { user: null, session: null }, error: null }),
     };
 

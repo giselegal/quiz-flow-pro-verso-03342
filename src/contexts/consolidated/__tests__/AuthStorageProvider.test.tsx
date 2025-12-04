@@ -22,7 +22,7 @@ const mockRefreshSession = vi.fn();
 const mockResetPasswordForEmail = vi.fn();
 const mockSignInWithOAuth = vi.fn();
 
-vi.mock('@/services/integrations/supabase/customClient', () => ({
+vi.mock('@/integrations/supabase/client', () => ({
     supabase: {
         auth: {
             signInWithPassword: (...args: unknown[]) => mockSignInWithPassword(...args),
