@@ -20,7 +20,7 @@ import { useMasterRuntime } from '@/hooks/useMasterRuntime';
 import { getEffectiveRequiredSelections, shouldAutoAdvance } from '@/lib/quiz/requiredSelections';
 import { mergeRuntimeFlags, type QuizRuntimeFlags } from '@/config/quizRuntimeFlags';
 import { stepIdVariants, normalizeStepId, getNextFromOrder, getPreviousFromOrder, safeGetStep } from '@/lib/utils/quizStepIds';
-import { getPersonalizedStepTemplate } from '../templates/quiz21StepsSimplified';
+import { getPersonalizedStepTemplate } from '../templates/quiz21StepsComplete';
 import { useFeatureFlags } from './useFeatureFlags';
 import { useTemplateLoader } from './useTemplateLoader';
 import { navigationService } from '@/services/canonical/NavigationService';
