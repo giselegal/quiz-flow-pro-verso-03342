@@ -4,25 +4,24 @@
  * Testa provider consolidado UI + Theme + Navigation
  * - Gerenciamento de tema (light/dark/system)
  * - Estado de UI (sidebar, modals, toasts)
- * - Navegação (react-router integration)
+ * - Navegação (wouter integration)
  * - Responsividade e acessibilidade
  */
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { renderHook, act, waitFor } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
+import { Router } from 'wouter';
 import { UXProvider, useUX, useTheme, useUI, useNavigation } from '../UXProvider';
 
-// Mock react-router
-const mockNavigate = vi.fn();
-const mockLocation = { pathname: '/test', search: '', hash: '', state: null, key: 'default' };
+// Mock wouter
+const mockSetLocation = vi.fn();
+let mockLocation = '/test';
 
-vi.mock('react-router-dom', async () => {
-    const actual = await vi.importActual('react-router-dom');
+vi.mock('wouter', async () => {
+    const actual = await vi.importActual('wouter');
     return {
         ...actual,
-        useNavigate: () => mockNavigate,
-        useLocation: () => mockLocation,
+        useLocation: () => [mockLocation, mockSetLocation],
     };
 });
 
@@ -41,16 +40,28 @@ Object.defineProperty(window, 'matchMedia', {
     })),
 });
 
+// Mock window.history
+const mockHistoryBack = vi.fn();
+const mockHistoryForward = vi.fn();
+Object.defineProperty(window, 'history', {
+    writable: true,
+    value: {
+        back: mockHistoryBack,
+        forward: mockHistoryForward,
+        pushState: vi.fn(),
+        replaceState: vi.fn(),
+    },
+});
+
 const wrapper = ({ children }: { children: React.ReactNode }) => (
-    <BrowserRouter>
-        <UXProvider>{children}</UXProvider>
-    </BrowserRouter>
+    <UXProvider>{children}</UXProvider>
 );
 
 describe('UXProvider', () => {
     beforeEach(() => {
         vi.clearAllMocks();
         localStorage.clear();
+        mockLocation = '/test';
     });
 
     describe('Theme: Gerenciamento de Tema', () => {
@@ -99,7 +110,7 @@ describe('UXProvider', () => {
                 result.current.setTheme('dark');
             });
 
-            const storedTheme = localStorage.getItem('app-theme');
+            const storedTheme = localStorage.getItem('quiz-flow:theme');
             expect(storedTheme).toBe('dark');
         });
 
@@ -221,7 +232,7 @@ describe('UXProvider', () => {
                 result.current.navigate('/dashboard');
             });
 
-            expect(mockNavigate).toHaveBeenCalledWith('/dashboard');
+            expect(mockSetLocation).toHaveBeenCalledWith('/dashboard');
         });
 
         it('deve navegar com estado', async () => {
@@ -231,7 +242,7 @@ describe('UXProvider', () => {
                 result.current.navigate('/editor');
             });
 
-            expect(mockNavigate).toHaveBeenCalledWith('/editor');
+            expect(mockSetLocation).toHaveBeenCalledWith('/editor');
         });
 
         it('deve voltar na navegação', async () => {
@@ -241,7 +252,7 @@ describe('UXProvider', () => {
                 result.current.goBack();
             });
 
-            expect(mockNavigate).toHaveBeenCalledWith(-1);
+            expect(mockHistoryBack).toHaveBeenCalled();
         });
 
         it('deve avançar na navegação', async () => {
@@ -251,7 +262,7 @@ describe('UXProvider', () => {
                 result.current.goForward();
             });
 
-            expect(mockNavigate).toHaveBeenCalledWith(1);
+            expect(mockHistoryForward).toHaveBeenCalled();
         });
 
         it('deve retornar rota atual', () => {
