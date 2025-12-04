@@ -70,7 +70,7 @@ const ModelosFunisPage: React.FC = () => {
         // setRealTimeMetrics(metrics);
 
         // Converter templates do registry unificado para modelos
-        const unifiedTemplates = getUnifiedTemplates({ excludeAliases: true });
+        const unifiedTemplates = getUnifiedTemplates();
         const funnelModels: FunnelModel[] = unifiedTemplates.map(template => ({
           id: template.id,
           name: template.name,
