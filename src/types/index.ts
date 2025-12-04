@@ -1,12 +1,38 @@
-// Tipos canônicos
-export type { Block, BlockProps } from './block.types';
-export * from './editor.types';
+/**
+ * 🎯 CANONICAL TYPES - MAIN BARREL EXPORT
+ * 
+ * Ponto único de importação para todos os tipos do projeto.
+ * 
+ * @example
+ * ```typescript
+ * import { Block, EditorState, QuizStep, UnifiedFunnel } from '@/types';
+ * ```
+ * 
+ * @canonical
+ */
 
-// Reexport específico para manter o tipo union de BlockType do legado
-export type { BlockType } from './editor';
+// =============================================================================
+// CORE TYPES (Canonical)
+// =============================================================================
 
-// TODO: adicionar quiz.types e funnel.types quando disponíveis
+export * from './core';
 
-// OBS: Evitamos reexportar arquivos legados aqui para não gerar ambiguidades.
-// Os módulos antigos ainda podem ser importados diretamente de '@/types/Block' e '@/types/editor' durante a migração.
-export * from './funnel';
+// =============================================================================
+// LEGACY COMPATIBILITY EXPORTS
+// =============================================================================
+
+// Re-export principais tipos para compatibilidade com imports existentes
+export type { Block, BlockType, BlockContent, BlockProps } from './core/block';
+export type { EditorState, EditorActions, EditorContextValue } from './core/editor';
+export type { QuizStep, QuizOption, QuizAnswer, QuizResult, StyleResult } from './core/quiz';
+export type { UnifiedFunnel, FunnelStep, FunnelConfig } from './core/funnel';
+export type { Template, TemplateV4, NormalizedTemplate } from './core/template';
+
+// Legacy type aliases - these point to core types
+export type { 
+  Block as CanonicalBlock,
+  QuizAnswer as UserResponse,
+  QuizAnswer as Answer,
+  StyleResult as Style,
+  QuizResult as ComputedResult,
+} from './core';
