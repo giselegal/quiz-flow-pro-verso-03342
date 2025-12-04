@@ -1,22 +1,33 @@
 /**
- * 📐 Editor Layout - Layout de 4 colunas
+ * 📐 Editor Layout - Layout de 4 colunas ou JSON Editor
  * 
- * Estrutura:
+ * Estrutura Visual:
  * [StepPanel | BlockLibrary | Canvas | PropertiesPanel]
  *    200px       250px        flex-1      300px
+ * 
+ * Estrutura JSON:
+ * [Full-width Monaco Editor]
  * 
  * ✅ AUDIT: Optimized with stable references and memoization
  */
 
-import React, { memo, useMemo } from 'react';
+import React, { memo, lazy, Suspense } from 'react';
 import { DndContext, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { StepPanel } from './StepPanel';
 import { BlockLibrary } from './BlockLibrary';
 import { Canvas } from './Canvas';
 import { PropertiesPanel } from './PropertiesPanel';
 import { useDndHandlers } from '../hooks/useDndHandlers';
+import { useEditorStore } from '../store/editorStore';
+
+// Lazy load JSON editor (Monaco is heavy)
+const JsonCodeEditor = lazy(() => 
+  import('../components/JsonCodeEditor').then(m => ({ default: m.JsonCodeEditor }))
+);
 
 export const EditorLayout = memo(() => {
+    const editorMode = useEditorStore((s) => s.editorMode);
+
     // ✅ AUDIT: Memoize sensor configuration to prevent recreation
     const sensors = useSensors(
         useSensor(PointerSensor, {
@@ -29,6 +40,23 @@ export const EditorLayout = memo(() => {
     // Handlers de Drag & Drop
     const { handleDragStart, handleDragEnd } = useDndHandlers();
 
+    // JSON Mode - Full width Monaco editor
+    if (editorMode === 'json') {
+        return (
+            <Suspense fallback={
+                <div className="h-full w-full flex items-center justify-center bg-muted">
+                    <div className="text-center">
+                        <div className="animate-spin text-4xl mb-2">⏳</div>
+                        <p className="text-sm text-muted-foreground">Carregando editor JSON...</p>
+                    </div>
+                </div>
+            }>
+                <JsonCodeEditor />
+            </Suspense>
+        );
+    }
+
+    // Visual Mode - 4 column layout
     return (
         <DndContext
             sensors={sensors}
@@ -36,7 +64,7 @@ export const EditorLayout = memo(() => {
             onDragStart={handleDragStart}
             onDragEnd={handleDragEnd}
         >
-            <div className="flex h-screen w-full bg-gray-50 overflow-hidden">
+            <div className="flex h-full w-full bg-muted/30 overflow-hidden">
                 {/* Coluna 1: Steps (200px) */}
                 <StepPanel />
 
