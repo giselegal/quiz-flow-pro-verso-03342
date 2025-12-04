@@ -17,7 +17,7 @@
 
 import { BaseCanonicalService, ServiceResult } from './types';
 import { CacheService } from './CacheService';
-import { TemplateService } from './TemplateService';
+import { TemplateService } from '@/services/canonical/TemplateService';
 import { DataService } from './DataService';
 import { ValidationService } from './ValidationService';
 import { generateErrorId, generateMetricId, generateAlertId } from '@/lib/utils/idGenerator';
@@ -404,9 +404,8 @@ export class MonitoringService extends BaseCanonicalService {
    */
   async checkAllServices(): Promise<ServiceResult<HealthStatus[]>> {
     try {
-      const services = [
+      const services: Array<{ name: string; instance: { healthCheck(): Promise<boolean> } }> = [
         { name: 'Cache', instance: CacheService.getInstance() },
-        { name: 'Template', instance: TemplateService.getInstance() },
         { name: 'Data', instance: DataService.getInstance() },
         { name: 'Validation', instance: ValidationService.getInstance() },
       ];
