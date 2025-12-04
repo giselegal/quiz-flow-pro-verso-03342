@@ -15,7 +15,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useLocation } from 'wouter';
 import { toast } from 'sonner';
-import { Loader2, LogIn, UserPlus, Mail, Lock, Sparkles, Chrome } from 'lucide-react';
+import { Loader2, LogIn, UserPlus, Mail, Lock, Sparkles } from 'lucide-react';
 import { appLogger } from '@/lib/utils/appLogger';
 
 const AuthPage: React.FC = () => {
@@ -25,7 +25,7 @@ const AuthPage: React.FC = () => {
     const [mode, setMode] = useState<'login' | 'signup'>('login');
     const [showPassword, setShowPassword] = useState(false);
     const [, setLocation] = useLocation();
-    const { login, signUp, resetPassword, signInWithGoogle, isAuthenticated, isLoading: authLoading } = useAuthStorage();
+    const { login, signUp, resetPassword, isAuthenticated, isLoading: authLoading } = useAuthStorage();
 
     // Auto-redirect quando autenticado com sanitização
     useEffect(() => {
@@ -55,26 +55,6 @@ const AuthPage: React.FC = () => {
         } catch (error: unknown) {
             const message = error instanceof Error ? error.message : 'Erro ao enviar email de recuperação';
             toast.error(message);
-        }
-    };
-
-    const handleGoogleLogin = async () => {
-        try {
-            setLoading(true);
-            await signInWithGoogle();
-            // OAuth redireciona automaticamente se bem-sucedido
-        } catch (error: unknown) {
-            const errorMessage = error instanceof Error ? error.message : 'Erro ao fazer login com Google';
-
-            // Mensagem específica se OAuth não configurado
-            if (errorMessage.includes('não está configurado') || errorMessage.includes('not enabled')) {
-                toast.error('Google OAuth não configurado no servidor. Entre com email/senha.', { duration: 8000 });
-                appLogger.warn('⚠️ Google OAuth não configurado - usuário deve usar email/senha');
-            } else {
-                toast.error(errorMessage, { duration: 5000 });
-            }
-        } finally {
-            setLoading(false);
         }
     };
 
@@ -248,35 +228,6 @@ const AuthPage: React.FC = () => {
                             )}
                         </Button>
                     </form>
-
-                    <div className="relative my-6">
-                        <div className="absolute inset-0 flex items-center">
-                            <div className="w-full border-t border-white/10" />
-                        </div>
-                        <div className="relative flex justify-center text-xs">
-                            <span className="bg-transparent px-2 text-slate-300">ou continue com</span>
-                        </div>
-                    </div>
-
-                    <Button
-                        type="button"
-                        onClick={handleGoogleLogin}
-                        disabled={loading || authLoading}
-                        variant="outline"
-                        className="w-full bg-white/5 border-white/20 hover:bg-white/10 text-white font-medium py-6 transition-all duration-300"
-                    >
-                        {loading ? (
-                            <>
-                                <Loader2 className="h-5 w-5 mr-2 animate-spin" />
-                                Conectando...
-                            </>
-                        ) : (
-                            <>
-                                <Chrome className="h-5 w-5 mr-2" />
-                                Continuar com Google
-                            </>
-                        )}
-                    </Button>
 
                     <div className="relative my-6">
                         <div className="absolute inset-0 flex items-center">
