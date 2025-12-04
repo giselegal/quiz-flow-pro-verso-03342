@@ -747,6 +747,54 @@ export type Database = {
         }
         Relationships: []
       }
+      security_audit_logs: {
+        Row: {
+          created_at: string | null
+          error_message: string | null
+          event_category: string
+          event_data: Json | null
+          event_type: string
+          id: string
+          ip_address: unknown
+          resource_id: string | null
+          resource_type: string | null
+          severity: string
+          success: boolean | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          error_message?: string | null
+          event_category?: string
+          event_data?: Json | null
+          event_type: string
+          id?: string
+          ip_address?: unknown
+          resource_id?: string | null
+          resource_type?: string | null
+          severity?: string
+          success?: boolean | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          error_message?: string | null
+          event_category?: string
+          event_data?: Json | null
+          event_type?: string
+          id?: string
+          ip_address?: unknown
+          resource_id?: string | null
+          resource_type?: string | null
+          severity?: string
+          success?: boolean | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       user_results: {
         Row: {
           created_at: string
@@ -785,6 +833,69 @@ export type Database = {
           },
         ]
       }
+      user_roles: {
+        Row: {
+          granted_at: string | null
+          granted_by: string | null
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          granted_at?: string | null
+          granted_by?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          granted_at?: string | null
+          granted_by?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_security_settings: {
+        Row: {
+          backup_codes_generated_at: string | null
+          created_at: string | null
+          failed_login_attempts: number | null
+          id: string
+          last_password_change: string | null
+          locked_until: string | null
+          two_factor_enabled: boolean | null
+          two_factor_verified_at: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          backup_codes_generated_at?: string | null
+          created_at?: string | null
+          failed_login_attempts?: number | null
+          id?: string
+          last_password_change?: string | null
+          locked_until?: string | null
+          two_factor_enabled?: boolean | null
+          two_factor_verified_at?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          backup_codes_generated_at?: string | null
+          created_at?: string | null
+          failed_login_attempts?: number | null
+          id?: string
+          last_password_change?: string | null
+          locked_until?: string | null
+          two_factor_enabled?: boolean | null
+          two_factor_verified_at?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -799,10 +910,17 @@ export type Database = {
         Args: { new_funnel_id: string; new_name: string; template_slug: string }
         Returns: string
       }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
       publish_quiz_draft: { Args: { draft_id: string }; Returns: string }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "moderator" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -929,6 +1047,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "moderator", "user"],
+    },
   },
 } as const
