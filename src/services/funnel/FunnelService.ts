@@ -216,20 +216,21 @@ export class FunnelService {
         return null;
       }
 
-      // Parse quiz_data JSON
-      const quiz = typeof data.quiz_data === 'string'
-        ? JSON.parse(data.quiz_data)
-        : data.quiz_data;
+      // Parse content JSON (usando any para flexibilidade com schema)
+      const draftData = data as any;
+      const quiz = typeof draftData.content === 'string'
+        ? JSON.parse(draftData.content)
+        : draftData.content;
 
       return {
-        id: data.funnel_id,
-        templateId: data.template_id || 'unknown',
-        draftId: data.id,
+        id: draftData.funnel_id,
+        templateId: draftData.template_id || draftData.slug || 'unknown',
+        draftId: draftData.id,
         quiz,
-        version: data.version,
-        createdAt: data.created_at,
-        updatedAt: data.updated_at,
-        userId: data.user_id,
+        version: draftData.version || 1,
+        createdAt: draftData.created_at || undefined,
+        updatedAt: draftData.updated_at || undefined,
+        userId: draftData.user_id,
       };
     } catch (error) {
       appLogger.error('❌ [FunnelService] Error loading draft from Supabase', {
@@ -415,12 +416,13 @@ export class FunnelService {
         };
       } else {
         // INSERT new draft
-        const { data, error } = await supabase
+        const { data, error } = await (supabase as any)
           .from('quiz_drafts')
           .insert({
             funnel_id: funnelId,
-            template_id: quiz.metadata?.id || funnelId,
-            quiz_data: quizData,
+            slug: quiz.metadata?.id || funnelId,
+            name: quiz.metadata?.name || 'Draft',
+            content: quizData,
             version: 1,
             user_id: userId,
           })

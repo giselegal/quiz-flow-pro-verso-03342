@@ -188,18 +188,18 @@ export const RealTimeProvider: React.FC<RealTimeProviderProps> = ({
 
             // Track presence
             channel
-                .on('presence', { event: 'sync' }, () => {
+            .on('presence', { event: 'sync' }, () => {
                     const state = channel.presenceState();
                     const users = Object.keys(state).map(key => {
-                        const user = state[key][0];
+                        const presenceData = state[key][0] as Record<string, any>;
                         return {
                             id: key,
-                            name: user.name || 'Anonymous',
-                            email: user.email,
-                            avatar: user.avatar,
-                            color: user.color || `#${Math.floor(Math.random() * 16777215).toString(16)}`,
-                            cursor: user.cursor,
-                            selection: user.selection,
+                            name: presenceData?.name || 'Anonymous',
+                            email: presenceData?.email,
+                            avatar: presenceData?.avatar,
+                            color: presenceData?.color || `#${Math.floor(Math.random() * 16777215).toString(16)}`,
+                            cursor: presenceData?.cursor,
+                            selection: presenceData?.selection,
                             lastSeen: new Date(),
                         } as Collaborator;
                     });

@@ -1886,19 +1886,19 @@ export class TemplateService extends BaseCanonicalService {
           if (!funnelId) return null;
 
           try {
-            const { data, error } = await supabase
-              .from('funnel_steps')
-              .select('version, updated_at')
+            const { data, error } = await (supabase as any)
+              .from('component_instances')
+              .select('order_index, updated_at')
               .eq('funnel_id', funnelId)
-              .eq('step_id', stepId)
+              .eq('step_number', parseInt(stepId))
               .single();
 
             if (error || !data) return null;
 
             return {
               stepId,
-              version: data.version || 1,
-              lastModified: data.updated_at || new Date().toISOString(),
+              version: (data as any).order_index || 1,
+              lastModified: (data as any).updated_at || new Date().toISOString(),
             };
           } catch {
             return null;

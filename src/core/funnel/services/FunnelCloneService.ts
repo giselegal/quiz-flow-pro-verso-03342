@@ -206,12 +206,12 @@ export class FunnelCloneService {
     clonedFunnelId: string, 
     options: CloneOptions
   ): Promise<any[]> {
-    // Carregar steps originais
-    let query = supabase
-      .from('funnel_steps')
+    // Carregar steps originais (usando component_instances como alternativa)
+    let query = (supabase as any)
+      .from('component_instances')
       .select('*')
       .eq('funnel_id', originalFunnelId)
-      .order('step_order', { ascending: true });
+      .order('step_number', { ascending: true });
 
     const { data: originalSteps, error: loadError } = await query;
 
@@ -250,8 +250,8 @@ export class FunnelCloneService {
     });
 
     // Inserir steps em lote
-    const { data: clonedSteps, error: insertError } = await supabase
-      .from('funnel_steps')
+    const { data: clonedSteps, error: insertError } = await (supabase as any)
+      .from('component_instances')
       .insert(clonedStepsData)
       .select();
 
