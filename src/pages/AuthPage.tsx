@@ -298,14 +298,6 @@ const AuthPage: React.FC = () => {
                         </p>
                     </div>
                 </div>
-
-                {import.meta.env.DEV && (
-                    <div className="mt-4 p-4 bg-white/10 border border-white/20 rounded-lg">
-                        <p className="text-xs text-slate-200 font-mono">
-                            <strong>DEV MODE:</strong> Ambiente de desenvolvimento conectado ao Supabase
-                        </p>
-                    </div>
-                )}
             </div>
         </div>
     );
