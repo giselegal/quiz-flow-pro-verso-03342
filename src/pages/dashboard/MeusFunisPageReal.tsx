@@ -33,9 +33,8 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { supabase } from '@/services/integrations/supabase/customClient';
 import { useToast } from '@/hooks/use-toast';
-import { templateService } from '@/services/canonical/TemplateService';
+import { templateService, funnelService as canonicalFunnelService } from '@/services';
 import { useFunnelController } from '@/hooks';
-import { canonicalFunnelService } from '@/services/funnel/CanonicalFunnelService';
 import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================

@@ -1,4 +1,6 @@
-import { canonicalFunnelService } from '@/services/funnel/CanonicalFunnelService';
+import { funnelService as canonicalFunnelService } from '@/services';
+
+// Legacy compatibility - keeping editorFunnelService separate for now
 import { funnelService as editorFunnelService } from '@/services/funnel/FunnelService';
 
 export type ServiceMap = {

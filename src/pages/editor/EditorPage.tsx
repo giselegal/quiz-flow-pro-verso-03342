@@ -30,7 +30,7 @@ import { PageLoadingFallback } from '@/components/LoadingSpinner';
 import { appLogger } from '@/lib/utils/appLogger';
 import type { QuizSchema } from '@/schemas/quiz-schema.zod';
 import { ServiceRegistry } from '@/services/ServiceRegistry';
-import { parseFunnelFromURL } from '@/services/funnel/FunnelResolver';
+import { parseFunnelFromURL } from '@/services';
 import { Button } from '@/components/ui/button';
 
 // ✅ Novo editor moderno com arquitetura limpa

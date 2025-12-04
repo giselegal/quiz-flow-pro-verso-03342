@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid'; // 🆕 G36 FIX: Import UUID
-import { quizSupabaseService } from '@/services/aliases';
+import { quizSupabaseService } from '@/services';
 import { StorageService } from '@/services/core/StorageService';
 import { appLogger } from '@/lib/utils/appLogger';
 

@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Save, Loader2, Settings, Copy, RefreshCw } from 'lucide-react';
 
-import { canonicalFunnelService } from '@/services/funnel/CanonicalFunnelService';
+import { funnelService as canonicalFunnelService } from '@/services';
 import {
     FunnelConfig,
     FunnelSEOOverrides,

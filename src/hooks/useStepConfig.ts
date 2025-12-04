@@ -5,8 +5,7 @@
  */
 
 import { useState, useEffect } from 'react';
-import { masterTemplateService } from '@/services/templates/MasterTemplateService';
-import { templateService } from '@/services/canonical/TemplateService';
+import { templateService } from '@/services';
 import { appLogger } from '@/lib/utils/appLogger';
 
 // Interface para configuração de step (adaptada do HybridTemplateService)

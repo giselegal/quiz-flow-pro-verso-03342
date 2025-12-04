@@ -6,6 +6,7 @@
  */
 
 import { useState, useEffect, useCallback, useRef } from 'react';
+// Legacy compatibility - ConfigurationAPI is different from ConfigurationService
 import { ConfigurationAPI } from '@/services/aliases';
 import type { ComponentDefinition } from '@/types/componentConfiguration';
 import { configurationCache } from '@/lib/utils/ConfigurationCache';

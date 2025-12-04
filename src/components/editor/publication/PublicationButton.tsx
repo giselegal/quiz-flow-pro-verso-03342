@@ -14,7 +14,7 @@ import { Settings } from 'lucide-react';
 import { FunnelPublicationPanel } from '@/components/editor/publication/FunnelPublicationPanel';
 import { useFunnelPublication } from '@/hooks/useFunnelPublication';
 import { EditorDashboardSyncService } from '@/services/core/EditorDashboardSyncService';
-import { canonicalFunnelService } from '@/services/funnel/CanonicalFunnelService';
+import { funnelService as canonicalFunnelService } from '@/services';
 
 interface PublicationSettingsButtonProps {
     funnelId: string;
