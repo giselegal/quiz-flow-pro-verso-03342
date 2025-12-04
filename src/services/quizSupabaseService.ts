@@ -1,13 +1,11 @@
 import { supabase } from '@/services/integrations/supabase/customClient';
 import type { Database } from '@/services/integrations/supabase/types';
-import type { InsertQuizConversion } from '@/types/unified-schema'; // Importar do unified-schema
 
 type InsertQuizUser = Database['public']['Tables']['quiz_users']['Insert'];
 type InsertQuizSession = Database['public']['Tables']['quiz_sessions']['Insert'];
 type InsertQuizStepResponse = Database['public']['Tables']['quiz_step_responses']['Insert'];
 type InsertQuizResult = Database['public']['Tables']['quiz_results']['Insert'];
 type InsertQuizAnalytics = Database['public']['Tables']['quiz_analytics']['Insert'];
-// type InsertQuizConversion = Database['public']['Tables']['quiz_conversions']['Insert']; // REMOVIDO: Usando do unified-schema
 
 export interface QuizParticipant {
   id: string;

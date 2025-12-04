@@ -5,7 +5,8 @@
 // Este arquivo mantém apenas interfaces auxiliares para retrocompatibilidade
 // =============================================================================
 
-// Re-export da fonte oficial de tipos
+// Re-export da fonte oficial de tipos (mantido para retrocompatibilidade)
+// eslint-disable-next-line no-restricted-imports
 export type { Database } from '../src/integrations/supabase/types';
 
 // =============================================================================

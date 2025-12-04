@@ -10,5 +10,5 @@ export type {
   ApiResponse, 
   PaginatedResponse, 
   ValidationError, 
-  ValidationResult 
-} from '../../shared/types/supabase';
+  ValidationResult,
+} from '@/shared/types/supabase';
