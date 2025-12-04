@@ -24,15 +24,21 @@ export * from './core';
 // Re-export principais tipos para compatibilidade com imports existentes
 export type { Block, BlockType, BlockContent, BlockProps } from './core/block';
 export type { EditorState, EditorActions, EditorContextValue } from './core/editor';
-export type { QuizStep, QuizOption, QuizAnswer, QuizResult, StyleResult } from './core/quiz';
+export type { QuizStep, QuizOption } from './core/quiz';
 export type { UnifiedFunnel, FunnelStep, FunnelConfig } from './core/funnel';
 export type { Template, TemplateV4, NormalizedTemplate } from './core/template';
 
-// Legacy type aliases - these point to core types
+// Legacy type aliases - quiz types with alternate names
 export type { 
   Block as CanonicalBlock,
+} from './core/block';
+
+export type { 
+  QuizAnswer,
   QuizAnswer as UserResponse,
   QuizAnswer as Answer,
+  StyleResult,
   StyleResult as Style,
+  QuizResult,
   QuizResult as ComputedResult,
-} from './core';
+} from './core/quiz';
