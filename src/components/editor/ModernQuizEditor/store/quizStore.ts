@@ -14,6 +14,8 @@ import { immer } from 'zustand/middleware/immer';
 import type { QuizSchema } from '@/schemas/quiz-schema.zod';
 import type { HistoryEntry } from './types';
 import { multiLayerCache, cacheKeys, cacheTTL } from '@/config/cache.config';
+import { generateBlockId, addStepVersioning } from '@/lib/utils/generateId';
+import { createBlock, cloneBlock } from '@/lib/utils/blockFactory';
 
 interface QuizStore {
   // ========================================================================
@@ -293,19 +295,17 @@ export const useQuizStore = create<QuizStore>()(
       set((state) => {
         if (!state.quiz) return;
         
-        const step = state.quiz.steps.find(s => s.id === stepId);
-        if (!step) return;
+        const stepIndex = state.quiz.steps.findIndex(s => s.id === stepId);
+        if (stepIndex === -1) return;
         
-        const newBlock = {
-          id: `block-${Date.now()}`,
-          type: blockType,
-          order,
-          properties: {},
-          content: {},
-          parentId: null,
-        };
+        // 🆕 Usar BlockFactory para criar bloco com defaults
+        const newBlock = createBlock(blockType, {}, order);
         
-        step.blocks.push(newBlock as any); // Fase 2: implementar factory de blocos tipados
+        state.quiz.steps[stepIndex].blocks.push(newBlock as any);
+        
+        // 🆕 Adicionar versionamento ao step
+        state.quiz.steps[stepIndex] = addStepVersioning(state.quiz.steps[stepIndex]) as any;
+        
         state.isDirty = true;
       });
       
@@ -316,26 +316,24 @@ export const useQuizStore = create<QuizStore>()(
     duplicateBlock: (stepId, blockId) => {
       set((state) => {
         if (!state.quiz) return;
-        const step = state.quiz.steps.find((s: any) => s.id === stepId);
-        if (!step) return;
+        const stepIndex = state.quiz.steps.findIndex((s: any) => s.id === stepId);
+        if (stepIndex === -1) return;
+        const step = state.quiz.steps[stepIndex];
         const idx = step.blocks.findIndex((b: any) => b.id === blockId);
         if (idx === -1) return;
         const original = step.blocks[idx];
-        const newId = `${original.id}-copy-${Date.now()}`;
-        const clone = {
-          id: newId,
-          type: original.type,
-          order: (original.order || 0) + 1,
-          properties: JSON.parse(JSON.stringify(original.properties || {})),
-          content: JSON.parse(JSON.stringify(original.content || {})),
-          parentId: original.parentId ?? null,
-          metadata: JSON.parse(JSON.stringify(original.metadata || {})),
-        } as any;
+        
+        // 🆕 Usar cloneBlock para garantir ID único via nanoid
+        const clone = cloneBlock(original, (original.order || 0) + 1);
 
         // Inserir após original
         step.blocks.splice(idx + 1, 0, clone);
         // Reatribuir ordem sequencial
         step.blocks = step.blocks.map((b: any, i: number) => ({ ...b, order: i + 1 }));
+        
+        // 🆕 Adicionar versionamento ao step
+        state.quiz.steps[stepIndex] = addStepVersioning(step) as any;
+        
         state.isDirty = true;
       });
       get().addToHistory();
