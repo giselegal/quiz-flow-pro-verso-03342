@@ -116,18 +116,18 @@ export const DynamicPropertiesPanel: React.FC = () => {
             selectedBlock={selectedBlock || null}
             selectedBlockId={selectedBlockId}
             onBlockSelect={setSelectedBlockId}
-            onBlockUpdate={async (blockId, updates) => {
-              await builderActions.updateBlock(currentStepKey, blockId, updates);
-            }}
-            updateProperty={(blockId, property, value) => {
-              builderActions.updateBlock(currentStepKey, blockId, { [property]: value });
-            }}
-            addBlock={(block) => {
-              builderActions.addBlock(currentStepKey, block);
-            }}
-            removeBlock={(blockId) => {
-              builderActions.removeBlock(currentStepKey, blockId);
-            }}
+                    onBlockUpdate={async (blockId, updates) => {
+                      await builderActions.updateBlock(builderState.currentStep, blockId, updates);
+                    }}
+                    updateProperty={(blockId, property, value) => {
+                      builderActions.updateBlock(builderState.currentStep, blockId, { [property]: value });
+                    }}
+                    addBlock={(block) => {
+                      builderActions.addBlock(builderState.currentStep, block);
+                    }}
+                    removeBlock={(blockId) => {
+                      builderActions.removeBlock(builderState.currentStep, blockId);
+                    }}
             selectBlock={setSelectedBlockId}
           />
         )}

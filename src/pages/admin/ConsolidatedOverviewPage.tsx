@@ -28,7 +28,9 @@ import {
 import React, { useEffect, useState } from 'react';
 import { Link } from 'wouter';
 import { appLogger } from '@/lib/utils/appLogger';
-import { HealthCheckResult } from '@/services/core/UnifiedServiceManager';
+
+// Tipo para resultado de health check
+type HealthCheckResult = Record<string, boolean>;
 
 interface DashboardData {
     funnelSummary: {
