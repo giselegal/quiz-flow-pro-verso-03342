@@ -1,18 +1,33 @@
 /**
  * 🎯 FUNNEL SERVICES - Entry Point
  * 
- * Exporta todos os serviços relacionados a funis.
+ * ⚠️ Este arquivo redireciona para o FunnelService canônico.
  * 
- * @since v4.1.0
+ * MIGRAÇÃO:
+ * ```typescript
+ * // ❌ ANTES
+ * import { funnelService } from '@/services/funnel';
+ * 
+ * // ✅ DEPOIS
+ * import { funnelService } from '@/services';
+ * ```
  */
 
-export { funnelService, FunnelService } from './FunnelService';
-export type { 
-  Funnel, 
-  LoadFunnelResult, 
-  SaveFunnelResult 
-} from './FunnelService';
+// Re-export from canonical service
+export { 
+  funnelService, 
+  CanonicalFunnelService as FunnelService,
+  type FunnelMetadata,
+  type CreateFunnelInput,
+  type UpdateFunnelInput,
+} from '../canonical/FunnelService';
 
+// Legacy type aliases
+export type Funnel = import('../canonical/FunnelService').FunnelMetadata;
+export type LoadFunnelResult = { funnel: Funnel | null; error?: string };
+export type SaveFunnelResult = { success: boolean; error?: string };
+
+// Funnel resolver (utility functions)
 export {
   resolveFunnel,
   resolveFunnelTemplatePath,
