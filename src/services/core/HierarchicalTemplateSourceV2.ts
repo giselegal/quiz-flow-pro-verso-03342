@@ -162,6 +162,99 @@ export class HierarchicalTemplateSource implements TemplateDataSource {
   }
 
   /**
+   * Salvar blocos (USER_EDIT no Supabase)
+   */
+  async setPrimary(stepId: string, blocks: Block[], funnelId: string): Promise<void> {
+    if (!funnelId) {
+      throw new Error('funnelId é obrigatório para salvar blocos');
+    }
+
+    try {
+      // Buscar config atual
+      const { data: currentFunnel, error: fetchError } = await supabase
+        .from('funnels')
+        .select('config')
+        .eq('id', funnelId)
+        .single();
+
+      if (fetchError) {
+        throw fetchError;
+      }
+
+      // Atualizar config com novos blocos
+      const config = (currentFunnel?.config as any) || {};
+      if (!config.steps) {
+        config.steps = {};
+      }
+      config.steps[stepId] = blocks;
+
+      // Salvar de volta
+      const { error: updateError } = await supabase
+        .from('funnels')
+        .update({ config })
+        .eq('id', funnelId);
+
+      if (updateError) {
+        throw updateError;
+      }
+
+      // Invalidar cache
+      await this.cache.invalidate(stepId, funnelId);
+
+      appLogger.info(`[HierarchicalSourceV2] Blocos salvos: ${stepId} (${blocks.length} blocos)`);
+    } catch (error) {
+      appLogger.error('[HierarchicalSourceV2] Erro ao salvar blocos:', { data: [error] });
+      throw error;
+    }
+  }
+
+  /**
+   * Invalidar cache
+   */
+  async invalidate(stepId: string, funnelId?: string): Promise<void> {
+    await this.cache.invalidate(stepId, funnelId);
+    appLogger.info(`[HierarchicalSourceV2] Cache invalidado: ${stepId}`);
+  }
+
+  /**
+   * Prever qual fonte seria usada (dry-run)
+   */
+  async predictSource(stepId: string, funnelId?: string): Promise<DataSourcePriority> {
+    // Verificar se step é válido
+    if (!this.loader.isValidStepId(stepId)) {
+      return DataSourcePriority.FALLBACK;
+    }
+
+    // Se não estiver usando overlays remotos, será JSON
+    if (!this.shouldUseRemoteOverlays() || !funnelId) {
+      return DataSourcePriority.TEMPLATE_DEFAULT;
+    }
+
+    // Verificar USER_EDIT
+    try {
+      const userEdit = await this.loader.loadUserEdit(stepId, funnelId);
+      if (userEdit && userEdit.length > 0) {
+        return DataSourcePriority.USER_EDIT;
+      }
+    } catch {
+      // Ignorar erro
+    }
+
+    // Verificar ADMIN_OVERRIDE
+    try {
+      const adminOverride = await this.loader.loadAdminOverride(stepId, this.activeTemplateId);
+      if (adminOverride && adminOverride.length > 0) {
+        return DataSourcePriority.ADMIN_OVERRIDE;
+      }
+    } catch {
+      // Ignorar erro
+    }
+
+    // Fallback para JSON
+    return DataSourcePriority.TEMPLATE_DEFAULT;
+  }
+
+  /**
    * Obter métricas de performance
    */
   getMetrics(): Record<string, any> {
