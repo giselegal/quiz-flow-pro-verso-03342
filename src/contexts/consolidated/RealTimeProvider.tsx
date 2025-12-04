@@ -314,8 +314,8 @@ export const RealTimeProvider: React.FC<RealTimeProviderProps> = ({
         });
 
         return () => {
-            if (subscription) {
-                realtimeChannel.unsubscribe();
+            if (subscription && realtimeChannel) {
+                supabase.removeChannel(realtimeChannel);
             }
         };
     }, [realtimeChannel]);

@@ -414,7 +414,7 @@ export function useRealTimeAnalytics(options: UseRealTimeAnalyticsOptions = {}) 
     return () => {
       mounted = false;
       if (channelRef.current) {
-        channelRef.current.unsubscribe();
+        supabase.removeChannel(channelRef.current);
         appLogger.info('Realtime connection closed');
       }
     };
@@ -451,7 +451,7 @@ export function useRealTimeAnalytics(options: UseRealTimeAnalyticsOptions = {}) 
 
   const reconnect = useCallback(async () => {
     if (channelRef.current) {
-      await channelRef.current.unsubscribe();
+      await supabase.removeChannel(channelRef.current);
     }
     setError(null);
     setIsConnected(false);
