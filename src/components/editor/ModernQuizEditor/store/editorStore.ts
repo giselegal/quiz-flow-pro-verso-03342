@@ -31,6 +31,7 @@ interface EditorStore {
   // ESTADO - MODO DO EDITOR
   // ========================================================================
   editorMode: EditorMode;
+  splitPreviewEnabled: boolean;
   
   // ========================================================================
   // AÇÕES - SELEÇÃO
@@ -79,6 +80,11 @@ interface EditorStore {
    * Toggle between visual and json mode
    */
   toggleEditorMode: () => void;
+
+  /**
+   * Toggle split preview
+   */
+  toggleSplitPreview: () => void;
 }
 
 export const useEditorStore = create<EditorStore>()(
@@ -92,6 +98,7 @@ export const useEditorStore = create<EditorStore>()(
     isBlockLibraryOpen: true,
     isPreviewMode: false,
     editorMode: 'visual',
+    splitPreviewEnabled: false,
     
     // ========================================================================
     // IMPLEMENTAÇÕES - SELEÇÃO
@@ -148,6 +155,12 @@ export const useEditorStore = create<EditorStore>()(
     toggleEditorMode: () => {
       set((state) => {
         state.editorMode = state.editorMode === 'visual' ? 'json' : 'visual';
+      });
+    },
+
+    toggleSplitPreview: () => {
+      set((state) => {
+        state.splitPreviewEnabled = !state.splitPreviewEnabled;
       });
     },
   })),
