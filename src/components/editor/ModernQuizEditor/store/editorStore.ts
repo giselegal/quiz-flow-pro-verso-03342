@@ -20,6 +20,8 @@ interface EditorStore {
   // ========================================================================
   selectedStepId: string | null;
   selectedBlockId: string | null;
+  /** 🆕 Multi-select: IDs de blocos selecionados */
+  selectedBlockIds: string[];
   
   // ========================================================================
   // ESTADO - UI
@@ -27,6 +29,8 @@ interface EditorStore {
   isPropertiesPanelOpen: boolean;
   isBlockLibraryOpen: boolean;
   isPreviewMode: boolean;
+  /** 🆕 Command Palette */
+  isCommandPaletteOpen: boolean;
   
   // ========================================================================
   // ESTADO - MODO DO EDITOR
@@ -57,6 +61,16 @@ interface EditorStore {
    * Selecionar bloco
    */
   selectBlock: (blockId: string | null) => void;
+  
+  /**
+   * 🆕 Toggle bloco na seleção múltipla (Ctrl+Click)
+   */
+  toggleBlockSelection: (blockId: string) => void;
+  
+  /**
+   * 🆕 Selecionar todos os blocos
+   */
+  selectAllBlocks: (blockIds: string[]) => void;
   
   /**
    * Limpar todas as seleções
@@ -111,6 +125,16 @@ interface EditorStore {
    * Close save to library dialog
    */
   closeSaveToLibrary: () => void;
+  
+  /**
+   * 🆕 Toggle command palette
+   */
+  toggleCommandPalette: () => void;
+  
+  /**
+   * 🆕 Set command palette open state
+   */
+  setCommandPaletteOpen: (open: boolean) => void;
 }
 
 export const useEditorStore = create<EditorStore>()(
@@ -120,9 +144,11 @@ export const useEditorStore = create<EditorStore>()(
     // ========================================================================
     selectedStepId: null,
     selectedBlockId: null,
+    selectedBlockIds: [],
     isPropertiesPanelOpen: true,
     isBlockLibraryOpen: true,
     isPreviewMode: false,
+    isCommandPaletteOpen: false,
     editorMode: 'visual',
     splitPreviewEnabled: false,
     libraryTab: 'blocks',
@@ -146,6 +172,27 @@ export const useEditorStore = create<EditorStore>()(
     selectBlock: (blockId) => {
       set((state) => {
         state.selectedBlockId = blockId;
+        state.selectedBlockIds = blockId ? [blockId] : [];
+      });
+    },
+    
+    toggleBlockSelection: (blockId) => {
+      set((state) => {
+        const idx = state.selectedBlockIds.indexOf(blockId);
+        if (idx === -1) {
+          state.selectedBlockIds.push(blockId);
+          state.selectedBlockId = blockId;
+        } else {
+          state.selectedBlockIds.splice(idx, 1);
+          state.selectedBlockId = state.selectedBlockIds[state.selectedBlockIds.length - 1] || null;
+        }
+      });
+    },
+    
+    selectAllBlocks: (blockIds) => {
+      set((state) => {
+        state.selectedBlockIds = [...blockIds];
+        state.selectedBlockId = blockIds[blockIds.length - 1] || null;
       });
     },
     
@@ -153,6 +200,7 @@ export const useEditorStore = create<EditorStore>()(
       set((state) => {
         state.selectedStepId = null;
         state.selectedBlockId = null;
+        state.selectedBlockIds = [];
       });
     },
     
@@ -215,6 +263,18 @@ export const useEditorStore = create<EditorStore>()(
     closeSaveToLibrary: () => {
       set((state) => {
         state.saveToLibraryDialog.open = false;
+      });
+    },
+    
+    toggleCommandPalette: () => {
+      set((state) => {
+        state.isCommandPaletteOpen = !state.isCommandPaletteOpen;
+      });
+    },
+    
+    setCommandPaletteOpen: (open) => {
+      set((state) => {
+        state.isCommandPaletteOpen = open;
       });
     },
   })),
