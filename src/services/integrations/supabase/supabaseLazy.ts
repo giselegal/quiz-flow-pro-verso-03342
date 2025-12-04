@@ -13,7 +13,10 @@ export interface SupabaseLazyOptions {
 let cached: any = null;
 
 function hasEnv(): boolean {
-    return !!(import.meta.env?.VITE_SUPABASE_URL && import.meta.env?.VITE_SUPABASE_ANON_KEY);
+    // Aceita ambas variáveis para compatibilidade
+    const url = import.meta.env?.VITE_SUPABASE_URL;
+    const key = import.meta.env?.VITE_SUPABASE_PUBLISHABLE_KEY || import.meta.env?.VITE_SUPABASE_ANON_KEY;
+    return !!(url && key);
 }
 
 function buildMock() {
@@ -64,9 +67,10 @@ export async function getSupabaseClient(opts: SupabaseLazyOptions = {}) {
     }
 
     const { createClient } = await import('@supabase/supabase-js');
+    const key = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || import.meta.env.VITE_SUPABASE_ANON_KEY;
     cached = createClient(
         import.meta.env.VITE_SUPABASE_URL,
-        import.meta.env.VITE_SUPABASE_ANON_KEY,
+        key,
         {
             auth: {
                 persistSession: !isServer,
