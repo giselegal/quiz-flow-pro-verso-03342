@@ -23,7 +23,7 @@
  * ```
  */
 
-import React, { Suspense, useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import React, { Suspense, useState, useEffect, useMemo } from 'react';
 import { useRoute } from 'wouter';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 import { PageLoadingFallback } from '@/components/LoadingSpinner';
@@ -31,7 +31,7 @@ import { appLogger } from '@/lib/utils/appLogger';
 import type { QuizSchema } from '@/schemas/quiz-schema.zod';
 import { ServiceRegistry } from '@/services/ServiceRegistry';
 import { parseFunnelFromURL } from '@/services';
-import { Button } from '@/components/ui/button';
+import { createBlankQuiz } from '@/components/editor/ModernQuizEditor/utils/createBlankQuiz';
 
 // ✅ Novo editor moderno com arquitetura limpa
 const ModernQuizEditor = React.lazy(() =>
@@ -95,15 +95,24 @@ export default function EditorPage() {
     useEffect(() => {
         let isMounted = true;
 
-        // Guardar ausência de serviço para evitar runtime error
-        if (!editorFunnelService) {
-            appLogger.error('❌ [EditorPage] editorFunnelService não encontrado no ServiceRegistry');
-            setLoadError('Serviço de funil indisponível. Tente recarregar a página.');
-            return;
-        }
-
         async function loadFunnel() {
-            if (!funnelId) return;
+            // ✅ SE FUNNEL_ID ESTÁ VAZIO → CANVAS EM BRANCO
+            if (!funnelId || funnelId === '') {
+                appLogger.info('🆕 [EditorPage] Nenhum funnelId - criando canvas em branco');
+                
+                const blankQuiz = createBlankQuiz();
+                setQuiz(blankQuiz);
+                setQuizId(undefined); // Novo funil, sem ID ainda
+                setIsLoadingQuiz(false);
+                return;
+            }
+
+            // Guardar ausência de serviço para evitar runtime error
+            if (!editorFunnelService) {
+                appLogger.error('❌ [EditorPage] editorFunnelService não encontrado no ServiceRegistry');
+                setLoadError('Serviço de funil indisponível. Tente recarregar a página.');
+                return;
+            }
 
             setIsLoadingQuiz(true);
             setLoadError(null);
@@ -167,7 +176,7 @@ export default function EditorPage() {
         return () => {
             isMounted = false;
         };
-    }, [funnelId]);
+    }, [funnelId, editorFunnelService, funnelIdentifier]);
 
     // 🆕 Handler de salvamento usando FunnelService
     const handleSave = async (savedQuiz: QuizSchema) => {
@@ -234,50 +243,19 @@ export default function EditorPage() {
                 {isLoadingQuiz ? (
                     <PageLoadingFallback message={`Carregando ${funnelId}...`} />
                 ) : loadError ? (
-                    <div className="h-screen flex items-center justify-center bg-gray-50">
+                    <div className="h-screen flex items-center justify-center bg-background">
                         <div className="text-center max-w-md">
                             <div className="text-6xl mb-4">⚠️</div>
-                            <h2 className="text-xl font-semibold text-gray-900 mb-2">
+                            <h2 className="text-xl font-semibold text-foreground mb-2">
                                 Erro ao carregar quiz
                             </h2>
-                            <p className="text-gray-600 mb-4">{loadError}</p>
+                            <p className="text-muted-foreground mb-4">{loadError}</p>
                             <button
                                 onClick={() => window.location.reload()}
-                                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                                className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90"
                             >
                                 Tentar novamente
                             </button>
-                        </div>
-                    </div>
-                ) : (!quiz && (!funnelId || funnelId === '')) ? (
-                    <div className="h-screen flex items-center justify-center bg-gray-50">
-                        <div className="text-center max-w-md space-y-4">
-                            <div className="text-6xl">🧩</div>
-                            <h2 className="text-xl font-semibold text-gray-900">
-                                Comece um funil do zero
-                            </h2>
-                            <p className="text-gray-600">
-                                Defina um template padrão no `.env` com `VITE_DEFAULT_FUNNEL_ID`, ou escolha um funil existente.
-                            </p>
-                            <div className="flex items-center justify-center gap-2">
-                                <Button
-                                    variant="outline"
-                                    onClick={() => {
-                                        const defId = (import.meta as any).env?.VITE_DEFAULT_FUNNEL_ID as string | undefined;
-                                        const target = `/editor${defId ? `?funnel=${encodeURIComponent(defId)}` : ''}`;
-                                        window.location.href = target;
-                                    }}
-                                >
-                                    Abrir com Template Padrão
-                                </Button>
-                                <Button
-                                    onClick={() => {
-                                        window.location.href = '/dashboard/meus-funis';
-                                    }}
-                                >
-                                    Ver Meus Funis
-                                </Button>
-                            </div>
                         </div>
                     </div>
                 ) : quiz ? (
@@ -286,11 +264,11 @@ export default function EditorPage() {
                             name: quiz.metadata?.name,
                             steps: quiz.steps?.length,
                             version: quiz.version,
-                            quizId // 🆕 PASSAR QUIZ ID
+                            quizId
                         })}
                         <ModernQuizEditor
                             initialQuiz={quiz}
-                            quizId={quizId} // 🆕 PASSAR QUIZ ID PARA PERSISTÊNCIA
+                            quizId={quizId}
                             onSave={handleSave}
                             onError={handleError}
                         />
