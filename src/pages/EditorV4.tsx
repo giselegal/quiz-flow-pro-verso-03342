@@ -253,13 +253,12 @@ export function EditorV4() {
     const params = new URLSearchParams(window.location.search);
     const templateId = params.get('template');
 
-    // ✅ FASE 2 FIX: Path corrigido para arquivo que existe
-    let templatePath = '/templates/.obsolete/quiz21-v4.json'; // default
+    let templatePath = '/templates/quiz21-v4.json'; // default canonical path
 
     if (templateId) {
         // Tentar vários caminhos possíveis
         const possiblePaths = [
-            `/templates/.obsolete/quiz21-v4.json`, // ✅ V4 canonical (existe)
+            `/templates/quiz21-v4.json`, // ✅ V4 canonical
             `/templates/funnels/${templateId}/master.json`,
             `/templates/funnels/${templateId}.json`,
         ];

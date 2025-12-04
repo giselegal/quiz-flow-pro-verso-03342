@@ -51,9 +51,6 @@ export { default as ConnectedTemplateWrapper } from './ConnectedTemplateWrapper'
  * Step 1: Introdução
  */
 export { default as IntroStep } from './IntroStep';
-export { default as IntroStepNew } from './IntroStepNew';
-export { default as IntroStepSimple } from './IntroStepSimple';
-export { default as IntroStepFixed } from './IntroStepFixed';
 
 /**
  * Step 2+: Perguntas
