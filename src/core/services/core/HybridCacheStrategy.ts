@@ -1,18 +1,27 @@
-// Minimal hybrid cache implementation for canonical services
-// Provides in-memory cache with optional TTL and named stores.
+/**
+ * ⚠️ DEPRECATED: HybridCacheStrategy
+ * 
+ * @deprecated Este cache foi consolidado em MultiLayerCacheStrategy.
+ * Use: import { multiLayerCache } from '@/services/core/MultiLayerCacheStrategy';
+ * 
+ * Este arquivo agora redireciona para MultiLayerCacheStrategy para manter
+ * compatibilidade com código existente.
+ */
+
+import { multiLayerCache } from '@/services/core/MultiLayerCacheStrategy';
+import type { CacheStore } from '@/services/canonical/CacheService';
 
 export type CacheOptions = {
   memoryStore?: string;
-  diskStore?: string; // placeholder for future implementation
-  ttl?: number; // milliseconds
+  diskStore?: string;
+  ttl?: number;
 };
 
-type Entry = { value: unknown; expiresAt?: number };
-
+/**
+ * @deprecated Use multiLayerCache from '@/services/core/MultiLayerCacheStrategy'
+ */
 export class HybridCacheStrategy {
   private static instance: HybridCacheStrategy;
-  // storeName -> Map<key, Entry>
-  private memory: Map<string, Map<string, Entry>> = new Map();
 
   private constructor() {}
 
@@ -23,48 +32,34 @@ export class HybridCacheStrategy {
     return HybridCacheStrategy.instance;
   }
 
-  private store(name?: string): Map<string, Entry> {
-    const nm = name || 'default';
-    let m = this.memory.get(nm);
-    if (!m) {
-      m = new Map();
-      this.memory.set(nm, m);
-    }
-    return m;
-  }
-
   async get<T = unknown>(key: string, opts?: CacheOptions): Promise<T | null> {
-    const s = this.store(opts?.memoryStore);
-    const ent = s.get(key);
-    if (!ent) return null;
-    if (ent.expiresAt && Date.now() > ent.expiresAt) {
-      s.delete(key);
-      return null;
-    }
-    return ent.value as T;
+    const store = (opts?.memoryStore || 'generic') as CacheStore;
+    return multiLayerCache.get<T>(store, key);
   }
 
   async set<T = unknown>(key: string, value: T, opts?: CacheOptions): Promise<void> {
-    const s = this.store(opts?.memoryStore);
-    const expiresAt = opts?.ttl ? Date.now() + opts.ttl : undefined;
-    s.set(key, { value, expiresAt });
+    const store = (opts?.memoryStore || 'generic') as CacheStore;
+    const ttl = opts?.ttl ?? 10 * 60 * 1000;
+    await multiLayerCache.set(store, key, value, ttl);
   }
 
   async del(key: string, opts?: CacheOptions): Promise<void> {
-    const s = this.store(opts?.memoryStore);
-    s.delete(key);
+    const store = (opts?.memoryStore || 'generic') as CacheStore;
+    await multiLayerCache.delete(store, key);
   }
 
-  // Alias de compatibilidade com chamadas existentes
   async invalidate(key: string, opts?: CacheOptions): Promise<void> {
     return this.del(key, opts);
   }
 
   clear(storeName?: string): void {
     if (storeName) {
-      this.store(storeName).clear();
-      return;
+      multiLayerCache.clearStore(storeName as CacheStore);
+    } else {
+      multiLayerCache.clearAll();
     }
-    for (const m of this.memory.values()) m.clear();
   }
 }
+
+/** @deprecated Use multiLayerCache from '@/services/core/MultiLayerCacheStrategy' */
+export const hybridCacheStrategy = HybridCacheStrategy.getInstance();
