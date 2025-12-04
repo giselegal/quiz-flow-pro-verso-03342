@@ -16,7 +16,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 import { useSecurityMonitor } from '@/hooks/useSecurityMonitor';
 import { useBackupSystem } from '@/hooks/useBackupSystem';
-import { supabase } from '@/services/integrations/supabase/customClient';
+import { supabase } from '@/integrations/supabase/client';
+import { TwoFactorSetup } from './TwoFactorSetup';
 import { 
   Shield, 
   Lock, 
@@ -35,11 +36,13 @@ interface SecuritySettings {
   id?: string;
   user_id: string;
   two_factor_enabled: boolean;
+  two_factor_verified_at?: string | null;
+  backup_codes_generated_at?: string | null;
   backup_notifications: boolean;
   security_alerts: boolean;
   session_timeout: number;
   last_password_change?: string | null;
-  login_attempts?: number | null;
+  failed_login_attempts?: number | null;
   locked_until?: string | null;
 }
 
@@ -75,13 +78,28 @@ export const SecuritySettingsPage: React.FC = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      // Security settings disabled - table 'user_security_settings' not available
+      // Load from user_security_settings table
+      const { data: dbSettings, error: dbError } = await supabase
+        .from('user_security_settings')
+        .select('*')
+        .eq('user_id', user.id)
+        .maybeSingle();
+
+      if (dbError && dbError.code !== 'PGRST116') {
+        throw dbError;
+      }
+
       const defaultSettings: SecuritySettings = {
         user_id: user.id,
-        two_factor_enabled: false,
+        two_factor_enabled: dbSettings?.two_factor_enabled ?? false,
+        two_factor_verified_at: dbSettings?.two_factor_verified_at ?? null,
+        backup_codes_generated_at: dbSettings?.backup_codes_generated_at ?? null,
         backup_notifications: true,
         security_alerts: true,
         session_timeout: 3600,
+        last_password_change: dbSettings?.last_password_change ?? null,
+        failed_login_attempts: dbSettings?.failed_login_attempts ?? 0,
+        locked_until: dbSettings?.locked_until ?? null,
       };
       setSettings(defaultSettings);
     } catch (error) {
@@ -263,9 +281,9 @@ export const SecuritySettingsPage: React.FC = () => {
               </span>
             </div>
             <div>
-              <span className="font-medium">Tentativas de Login:</span>
+              <span className="font-medium">Tentativas de Login Falhas:</span>
               <span className="ml-2">
-                {settings.login_attempts || 0}
+                {settings.failed_login_attempts || 0}
               </span>
             </div>
           </div>
@@ -346,32 +364,23 @@ export const SecuritySettingsPage: React.FC = () => {
         </TabsContent>
 
         <TabsContent value="authentication" className="space-y-4">
+          {/* 2FA Setup Component */}
+          <TwoFactorSetup 
+            onStatusChange={(enabled) => {
+              setSettings(prev => prev ? { ...prev, two_factor_enabled: enabled } : null);
+            }}
+          />
+
+          {/* Account Info Card */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Lock className="w-5 h-5" />
-                Autenticação
+                Informações da Conta
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label htmlFor="two-factor">Autenticação de Dois Fatores</Label>
-                  <p className="text-sm text-muted-foreground">
-                    Adicionar camada extra de segurança ao login
-                  </p>
-                </div>
-                <Switch
-                  id="two-factor"
-                  checked={settings.two_factor_enabled}
-                  onCheckedChange={(checked) => 
-                    saveSecuritySettings({ two_factor_enabled: checked })
-                  }
-                  disabled={isSaving}
-                />
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <Label>Última Alteração de Senha</Label>
                   <p className="text-sm">
@@ -390,6 +399,22 @@ export const SecuritySettingsPage: React.FC = () => {
                     }
                   </p>
                 </div>
+                {settings.two_factor_verified_at && (
+                  <div>
+                    <Label>2FA Verificado em</Label>
+                    <p className="text-sm">
+                      {new Date(settings.two_factor_verified_at).toLocaleDateString()}
+                    </p>
+                  </div>
+                )}
+                {settings.backup_codes_generated_at && (
+                  <div>
+                    <Label>Backup Codes Gerados em</Label>
+                    <p className="text-sm">
+                      {new Date(settings.backup_codes_generated_at).toLocaleDateString()}
+                    </p>
+                  </div>
+                )}
               </div>
 
               <Button variant="outline" className="w-full">
