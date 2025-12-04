@@ -23,35 +23,29 @@
 
 ---
 
-## Fase 2: Consolidação de Hooks ✅ PARCIAL
+## Fase 2: Consolidação de Hooks ✅ CONCLUÍDA
 
 ### 2.1 Hook Canônico do Editor ✅
 - **Criado:** `src/hooks/canonical/useEditorCanonical.ts`
-- **Funcionalidades consolidadas:**
-  - Gerenciamento de estado (blocos, steps, dirty state)
-  - Operações CRUD de blocos
-  - Histórico undo/redo
-  - Auto-save
-  - Modo de visualização
+- **Consolida:** 15+ hooks useEditor*
 
-### 2.2 Hooks Removidos ✅
-- `src/hooks/editor/useKeyboardShortcuts.ts` (vazio)
-- `src/hooks/editor/useUndoRedo.ts` (vazio)
+### 2.2 Hook Canônico do Quiz ✅
+- **Criado:** `src/hooks/canonical/useQuizCanonical.ts`
+- **Consolida:** 25+ hooks useQuiz*
+- **Funcionalidades:**
+  - `navigation`: next, previous, goTo, reset, progress
+  - `answers`: add, update, remove, clear, get, has
+  - `userProfile`: setName, setEmail, update
+  - `result`: calculate, reset, scores
+  - `validation`: isStepComplete, canProceed
+  - `analytics`: getTimeSpent, trackEvent
 
 ---
 
 ## Fase 3: Limpeza de Componentes ✅ CONCLUÍDA
 
 ### 3.1 Variantes IntroStep Removidas ✅
-| Arquivo Deletado | ~Linhas |
-|------------------|---------|
-| `IntroStepDebug.tsx` | 34 |
-| `IntroStepDirect.tsx` | 100 |
-| `IntroStepFixed.tsx` | 170 |
-| `IntroStepNew.tsx` | 150 |
-| `IntroStepSimple.tsx` | 100 |
-
-**Total:** ~554 linhas de código duplicado removidas
+- 5 variantes deletadas (~554 linhas)
 
 ---
 
@@ -59,17 +53,6 @@
 
 ### 4.1 Arquivos .md Movidos ✅
 - **80+ arquivos** movidos de `/` para `docs/archive/`
-- **Mantidos na raiz:**
-  - `README.md`
-  - `CONTRIBUTING.md`
-  - `SECURITY.md`
-  - `PROGRESSO_REFATORACAO.md`
-
-### Raiz Antes vs Depois
-| Métrica | Antes | Depois |
-|---------|-------|--------|
-| Arquivos .md na raiz | 100+ | 4 |
-| Organização | Caótica | Limpa |
 
 ---
 
@@ -80,19 +63,16 @@
 | Serviços duplicados | 3 | 0 | -100% |
 | Variantes IntroStep | 6 | 1 | -83% |
 | Arquivos .md na raiz | 100+ | 4 | -96% |
-| Referências path inexistente | 70+ | 0 | -100% |
-| Linhas código morto | - | ~3200 | Removido |
+| Hooks useEditor* | 15+ | 1 canônico | Consolidado |
+| Hooks useQuiz* | 25+ | 1 canônico | Consolidado |
 
 ---
 
 ## Próximas Fases (Pendentes)
 
-### Fase 5: Consolidação useQuiz* 🔄
-- [ ] Criar `useQuizCanonical.ts` consolidando 25+ hooks
-
-### Fase 6: Dividir blockPropertySchemas.ts 📁
+### Fase 5: Dividir blockPropertySchemas.ts 📁
 - [ ] Arquivo atual: 116KB (2917 linhas)
 - [ ] Dividir em módulos por categoria de bloco
 
-### Fase 7: Segurança 🔒
+### Fase 6: Segurança 🔒
 - [ ] Habilitar Leaked Password Protection no Supabase
