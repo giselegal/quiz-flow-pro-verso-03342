@@ -24,6 +24,7 @@ import { AnalyticsSidebar } from './components/AnalyticsSidebar';
 import { DevTools } from './components/DevTools';
 import { EditorModeToggle } from './components/EditorModeToggle';
 import { CollaboratorAvatars } from './components/CollaboratorAvatars';
+import { SaveToLibraryDialog } from './components/SaveToLibraryDialog';
 import { ExportTemplateButton } from '../ExportTemplateButton';
 import { ImportTemplateButton } from '../ImportTemplateButton';
 import { usePerformanceMonitor, useMemoryLeakDetector } from '@/hooks/usePerformanceMonitor';
@@ -72,6 +73,8 @@ export function ModernQuizEditor({
     const selectedStepId = useEditorStore((s) => s.selectedStepId);
     const splitPreviewEnabled = useEditorStore((s) => s.splitPreviewEnabled);
     const toggleSplitPreview = useEditorStore((s) => s.toggleSplitPreview);
+    const saveToLibraryDialog = useEditorStore((s) => s.saveToLibraryDialog);
+    const closeSaveToLibrary = useEditorStore((s) => s.closeSaveToLibrary);
     
     // 🆕 PHASE 3: Get current user for collaboration
     const { user } = useAuthStore();
@@ -368,6 +371,14 @@ export function ModernQuizEditor({
 
             {/* 🆕 PHASE 4: DevTools with Accessibility Auditor (dev only) */}
             <DevTools />
+
+            {/* 🆕 PHASE 5: Save to Library Dialog */}
+            <SaveToLibraryDialog
+                open={saveToLibraryDialog.open}
+                onOpenChange={(open) => !open && closeSaveToLibrary()}
+                blockType={saveToLibraryDialog.blockType}
+                blockConfig={saveToLibraryDialog.blockConfig}
+            />
         </div>
     );
 }

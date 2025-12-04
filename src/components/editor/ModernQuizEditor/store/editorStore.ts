@@ -12,6 +12,7 @@ import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 
 type EditorMode = 'visual' | 'json';
+type LibraryTab = 'blocks' | 'saved';
 
 interface EditorStore {
   // ========================================================================
@@ -32,6 +33,16 @@ interface EditorStore {
   // ========================================================================
   editorMode: EditorMode;
   splitPreviewEnabled: boolean;
+  libraryTab: LibraryTab;
+  
+  // ========================================================================
+  // ESTADO - SAVE TO LIBRARY DIALOG
+  // ========================================================================
+  saveToLibraryDialog: {
+    open: boolean;
+    blockType: string;
+    blockConfig: Record<string, any>;
+  };
   
   // ========================================================================
   // AÇÕES - SELEÇÃO
@@ -85,6 +96,21 @@ interface EditorStore {
    * Toggle split preview
    */
   toggleSplitPreview: () => void;
+  
+  /**
+   * Set library tab
+   */
+  setLibraryTab: (tab: LibraryTab) => void;
+  
+  /**
+   * Open save to library dialog
+   */
+  openSaveToLibrary: (blockType: string, blockConfig: Record<string, any>) => void;
+  
+  /**
+   * Close save to library dialog
+   */
+  closeSaveToLibrary: () => void;
 }
 
 export const useEditorStore = create<EditorStore>()(
@@ -99,6 +125,12 @@ export const useEditorStore = create<EditorStore>()(
     isPreviewMode: false,
     editorMode: 'visual',
     splitPreviewEnabled: false,
+    libraryTab: 'blocks',
+    saveToLibraryDialog: {
+      open: false,
+      blockType: '',
+      blockConfig: {},
+    },
     
     // ========================================================================
     // IMPLEMENTAÇÕES - SELEÇÃO
@@ -161,6 +193,28 @@ export const useEditorStore = create<EditorStore>()(
     toggleSplitPreview: () => {
       set((state) => {
         state.splitPreviewEnabled = !state.splitPreviewEnabled;
+      });
+    },
+    
+    setLibraryTab: (tab) => {
+      set((state) => {
+        state.libraryTab = tab;
+      });
+    },
+    
+    openSaveToLibrary: (blockType, blockConfig) => {
+      set((state) => {
+        state.saveToLibraryDialog = {
+          open: true,
+          blockType,
+          blockConfig,
+        };
+      });
+    },
+    
+    closeSaveToLibrary: () => {
+      set((state) => {
+        state.saveToLibraryDialog.open = false;
       });
     },
   })),

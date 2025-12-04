@@ -279,8 +279,13 @@ const BlockPreview = memo(({ block, isSelected, onClick, onDoubleClick }: BlockP
 // ✅ AUDIT: Memoized block actions component
 const BlockActions = memo(({ block }: { block: QuizBlock }) => {
     const selectedStepId = useEditorStore((state) => state.selectedStepId);
+    const openSaveToLibrary = useEditorStore((state) => state.openSaveToLibrary);
     const deleteBlock = useQuizStore((s) => s.deleteBlock);
     const reorderBlocks = useQuizStore((s) => s.reorderBlocks);
+
+    const saveToLibrary = useCallback(() => {
+        openSaveToLibrary(block.type, block.properties || {});
+    }, [block.type, block.properties, openSaveToLibrary]);
 
     const duplicate = useCallback(() => {
         if (!selectedStepId) return;
@@ -317,6 +322,7 @@ const BlockActions = memo(({ block }: { block: QuizBlock }) => {
 
     return (
         <div className="flex items-center gap-2">
+            <button className="px-2 py-1 text-xs bg-primary/10 hover:bg-primary/20 text-primary rounded" onClick={saveToLibrary}>📚 Salvar</button>
             <button className="px-2 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded" onClick={duplicate}>Duplicar</button>
             <button className="px-2 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded" onClick={moveUp}>↑ Mover</button>
             <button className="px-2 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded" onClick={moveDown}>↓ Mover</button>
