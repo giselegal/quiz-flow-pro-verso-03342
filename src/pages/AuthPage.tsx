@@ -29,7 +29,7 @@ const AuthPage: React.FC = () => {
 
     const isSupabaseConfigured = (() => {
         const env = (import.meta as any)?.env ?? {};
-        const hasEnv = Boolean(env?.VITE_SUPABASE_URL && env?.VITE_SUPABASE_ANON_KEY);
+        const hasEnv = Boolean(env?.VITE_SUPABASE_URL && (env?.VITE_SUPABASE_PUBLISHABLE_KEY || env?.VITE_SUPABASE_ANON_KEY));
         let hasLs = false;
         try {
             hasLs = Boolean(localStorage.getItem('supabase:url') && localStorage.getItem('supabase:key'));
