@@ -27,7 +27,7 @@ import { CollaboratorAvatars } from './components/CollaboratorAvatars';
 import { ExportTemplateButton } from '../ExportTemplateButton';
 import { ImportTemplateButton } from '../ImportTemplateButton';
 import { usePerformanceMonitor, useMemoryLeakDetector } from '@/hooks/usePerformanceMonitor';
-import { useAuthStore } from '@/stores/authStore';
+import { useAuthStore } from '@/contexts/store/authStore';
 import { Activity } from 'lucide-react';
 import type { QuizSchema } from '@/schemas/quiz-schema.zod';
 import { normalizeQuizFormat } from './utils/quizAdapter';
