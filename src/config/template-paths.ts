@@ -11,33 +11,18 @@
  * Template path constants
  */
 export const TEMPLATE_PATHS = {
-  /** V4.1 SaaS - Production template (canonical) */
-  V4_SAAS: '/templates/.obsolete/quiz21-v4.json',
-  
-  /** V4.0 - Previous production template */
-  V4_LEGACY: '/templates/.obsolete/quiz21-v4.json',
-  
-  /** V3 Complete - Complete v3 template */
-  V3_COMPLETE: '/templates/.obsolete/quiz21-v4.json',
-  
-  /** V4 Gold - Gold standard reference template */
-  V4_GOLD: '/templates/.obsolete/quiz21-v4.json',
+  /** V4 SaaS - Production template (canonical) */
+  V4_SAAS: '/templates/quiz21-v4.json',
 } as const;
 
 /**
  * Template ID to path mapping
  */
 export const TEMPLATE_ID_MAP: Record<string, string> = {
-  // V4.1 SaaS (current production) - ÚNICO TEMPLATE ATIVO
   'quiz21-v4-saas': TEMPLATE_PATHS.V4_SAAS,
-  'quiz21StepsComplete': TEMPLATE_PATHS.V4_SAAS, // Default for legacy IDs
-  'quiz21-v4': TEMPLATE_PATHS.V4_SAAS, // Redirect v4 to v4-saas
-  
-  // Legacy templates (OBSOLETOS - mantidos apenas para compatibilidade)
-  // ⚠️ Estes arquivos foram movidos para /templates/.obsolete/
-  'quiz21-complete': TEMPLATE_PATHS.V3_COMPLETE,
-  'quiz21-v4-gold': TEMPLATE_PATHS.V4_GOLD,
-  'quiz21-v4-legacy': TEMPLATE_PATHS.V4_LEGACY,
+  'quiz21StepsComplete': TEMPLATE_PATHS.V4_SAAS,
+  'quiz21-v4': TEMPLATE_PATHS.V4_SAAS,
+  'quiz21-complete': TEMPLATE_PATHS.V4_SAAS,
 };
 
 /**
@@ -57,9 +42,9 @@ export function getTemplatePath(templateId: string | null | undefined): string {
 }
 
 /**
- * Check if template is v4.1-saas format
+ * Check if template is v4 format
  */
-export function isV41SaasTemplate(templatePath: string): boolean {
+export function isV4Template(templatePath: string): boolean {
   return templatePath === TEMPLATE_PATHS.V4_SAAS;
 }
 
@@ -67,6 +52,5 @@ export function isV41SaasTemplate(templatePath: string): boolean {
  * Get template version from path
  */
 export function getTemplateVersion(templatePath: string): string {
-  if (templatePath === TEMPLATE_PATHS.V4_SAAS) return 'v4.1-saas';
-  return 'v4.1-saas'; // All paths now consolidated to v4
+  return 'v4.0';
 }
