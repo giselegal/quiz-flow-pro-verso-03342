@@ -117,6 +117,7 @@ const CanonicalAdoptionDashboard = lazy(() => retryImport(() => import('./pages/
 const AuthPage = lazy(() => retryImport(() => import('./pages/AuthPage')));
 const ResetPasswordPage = lazy(() => retryImport(() => import('./pages/ResetPasswordPage')));
 const ProfilePage = lazy(() => retryImport(() => import('./pages/ProfilePage')));
+const AuthTestPage = lazy(() => retryImport(() => import('./pages/AuthTestPage')));
 
 
 
@@ -469,6 +470,13 @@ function AppCore() {
                                         <Route path="/auth/reset-password">
                                             <Suspense fallback={<PageLoadingFallback message="Carregando..." />}>
                                                 <ResetPasswordPage />
+                                            </Suspense>
+                                        </Route>
+
+                                        {/* 🧪 AUTH TEST - Página minimalista de teste */}
+                                        <Route path="/auth-test">
+                                            <Suspense fallback={<PageLoadingFallback message="Carregando teste..." />}>
+                                                <AuthTestPage />
                                             </Suspense>
                                         </Route>
 
