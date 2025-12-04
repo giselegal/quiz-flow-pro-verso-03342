@@ -1,6 +1,9 @@
 import { Button } from '@/components/ui/button';
 import { appLogger } from '@/lib/utils/logger';
 import { Card } from '@/components/ui/card';
+import { templateService } from '@/services';
+
+// Using giseleStyleTemplate from templates
 import { giseleStyleTemplate } from '@/services/templates/giseleStyleTemplate';
 import { useResultPageConfig } from '@/hooks/useResultPageConfig';
 import { toast } from '@/components/ui/use-toast';

@@ -7,7 +7,7 @@
  */
 
 import { useState, useCallback } from 'react';
-import { templateService } from '@/services/canonical/TemplateService';
+import { templateService } from '@/services';
 import { generateBlockId } from '@/lib/utils/idGenerator';
 import { appLogger } from '@/lib/utils/appLogger';
 

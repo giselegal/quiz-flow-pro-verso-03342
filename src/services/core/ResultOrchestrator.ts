@@ -1,7 +1,7 @@
 import { ResultEngine } from './ResultEngine';
 import { StorageService } from './StorageService';
 import EVENTS from '@/core/constants/events';
-import { quizSupabaseService } from '@/services/aliases';
+import { quizSupabaseService } from '@/services';
 import { isUUID } from '@/core/utils/id';
 import { toCanonicalAny } from './adapters';
 import { accumulateScores as accumulateCanonicalScores } from './CanonicalScorer';

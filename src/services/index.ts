@@ -54,6 +54,21 @@ export {
   type FunnelWithComponents
 } from './canonical/FunnelService';
 
+// Funnel Resolver utilities
+export {
+  resolveFunnel,
+  resolveFunnelTemplatePath,
+  parseFunnelFromURL,
+  normalizeFunnelId,
+  isV41SaasFunnel,
+  FUNNEL_TEMPLATE_MAP,
+} from './funnel/FunnelResolver';
+
+export type {
+  FunnelIdentifier,
+  ResolvedFunnel,
+} from './funnel/FunnelResolver';
+
 // Data
 export { dataService, DataService } from './canonical/DataService';
 

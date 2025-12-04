@@ -1,7 +1,6 @@
 import { toast } from '@/components/ui/use-toast';
 import { useQuizFlow } from '@/contexts';
-import { quizSupabaseService } from '@/services/aliases';
-import { templateService } from '@/services/canonical/TemplateService';
+import { quizSupabaseService, templateService } from '@/services';
 import { useCallback, useEffect, useState } from 'react';
 import { StorageService } from '@/services/core/StorageService';
 import { useLocation } from 'wouter';

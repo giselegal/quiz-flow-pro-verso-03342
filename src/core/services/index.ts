@@ -41,13 +41,15 @@ export * from './ConfigService';
 export * from './HistoryService';
 export * from './EditorService';
 export * from './persistenceService';
-// FunnelService - Redirecionado para o serviço oficial V4.1
-// @deprecated Use import direto de '@/services/funnel/FunnelService'
+// FunnelService - Redirecionado para o serviço canônico
+// @deprecated Use import direto de '@/services'
 export {
   funnelService,
-  type Funnel as FunnelMetadata,
-  type LoadFunnelResult,
-  type SaveFunnelResult
+  type FunnelMetadata,
+} from '@/services';
+export type {
+  LoadFunnelResult,
+  SaveFunnelResult
 } from '@/services/funnel/FunnelService';
 export * from './monitoring';
 

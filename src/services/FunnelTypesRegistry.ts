@@ -7,7 +7,7 @@
  */
 
 // Migrado: usar TemplateService canônico
-import { templateService } from '@/services/canonical/TemplateService';
+import { templateService } from '@/services';
 import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================

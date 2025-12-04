@@ -1,6 +1,6 @@
 // Hook de integração com Supabase para o Quiz - ATUALIZADO para Quiz21StepsProvider
 import { useToast } from '@/components/ui/use-toast';
-import { quizSupabaseService } from '@/services/aliases';
+import { quizSupabaseService } from '@/services';
 import { QuizAnswer, QuizQuestion, QuizResult } from '@/types/quiz';
 import { useCallback, useEffect, useState } from 'react';
 import { StorageService } from '@/services/core/StorageService';
