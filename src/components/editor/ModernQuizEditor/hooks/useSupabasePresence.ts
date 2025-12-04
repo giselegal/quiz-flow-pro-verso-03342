@@ -189,7 +189,7 @@ export function useSupabasePresence({
     // Cleanup
     return () => {
       console.log('🔌 Desconectando do canal de presença');
-      channel.unsubscribe();
+      supabase.removeChannel(channel);
       channelRef.current = null;
     };
   }, [quizId, userId, userName, userEmail, userAvatar]);
