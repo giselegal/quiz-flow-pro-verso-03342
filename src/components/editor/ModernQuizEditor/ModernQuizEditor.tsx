@@ -12,12 +12,14 @@
  * 🆕 PHASE 3: Real-time collaboration with Supabase Realtime
  */
 
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, useCallback } from 'react';
 import { EditorLayout } from './layout/EditorLayout';
 import { useQuizStore } from './store/quizStore';
 import { useEditorStore } from './store/editorStore';
 import { usePersistence, useAutoSave } from './hooks/usePersistence';
 import { useSupabasePresence } from './hooks/useSupabasePresence';
+import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts';
+import { useBlockClipboard } from './hooks/useBlockClipboard';
 import { SaveStatusIndicator } from './components/SaveStatusIndicator';
 import { PerformanceDebugger } from './components/PerformanceDebugger';
 import { AnalyticsSidebar } from './components/AnalyticsSidebar';
@@ -25,11 +27,13 @@ import { DevTools } from './components/DevTools';
 import { EditorModeToggle } from './components/EditorModeToggle';
 import { CollaboratorAvatars } from './components/CollaboratorAvatars';
 import { SaveToLibraryDialog } from './components/SaveToLibraryDialog';
+import { CommandPalette } from './components/CommandPalette';
+import { GlobalSearch } from './components/GlobalSearch';
 import { ExportTemplateButton } from '../ExportTemplateButton';
 import { ImportTemplateButton } from '../ImportTemplateButton';
 import { usePerformanceMonitor, useMemoryLeakDetector } from '@/hooks/usePerformanceMonitor';
 import { useAuthStore } from '@/contexts/store/authStore';
-import { Activity, PanelLeftClose, PanelLeft } from 'lucide-react';
+import { Activity, PanelLeftClose, PanelLeft, Command } from 'lucide-react';
 import type { QuizSchema } from '@/schemas/quiz-schema.zod';
 import { normalizeQuizFormat } from './utils/quizAdapter';
 import { validateTemplateFormat, formatValidationReport } from './utils/templateValidator';
@@ -75,6 +79,8 @@ export function ModernQuizEditor({
     const toggleSplitPreview = useEditorStore((s) => s.toggleSplitPreview);
     const saveToLibraryDialog = useEditorStore((s) => s.saveToLibraryDialog);
     const closeSaveToLibrary = useEditorStore((s) => s.closeSaveToLibrary);
+    const isCommandPaletteOpen = useEditorStore((s) => s.isCommandPaletteOpen);
+    const setCommandPaletteOpen = useEditorStore((s) => s.setCommandPaletteOpen);
     
     // 🆕 PHASE 3: Get current user for collaboration
     const { user } = useAuthStore();
@@ -216,6 +222,19 @@ export function ModernQuizEditor({
         await persistence.saveQuiz(quiz, quizId);
     };
 
+    // 🆕 Premium: Keyboard shortcuts
+    const handleOpenCommandPalette = useCallback(() => {
+        setCommandPaletteOpen(true);
+    }, [setCommandPaletteOpen]);
+
+    useKeyboardShortcuts({
+        onSave: handleSave,
+        onOpenCommandPalette: handleOpenCommandPalette,
+    });
+
+    // 🆕 Premium: Clipboard operations
+    useBlockClipboard();
+
     // Loading state
     if (isLoading) {
         return (
@@ -276,6 +295,20 @@ export function ModernQuizEditor({
                     
                     {/* Toggle Visual/JSON */}
                     <EditorModeToggle />
+
+                    {/* 🆕 Global Search */}
+                    <GlobalSearch />
+                    
+                    {/* 🆕 Command Palette trigger */}
+                    <button
+                        onClick={handleOpenCommandPalette}
+                        className="flex items-center gap-2 px-3 py-1.5 text-sm text-muted-foreground bg-muted hover:bg-muted/80 rounded-lg transition-colors"
+                    >
+                        <Command className="w-4 h-4" />
+                        <kbd className="hidden sm:inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] font-mono bg-background rounded border border-border">
+                            ⌘K
+                        </kbd>
+                    </button>
 
                     {/* 🆕 PHASE 3: Collaborator presence indicators */}
                     <div className="border-l border-border pl-4 ml-2">
@@ -378,6 +411,13 @@ export function ModernQuizEditor({
                 onOpenChange={(open) => !open && closeSaveToLibrary()}
                 blockType={saveToLibraryDialog.blockType}
                 blockConfig={saveToLibraryDialog.blockConfig}
+            />
+
+            {/* 🆕 Premium: Command Palette */}
+            <CommandPalette
+                open={isCommandPaletteOpen}
+                onOpenChange={setCommandPaletteOpen}
+                onSave={handleSave}
             />
         </div>
     );
