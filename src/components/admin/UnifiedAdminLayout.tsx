@@ -18,12 +18,23 @@ import {
     ArrowLeft,
     Home,
     Plus,
+    User,
+    LogOut,
 } from 'lucide-react';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { UnifiedRoutingService } from '@/services/core/UnifiedRoutingService';
 import { EditorDashboardSyncService } from '@/services/core/EditorDashboardSyncService';
 import { useEditorContext } from '@/core';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { useUserName } from '@/hooks/useUserName';
+import { useLocation } from 'wouter';
+import { useAuthStorage } from '@/contexts/consolidated/AuthStorageProvider';
 
 // Componentes lazy-loaded
 const ConsolidatedOverviewPage = React.lazy(() => import('@/pages/admin/ConsolidatedOverviewPage'));
@@ -65,6 +76,8 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
     const { auth, navigation } = useEditorContext();
     const { user } = auth;
     const displayName = useUserName();
+    const [, setLocation] = useLocation();
+    const { logout } = useAuthStorage();
 
     // Map theme providers to expected format
     const theme = React.useMemo(() => {
@@ -397,33 +410,54 @@ export const UnifiedAdminLayout: React.FC<UnifiedAdminLayoutProps> = ({
 
                         <ThemeToggle size="sm" />
 
-                        {/* User Identity */}
-                        <div
-                            className="flex items-center gap-2 pl-2 pr-3 py-1 rounded-2xl border text-sm font-medium select-none"
-                            style={{
-                                borderColor: `${theme.colors.detailsMinor}40`,
-                                background: `${theme.colors.background}70`,
-                                boxShadow: `0 0 12px ${theme.colors.glowEffect}25`,
-                            }}
-                            title={displayName}
-                        >
-                            <div
-                                className="w-8 h-8 rounded-xl flex items-center justify-center text-xs font-bold tracking-wide"
-                                style={{
-                                    background: `linear-gradient(135deg, ${theme.colors.detailsMinor} 0%, ${theme.colors.buttons} 100%)`,
-                                    color: '#fff',
-                                    boxShadow: `0 0 10px ${theme.colors.detailsMinor}50`,
-                                }}
-                            >
-                                {initials}
-                            </div>
-                            <span
-                                className="truncate max-w-[140px]"
-                                style={{ color: theme.colors.text }}
-                            >
-                                {displayName}
-                            </span>
-                        </div>
+                        {/* User Identity with Dropdown */}
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <button
+                                    className="flex items-center gap-2 pl-2 pr-3 py-1 rounded-2xl border text-sm font-medium select-none cursor-pointer hover:opacity-80 transition-opacity"
+                                    style={{
+                                        borderColor: `${theme.colors.detailsMinor}40`,
+                                        background: `${theme.colors.background}70`,
+                                        boxShadow: `0 0 12px ${theme.colors.glowEffect}25`,
+                                    }}
+                                    title={displayName}
+                                >
+                                    <div
+                                        className="w-8 h-8 rounded-xl flex items-center justify-center text-xs font-bold tracking-wide"
+                                        style={{
+                                            background: `linear-gradient(135deg, ${theme.colors.detailsMinor} 0%, ${theme.colors.buttons} 100%)`,
+                                            color: '#fff',
+                                            boxShadow: `0 0 10px ${theme.colors.detailsMinor}50`,
+                                        }}
+                                    >
+                                        {initials}
+                                    </div>
+                                    <span
+                                        className="truncate max-w-[140px]"
+                                        style={{ color: theme.colors.text }}
+                                    >
+                                        {displayName}
+                                    </span>
+                                </button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="w-48">
+                                <DropdownMenuItem onClick={() => setLocation('/profile')}>
+                                    <User className="w-4 h-4 mr-2" />
+                                    Meu Perfil
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem 
+                                    onClick={async () => {
+                                        await logout();
+                                        setLocation('/auth');
+                                    }}
+                                    className="text-destructive focus:text-destructive"
+                                >
+                                    <LogOut className="w-4 h-4 mr-2" />
+                                    Sair
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
 
                         {/* Preview Draft: aparece apenas quando estiver no editor e for um draft */}
                         {activeView === 'editor' && funnelId && funnelId.startsWith('draft-') && (

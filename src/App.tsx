@@ -116,6 +116,7 @@ const CanonicalAdoptionDashboard = lazy(() => retryImport(() => import('./pages/
 // 🔐 PÁGINAS DE AUTENTICAÇÃO
 const AuthPage = lazy(() => retryImport(() => import('./pages/AuthPage')));
 const ResetPasswordPage = lazy(() => retryImport(() => import('./pages/ResetPasswordPage')));
+const ProfilePage = lazy(() => retryImport(() => import('./pages/ProfilePage')));
 
 
 
@@ -473,6 +474,15 @@ function AppCore() {
                                             <Suspense fallback={<PageLoadingFallback message="Carregando..." />}>
                                                 <ResetPasswordPage />
                                             </Suspense>
+                                        </Route>
+
+                                        {/* 👤 PERFIL DO USUÁRIO */}
+                                        <Route path="/profile">
+                                            <ProtectedRoute>
+                                                <Suspense fallback={<PageLoadingFallback message="Carregando perfil..." />}>
+                                                    <ProfilePage />
+                                                </Suspense>
+                                            </ProtectedRoute>
                                         </Route>
 
                                         {/* 🏢 ADMIN DASHBOARDS - CONSOLIDADO */}
