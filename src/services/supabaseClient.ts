@@ -2,28 +2,23 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
 let client: SupabaseClient | null = null;
 
-function getEnv(key: string): string | undefined {
-  // Prefer runtime-safe envs (Vite) but allow Node for server code
-  if (typeof process !== 'undefined' && process.env[key]) return process.env[key];
-  if (typeof import.meta !== 'undefined' && (import.meta as any).env && (import.meta as any).env[key]) return (import.meta as any).env[key];
-  return undefined;
-}
+// Acesso direto às variáveis de ambiente do Vite
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || '';
+const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || '';
 
 export function getSupabaseClient(): SupabaseClient {
   if (client) return client;
-  const disable = getEnv('VITE_DISABLE_SUPABASE');
-  if (String(disable).toLowerCase() === 'true') {
-    // Return a minimal no-op client to avoid network calls in DEV
-    const noop = createNoopClient();
-    client = noop as unknown as SupabaseClient;
-    return client;
+  
+  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+    throw new Error('Missing Supabase env: VITE_SUPABASE_URL / VITE_SUPABASE_PUBLISHABLE_KEY');
   }
-  const url = getEnv('VITE_SUPABASE_URL');
-  const anon = getEnv('VITE_SUPABASE_ANON_KEY') || getEnv('VITE_SUPABASE_PUBLISHABLE_KEY');
-  if (!url || !anon) {
-    throw new Error('Missing Supabase env: VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY');
-  }
-  client = createClient(url, anon, {
+  
+  client = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    auth: {
+      autoRefreshToken: true,
+      persistSession: true,
+      detectSessionInUrl: true,
+    },
     global: {
       fetch: (input, init) => fetchWithRetry(input, init),
     },

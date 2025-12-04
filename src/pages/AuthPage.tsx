@@ -36,15 +36,10 @@ const AuthPage: React.FC = () => {
         }
     }, [isAuthenticated, setLocation]);
 
-    const isSupabaseConfigured = (() => {
-        const env = (import.meta as any)?.env ?? {};
-        const hasEnv = Boolean(env?.VITE_SUPABASE_URL && (env?.VITE_SUPABASE_PUBLISHABLE_KEY || env?.VITE_SUPABASE_ANON_KEY));
-        let hasLs = false;
-        try {
-            hasLs = Boolean(localStorage.getItem('supabase:url') && localStorage.getItem('supabase:key'));
-        } catch { }
-        return hasEnv || hasLs;
-    })();
+    const isSupabaseConfigured = Boolean(
+        import.meta.env.VITE_SUPABASE_URL && 
+        (import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || import.meta.env.VITE_SUPABASE_ANON_KEY)
+    );
 
     const handleForgotPassword = async () => {
         const normalizedEmail = email.trim().toLowerCase();
