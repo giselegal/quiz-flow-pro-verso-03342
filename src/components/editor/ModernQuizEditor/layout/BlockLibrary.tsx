@@ -1,19 +1,20 @@
 /**
- * 📚 Block Library - Coluna 2: Biblioteca de Tipos de Blocos
+ * 📚 Block Library - Coluna 2: Biblioteca de Tipos de Blocos + Blocos Salvos
  * 
  * Funcionalidades:
- * - Exibir tipos de blocos disponíveis
- * - Categorizar blocos (Pergunta, Resultado, UI)
- * - Drag source para DnD (Fase 3)
- * 
- * ✅ AUDIT: Optimized with React.memo
- * 🆕 PHASE 1: Added throttle for scroll events
+ * - Tab "Blocos": tipos de blocos disponíveis para arrastar
+ * - Tab "Salvos": blocos salvos pelo usuário (persistidos no Supabase)
+ * - Drag source para DnD
  */
 
-import React, { memo, useMemo, useRef, useCallback } from 'react';
+import React, { memo, useMemo } from 'react';
 import { useEditorStore } from '../store/editorStore';
 import { useDraggable } from '@dnd-kit/core';
-import { throttle } from '@/lib/utils/performanceOptimizations';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Blocks, Library } from 'lucide-react';
+import { BlockLibraryPanel } from '../components/BlockLibraryPanel';
+import { useQuizStore } from '../store/quizStore';
+import { cn } from '@/lib/utils';
 
 // Tipos de blocos disponíveis no sistema
 const BLOCK_TYPES = {
@@ -36,48 +37,76 @@ const BLOCK_TYPES = {
 
 export const BlockLibrary = memo(() => {
     const isBlockLibraryOpen = useEditorStore((state) => state.isBlockLibraryOpen);
+    const libraryTab = useEditorStore((state) => state.libraryTab);
+    const setLibraryTab = useEditorStore((state) => state.setLibraryTab);
+    const selectedStepId = useEditorStore((state) => state.selectedStepId);
+    const addBlock = useQuizStore((state) => state.addBlock);
 
-    // 🆕 PHASE 1: Throttled scroll handler for performance (max 10 calls/second)
-    const handleScroll = useMemo(
-        () => throttle((e: React.UIEvent<HTMLDivElement>) => {
-            // Future: Implement lazy loading of block categories if needed
-            // const scrollTop = e.currentTarget.scrollTop;
-            // console.debug('Library scroll position:', scrollTop);
-        }, 100),
-        [],
-    );
+    const handleInsertFromLibrary = (blockType: string, _config: Record<string, any>) => {
+        if (!selectedStepId) return;
+        
+        // Get current step to determine order
+        const quiz = useQuizStore.getState().quiz;
+        const step = quiz?.steps.find(s => s.id === selectedStepId);
+        const order = step?.blocks?.length || 0;
+        
+        addBlock(selectedStepId, blockType, order);
+    };
 
     if (!isBlockLibraryOpen) {
         return null;
     }
 
     return (
-        <div className="w-64 border-r border-gray-200 bg-white flex flex-col">
-            {/* Header */}
-            <div className="p-4 border-b border-gray-200">
-                <h2 className="text-sm font-semibold text-gray-900">Biblioteca de Blocos</h2>
-                <p className="text-xs text-gray-500 mt-1">Arraste para adicionar</p>
-            </div>
-
-            {/* Categorias de blocos */}
-            <div 
-                className="flex-1 overflow-y-auto p-4 space-y-6"
-                onScroll={handleScroll}
+        <div className="w-64 border-r border-border bg-card flex flex-col">
+            <Tabs 
+                value={libraryTab} 
+                onValueChange={(v) => setLibraryTab(v as 'blocks' | 'saved')}
+                className="flex flex-col h-full"
             >
-                {/* Categoria: Perguntas */}
-                <BlockCategory title="Perguntas" blocks={BLOCK_TYPES.question} />
+                {/* Tab Headers */}
+                <div className="border-b border-border">
+                    <TabsList className="w-full h-auto p-1 bg-transparent">
+                        <TabsTrigger 
+                            value="blocks" 
+                            className="flex-1 gap-1.5 data-[state=active]:bg-background"
+                        >
+                            <Blocks className="h-4 w-4" />
+                            Blocos
+                        </TabsTrigger>
+                        <TabsTrigger 
+                            value="saved" 
+                            className="flex-1 gap-1.5 data-[state=active]:bg-background"
+                        >
+                            <Library className="h-4 w-4" />
+                            Salvos
+                        </TabsTrigger>
+                    </TabsList>
+                </div>
 
-                {/* Categoria: Resultados */}
-                <BlockCategory title="Resultados" blocks={BLOCK_TYPES.result} />
+                {/* Tab: Block Types */}
+                <TabsContent value="blocks" className="flex-1 m-0 overflow-hidden">
+                    <div className="flex flex-col h-full">
+                        <div className="p-3 border-b border-border">
+                            <p className="text-xs text-muted-foreground">Arraste para adicionar ao canvas</p>
+                        </div>
+                        <div className="flex-1 overflow-y-auto p-3 space-y-4">
+                            <BlockCategory title="Perguntas" blocks={BLOCK_TYPES.question} />
+                            <BlockCategory title="Resultados" blocks={BLOCK_TYPES.result} />
+                            <BlockCategory title="Interface" blocks={BLOCK_TYPES.ui} />
+                        </div>
+                    </div>
+                </TabsContent>
 
-                {/* Categoria: UI */}
-                <BlockCategory title="Interface" blocks={BLOCK_TYPES.ui} />
-            </div>
+                {/* Tab: Saved Library */}
+                <TabsContent value="saved" className="flex-1 m-0 overflow-hidden">
+                    <BlockLibraryPanel onInsertBlock={handleInsertFromLibrary} />
+                </TabsContent>
+            </Tabs>
         </div>
     );
 });
 
-// ✅ AUDIT: Memoized category component
 interface BlockCategoryProps {
     title: string;
     blocks: readonly { type: string; label: string; icon: string; description: string }[];
@@ -86,7 +115,7 @@ interface BlockCategoryProps {
 const BlockCategory = memo(({ title, blocks }: BlockCategoryProps) => {
     return (
         <div>
-            <h3 className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2">
+            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">
                 {title}
             </h3>
             <div className="space-y-2">
@@ -98,7 +127,6 @@ const BlockCategory = memo(({ title, blocks }: BlockCategoryProps) => {
     );
 });
 
-// ✅ AUDIT: Memoized block card component
 interface BlockCardProps {
     type: string;
     label: string;
@@ -107,7 +135,6 @@ interface BlockCardProps {
 }
 
 const BlockCard = memo(({ type, label, icon, description }: BlockCardProps) => {
-    // Tornar o card draggable
     const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
         id: `new-block-${type}`,
         data: {
@@ -130,12 +157,12 @@ const BlockCard = memo(({ type, label, icon, description }: BlockCardProps) => {
             style={style}
             {...listeners}
             {...attributes}
-            className={`
-                p-3 bg-white border border-gray-200 rounded-lg
-                hover:border-blue-400 hover:bg-blue-50
-                transition-all duration-150
-                ${isDragging ? 'opacity-50 shadow-lg ring-2 ring-blue-400' : ''}
-            `}
+            className={cn(
+                "p-3 bg-card border border-border rounded-lg",
+                "hover:border-primary/50 hover:bg-accent/50",
+                "transition-all duration-150",
+                isDragging && "opacity-50 shadow-lg ring-2 ring-primary"
+            )}
             data-block-type={type}
         >
             <div className="flex items-start gap-3">
@@ -143,8 +170,8 @@ const BlockCard = memo(({ type, label, icon, description }: BlockCardProps) => {
                     {icon}
                 </span>
                 <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-gray-900">{label}</p>
-                    <p className="text-xs text-gray-500 mt-0.5">{description}</p>
+                    <p className="text-sm font-medium text-foreground">{label}</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">{description}</p>
                 </div>
             </div>
         </div>
