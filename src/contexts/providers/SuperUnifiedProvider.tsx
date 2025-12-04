@@ -24,5 +24,6 @@ export function useSuperUnified(): any {
 
 export const useUnifiedAuth = useSuperUnified;
 export const useAuth = useSuperUnified;
+export const useUnifiedContext = useSuperUnified;
 
 export default SuperUnifiedProvider;

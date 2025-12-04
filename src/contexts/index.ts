@@ -33,7 +33,7 @@ export { CollaborationProvider, useCollaboration } from './collaboration/Collabo
 export { VersioningProvider, useVersioning } from './versioning/VersioningProvider';
 
 // Composed Provider
-export { SuperUnifiedProvider, useUnifiedContext } from './providers/SuperUnifiedProviderV2';
+export { SuperUnifiedProvider, useUnifiedContext } from './providers/SuperUnifiedProvider';
 // Provider minimalista (Fase 4 simplificação) - uso recomendado para rotas sem recursos avançados
 export { SimpleAppProvider, useSimpleApp } from './providers/SimpleAppProvider';
 

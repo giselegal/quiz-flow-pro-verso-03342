@@ -20,8 +20,7 @@ import {
 } from 'lucide-react';
 
 // Providers necessários
-import { SuperUnifiedProvider } from '@/contexts/providers/SuperUnifiedProviderV2';
-import { SuperUnifiedProviderV3 } from '@/contexts/providers/SuperUnifiedProviderV3';
+import { SuperUnifiedProviderV4 } from '@/contexts/providers/SuperUnifiedProviderV4';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
 
 // Components especializados
@@ -367,20 +366,18 @@ const QuizEditorIntegratedPageCore: React.FC<QuizEditorIntegratedPageProps> = ({
 // Wrapped component with providers
 const QuizEditorIntegratedPage: React.FC<QuizEditorIntegratedPageProps> = (props) => {
   return (
-    <SuperUnifiedProviderV3>
-      <SuperUnifiedProvider>
-        <Suspense fallback={
-          <div className="flex items-center justify-center h-screen">
-            <div className="text-center">
-              <div className="w-12 h-12 mx-auto mb-4 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
-              <p className="text-muted-foreground">Carregando Quiz Editor...</p>
-            </div>
+    <SuperUnifiedProviderV4>
+      <Suspense fallback={
+        <div className="flex items-center justify-center h-screen">
+          <div className="text-center">
+            <div className="w-12 h-12 mx-auto mb-4 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+            <p className="text-muted-foreground">Carregando Quiz Editor...</p>
           </div>
-        }>
-          <QuizEditorIntegratedPageCore {...props} />
-        </Suspense>
-      </SuperUnifiedProvider>
-    </SuperUnifiedProviderV3>
+        </div>
+      }>
+        <QuizEditorIntegratedPageCore {...props} />
+      </Suspense>
+    </SuperUnifiedProviderV4>
   );
 };
 
