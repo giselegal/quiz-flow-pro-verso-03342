@@ -22,7 +22,7 @@ export * from './core';
 // =============================================================================
 
 // Re-export principais tipos para compatibilidade com imports existentes
-export type { Block, BlockType, BlockContent, BlockProps } from './core/block';
+export type { Block, BlockType, BlockContent, BlockProperties } from './core/block';
 export type { EditorState, EditorActions, EditorContextValue } from './core/editor';
 export type { QuizStep, QuizOption } from './core/quiz';
 export type { UnifiedFunnel, FunnelStep, FunnelConfig } from './core/funnel';

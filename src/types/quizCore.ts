@@ -51,7 +51,7 @@ export interface StepTemplate {
 }
 
 // Canonical Block import (remove definição duplicada)
-import type { Block as CanonicalBlock } from './core/Block';
+import type { Block as CanonicalBlock } from './core/block';
 
 // Interface Block local (transição): mantém compatibilidade enquanto migramos uso para CanonicalBlock.
 export interface Block {

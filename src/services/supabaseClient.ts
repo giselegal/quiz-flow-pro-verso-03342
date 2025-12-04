@@ -19,7 +19,7 @@ export function getSupabaseClient(): SupabaseClient {
     return client;
   }
   const url = getEnv('VITE_SUPABASE_URL');
-  const anon = getEnv('VITE_SUPABASE_ANON_KEY');
+  const anon = getEnv('VITE_SUPABASE_ANON_KEY') || getEnv('VITE_SUPABASE_PUBLISHABLE_KEY');
   if (!url || !anon) {
     throw new Error('Missing Supabase env: VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY');
   }
