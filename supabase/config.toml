@@ -22,3 +22,8 @@ verify_jwt = true
 # AI-powered quiz generation using OpenAI
 # Requires authentication to prevent abuse and track usage
 verify_jwt = true
+
+[functions.security-monitor]
+# Security monitoring endpoint
+# Requires authentication to prevent log injection and abuse
+verify_jwt = true
