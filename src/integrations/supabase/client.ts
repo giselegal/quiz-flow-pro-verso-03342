@@ -66,7 +66,9 @@ function createMockClient(): SupabaseClient<Database> {
         channel: () => ({
             on: () => ({ subscribe: () => ({}) }),
             subscribe: () => ({}),
+            unsubscribe: () => Promise.resolve(),
         }),
+        removeChannel: () => Promise.resolve('ok'),
     } as unknown as SupabaseClient<Database>;
 }
 
