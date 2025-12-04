@@ -80,23 +80,30 @@ const AuthPage: React.FC = () => {
 
     const handleAuth = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        
+        // Debug logging
+        console.log('🔐 [AuthPage] handleAuth chamado', { email, password: password ? '***' : 'empty', mode, loading, authLoading });
 
         if (loading || authLoading) return; // evitar duplo envio
 
         const normalizedEmail = email.trim().toLowerCase();
 
         if (!normalizedEmail || !password) {
+            console.log('🔐 [AuthPage] Campos vazios - email:', normalizedEmail, 'password:', password ? '***' : 'empty');
             toast.error('Preencha todos os campos');
             return;
         }
         if (password.length < 6) {
+            console.log('🔐 [AuthPage] Senha muito curta:', password.length);
             toast.error('Senha deve ter no mínimo 6 caracteres');
             return;
         }
 
+        console.log('🔐 [AuthPage] Passando validação, chamando setLoading(true)');
         setLoading(true);
         try {
             if (mode === 'signup') {
+                console.log('🔐 [AuthPage] Modo signup, chamando signUp');
                 appLogger.info('Tentando criar nova conta', { email: normalizedEmail });
                 await signUp(normalizedEmail, password, {
                     created_via: 'quiz_flow_pro',
@@ -105,8 +112,10 @@ const AuthPage: React.FC = () => {
                 toast.success('Conta criada com sucesso!', { duration: 5000 });
                 // Redirect é tratado pelo useEffect quando isAuthenticated mudar
             } else {
+                console.log('🔐 [AuthPage] Modo login, chamando login()');
                 appLogger.info('Tentando fazer login', { email: normalizedEmail });
                 await login(normalizedEmail, password);
+                console.log('🔐 [AuthPage] Login retornou sem erro');
                 toast.success('Login realizado com sucesso!');
                 // Redirect é tratado pelo useEffect quando isAuthenticated mudar
             }
