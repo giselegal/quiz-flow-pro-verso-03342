@@ -571,8 +571,8 @@ export interface BaseBlock {
 
 // Interface Block específica por tipo
 // Canonical Block (substitui definição duplicada)
-import type { Block as CanonicalBlock } from './core/Block';
-export type { Block as CanonicalBlock } from './core/Block';
+import type { Block as CanonicalBlock } from './core/block';
+export type { Block as CanonicalBlock } from './core/block';
 
 // Interface Block original (transição). Mantida para compatibilidade até migração total para CanonicalBlock.
 export interface Block extends BaseBlock {

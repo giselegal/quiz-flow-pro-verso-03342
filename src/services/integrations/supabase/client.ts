@@ -3,7 +3,7 @@ import { getSupabaseClient } from '@/services/supabaseClient';
 import type { Database } from './types';
 
 const SUPABASE_URL = (import.meta as any)?.env?.VITE_SUPABASE_URL as string;
-const SUPABASE_ANON_KEY = (import.meta as any)?.env?.VITE_SUPABASE_ANON_KEY as string;
+const SUPABASE_ANON_KEY = ((import.meta as any)?.env?.VITE_SUPABASE_ANON_KEY || (import.meta as any)?.env?.VITE_SUPABASE_PUBLISHABLE_KEY) as string;
 const DISABLE_SUPABASE = ((import.meta as any)?.env?.VITE_DISABLE_SUPABASE === 'true');
 
 // Import the supabase client like this:
