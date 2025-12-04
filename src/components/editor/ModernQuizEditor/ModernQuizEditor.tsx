@@ -29,6 +29,8 @@ import { CollaboratorAvatars } from './components/CollaboratorAvatars';
 import { SaveToLibraryDialog } from './components/SaveToLibraryDialog';
 import { CommandPalette } from './components/CommandPalette';
 import { GlobalSearch } from './components/GlobalSearch';
+import { PublishButton } from './components/PublishButton';
+import { DuplicateFunnelButton } from './components/DuplicateFunnelButton';
 import { ExportTemplateButton } from '../ExportTemplateButton';
 import { ImportTemplateButton } from '../ImportTemplateButton';
 import { usePerformanceMonitor, useMemoryLeakDetector } from '@/hooks/usePerformanceMonitor';
@@ -338,6 +340,13 @@ export function ModernQuizEditor({
                     <ExportTemplateButton 
                         buttonText="Exportar" 
                         variant="outline" 
+                        className="h-9 text-sm"
+                    />
+                    
+                    {/* 🆕 PHASE 3: Duplicate & Publish */}
+                    <DuplicateFunnelButton className="h-9 text-sm" />
+                    <PublishButton 
+                        draftId={quizId || quiz?.metadata?.id}
                         className="h-9 text-sm"
                     />
 

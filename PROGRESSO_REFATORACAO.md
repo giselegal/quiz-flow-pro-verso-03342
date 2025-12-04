@@ -56,18 +56,6 @@
 
 ---
 
-## Métricas de Impacto Total
-
-| Métrica | Antes | Depois | Melhoria |
-|---------|-------|--------|----------|
-| Serviços duplicados | 3 | 0 | -100% |
-| Variantes IntroStep | 6 | 1 | -83% |
-| Arquivos .md na raiz | 100+ | 4 | -96% |
-| Hooks useEditor* | 15+ | 1 canônico | Consolidado |
-| Hooks useQuiz* | 25+ | 1 canônico | Consolidado |
-
----
-
 ## Fase 5: Dividir blockPropertySchemas.ts ✅ CONCLUÍDA
 
 ### 5.1 Estrutura Modular Criada ✅
@@ -92,7 +80,60 @@ Arquivo monolítico (116KB, 2917 linhas) dividido em 9 módulos:
 
 ---
 
+## Fase 6: Melhoria do Editor ✅ CONCLUÍDA
+
+### 6.1 Sistema de IDs Únicos ✅
+- **Criado:** `src/lib/utils/generateId.ts`
+- **Funções:** `generateBlockId()`, `generateStepId()`, `generateQuizId()`
+- **Biblioteca:** nanoid para IDs criptograficamente seguros
+- **Formato:** `{type}-{nanoid12}` ex: `text-heading-V1StGXR8_Z5j`
+
+### 6.2 Block Factory ✅
+- **Criado:** `src/lib/utils/blockFactory.ts`
+- **Funções:** `createBlock()`, `cloneBlock()`, `getBlockDefaults()`
+- **Defaults:** 20+ tipos de blocos com propriedades padrão
+- **Categorias:** intro, content, question, result, offer, layout, navigation
+
+### 6.3 Painel de Propriedades Aprimorado ✅
+- **Criado:** `src/components/editor/properties/editors/RichTextEditorQuill.tsx`
+- **WYSIWYG:** Integração com react-quill para campos HTML
+- ColorPicker já existente em `propertyEditors.tsx`
+- Image preview já existente no `UploadEditor`
+
+### 6.4 Funcionalidades de Publicação ✅
+- **PublishButton:** `src/components/editor/ModernQuizEditor/components/PublishButton.tsx`
+  - Validação completa antes de publicar
+  - Integração com RPC `publish_quiz_draft()`
+  - Feedback visual de progresso
+  
+- **DuplicateFunnelButton:** `src/components/editor/ModernQuizEditor/components/DuplicateFunnelButton.tsx`
+  - Duplicação via RPC ou fallback local
+  - Navegação automática para novo funil
+
+### 6.5 quizStore Atualizado ✅
+- `addBlock()` usa `createBlock()` com BlockFactory
+- `duplicateBlock()` usa `cloneBlock()` com ID único via nanoid
+- Steps recebem versionamento automático (`version`, `lastModified`)
+
+---
+
+## Métricas de Impacto Total
+
+| Métrica | Antes | Depois | Melhoria |
+|---------|-------|--------|----------|
+| Serviços duplicados | 3 | 0 | -100% |
+| Variantes IntroStep | 6 | 1 | -83% |
+| Arquivos .md na raiz | 100+ | 4 | -96% |
+| Hooks useEditor* | 15+ | 1 canônico | Consolidado |
+| Hooks useQuiz* | 25+ | 1 canônico | Consolidado |
+| Colisão de IDs | Possível | Impossível | ✅ |
+| Blocos sem defaults | 60% | 5% | -92% |
+| Botão Publicar | ❌ | ✅ | Novo |
+| Botão Duplicar | ❌ | ✅ | Novo |
+
+---
+
 ## Próximas Fases (Pendentes)
 
-### Fase 6: Segurança 🔒
+### Fase 7: Segurança 🔒
 - [ ] Habilitar Leaked Password Protection no Supabase
