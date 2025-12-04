@@ -5,10 +5,13 @@
  * - Seleções (step, block)
  * - Estado da UI (panels abertos, etc)
  * - Preview mode
+ * - Editor mode (visual/json)
  */
 
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
+
+type EditorMode = 'visual' | 'json';
 
 interface EditorStore {
   // ========================================================================
@@ -23,6 +26,11 @@ interface EditorStore {
   isPropertiesPanelOpen: boolean;
   isBlockLibraryOpen: boolean;
   isPreviewMode: boolean;
+  
+  // ========================================================================
+  // ESTADO - MODO DO EDITOR
+  // ========================================================================
+  editorMode: EditorMode;
   
   // ========================================================================
   // AÇÕES - SELEÇÃO
@@ -61,6 +69,16 @@ interface EditorStore {
    * Toggle preview mode
    */
   togglePreviewMode: () => void;
+  
+  /**
+   * Set editor mode (visual or json)
+   */
+  setEditorMode: (mode: EditorMode) => void;
+  
+  /**
+   * Toggle between visual and json mode
+   */
+  toggleEditorMode: () => void;
 }
 
 export const useEditorStore = create<EditorStore>()(
@@ -73,6 +91,7 @@ export const useEditorStore = create<EditorStore>()(
     isPropertiesPanelOpen: true,
     isBlockLibraryOpen: true,
     isPreviewMode: false,
+    editorMode: 'visual',
     
     // ========================================================================
     // IMPLEMENTAÇÕES - SELEÇÃO
@@ -117,6 +136,18 @@ export const useEditorStore = create<EditorStore>()(
     togglePreviewMode: () => {
       set((state) => {
         state.isPreviewMode = !state.isPreviewMode;
+      });
+    },
+    
+    setEditorMode: (mode) => {
+      set((state) => {
+        state.editorMode = mode;
+      });
+    },
+    
+    toggleEditorMode: () => {
+      set((state) => {
+        state.editorMode = state.editorMode === 'visual' ? 'json' : 'visual';
       });
     },
   })),

@@ -20,6 +20,7 @@ import { SaveStatusIndicator } from './components/SaveStatusIndicator';
 import { PerformanceDebugger } from './components/PerformanceDebugger';
 import { AnalyticsSidebar } from './components/AnalyticsSidebar';
 import { DevTools } from './components/DevTools';
+import { EditorModeToggle } from './components/EditorModeToggle';
 import { usePerformanceMonitor, useMemoryLeakDetector } from '@/hooks/usePerformanceMonitor';
 import { Activity } from 'lucide-react';
 import type { QuizSchema } from '@/schemas/quiz-schema.zod';
@@ -221,14 +222,17 @@ export function ModernQuizEditor({
     return (
         <div className="h-screen w-full overflow-hidden flex flex-col">
             {/* Barra superior com ações globais */}
-            <header className="bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between shrink-0">
+            <header className="bg-background border-b border-border px-6 py-3 flex items-center justify-between shrink-0">
                 <div className="flex items-center gap-4">
-                    <h1 className="text-xl font-bold text-gray-900">
+                    <h1 className="text-xl font-bold text-foreground">
                         {quiz.metadata.name || 'Quiz sem título'}
                     </h1>
-                    <span className="px-2 py-1 text-xs font-medium bg-gray-100 text-gray-600 rounded">
+                    <span className="px-2 py-1 text-xs font-medium bg-muted text-muted-foreground rounded">
                         {quiz.version}
                     </span>
+                    
+                    {/* Toggle Visual/JSON */}
+                    <EditorModeToggle />
                 </div>
 
                 <div className="flex items-center gap-2">
