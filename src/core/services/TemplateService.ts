@@ -314,9 +314,10 @@ export class TemplateService extends BaseCanonicalService {
    */
   async loadV4Template(): Promise<ServiceResult<any>> {
     try {
-      this.log('📂 Loading quiz21-v4-saas.json...');
+      this.log('📂 Loading quiz21-v4.json...');
 
-      const response = await fetch('/templates/quiz21-v4-saas.json', {
+      // ✅ FASE 2 FIX: Path corrigido para arquivo que existe
+      const response = await fetch('/templates/.obsolete/quiz21-v4.json', {
         cache: 'no-cache'
       });
 
@@ -863,7 +864,8 @@ export class TemplateService extends BaseCanonicalService {
    */
   private async detectTemplateSteps(templateId: string): Promise<number> {
     try {
-      const masterPath = `/templates/quiz21-complete.json`;
+      // ✅ FASE 2 FIX: Path corrigido para arquivo v4 em .obsolete
+      const masterPath = `/templates/.obsolete/quiz21-v4.json`;
       const response = await fetch(masterPath);
 
       if (!response.ok) {

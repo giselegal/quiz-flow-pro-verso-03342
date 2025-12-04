@@ -102,8 +102,8 @@ class NetworkMonitor {
         }
         this.stats.avgLatency = this.latencies.reduce((a, b) => a + b, 0) / this.latencies.length;
 
-        // Master file request
-        if (url.includes('quiz21-complete.json')) {
+        // Master file request - ✅ FASE 2 FIX: Path atualizado
+        if (url.includes('quiz21-v4.json') || url.includes('.obsolete')) {
             this.stats.masterFileRequests++;
             appLogger.debug(`[NetworkMonitor] 📦 Master file request detected: ${status} (${latency.toFixed(0)}ms)`);
         }

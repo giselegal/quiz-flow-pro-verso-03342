@@ -11,7 +11,8 @@ export const normalizeStepId = (id: string): string => {
   return id;
 };
 
-export const masterTemplateKey = (): string => 'master:quiz21-complete.json';
+// ✅ FASE 2 FIX: Path atualizado para quiz21-v4.json
+export const masterTemplateKey = (): string => 'master:quiz21-v4.json';
 
 export const stepBlocksKey = (stepId: string): string => {
   const n = normalizeStepId(stepId);

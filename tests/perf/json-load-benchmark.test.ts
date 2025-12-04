@@ -7,9 +7,10 @@ interface LoadResult { pathTried: string[]; blocksCount: number; durationMs: num
 
 async function loadStepRaw(stepId: string): Promise<LoadResult> {
   const start = performance.now();
+  // ✅ FASE 2: Paths corrigidos - quiz21-v4.json em .obsolete
   const paths = [
+    `/templates/.obsolete/quiz21-v4.json`,
     `/templates/quiz21Steps/steps/${stepId}.json`,
-    `/templates/quiz21-v4-saas.json`,
   ];
   const tried: string[] = [];
   for (const url of paths) {

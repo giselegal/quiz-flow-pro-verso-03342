@@ -731,14 +731,15 @@ export class TemplateLoader {
           appLogger.info('✅ [loadFromMasterJSON] Master JSON encontrado no cache');
           this.masterTemplateRef = cachedMaster;
         } else {
-          appLogger.info('🔍 [loadFromMasterJSON] Fazendo fetch de /templates/quiz21-complete.json...');
+          // ✅ FASE 2 FIX: Path corrigido para quiz21-v4.json em .obsolete
+          appLogger.info('🔍 [loadFromMasterJSON] Fazendo fetch de /templates/.obsolete/quiz21-v4.json...');
 
           // Retry com exponential backoff
           let lastError: any = null;
           for (let attempt = 0; attempt < 3; attempt++) {
             try {
               appLogger.info(`🔍 [loadFromMasterJSON] Tentativa ${attempt + 1}/3...`);
-              const resp = await fetch('/templates/quiz21-complete.json', {
+              const resp = await fetch('/templates/.obsolete/quiz21-v4.json', {
                 cache: 'force-cache',
               });
 

@@ -35,7 +35,8 @@ interface UseQuizV4LoaderResult {
   reloadQuiz: () => Promise<void>;
 }
 
-const DEFAULT_TEMPLATE_PATH = '/templates/quiz21-v4-saas.json';
+// ✅ FASE 2 FIX: Path corrigido para arquivo que existe em .obsolete
+const DEFAULT_TEMPLATE_PATH = '/templates/.obsolete/quiz21-v4.json';
 
 export function useQuizV4Loader(options: UseQuizV4LoaderOptions = {}): UseQuizV4LoaderResult {
   const {

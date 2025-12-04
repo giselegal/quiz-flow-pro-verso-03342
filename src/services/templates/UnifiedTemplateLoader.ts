@@ -378,21 +378,23 @@ export class UnifiedTemplateLoader {
 
     // 🔧 FIX: Mapear 'quiz21stepscomplete' (fallback padrão) para quiz21-v4.json
     if (id === 'quiz21stepscomplete' || id === 'quiz21-steps-complete') {
-      return `/templates/quiz21-v4.json`;
+      return `/templates/.obsolete/quiz21-v4.json`;
     }
 
     // Padrão
-    return `/templates/quiz21-v4.json`;
+    return `/templates/.obsolete/quiz21-v4.json`;
   }
 
   /**
-   * Carregar de v3 Modular (step-XX-v3.json)
+   * Carregar de v3 Modular (quiz21Steps/steps/step-XX.json)
+   * ✅ FASE 2 FIX: Corrigido path para arquivos que existem
    */
   private async loadFromV3Modular(
     stepId: string,
     options: { timeout: number; signal?: AbortSignal }
   ): Promise<Block[] | null> {
-    const url = `/templates/${stepId}-v3.json`;
+    // ✅ FIX: Path correto para steps existentes
+    const url = `/templates/quiz21Steps/steps/${stepId}.json`;
 
     try {
       const response = await this.fetchWithTimeout(url, options.timeout, options.signal);
@@ -413,13 +415,14 @@ export class UnifiedTemplateLoader {
   }
 
   /**
-   * Carregar de v3 Master (quiz21-complete.json)
+   * Carregar de v3 Master (quiz21-v4.json fallback)
+   * ✅ FASE 2 FIX: Path corrigido para arquivo que existe
    */
   private async loadFromV3Master(
     stepId: string,
     options: { timeout: number; signal?: AbortSignal }
   ): Promise<Block[] | null> {
-    const url = `/templates/quiz21-complete.json`;
+    const url = `/templates/.obsolete/quiz21-v4.json`;
 
     try {
       const response = await this.fetchWithTimeout(url, options.timeout, options.signal);
