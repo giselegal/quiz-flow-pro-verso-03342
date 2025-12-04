@@ -2,18 +2,18 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
 let client: SupabaseClient | null = null;
 
-// Acesso direto às variáveis de ambiente do Vite
+// Priorizar VITE_SUPABASE_PUBLISHABLE_KEY (padrão Lovable Cloud)
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || '';
-const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || '';
+const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || import.meta.env.VITE_SUPABASE_ANON_KEY || '';
 
 export function getSupabaseClient(): SupabaseClient {
   if (client) return client;
   
-  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-    throw new Error('Missing Supabase env: VITE_SUPABASE_URL / VITE_SUPABASE_PUBLISHABLE_KEY');
+  if (!SUPABASE_URL || !SUPABASE_KEY) {
+    throw new Error('Supabase não configurado. Verifique VITE_SUPABASE_URL e VITE_SUPABASE_PUBLISHABLE_KEY.');
   }
   
-  client = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+  client = createClient(SUPABASE_URL, SUPABASE_KEY, {
     auth: {
       autoRefreshToken: true,
       persistSession: true,
