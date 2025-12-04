@@ -25,14 +25,15 @@
  */
 
 import React, { ReactNode, memo } from 'react';
-import { AuthProvider } from '@/core/contexts/auth';
+// ❌ REMOVIDO: AuthProvider e StorageProvider duplicados
+// import { AuthProvider } from '@/core/contexts/auth';
+// import { StorageProvider } from '@/contexts/storage/StorageProvider';
 import { ThemeProvider } from '@/core/contexts/theme';
 import { EditorStateProvider } from '@/core/contexts/EditorContext/EditorStateProvider';
 import { FunnelDataProvider } from '@/contexts/funnel/FunnelDataProvider';
 import { NavigationProvider } from '@/contexts/navigation/NavigationProvider';
 import { QuizStateProvider } from '@/contexts/quiz/QuizStateProvider';
 import { ResultProvider } from '@/contexts/result/ResultProvider';
-import { StorageProvider } from '@/contexts/storage/StorageProvider';
 import { SyncProvider } from '@/contexts/sync/SyncProvider';
 import { ValidationProvider } from '@/core/contexts/validation';
 import { CollaborationProvider } from '@/contexts/collaboration/CollaborationProvider';
@@ -51,17 +52,13 @@ import { UXProvider } from '@/contexts/consolidated/UXProvider';
 /**
  * 🔵 Core Group: Auth + Storage
  * Raramente muda, base estável para outros providers
- * ✅ FASE 3: Usando AuthStorageProvider consolidado + providers legados
+ * ✅ FASE 3: Usando APENAS AuthStorageProvider consolidado (remove duplicação)
  */
 const CoreProvidersGroup = memo<{ children: ReactNode }>(({ children }) => {
     return (
-        <AuthProvider>
-            <StorageProvider>
-                <AuthStorageProvider>
-                    {children}
-                </AuthStorageProvider>
-            </StorageProvider>
-        </AuthProvider>
+        <AuthStorageProvider>
+            {children}
+        </AuthStorageProvider>
     );
 });
 CoreProvidersGroup.displayName = 'CoreProvidersGroup';
