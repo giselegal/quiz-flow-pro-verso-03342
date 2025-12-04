@@ -8,9 +8,8 @@ interface MasterRuntime {
 }
 
 /**
- * Lê /templates/.obsolete/quiz21-v4.json e expõe runtime + metadata.scoringRules
+ * Lê /templates/quiz21-v4.json e expõe runtime + metadata.scoringRules
  * com cache leve em memória (por sessão).
- * ✅ FASE 2 FIX: Path corrigido para arquivo que existe em .obsolete
  */
 export function useMasterRuntime(): MasterRuntime {
   const [state, setState] = useState<MasterRuntime>({ loading: true });
@@ -26,8 +25,7 @@ export function useMasterRuntime(): MasterRuntime {
           return;
         }
 
-        // ✅ FASE 2 FIX: Path corrigido para arquivo que existe
-        const res = await fetch('/templates/.obsolete/quiz21-v4.json', { cache: 'no-cache' });
+        const res = await fetch('/templates/quiz21-v4.json', { cache: 'no-cache' });
         const data = await res.json();
         const runtime = data?.runtime;
         const scoringRules = data?.metadata?.scoringRules;

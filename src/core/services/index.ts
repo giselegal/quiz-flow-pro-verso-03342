@@ -29,7 +29,8 @@ export * from './types';
 
 // Canonical Services - Unified API Layer
 export * from './CacheService';
-export * from './TemplateService';
+// TemplateService consolidado em @/services/canonical/TemplateService
+export { TemplateService, templateService } from '@/services/canonical/TemplateService';
 export * from './DataService';
 export * from './ValidationService';
 export * from './MonitoringService';

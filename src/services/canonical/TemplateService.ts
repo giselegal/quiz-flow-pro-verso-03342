@@ -320,7 +320,8 @@ export class TemplateService extends BaseCanonicalService {
     try {
       this.log('📂 Loading quiz21-v4.json (modelo oficial V4)...');
 
-      const response = await fetch('/templates/.obsolete/quiz21-v4.json', {
+      // ✅ FASE 1 FIX: Path canônico correto
+      const response = await fetch('/templates/quiz21-v4.json', {
         cache: 'no-cache'
       });
 
@@ -933,11 +934,10 @@ export class TemplateService extends BaseCanonicalService {
 
   /**
    * 🔍 Detectar número de steps do template lendo arquivo consolidado V4
-   * ✅ FASE 2 FIX: Path corrigido
    */
   private async detectTemplateSteps(templateId: string): Promise<number> {
     try {
-      const masterPath = `/templates/.obsolete/quiz21-v4.json`;
+      const masterPath = `/templates/quiz21-v4.json`;
       const response = await fetch(masterPath);
 
       if (!response.ok) {

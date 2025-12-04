@@ -378,11 +378,11 @@ export class UnifiedTemplateLoader {
 
     // 🔧 FIX: Mapear 'quiz21stepscomplete' (fallback padrão) para quiz21-v4.json
     if (id === 'quiz21stepscomplete' || id === 'quiz21-steps-complete') {
-      return `/templates/.obsolete/quiz21-v4.json`;
+      return `/templates/quiz21-v4.json`;
     }
 
-    // Padrão
-    return `/templates/.obsolete/quiz21-v4.json`;
+    // Padrão - path canônico
+    return `/templates/quiz21-v4.json`;
   }
 
   /**
@@ -422,7 +422,7 @@ export class UnifiedTemplateLoader {
     stepId: string,
     options: { timeout: number; signal?: AbortSignal }
   ): Promise<Block[] | null> {
-    const url = `/templates/.obsolete/quiz21-v4.json`;
+    const url = `/templates/quiz21-v4.json`;
 
     try {
       const response = await this.fetchWithTimeout(url, options.timeout, options.signal);
