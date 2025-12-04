@@ -256,6 +256,7 @@ export const AuthStorageProvider: React.FC<AuthStorageProviderProps> = ({
                 password,
                 options: {
                     data: metadata || {},
+                    emailRedirectTo: `${window.location.origin}/admin`,
                 },
             });
 

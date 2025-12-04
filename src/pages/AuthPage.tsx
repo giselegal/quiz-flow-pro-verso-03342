@@ -9,7 +9,7 @@
  * - Feedback de erros
  */
 
-import React, { useState, FormEvent } from 'react';
+import React, { useState, FormEvent, useEffect } from 'react';
 import { useAuthStorage } from '@/contexts/consolidated/AuthStorageProvider';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -25,7 +25,16 @@ const AuthPage: React.FC = () => {
     const [mode, setMode] = useState<'login' | 'signup'>('login');
     const [showForgotPassword, setShowForgotPassword] = useState(false);
     const [, setLocation] = useLocation();
-    const { login, signUp, resetPassword, signInWithGoogle } = useAuthStorage();
+    const { login, signUp, resetPassword, signInWithGoogle, isAuthenticated } = useAuthStorage();
+
+    // Auto-redirect quando autenticado
+    useEffect(() => {
+        if (isAuthenticated) {
+            const redirect = new URLSearchParams(window.location.search).get('redirect') || '/admin';
+            appLogger.info('✅ [AuthPage] Usuário autenticado, redirecionando para:', redirect);
+            setLocation(redirect);
+        }
+    }, [isAuthenticated, setLocation]);
 
     const isSupabaseConfigured = (() => {
         const env = (import.meta as any)?.env ?? {};
@@ -96,15 +105,13 @@ const AuthPage: React.FC = () => {
                     created_via: 'quiz_flow_pro',
                     onboarding_completed: false,
                 });
-                toast.success('Conta criada! Verifique seu email para confirmar.', { duration: 5000 });
-                const redirect = new URLSearchParams(window.location.search).get('redirect') || '/admin';
-                setLocation(redirect);
+                toast.success('Conta criada com sucesso!', { duration: 5000 });
+                // Redirect é tratado pelo useEffect quando isAuthenticated mudar
             } else {
                 appLogger.info('Tentando fazer login', { email: normalizedEmail });
                 await login(normalizedEmail, password);
                 toast.success('Login realizado com sucesso!');
-                const redirect = new URLSearchParams(window.location.search).get('redirect') || '/admin';
-                setLocation(redirect);
+                // Redirect é tratado pelo useEffect quando isAuthenticated mudar
             }
         } catch (error: any) {
             let errorMessage = 'Erro na autenticação';
