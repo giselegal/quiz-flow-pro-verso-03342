@@ -226,13 +226,10 @@ export async function loadStepFromJson(
     if (live || enableBust) bust = `?t=${Date.now()}`;
   } catch { }
 
-  // Paths ordenados por prioridade
+  // ✅ FASE 2 FIX: Paths ordenados por prioridade (arquivos que EXISTEM primeiro)
   const paths: string[] = [
-    `/templates/quiz21-v4-saas.json${bust}`, // V4.1 SaaS (prioridade)
-    `/templates/quiz21-complete.json${bust}`, // Master consolidado (legacy)
-    `/templates/${stepId}-v3.json${bust}`, // Step individual v3
-    `/templates/funnels/${templateId}/steps/${stepId}.json${bust}`, // Path por template
-    `/templates/funnels/${templateId}/master.v3.json${bust}`, // Master por template
+    `/templates/.obsolete/quiz21-v4.json${bust}`, // ✅ V4 canonical (existe em .obsolete)
+    `/templates/quiz21Steps/steps/${stepId}.json${bust}`, // ✅ Steps individuais (existem)
   ];
 
   appLogger.info(`🔍 [jsonStepLoader] Tentando carregar: ${paths.join(' , ')}`);

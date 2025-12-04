@@ -253,16 +253,15 @@ export function EditorV4() {
     const params = new URLSearchParams(window.location.search);
     const templateId = params.get('template');
 
-    // 🎯 Mapear templateId para caminho do JSON
-    let templatePath = '/templates/quiz21-v4-saas.json'; // default
+    // ✅ FASE 2 FIX: Path corrigido para arquivo que existe
+    let templatePath = '/templates/.obsolete/quiz21-v4.json'; // default
 
     if (templateId) {
         // Tentar vários caminhos possíveis
         const possiblePaths = [
+            `/templates/.obsolete/quiz21-v4.json`, // ✅ V4 canonical (existe)
             `/templates/funnels/${templateId}/master.json`,
             `/templates/funnels/${templateId}.json`,
-            `/templates/${templateId}.json`,
-            `/templates/quiz21-v4-saas.json`, // fallback
         ];
 
         // Por enquanto, usar o primeiro caminho (master.json)

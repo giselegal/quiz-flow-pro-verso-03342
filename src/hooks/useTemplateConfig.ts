@@ -109,10 +109,10 @@ export const useTemplateConfig = (stepNumber: number) => {
       const primary = await hierarchicalTemplateSource.getPrimary(stepId);
       const blocks = primary.data || [];
 
-      // 2. Usar quiz21-complete.json consolidado (master.v3.json não existe mais)
+      // ✅ FASE 2 FIX: Usar quiz21-v4.json (path correto em .obsolete)
       let master: any = null;
       try {
-        const masterResp = await fetch('/templates/quiz21-complete.json', { cache: 'no-cache' });
+        const masterResp = await fetch('/templates/.obsolete/quiz21-v4.json', { cache: 'no-cache' });
         if (masterResp.ok) {
           master = await masterResp.json();
         }

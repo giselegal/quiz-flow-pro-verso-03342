@@ -11,17 +11,17 @@
  * Template path constants
  */
 export const TEMPLATE_PATHS = {
-  /** V4.1 SaaS - Production template (usando arquivo existente) */
+  /** V4.1 SaaS - Production template (canonical) */
   V4_SAAS: '/templates/.obsolete/quiz21-v4.json',
   
   /** V4.0 - Previous production template */
   V4_LEGACY: '/templates/.obsolete/quiz21-v4.json',
   
   /** V3 Complete - Complete v3 template */
-  V3_COMPLETE: '/templates/.obsolete/quiz21-complete.json',
+  V3_COMPLETE: '/templates/.obsolete/quiz21-v4.json',
   
   /** V4 Gold - Gold standard reference template */
-  V4_GOLD: '/templates/.obsolete/quiz21-v4-gold.json',
+  V4_GOLD: '/templates/.obsolete/quiz21-v4.json',
 } as const;
 
 /**
@@ -68,8 +68,5 @@ export function isV41SaasTemplate(templatePath: string): boolean {
  */
 export function getTemplateVersion(templatePath: string): string {
   if (templatePath === TEMPLATE_PATHS.V4_SAAS) return 'v4.1-saas';
-  if (templatePath === TEMPLATE_PATHS.V4_LEGACY) return 'v4.0';
-  if (templatePath === TEMPLATE_PATHS.V3_COMPLETE) return 'v3.0';
-  if (templatePath === TEMPLATE_PATHS.V4_GOLD) return 'v4.0-gold';
-  return 'unknown';
+  return 'v4.1-saas'; // All paths now consolidated to v4
 }
