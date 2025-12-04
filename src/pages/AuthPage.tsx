@@ -23,14 +23,21 @@ const AuthPage: React.FC = () => {
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const [mode, setMode] = useState<'login' | 'signup'>('login');
-    const [showForgotPassword, setShowForgotPassword] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
     const [, setLocation] = useLocation();
     const { login, signUp, resetPassword, signInWithGoogle, isAuthenticated, isLoading: authLoading } = useAuthStorage();
 
-    // Auto-redirect quando autenticado
+    // Auto-redirect quando autenticado com sanitização
     useEffect(() => {
         if (isAuthenticated) {
-            const redirect = new URLSearchParams(window.location.search).get('redirect') || '/admin';
+            const params = new URLSearchParams(window.location.search);
+            let redirect = params.get('redirect') || '/admin';
+
+            // Garantir que é uma rota interna (previne redirecionamento externo)
+            if (!redirect.startsWith('/')) {
+                redirect = '/admin';
+            }
+
             appLogger.info('✅ [AuthPage] Usuário autenticado, redirecionando para:', redirect);
             setLocation(redirect);
         }
@@ -45,9 +52,9 @@ const AuthPage: React.FC = () => {
         try {
             await resetPassword(normalizedEmail);
             toast.success('Email de recuperação enviado! Verifique sua caixa de entrada.', { duration: 6000 });
-            setShowForgotPassword(false);
-        } catch (error: any) {
-            toast.error(error?.message || 'Erro ao enviar email de recuperação');
+        } catch (error: unknown) {
+            const message = error instanceof Error ? error.message : 'Erro ao enviar email de recuperação';
+            toast.error(message);
         }
     };
 
@@ -56,8 +63,8 @@ const AuthPage: React.FC = () => {
             setLoading(true);
             await signInWithGoogle();
             // OAuth redireciona automaticamente se bem-sucedido
-        } catch (error: any) {
-            const errorMessage = error?.message || 'Erro ao fazer login com Google';
+        } catch (error: unknown) {
+            const errorMessage = error instanceof Error ? error.message : 'Erro ao fazer login com Google';
 
             // Mensagem específica se OAuth não configurado
             if (errorMessage.includes('não está configurado') || errorMessage.includes('not enabled')) {
@@ -71,10 +78,10 @@ const AuthPage: React.FC = () => {
         }
     };
 
-    const handleAuth = async (e: FormEvent) => {
+    const handleAuth = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        if (loading) return; // evitar duplo envio
+        if (loading || authLoading) return; // evitar duplo envio
 
         const normalizedEmail = email.trim().toLowerCase();
 
@@ -103,13 +110,15 @@ const AuthPage: React.FC = () => {
                 toast.success('Login realizado com sucesso!');
                 // Redirect é tratado pelo useEffect quando isAuthenticated mudar
             }
-        } catch (error: any) {
+        } catch (error: unknown) {
             let errorMessage = 'Erro na autenticação';
-            const msg = String(error?.message || '').toLowerCase();
-            if (msg.includes('invalid login credentials')) errorMessage = 'Email ou senha incorretos';
-            else if (msg.includes('email not confirmed')) errorMessage = 'Confirme seu email antes de fazer login';
-            else if (msg.includes('user already registered')) errorMessage = 'Este email já está cadastrado. Faça login.';
-            else if (error?.message) errorMessage = error.message;
+            if (error instanceof Error) {
+                const msg = error.message.toLowerCase();
+                if (msg.includes('invalid login credentials')) errorMessage = 'Email ou senha incorretos';
+                else if (msg.includes('email not confirmed')) errorMessage = 'Confirme seu email antes de fazer login';
+                else if (msg.includes('user already registered')) errorMessage = 'Este email já está cadastrado. Faça login.';
+                else errorMessage = error.message;
+            }
             toast.error(errorMessage, { duration: 5000 });
             appLogger.error('Erro de autenticação', { error, mode, email: normalizedEmail });
         } finally {
@@ -119,11 +128,20 @@ const AuthPage: React.FC = () => {
 
     const toggleMode = () => {
         setMode(mode === 'login' ? 'signup' : 'login');
-        setEmail('');
-        setPassword('');
+        setPassword(''); // Manter email, apenas limpar senha
     };
 
-    const [showPassword, setShowPassword] = useState(false);
+    // Splash screen enquanto verifica sessão existente
+    if (authLoading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-neon-space">
+                <div className="text-slate-200 flex items-center gap-3">
+                    <Loader2 className="h-6 w-6 animate-spin text-neon-blue" />
+                    <span className="text-lg">Carregando sua sessão...</span>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-neon-space p-4 relative">
@@ -198,7 +216,7 @@ const AuthPage: React.FC = () => {
                             )}
                         </div>
 
-                        <Button type="submit" className="w-full btn-neon text-white font-medium py-6 transition-all duration-300" disabled={loading}>
+                        <Button type="submit" className="w-full btn-neon text-white font-medium py-6 transition-all duration-300" disabled={loading || authLoading}>
                             {loading ? (
                                 <>
                                     <Loader2 className="h-5 w-5 mr-2 animate-spin" />
@@ -234,12 +252,21 @@ const AuthPage: React.FC = () => {
                     <Button
                         type="button"
                         onClick={handleGoogleLogin}
-                        disabled={loading}
+                        disabled={loading || authLoading}
                         variant="outline"
                         className="w-full bg-white/5 border-white/20 hover:bg-white/10 text-white font-medium py-6 transition-all duration-300"
                     >
-                        <Chrome className="h-5 w-5 mr-2" />
-                        Continuar com Google
+                        {loading ? (
+                            <>
+                                <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+                                Conectando...
+                            </>
+                        ) : (
+                            <>
+                                <Chrome className="h-5 w-5 mr-2" />
+                                Continuar com Google
+                            </>
+                        )}
                     </Button>
 
                     <div className="relative my-6">
@@ -256,7 +283,7 @@ const AuthPage: React.FC = () => {
                     <button
                         type="button"
                         onClick={toggleMode}
-                        disabled={loading}
+                        disabled={loading || authLoading}
                         className="w-full text-center text-sm text-slate-200 hover:text-white font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         {mode === 'login' ? 'Criar nova conta' : 'Já tenho conta, fazer login'}
@@ -275,7 +302,7 @@ const AuthPage: React.FC = () => {
                 {import.meta.env.DEV && (
                     <div className="mt-4 p-4 bg-white/10 border border-white/20 rounded-lg">
                         <p className="text-xs text-slate-200 font-mono">
-                            <strong>DEV MODE:</strong> Use qualquer email/senha para teste
+                            <strong>DEV MODE:</strong> Ambiente de desenvolvimento conectado ao Supabase
                         </p>
                     </div>
                 )}
