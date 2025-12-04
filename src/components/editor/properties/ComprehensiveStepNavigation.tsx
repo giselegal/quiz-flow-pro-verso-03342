@@ -19,7 +19,7 @@ import {
   Search,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplateSource';
+import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplateSourceMigration';
 import NoCodePropertiesPanel from './NoCodePropertiesPanel';
 import type { Block } from '@/types/editor';
 

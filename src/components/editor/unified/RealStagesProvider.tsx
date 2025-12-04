@@ -515,7 +515,7 @@ function getStageDescription(stepNumber: number): string {
 }
 
 // ✅ CORREÇÃO: Usar HierarchicalTemplateSource em vez de import direto do .ts
-import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplateSource';
+import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplateSourceMigration';
 
 async function loadStepDirect(stepNumber: number): Promise<Block[]> {
   // ✅ CORREÇÃO: Carregar do JSON via HierarchicalTemplateSource

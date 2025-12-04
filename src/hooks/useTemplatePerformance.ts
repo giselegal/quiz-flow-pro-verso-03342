@@ -8,7 +8,7 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 // ✅ CORREÇÃO: Comentado import direto do .ts - usar HierarchicalTemplateSource se necessário
 // import { getStepTemplate as getStepTemplateStatic } from '@/templates/quiz21StepsComplete';
-import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplateSource';
+import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplateSourceMigration';
 import { appLogger } from '@/lib/utils/appLogger';
 
 interface PerformanceMetrics {

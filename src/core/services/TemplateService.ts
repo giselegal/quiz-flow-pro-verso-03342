@@ -41,7 +41,7 @@ import type { Block } from '@/types/editor';
 import { editorMetrics } from '@/lib/utils/editorMetrics'; // ✅ FASE 3.3
 import { templateFormatAdapter } from './TemplateFormatAdapter'; // ✅ FASE 1: Adapter para normalização
 // 🎯 FASE 1: Hierarchical Template Source (SSOT)
-import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplateSource';
+import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplateSourceMigration';
 import { DataSourcePriority } from '@/services/core/TemplateDataSource';
 // 🆔 ID Generator (W1: Quick Win - Replace Date.now())
 import { generateCustomStepId, generateBlockId } from '@/lib/utils/idGenerator';

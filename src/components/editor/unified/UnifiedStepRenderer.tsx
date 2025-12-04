@@ -7,7 +7,7 @@ import { getPreloadSteps, getChunkForStep, PERFORMANCE_TARGETS } from './ChunkOp
 // V3.0 Template Support
 import V3Renderer from '@/components/core/V3Renderer';
 import type { TemplateV3, UserData } from '@/types/template-v3.types';
-import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplateSource';
+import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplateSourceMigration';
 
 /**
  * 🎯 UNIFIED STEP RENDERER - FASE 3

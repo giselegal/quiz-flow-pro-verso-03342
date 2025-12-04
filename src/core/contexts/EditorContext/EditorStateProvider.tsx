@@ -23,7 +23,7 @@
 import React, { createContext, useContext, useReducer, useCallback, useMemo, useEffect, ReactNode } from 'react';
 import { Block } from '@/types/editor';
 import { appLogger } from '@/lib/utils/appLogger';
-import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplateSource';
+import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplateSourceMigration';
 import { EditorState, ValidationError, INITIAL_EDITOR_STATE } from '@/types/editor/EditorState';
 
 // ============================================================================

@@ -12,7 +12,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { useQuizFlow } from '@/hooks/core/useQuizFlow';
 import { cn } from '@/lib/utils';
-import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplateSource';
+import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplateSourceMigration';
 import { getStepCategory, getStepType, getStepTitle, getStepDescription, getStepIcon } from '@/lib/utils/stepMeta';
 import {
   ArrowRight,

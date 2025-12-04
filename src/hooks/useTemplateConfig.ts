@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplateSource';
+import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplateSourceMigration';
 import { appLogger } from '@/lib/utils/appLogger';
 
 // Interface para configuração de template

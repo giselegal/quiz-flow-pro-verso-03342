@@ -9,7 +9,7 @@
 import { Block } from '@/types/editor';
 // ✅ CORREÇÃO: Remover import direto do .ts
 // import { QUIZ_STYLE_21_STEPS_TEMPLATE, getStepTemplate } from '@/templates/quiz21StepsComplete';
-import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplateSource';
+import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplateSourceMigration';
 
 // Import BlockType para tipagem correta
 import { BlockType } from '@/types/editor';

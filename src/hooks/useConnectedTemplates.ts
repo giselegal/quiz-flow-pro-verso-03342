@@ -3,7 +3,7 @@
 
 // ✅ CORREÇÃO: Usar HierarchicalTemplateSource ao invés de import direto do .ts
 // import { QUIZ_QUESTIONS_COMPLETE } from '@/templates/quiz21StepsComplete';
-import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplateSource';
+import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplateSourceMigration';
 import { useCallback, useMemo, useState, useEffect } from 'react';
 import { useQuizLogic } from './useQuizLogic';
 import { useSupabaseQuiz } from './useSupabaseQuiz';

@@ -10,7 +10,7 @@ import { mapComponentType } from './ComponentTypeMapping';
 import { MODULAR_COMPONENTS } from '@/config/modularComponents';
 // ✅ CORREÇÃO: Remover import direto do .ts
 // import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
-import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplateSource';
+import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplateSourceMigration';
 import { propertySchemas, getPropertySchema as getBlockPropertySchema } from '@/config/propertySchemas';
 import type { Block } from '@/types/editor';
 import { appLogger } from '@/lib/utils/appLogger';

@@ -16,7 +16,7 @@
 
 import { appLogger } from '@/lib/utils/appLogger';
 import { cacheService } from '@/services/canonical';
-import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplateSource';
+import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplateSourceMigration';
 import { validateQuizSchema, type QuizSchema } from '@/schemas/quiz-schema.zod';
 import type { Block } from '@/types/editor';
 

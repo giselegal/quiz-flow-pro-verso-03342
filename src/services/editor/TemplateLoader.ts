@@ -18,7 +18,7 @@
 import { Block } from '@/types/editor';
 // ✅ CORREÇÃO: Remover import direto do .ts
 // import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
-import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplateSource';
+import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplateSourceMigration';
 import { blockComponentsToBlocks, convertTemplateToBlocks } from '@/lib/utils/templateConverter';
 // 🔧 Removido dependência de utils/loadStepTemplates para evitar eager-loading de bundles
 import hydrateSectionsWithQuizSteps from '@/lib/utils/hydrators/hydrateSectionsWithQuizSteps';
