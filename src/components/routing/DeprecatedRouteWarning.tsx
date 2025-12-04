@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'wouter';
 import { AlertTriangle, X } from 'lucide-react';
 import { toast } from 'sonner';
 import { appLogger } from '@/lib/utils/appLogger';
@@ -25,7 +25,7 @@ export const DeprecatedRouteWarning: React.FC<DeprecatedRouteWarningProps> = ({
   removalVersion = 'v4.0 (Janeiro 2026)',
   children,
 }) => {
-  const navigate = useNavigate();
+  const [, setLocation] = useLocation();
   const [showBanner, setShowBanner] = React.useState(true);
   const [countdown, setCountdown] = React.useState(10);
 
@@ -57,7 +57,7 @@ export const DeprecatedRouteWarning: React.FC<DeprecatedRouteWarningProps> = ({
       setCountdown((prev) => {
         if (prev <= 1) {
           clearInterval(timer);
-          navigate(recommendedRoute);
+          setLocation(recommendedRoute);
           return 0;
         }
         return prev - 1;
@@ -65,7 +65,7 @@ export const DeprecatedRouteWarning: React.FC<DeprecatedRouteWarningProps> = ({
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [routePath, recommendedRoute, reason, removalVersion, navigate]);
+  }, [routePath, recommendedRoute, reason, removalVersion, setLocation]);
 
   if (!showBanner) {
     return <>{children}</>;
@@ -94,7 +94,7 @@ export const DeprecatedRouteWarning: React.FC<DeprecatedRouteWarningProps> = ({
                   className="text-blue-600 hover:underline font-semibold"
                   onClick={(e) => {
                     e.preventDefault();
-                    navigate(recommendedRoute);
+                    setLocation(recommendedRoute);
                   }}
                 >
                   {recommendedRoute}
@@ -110,7 +110,7 @@ export const DeprecatedRouteWarning: React.FC<DeprecatedRouteWarningProps> = ({
 
             <div className="mt-4 flex items-center gap-4">
               <button
-                onClick={() => navigate(recommendedRoute)}
+                onClick={() => setLocation(recommendedRoute)}
                 className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors font-medium"
               >
                 Ir para nova rota agora
