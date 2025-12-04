@@ -14,7 +14,7 @@ import { Route, Switch, useLocation } from 'wouter';
 import { UnifiedAdminLayout } from '@/components/admin/UnifiedAdminLayout';
 import { Button } from '@/components/ui/button';
 import { Plus, RefreshCw, Download, Filter } from 'lucide-react';
-import { TemplateRegistry } from '@/config/unifiedTemplatesRegistry';
+import { UNIFIED_TEMPLATE_REGISTRY } from '@/config/unifiedTemplatesRegistry';
 import useMyTemplates from '@/hooks/useMyTemplates';
 
 // Lazy loading das páginas do dashboard
@@ -229,9 +229,9 @@ const ModernDashboardPage: React.FC = () => {
     // Extrair funnelId se estiver na rota de edição
     // Métricas consolidadas de templates oficiais + personalizados
     const { templates: userTemplates, templatesCount: userTemplatesCount, totalUsage: userTemplatesUsage } = useMyTemplates();
-    const registryStats = TemplateRegistry.getStats();
-    const combinedTemplatesCount = registryStats.totalTemplates + userTemplatesCount;
-    const combinedUsage = registryStats.totalUsage + userTemplatesUsage;
+    const registryTemplates = Object.values(UNIFIED_TEMPLATE_REGISTRY);
+    const combinedTemplatesCount = registryTemplates.length + userTemplatesCount;
+    const combinedUsage = registryTemplates.reduce((acc, t) => acc + (t.usageCount || 0), 0) + userTemplatesUsage;
     const funnelId = location.match(/\/funnels\/([^\/]+)\/edit/)?.[1];
 
     return (

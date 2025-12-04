@@ -13,7 +13,7 @@
 
 import React, { createContext, useContext, useCallback, useEffect, useMemo, useState, ReactNode } from 'react';
 import { useUnifiedEditor, type UnifiedEditorReturn } from '../../hooks/core/useUnifiedEditor';
-import { TemplateRegistry, type UnifiedTemplate } from '@/config/unifiedTemplatesRegistry';
+import { UNIFIED_TEMPLATE_REGISTRY, type UnifiedTemplate } from '@/config/unifiedTemplatesRegistry';
 import { FunnelContext } from './FunnelContext';
 import { useToast } from '../../components/ui/use-toast';
 import { appLogger } from '@/lib/utils/appLogger';
@@ -175,7 +175,7 @@ export const UnifiedContextProvider: React.FC<UnifiedContextProviderProps> = ({
                 appLogger.info('🔄 UnifiedContext: Loading template:', { data: [templateId] });
             }
 
-            const template = TemplateRegistry.getById(templateId);
+            const template = UNIFIED_TEMPLATE_REGISTRY[templateId];
             if (!template) {
                 throw new Error(`Template não encontrado: ${templateId}`);
             }
@@ -205,7 +205,7 @@ export const UnifiedContextProvider: React.FC<UnifiedContextProviderProps> = ({
             }
 
             // Criar funil simples baseado no template
-            const template = TemplateRegistry.getById(templateId);
+            const template = UNIFIED_TEMPLATE_REGISTRY[templateId];
             if (!template) {
                 throw new Error(`Template não encontrado: ${templateId}`);
             }
@@ -464,7 +464,7 @@ export const UnifiedContextProvider: React.FC<UnifiedContextProviderProps> = ({
     useEffect(() => {
         const loadAvailableTemplates = async () => {
             try {
-                const availableTemplates = TemplateRegistry.getAll();
+                const availableTemplates = Object.values(UNIFIED_TEMPLATE_REGISTRY);
                 setTemplates(prev => ({ ...prev, available: availableTemplates }));
             } catch (error) {
                 appLogger.error('Failed to load available templates:', { data: [error] });
