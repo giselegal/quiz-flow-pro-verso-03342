@@ -1,39 +1,38 @@
 /**
- * 📥 COMPONENTE: Importar Template JSON v3.0
+ * 📥 COMPONENTE: Importar Template JSON v4.0
  * 
- * Permite fazer upload de arquivos JSON v3.0 e importá-los para o editor
- * Converte automaticamente sections → blocks
+ * Permite upload de arquivos JSON e importação direta no editor
+ * Valida com Zod e carrega no quizStore
  */
 
-import { useState } from 'react';
-import { appLogger } from '@/lib/utils/logger';
+import { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Upload, FileJson, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
-import { templateService } from '@/services';
-import type { JSONv3Template } from '@/lib/adapters/BlocksToJSONv3Adapter';
-
-// TODO: quizEditorBridge was deprecated and archived - this component needs refactoring
-const quizEditorBridge = {
-    importFromJSONv3: async (file: File) => {
-        appLogger.warn('quizEditorBridge.importFromJSONv3 is deprecated');
-        return { success: false, error: 'Deprecated function' };
-    },
-    importAllJSONv3Templates: async (templates: Record<string, any>, name: string) => {
-        appLogger.warn('quizEditorBridge.importAllJSONv3Templates is deprecated');
-        return { id: 'deprecated', name };
-    }
-};
+import { useQuizStore } from './ModernQuizEditor/store/quizStore';
+import { QuizSchemaZ, getSchemaErrors, type QuizSchema } from '@/schemas/quiz-schema.zod';
+import { useToast } from '@/hooks/use-toast';
 
 interface ImportTemplateProps {
-    onImportSuccess?: (draftId: string) => void;
+    onImportSuccess?: (quiz: QuizSchema) => void;
     onImportError?: (error: Error) => void;
+    compact?: boolean;
 }
 
-export function ImportTemplateButton({ onImportSuccess, onImportError }: ImportTemplateProps) {
+export function ImportTemplateButton({ 
+    onImportSuccess, 
+    onImportError,
+    compact = false 
+}: ImportTemplateProps) {
     const [isImporting, setIsImporting] = useState(false);
     const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
     const [message, setMessage] = useState('');
+    const [validationErrors, setValidationErrors] = useState<string[]>([]);
+    const fileInputRef = useRef<HTMLInputElement>(null);
+    const { toast } = useToast();
+
+    // Acesso direto ao store
+    const loadQuiz = useQuizStore((state) => state.loadQuiz);
 
     const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const files = event.target.files;
@@ -42,87 +41,141 @@ export function ImportTemplateButton({ onImportSuccess, onImportError }: ImportT
         setIsImporting(true);
         setStatus('idle');
         setMessage('');
+        setValidationErrors([]);
 
         try {
-            const templates: Record<string, JSONv3Template> = {};
-
-            // Ler todos os arquivos
-            for (let i = 0; i < files.length; i++) {
-                const file = files[i];
-                const content = await file.text();
-                const json = JSON.parse(content) as JSONv3Template;
-
-                if (!json.templateVersion || !['3.0', '3.1', '3.2'].includes(json.templateVersion)) {
-                    throw new Error(`Arquivo ${file.name} não é um template JSON v3.x válido (versão: ${json.templateVersion || 'não especificada'})`);
-                }
-
-                templates[json.metadata.id] = json;
+            const file = files[0];
+            const content = await file.text();
+            
+            let json: unknown;
+            try {
+                json = JSON.parse(content);
+            } catch {
+                throw new Error(`Arquivo "${file.name}" não é um JSON válido`);
             }
 
-            appLogger.debug(`📥 Importando ${Object.keys(templates).length} template(s)...`);
+            // Validar com Zod
+            const validationResult = QuizSchemaZ.safeParse(json);
 
-            // Importar para o editor
-            const funnel = await quizEditorBridge.importAllJSONv3Templates(
-                templates,
-                `Imported from ${files.length} file(s)`,
-            );
+            if (!validationResult.success) {
+                const errors = getSchemaErrors(json);
+                setValidationErrors(errors);
+                
+                // Se tem erros críticos, não importar
+                if (errors.some(e => e.includes('obrigatório') || e.includes('required'))) {
+                    throw new Error(`Arquivo não é um quiz v4.0 válido:\n${errors.slice(0, 3).join('\n')}`);
+                }
+                
+                // Erros não críticos - avisar mas importar
+                toast({
+                    title: 'Quiz importado com avisos',
+                    description: `${errors.length} campo(s) com problemas de validação.`,
+                    variant: 'destructive',
+                });
+            }
+
+            // Carregar no store
+            const quizData = validationResult.success 
+                ? validationResult.data 
+                : json as QuizSchema;
+            
+            loadQuiz(quizData);
 
             setStatus('success');
-            setMessage(`✅ ${Object.keys(templates).length} template(s) importado(s) com sucesso!`);
+            setMessage(`✅ "${quizData.metadata?.name || file.name}" importado com sucesso!`);
+
+            toast({
+                title: 'Quiz importado',
+                description: `${quizData.steps?.length || 0} steps carregados.`,
+            });
 
             if (onImportSuccess) {
-                onImportSuccess(funnel.id);
+                onImportSuccess(quizData);
             }
 
-            // Redirecionar para editor após 2 segundos
+            // Reset status após 3 segundos
             setTimeout(() => {
-                window.location.href = `/editor?funnel=${funnel.id}`;
-            }, 2000);
+                setStatus('idle');
+                setMessage('');
+                setValidationErrors([]);
+            }, 3000);
 
         } catch (error) {
-            appLogger.error('❌ Erro ao importar templates:', error);
+            console.error('❌ Erro ao importar:', error);
             setStatus('error');
             setMessage(error instanceof Error ? error.message : 'Erro desconhecido ao importar');
+
+            toast({
+                title: 'Erro ao importar',
+                description: error instanceof Error ? error.message : 'Erro desconhecido',
+                variant: 'destructive',
+            });
 
             if (onImportError && error instanceof Error) {
                 onImportError(error);
             }
         } finally {
             setIsImporting(false);
+            // Reset input para permitir reimportar mesmo arquivo
+            if (fileInputRef.current) {
+                fileInputRef.current.value = '';
+            }
         }
     };
+
+    // Versão compacta para toolbar
+    if (compact) {
+        return (
+            <>
+                <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={isImporting}
+                    className="gap-2"
+                >
+                    <Upload className="h-4 w-4" />
+                    {isImporting ? 'Importando...' : 'Importar'}
+                </Button>
+                <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept=".json"
+                    onChange={handleFileUpload}
+                    className="hidden"
+                />
+            </>
+        );
+    }
 
     return (
         <Card className="p-6">
             <div className="space-y-4">
                 <div className="flex items-center gap-2">
-                    <FileJson className="h-5 w-5 text-blue-500" />
-                    <h3 className="text-lg font-semibold">Importar Template JSON v3.0</h3>
+                    <FileJson className="h-5 w-5 text-primary" />
+                    <h3 className="text-lg font-semibold">Importar Quiz JSON</h3>
                 </div>
 
-                <p className="text-sm text-gray-600">
-                    Faça upload de um ou mais arquivos JSON v3.0 para importar templates existentes para o editor.
+                <p className="text-sm text-muted-foreground">
+                    Faça upload de um arquivo JSON v4.0 para carregar no editor.
                 </p>
 
                 <div className="flex flex-col gap-3">
-                    <label htmlFor="file-upload" className="cursor-pointer">
-                        <Button
-                            type="button"
-                            variant="outline"
-                            className="w-full"
-                            disabled={isImporting}
-                            onClick={() => document.getElementById('file-upload')?.click()}
-                        >
-                            <Upload className="mr-2 h-4 w-4" />
-                            {isImporting ? 'Importando...' : 'Selecionar Arquivo(s) JSON'}
-                        </Button>
-                    </label>
+                    <Button
+                        type="button"
+                        variant="outline"
+                        className="w-full"
+                        disabled={isImporting}
+                        onClick={() => fileInputRef.current?.click()}
+                    >
+                        <Upload className="mr-2 h-4 w-4" />
+                        {isImporting ? 'Importando...' : 'Selecionar Arquivo JSON'}
+                    </Button>
 
                     <input
-                        id="file-upload"
+                        ref={fileInputRef}
                         type="file"
                         accept=".json"
-                        multiple
                         onChange={handleFileUpload}
                         className="hidden"
                     />
@@ -130,29 +183,42 @@ export function ImportTemplateButton({ onImportSuccess, onImportError }: ImportT
 
                 {status !== 'idle' && (
                     <div
-                        className={`flex items-start gap-2 p-3 rounded-lg ${status === 'success'
-                            ? 'bg-green-50 text-green-800 border border-green-200'
-                            : 'bg-red-50 text-red-800 border border-red-200'
-                            }`}
+                        className={`flex items-start gap-2 p-3 rounded-lg ${
+                            status === 'success'
+                                ? 'bg-green-50 text-green-800 border border-green-200'
+                                : 'bg-red-50 text-red-800 border border-red-200'
+                        }`}
                     >
                         {status === 'success' ? (
                             <CheckCircle className="h-5 w-5 flex-shrink-0 mt-0.5" />
                         ) : (
                             <XCircle className="h-5 w-5 flex-shrink-0 mt-0.5" />
                         )}
-                        <p className="text-sm">{message}</p>
+                        <div className="text-sm">
+                            <p>{message}</p>
+                            {validationErrors.length > 0 && status === 'error' && (
+                                <ul className="mt-2 list-disc list-inside text-xs opacity-80">
+                                    {validationErrors.slice(0, 5).map((err, i) => (
+                                        <li key={i}>{err}</li>
+                                    ))}
+                                    {validationErrors.length > 5 && (
+                                        <li>...e mais {validationErrors.length - 5} erro(s)</li>
+                                    )}
+                                </ul>
+                            )}
+                        </div>
                     </div>
                 )}
 
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                <div className="bg-muted/50 border border-border rounded-lg p-3">
                     <div className="flex items-start gap-2">
-                        <AlertCircle className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" />
-                        <div className="text-sm text-blue-800">
+                        <AlertCircle className="h-5 w-5 text-muted-foreground flex-shrink-0 mt-0.5" />
+                        <div className="text-sm text-muted-foreground">
                             <p className="font-medium mb-1">Formato esperado:</p>
                             <ul className="list-disc list-inside space-y-1 text-xs">
-                                <li>Arquivo .json com templateVersion: "3.0", "3.1" ou "3.2"</li>
-                                <li>Deve conter: metadata, sections, navigation</li>
-                                <li>Múltiplos arquivos serão mesclados em um funil</li>
+                                <li>JSON v4.0 com version e schemaVersion</li>
+                                <li>Deve conter: metadata, theme, settings, steps</li>
+                                <li>Validação automática com schema Zod</li>
                             </ul>
                         </div>
                     </div>

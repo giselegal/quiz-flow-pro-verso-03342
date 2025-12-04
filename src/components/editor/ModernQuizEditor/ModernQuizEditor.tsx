@@ -21,6 +21,8 @@ import { PerformanceDebugger } from './components/PerformanceDebugger';
 import { AnalyticsSidebar } from './components/AnalyticsSidebar';
 import { DevTools } from './components/DevTools';
 import { EditorModeToggle } from './components/EditorModeToggle';
+import { ExportTemplateButton } from '../ExportTemplateButton';
+import { ImportTemplateButton } from '../ImportTemplateButton';
 import { usePerformanceMonitor, useMemoryLeakDetector } from '@/hooks/usePerformanceMonitor';
 import { Activity } from 'lucide-react';
 import type { QuizSchema } from '@/schemas/quiz-schema.zod';
@@ -236,15 +238,23 @@ export function ModernQuizEditor({
                 </div>
 
                 <div className="flex items-center gap-2">
-                    {/* 🆕 PHASE 2: Analytics toggle button */}
+                    {/* 🆕 PHASE 2: Import/Export buttons */}
+                    <ImportTemplateButton compact />
+                    <ExportTemplateButton 
+                        buttonText="Exportar" 
+                        variant="outline" 
+                        className="h-9 text-sm"
+                    />
+
+                    {/* Analytics toggle button */}
                     <button
                         onClick={() => setShowAnalytics(!showAnalytics)}
                         className={`
                             px-3 py-2 rounded-lg flex items-center gap-2
                             transition-colors text-sm font-medium
                             ${showAnalytics
-                                ? 'bg-blue-100 text-blue-700 hover:bg-blue-200'
-                                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}
+                                ? 'bg-primary/10 text-primary hover:bg-primary/20'
+                                : 'bg-muted text-muted-foreground hover:bg-muted/80'}
                         `}
                         title="Analytics em Tempo Real"
                     >
@@ -257,12 +267,12 @@ export function ModernQuizEditor({
                         onClick={handleSave}
                         disabled={!isDirty || persistence.status === 'saving'}
                         className="
-              px-4 py-2 bg-blue-600 text-white rounded-lg
-              hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed
-              transition-colors text-sm font-medium
-            "
+                            px-4 py-2 bg-primary text-primary-foreground rounded-lg
+                            hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed
+                            transition-colors text-sm font-medium
+                        "
                     >
-                        💾 Salvar agora
+                        💾 Salvar
                     </button>
                 </div>
             </header>
