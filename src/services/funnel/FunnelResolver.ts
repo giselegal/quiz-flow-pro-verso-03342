@@ -54,7 +54,7 @@ export interface ResolvedFunnel {
   draftId?: string;
   
   /** Resolved strategy used */
-  strategy: 'draft' | 'template' | 'default';
+  strategy: 'draft' | 'template' | 'default' | 'blank';
 }
 
 /**
@@ -221,14 +221,14 @@ export function resolveFunnel(identifier: FunnelIdentifier): ResolvedFunnel {
     };
   }
 
-  // Strategy 5: Default fallback
-  appLogger.warn('🗺️ [FunnelResolver] No identifier provided, using default');
+  // Strategy 5: Blank canvas (no funnel specified)
+  appLogger.info('🗺️ [FunnelResolver] No identifier provided, returning blank canvas strategy');
   return {
-    funnelId: 'quiz21StepsComplete',
-    templatePath: DEFAULT_TEMPLATE_PATH,
-    templateVersion: 'v4.1-saas',
+    funnelId: '',
+    templatePath: '',
+    templateVersion: '',
     isDraft: false,
-    strategy: 'default',
+    strategy: 'blank',
   };
 }
 
@@ -259,11 +259,12 @@ export function normalizeFunnelId(
   // Priority: funnelId > templateParam > resourceId
   const id = funnelId || templateParam || resourceId;
   
+  // ✅ Se não há ID, retorna vazio para permitir canvas em branco
   if (!id) {
-    return 'quiz21StepsComplete'; // Default
+    return '';
   }
 
-  // Normalize known aliases
+  // Normalize known aliases (mantém aliases para templates específicos)
   const aliases: Record<string, string> = {
     'quiz21': 'quiz21StepsComplete',
     'default': 'quiz21StepsComplete',

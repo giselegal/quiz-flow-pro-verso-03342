@@ -268,13 +268,26 @@ export function ModernQuizEditor({
         );
     }
 
-    // Empty state
+    // Empty state - canvas em branco
     if (!quiz) {
         return (
-            <div className="h-screen w-full flex items-center justify-center bg-gray-50">
-                <div className="text-center">
-                    <div className="text-6xl mb-4">📋</div>
-                    <p className="text-gray-600">Nenhum quiz carregado</p>
+            <div className="h-screen w-full flex items-center justify-center bg-gradient-to-br from-background to-muted/50">
+                <div className="text-center max-w-lg">
+                    <div className="text-8xl mb-6">🎨</div>
+                    <h2 className="text-2xl font-bold text-foreground mb-3">
+                        Canvas Vazio
+                    </h2>
+                    <p className="text-muted-foreground mb-6">
+                        Arraste blocos da biblioteca para começar a construir seu funil.
+                    </p>
+                    <div className="flex gap-3 justify-center">
+                        <button
+                            onClick={() => window.location.href = '/editor?funnel=quiz21StepsComplete'}
+                            className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
+                        >
+                            📂 Usar Template Base
+                        </button>
+                    </div>
                 </div>
             </div>
         );
