@@ -1,77 +1,96 @@
-// @ts-nocheck
 /**
- * 📤 COMPONENTE: Exportar Funil para JSON v3.0
+ * 📤 COMPONENTE: Exportar Quiz para JSON v4.0
  * 
- * Permite exportar funil editado de volta para formato JSON v3.0
- * Gera arquivo .json para download
+ * Exporta o quiz atual diretamente do store para formato JSON v4.0
+ * Gera arquivo .json para download com validação Zod
  */
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Download, FileJson, CheckCircle, XCircle } from 'lucide-react';
-import { templateService } from '@/services';
-import { appLogger } from '@/lib/utils/appLogger';
-
-// TODO: quizEditorBridge was deprecated and archived
-// This component needs refactoring to use templateService directly
-const quizEditorBridge = {
-    exportToJSONv3: async (funnelId: string) => {
-        appLogger.warn('quizEditorBridge.exportToJSONv3 is deprecated');
-        // Return empty object as fallback
-        return {};
-    }
-};
+import { useQuizStore } from './ModernQuizEditor/store/quizStore';
+import { QuizSchemaZ, getSchemaErrors } from '@/schemas/quiz-schema.zod';
+import { useToast } from '@/hooks/use-toast';
 
 interface ExportTemplateButtonProps {
-    funnelId: string;
     buttonText?: string;
     variant?: 'default' | 'outline' | 'ghost';
+    className?: string;
 }
 
 export function ExportTemplateButton({
-    funnelId,
-    buttonText = 'Exportar para JSON v3.0',
+    buttonText = 'Exportar JSON',
     variant = 'outline',
+    className = '',
 }: ExportTemplateButtonProps) {
     const [isExporting, setIsExporting] = useState(false);
     const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
     const [message, setMessage] = useState('');
+    const { toast } = useToast();
+
+    // Acesso direto ao store - sem bridges deprecados
+    const quiz = useQuizStore((state) => state.quiz);
 
     const handleExport = async () => {
+        if (!quiz) {
+            toast({
+                title: 'Nenhum quiz carregado',
+                description: 'Carregue um quiz antes de exportar.',
+                variant: 'destructive',
+            });
+            return;
+        }
+
         setIsExporting(true);
         setStatus('idle');
         setMessage('');
 
         try {
-            appLogger.debug('📤 Exportando funil:', funnelId);
-
-            // Exportar via QuizEditorBridge
-            const templates = await quizEditorBridge.exportToJSONv3(funnelId);
-
-            const stepCount = Object.keys(templates).length;
-            appLogger.debug(`✅ ${stepCount} steps exportados`);
-
-            // Criar arquivos para download
-            for (const [stepId, template] of Object.entries(templates)) {
-                const json = JSON.stringify(template, null, 2);
-                const blob = new Blob([json], { type: 'application/json' });
-                const url = URL.createObjectURL(blob);
-
-                // Criar link de download
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `${stepId}-v3.json`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-
-                // Delay pequeno entre downloads
-                await new Promise(resolve => setTimeout(resolve, 100));
+            // Validar com Zod antes de exportar
+            const validationResult = QuizSchemaZ.safeParse(quiz);
+            
+            if (!validationResult.success) {
+                const errors = getSchemaErrors(quiz);
+                console.warn('⚠️ Quiz tem erros de validação:', errors);
+                
+                // Exportar mesmo com erros, mas avisar usuário
+                toast({
+                    title: 'Atenção: Quiz com erros',
+                    description: `Exportando com ${errors.length} erro(s) de validação.`,
+                    variant: 'destructive',
+                });
             }
 
+            // Preparar JSON para exportação
+            const exportData = {
+                ...quiz,
+                exportedAt: new Date().toISOString(),
+                exportSource: 'lovable-editor-v4',
+            };
+
+            const json = JSON.stringify(exportData, null, 2);
+            const blob = new Blob([json], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+
+            // Gerar nome do arquivo baseado no quiz
+            const fileName = `${quiz.metadata?.id || 'quiz'}-v${quiz.version || '4.0.0'}.json`;
+
+            // Criar link de download
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
             setStatus('success');
-            setMessage(`✅ ${stepCount} arquivo(s) exportado(s) com sucesso!`);
+            setMessage(`✅ "${fileName}" exportado com sucesso!`);
+
+            toast({
+                title: 'Quiz exportado',
+                description: `Arquivo ${fileName} baixado.`,
+            });
 
             // Reset status após 3 segundos
             setTimeout(() => {
@@ -80,9 +99,15 @@ export function ExportTemplateButton({
             }, 3000);
 
         } catch (error) {
-            appLogger.error('❌ Erro ao exportar:', error);
+            console.error('❌ Erro ao exportar:', error);
             setStatus('error');
             setMessage(error instanceof Error ? error.message : 'Erro desconhecido ao exportar');
+
+            toast({
+                title: 'Erro ao exportar',
+                description: error instanceof Error ? error.message : 'Erro desconhecido',
+                variant: 'destructive',
+            });
 
             setTimeout(() => {
                 setStatus('idle');
@@ -98,8 +123,8 @@ export function ExportTemplateButton({
             <Button
                 variant={variant}
                 onClick={handleExport}
-                disabled={isExporting}
-                className="gap-2"
+                disabled={isExporting || !quiz}
+                className={`gap-2 ${className}`}
             >
                 {isExporting ? (
                     <>
@@ -116,10 +141,11 @@ export function ExportTemplateButton({
 
             {status !== 'idle' && (
                 <div
-                    className={`flex items-center gap-2 text-sm px-3 py-2 rounded-md ${status === 'success'
+                    className={`flex items-center gap-2 text-sm px-3 py-2 rounded-md ${
+                        status === 'success'
                             ? 'bg-green-50 text-green-700 border border-green-200'
                             : 'bg-red-50 text-red-700 border border-red-200'
-                        }`}
+                    }`}
                 >
                     {status === 'success' ? (
                         <CheckCircle className="h-4 w-4" />
