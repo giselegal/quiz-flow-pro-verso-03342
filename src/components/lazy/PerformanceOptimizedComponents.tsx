@@ -18,10 +18,10 @@ import { appLogger } from '@/lib/utils/appLogger';
 
 // @deprecated ModernUnifiedEditor não existe. Componente removido.
 
-// Migrado: usar SuperUnifiedProvider em vez do provider canônico deprecated
+// Migrado: usar SuperUnifiedProviderV4 (arquitetura minimal + Zustand)
 const LazyEditorProvider = lazy(() =>
-    import('@/contexts/providers/SuperUnifiedProviderV2').then(module => ({
-        default: module.SuperUnifiedProvider,
+    import('@/contexts/providers/SuperUnifiedProviderV4').then(module => ({
+        default: module.SuperUnifiedProviderV4,
     })),
 );
 
@@ -128,8 +128,8 @@ export const OptimizedMetricsPage = (props: any) => (
 export const preloadCriticalComponents = () => {
     // Preload dos componentes mais usados após 2s de idle
     const preloadTimer = setTimeout(() => {
-        // Migrado: usar SuperUnifiedProvider em vez do provider canônico deprecated
-        import('@/contexts/providers/SuperUnifiedProviderV2');
+        // Migrado: usar SuperUnifiedProviderV4 (arquitetura minimal + Zustand)
+        import('@/contexts/providers/SuperUnifiedProviderV4');
     }, 2000);
 
     return () => clearTimeout(preloadTimer);

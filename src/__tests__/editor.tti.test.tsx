@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import QuizModularEditor from '@/components/editor/quiz/QuizModularEditor'
-import { SuperUnifiedProvider } from '@/contexts/providers/SuperUnifiedProviderV2'
+import { SuperUnifiedProviderV4 as SuperUnifiedProvider } from '@/contexts/providers/SuperUnifiedProviderV4'
 
 vi.mock('@/services/canonical/TemplateService', () => {
   const steps = Array.from({ length: 21 }, (_, i) => ({ id: `step-${String(i + 1).padStart(2, '0')}`, order: i + 1, name: `Etapa ${i + 1}` }))
