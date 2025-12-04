@@ -39,8 +39,8 @@ import { loadDefaultSchemas, isSchemasLoaded } from '@/core/schema/loadDefaultSc
 import { PWANotifications } from './components/PWANotifications';
 // Remover LocalConfigProvider complexo - usando sistema JavaScript simples
 
-// 🚀 FASE 3: SuperUnifiedProvider V3 (optimized architecture)
-import { SuperUnifiedProviderV3 } from '@/contexts/providers/SuperUnifiedProviderV3';
+// 🚀 FASE 4: SuperUnifiedProvider V4 (minimal architecture with Zustand)
+import { SuperUnifiedProviderV4 } from '@/contexts/providers/SuperUnifiedProviderV4';
 import { appLogger } from '@/lib/utils/appLogger';
 import { setSupabaseCredentials } from '@/services/integrations/supabase/client';
 // EditorProvider legado removido - usar SuperUnifiedProvider que já inclui EditorStateProvider
@@ -136,7 +136,7 @@ function AppCore() {
             }
         } catch { }
 
-        appLogger.info('🚀 App initialized with SuperUnifiedProviderV3 (optimized)');
+        appLogger.info('🚀 App initialized with SuperUnifiedProviderV4 (minimal + Zustand)');
 
         try {
             const params = new URLSearchParams(window.location.search);
@@ -226,8 +226,8 @@ function AppCore() {
         <HelmetProvider>
             <SentryErrorBoundary showDialog={true}>
                 <GlobalErrorBoundary showResetButton={true}>
-                    {/* 🚀 SUPER UNIFIED PROVIDER V3 - Optimized architecture */}
-                    <SuperUnifiedProviderV3>
+                    {/* 🚀 SUPER UNIFIED PROVIDER V4 - Minimal architecture with Zustand */}
+                    <SuperUnifiedProviderV4>
                         {/* 🛡️ PHASE 2: Error Boundary para rotas principais */}
                         <ErrorBoundary
                             onError={(error, errorInfo) => {
@@ -641,7 +641,7 @@ function AppCore() {
                         {/* 🚀 FASE 3.5: PWA Notifications (offline/update) */}
                         <PWANotifications />
 
-                    </SuperUnifiedProviderV3>
+                    </SuperUnifiedProviderV4>
                 </GlobalErrorBoundary>
             </SentryErrorBoundary>
         </HelmetProvider>

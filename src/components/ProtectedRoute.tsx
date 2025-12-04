@@ -1,7 +1,7 @@
 import React from 'react';
 import { Redirect } from 'wouter';
 import { PageLoadingFallback } from '@/components/LoadingSpinner';
-import { useAuthStorage } from '@/contexts/consolidated/AuthStorageProvider';
+import { useAuthStorage } from '@/hooks/useAuth';
 
 interface ProtectedRouteProps {
     children: React.ReactNode;

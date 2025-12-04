@@ -10,7 +10,7 @@
  */
 
 import React, { useState, FormEvent, useEffect } from 'react';
-import { useAuthStorage } from '@/contexts/consolidated/AuthStorageProvider';
+import { useAuthStorage } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useLocation } from 'wouter';

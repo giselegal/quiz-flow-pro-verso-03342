@@ -42,8 +42,11 @@ export {
 // 🔧 INTERNO: Usado internamente por UnifiedAppProvider (exposto apenas para testes e extensão avançada)
 export { SuperUnifiedProvider } from './SuperUnifiedProviderV2';
 
-// ✅ FASE 3.1: Provider otimizado com memoização (RECOMENDADO)
+// ✅ FASE 3.1: Provider otimizado com memoização (LEGACY)
 export { SuperUnifiedProviderV3, default as SuperUnifiedProviderV3Default } from './SuperUnifiedProviderV3';
+
+// 🚀 FASE 4: Provider minimalista com Zustand (RECOMENDADO)
+export { SuperUnifiedProviderV4, default as SuperUnifiedProviderV4Default } from './SuperUnifiedProviderV4';
 
 // 🎥 FEATURE: Live preview via WebSocket (usado em editor avançado)
 export { default as LivePreviewProvider, useLivePreview } from './LivePreviewProvider';
