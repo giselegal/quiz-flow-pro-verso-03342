@@ -1,25 +1,30 @@
 import { appLogger } from '@/lib/utils/appLogger';
 /**
- * 🏗️ PROVIDERS INDEX - FASE 3 LIMPEZA
+ * 🏗️ PROVIDERS INDEX - FASE 4 CONSOLIDADA
  *
- * Exportações centralizadas dos providers APÓS remoção dos legados.
+ * Exportações centralizadas dos providers após limpeza completa.
  *
- * ✅ CANÔNICO ÚNICO: UnifiedAppProvider (use este!)
- * 🔧 INTERNOS: SuperUnifiedProvider (camadas base)
- * ❌ REMOVIDOS: ConsolidatedProvider, FunnelMasterProvider, OptimizedProviderStack
- *
- * MIGRAÇÃO:
- * - Substitua qualquer import antigo por: import { UnifiedAppProvider } from '@/providers/UnifiedAppProvider';
- * - Hooks antigos (useFunnels, useQuiz21Steps, etc) agora vivem em contextos unificados (useUnifiedCRUD / selectors específicos)
+ * ✅ CANÔNICO: SuperUnifiedProviderV4 (minimal + Zustand)
+ * ✅ ALIASES: UnifiedAppProvider (aponta para V4)
+ * ❌ REMOVIDOS: V2, V3, ConsolidatedProvider, FunnelMasterProvider
  */
 
-// ✅ PROVIDER CANÔNICO - ÚNICO QUE DEVE SER USADO EXTERNAMENTE
+// ✅ PROVIDER CANÔNICO - V4
 export {
   UnifiedAppProvider,
   default as UnifiedAppProviderDefault,
 } from './UnifiedAppProvider';
 
-// 🔧 INTERNO: SuperUnifiedProvider deve ser importado de @/contexts/providers/SuperUnifiedProviderV2
+// Hooks placeholder (use context-specific hooks instead)
+export const useUnifiedApp = () => {
+  console.warn('⚠️ useUnifiedApp is deprecated. Use context-specific hooks instead.');
+  return {};
+};
+
+export const useUnifiedAppSelector = () => {
+  console.warn('⚠️ useUnifiedAppSelector is deprecated. Use Zustand selectors instead.');
+  return {};
+};
 
 // 🎥 FEATURE: Live preview via WebSocket (usado em editor avançado)
 export { default as LivePreviewProvider, useLivePreview } from './LivePreviewProvider';
@@ -27,12 +32,11 @@ export { default as LivePreviewProvider, useLivePreview } from './LivePreviewPro
 // 🔧 INTERNOS: Runtime providers para editor (mantidos)
 export { EditorRuntimeProviders } from '@/contexts';
 
-// 🚨 FAIL-SAFE: Throw helper para detectar uso indevido de legados em runtime (opcional futuramente)
+// 🚨 FAIL-SAFE: Throw helper para detectar uso indevido de legados em runtime
 export const assertNoLegacyProvidersRuntime = () => {
   if (process.env.NODE_ENV !== 'production') {
     const legacyDetected = (globalThis as any).__LEGACY_PROVIDER_USED__;
     if (legacyDetected) {
-      // eslint-disable-next-line no-console
       appLogger.error('❌ Legacy provider foi utilizado após fase de limpeza:', { data: [legacyDetected] });
     }
   }

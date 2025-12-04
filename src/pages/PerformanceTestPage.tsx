@@ -8,7 +8,7 @@
  */
 
 import React, { useState } from 'react';
-import { SuperUnifiedProviderV3 } from '@/contexts/providers/SuperUnifiedProviderV3';
+import { SuperUnifiedProviderV4 } from '@/contexts/providers/SuperUnifiedProviderV4';
 import { RenderProfiler, RenderMetricsDashboard, useRenderCounter } from '@/lib/utils/RenderProfiler';
 
 // Componente filho que usa o editor context
@@ -119,8 +119,8 @@ const PerformanceTestPage: React.FC = () => {
             <div style={{ marginTop: '30px' }}>
                 <h2>🧪 Componentes de Teste</h2>
 
-                <RenderProfiler id="SuperUnifiedProviderV3-Test" logToConsole showOverlay>
-                    <SuperUnifiedProviderV3>
+                <RenderProfiler id="SuperUnifiedProviderV4-Test" logToConsole showOverlay>
+                    <SuperUnifiedProviderV4>
                         <RenderProfiler id="EditorConsumer-1" logToConsole>
                             <EditorConsumer />
                         </RenderProfiler>
@@ -130,11 +130,11 @@ const PerformanceTestPage: React.FC = () => {
                         </RenderProfiler>
 
                         <div style={{ padding: '20px', border: '2px solid #6c757d', margin: '10px', borderRadius: '5px' }}>
-                            <h3>ℹ️ Métricas Esperadas (Meta Fase 2)</h3>
+                            <h3>ℹ️ Métricas Esperadas (Meta Fase 4)</h3>
                             <ul>
                                 <li>
-                                    <strong>SuperUnifiedProviderV3:</strong> Máximo 3-5 renders iniciais
-                                    (mount + hydration)
+                                    <strong>SuperUnifiedProviderV4:</strong> Máximo 2-3 renders iniciais
+                                    (mount + Zustand sync)
                                 </li>
                                 <li>
                                     <strong>EditorConsumer:</strong> 1 render por atualização de estado local
@@ -154,11 +154,11 @@ const PerformanceTestPage: React.FC = () => {
                                 borderRadius: '5px',
                                 borderLeft: '4px solid #28a745',
                             }}>
-                                <strong>✅ Meta Fase 2:</strong> Redução de 50% nos re-renders em comparação
-                                com arquitetura anterior (5 níveis de providers)
+                                <strong>✅ Meta Fase 4:</strong> Redução de 75% nos re-renders com Zustand
+                                (arquitetura minimal)
                             </div>
                         </div>
-                    </SuperUnifiedProviderV3>
+                    </SuperUnifiedProviderV4>
                 </RenderProfiler>
             </div>
 

@@ -1,4 +1,4 @@
-import { SuperUnifiedProvider } from '@/contexts/providers/SuperUnifiedProviderV2';
+import { SuperUnifiedProviderV4 as SuperUnifiedProvider } from '@/contexts/providers/SuperUnifiedProviderV4';
 import { useEditorContext } from '@/core';
 import type { Block } from '@/types/editor';
 import { render, waitFor } from '@testing-library/react';
