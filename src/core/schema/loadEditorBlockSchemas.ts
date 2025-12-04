@@ -99,10 +99,13 @@ export function loadEditorBlockSchemas(): void {
   Object.entries(blockPropertySchemas).forEach(([type, schema]) => {
     appLogger.debug(`[EditorBlockSchemas] Processing blockPropertySchema: ${type}`);
     
+    // Type assertion for schema
+    const typedSchema = schema as { label: string; fields: Array<{ key: string; type: string; label: string; description?: string; defaultValue?: unknown; required?: boolean; options?: Array<{ label: string; value: string | number }> }> };
+    
     // Converter BlockSchema para BlockTypeSchema
     const properties: Record<string, any> = {};
     
-    schema.fields.forEach(field => {
+    typedSchema.fields.forEach(field => {
       properties[field.key] = {
         type: field.type === 'textarea' ? 'string' : 
               field.type === 'range' ? 'number' :
@@ -126,11 +129,11 @@ export function loadEditorBlockSchemas(): void {
     if (!blockTypes[type]) {
       blockTypes[type] = {
         type,
-        label: schema.label,
+        label: typedSchema.label,
         category: 'content', // default category
         properties,
       };
-      appLogger.info(`[EditorBlockSchemas] ✅ Registered ${type} from blockPropertySchemas (${schema.fields.length} properties)`);
+      appLogger.info(`[EditorBlockSchemas] ✅ Registered ${type} from blockPropertySchemas (${typedSchema.fields.length} properties)`);
     } else {
       appLogger.debug(`[EditorBlockSchemas] Skipped ${type} - already exists in JSON schemas`);
     }

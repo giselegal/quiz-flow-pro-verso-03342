@@ -68,11 +68,31 @@
 
 ---
 
-## Próximas Fases (Pendentes)
+## Fase 5: Dividir blockPropertySchemas.ts ✅ CONCLUÍDA
 
-### Fase 5: Dividir blockPropertySchemas.ts 📁
-- [ ] Arquivo atual: 116KB (2917 linhas)
-- [ ] Dividir em módulos por categoria de bloco
+### 5.1 Estrutura Modular Criada ✅
+Arquivo monolítico (116KB, 2917 linhas) dividido em 9 módulos:
+
+| Módulo | Descrição |
+|--------|-----------|
+| `types.ts` | Tipos e campos comuns |
+| `universal.ts` | Schemas universais |
+| `intro.ts` | Intro, headers, decorativos |
+| `content.ts` | Texto, imagem, mídia |
+| `question.ts` | Perguntas, opções, inputs |
+| `result.ts` | Resultados, scores |
+| `offer.ts` | Ofertas, CTAs, preços |
+| `layout.ts` | Layout, containers |
+| `social.ts` | Compartilhamento social |
+| `index.ts` | Barrel export |
+
+### 5.2 Compatibilidade Mantida ✅
+- `blockPropertySchemas.ts` original redireciona para módulos
+- Imports existentes continuam funcionando
+
+---
+
+## Próximas Fases (Pendentes)
 
 ### Fase 6: Segurança 🔒
 - [ ] Habilitar Leaked Password Protection no Supabase
