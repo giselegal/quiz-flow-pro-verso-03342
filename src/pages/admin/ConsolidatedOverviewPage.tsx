@@ -160,35 +160,6 @@ const ConsolidatedOverviewPage: React.FC = () => {
                     <p className="text-blue-700">Carregando dados...</p>
                 </div>
             </div>
-
-            {/* Status das Integrações */}
-            {health && (
-                <div className="space-y-4">
-                    <h2 className="text-xl font-semibold text-blue-700">Status das Integrações</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        {Object.entries(health).map(([key, result]) => (
-                            <Card key={key}>
-                                <CardHeader className="pb-2">
-                                    <CardTitle className="text-sm font-medium">{key}</CardTitle>
-                                </CardHeader>
-                                <CardContent>
-                                    <div className="flex items-center justify-between">
-                                        <Badge className={result.ok ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}>
-                                            {result.ok ? 'OK' : 'Erro'}
-                                        </Badge>
-                                        {result.latencyMs !== undefined && (
-                                            <span className="text-xs text-muted-foreground">{result.latencyMs}ms</span>
-                                        )}
-                                    </div>
-                                    {result.message && (
-                                        <p className="text-xs mt-2 text-muted-foreground">{result.message}</p>
-                                    )}
-                                </CardContent>
-                            </Card>
-                        ))}
-                    </div>
-                </div>
-            )}
         );
     }
 
@@ -608,6 +579,35 @@ const ConsolidatedOverviewPage: React.FC = () => {
                     </Card>
                 </div>
             </div>
+
+            {/* Status das Integrações */}
+            {health && (
+                <div className="space-y-4">
+                    <h2 className="text-xl font-semibold text-blue-700">Status das Integrações</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        {Object.entries(health).map(([key, result]) => (
+                            <Card key={key}>
+                                <CardHeader className="pb-2">
+                                    <CardTitle className="text-sm font-medium">{key}</CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="flex items-center justify-between">
+                                        <Badge className={result.ok ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}>
+                                            {result.ok ? 'OK' : 'Erro'}
+                                        </Badge>
+                                        {result.latencyMs !== undefined && (
+                                            <span className="text-xs text-muted-foreground">{result.latencyMs}ms</span>
+                                        )}
+                                    </div>
+                                    {result.message && (
+                                        <p className="text-xs mt-2 text-muted-foreground">{result.message}</p>
+                                    )}
+                                </CardContent>
+                            </Card>
+                        ))}
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
