@@ -1,9 +1,12 @@
 /**
- * 📐 Editor Layout - Layout de 4 colunas ou JSON Editor
+ * 📐 Editor Layout - Layout de 4 colunas, Split Preview ou JSON Editor
  * 
  * Estrutura Visual:
  * [StepPanel | BlockLibrary | Canvas | PropertiesPanel]
  *    200px       250px        flex-1      300px
+ * 
+ * Estrutura Split Preview:
+ * [StepPanel | BlockLibrary | Canvas <-> Preview | PropertiesPanel]
  * 
  * Estrutura JSON:
  * [Full-width Monaco Editor]
@@ -20,13 +23,15 @@ import { PropertiesPanel } from './PropertiesPanel';
 import { useDndHandlers } from '../hooks/useDndHandlers';
 import { useEditorStore } from '../store/editorStore';
 
-// Lazy load JSON editor (Monaco is heavy)
+// Lazy load heavy components
 const JsonCodeEditor = lazy(() => 
   import('../components/JsonCodeEditor').then(m => ({ default: m.JsonCodeEditor }))
 );
+const SplitPreviewLayout = lazy(() => import('./SplitPreviewLayout'));
 
 export const EditorLayout = memo(() => {
     const editorMode = useEditorStore((s) => s.editorMode);
+    const splitPreviewEnabled = useEditorStore((s) => s.splitPreviewEnabled);
 
     // ✅ AUDIT: Memoize sensor configuration to prevent recreation
     const sensors = useSensors(
@@ -52,6 +57,22 @@ export const EditorLayout = memo(() => {
                 </div>
             }>
                 <JsonCodeEditor />
+            </Suspense>
+        );
+    }
+
+    // Split Preview Mode
+    if (splitPreviewEnabled) {
+        return (
+            <Suspense fallback={
+                <div className="h-full w-full flex items-center justify-center bg-muted">
+                    <div className="text-center">
+                        <div className="animate-spin text-4xl mb-2">⏳</div>
+                        <p className="text-sm text-muted-foreground">Carregando split preview...</p>
+                    </div>
+                </div>
+            }>
+                <SplitPreviewLayout />
             </Suspense>
         );
     }

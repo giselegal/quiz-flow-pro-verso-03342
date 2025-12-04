@@ -28,7 +28,7 @@ import { ExportTemplateButton } from '../ExportTemplateButton';
 import { ImportTemplateButton } from '../ImportTemplateButton';
 import { usePerformanceMonitor, useMemoryLeakDetector } from '@/hooks/usePerformanceMonitor';
 import { useAuthStore } from '@/contexts/store/authStore';
-import { Activity } from 'lucide-react';
+import { Activity, PanelLeftClose, PanelLeft } from 'lucide-react';
 import type { QuizSchema } from '@/schemas/quiz-schema.zod';
 import { normalizeQuizFormat } from './utils/quizAdapter';
 import { validateTemplateFormat, formatValidationReport } from './utils/templateValidator';
@@ -70,6 +70,8 @@ export function ModernQuizEditor({
 
     const { loadQuiz, quiz, isLoading, error, isDirty } = useQuizStore();
     const selectedStepId = useEditorStore((s) => s.selectedStepId);
+    const splitPreviewEnabled = useEditorStore((s) => s.splitPreviewEnabled);
+    const toggleSplitPreview = useEditorStore((s) => s.toggleSplitPreview);
     
     // 🆕 PHASE 3: Get current user for collaboration
     const { user } = useAuthStore();
@@ -289,6 +291,26 @@ export function ModernQuizEditor({
                         variant="outline" 
                         className="h-9 text-sm"
                     />
+
+                    {/* 🆕 PHASE 4: Split Preview toggle */}
+                    <button
+                        onClick={toggleSplitPreview}
+                        className={`
+                            px-3 py-2 rounded-lg flex items-center gap-2
+                            transition-colors text-sm font-medium
+                            ${splitPreviewEnabled
+                                ? 'bg-primary/10 text-primary hover:bg-primary/20'
+                                : 'bg-muted text-muted-foreground hover:bg-muted/80'}
+                        `}
+                        title="Split Preview"
+                    >
+                        {splitPreviewEnabled ? (
+                            <PanelLeftClose className="w-4 h-4" />
+                        ) : (
+                            <PanelLeft className="w-4 h-4" />
+                        )}
+                        Preview
+                    </button>
 
                     {/* Analytics toggle button */}
                     <button
