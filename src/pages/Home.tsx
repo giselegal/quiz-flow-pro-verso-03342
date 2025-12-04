@@ -14,8 +14,6 @@ import {
   CheckCircle,
   Star,
   ArrowRight,
-  Play,
-  X,
 } from 'lucide-react';
 import { useAuthStorage } from '@/contexts/consolidated/AuthStorageProvider';
 import { appLogger } from '@/lib/utils/appLogger';
