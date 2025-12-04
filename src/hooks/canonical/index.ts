@@ -6,11 +6,13 @@
  * 
  * @example
  * ```typescript
- * import { useEditorCanonical, useEditor } from '@/hooks/canonical';
+ * import { useEditorCanonical, useQuizCanonical } from '@/hooks/canonical';
  * ```
  */
 
-// Editor Hook Canônico
+// ============================================================================
+// EDITOR - Consolida 15+ hooks useEditor*
+// ============================================================================
 export {
   useEditorCanonical,
   useEditor,
@@ -20,6 +22,20 @@ export {
   type UseEditorCanonicalResult,
   type UseEditorCanonicalOptions,
 } from './useEditorCanonical';
+
+// ============================================================================
+// QUIZ - Consolida 25+ hooks useQuiz*
+// ============================================================================
+export {
+  useQuizCanonical,
+  type UseQuizCanonicalReturn,
+  type QuizAnswer,
+  type QuizScores,
+  type QuizResult,
+  type QuizUserProfile,
+  type QuizCanonicalConfig,
+  type QuizCanonicalState,
+} from './useQuizCanonical';
 
 // Re-export do useEditorCore original (para compatibilidade)
 export { useEditorCore, type EditorCoreState, type EditorCoreActions } from '../core/useEditorCore';

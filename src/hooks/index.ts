@@ -9,12 +9,22 @@
 // ✅ CANONICAL HOOKS (RECOMENDADO)
 // ============================================================================
 export {
+  // Editor
   useEditorCanonical,
   useEditor,
   useEditorOptional,
   type EditorCanonicalState,
   type EditorCanonicalActions,
   type UseEditorCanonicalResult,
+  // Quiz
+  useQuizCanonical,
+  type UseQuizCanonicalReturn,
+  type QuizAnswer,
+  type QuizScores,
+  type QuizResult,
+  type QuizUserProfile,
+  type QuizCanonicalConfig,
+  type QuizCanonicalState,
 } from './canonical';
 
 // ============================================================================
