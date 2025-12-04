@@ -1492,7 +1492,8 @@ export const completeBlockSchemas: Record<string, BlockSchema> = {
 // Preenche descrições padrão para campos complexos sem descrição explícita
 Object.values(completeBlockSchemas).forEach((schema) => {
   schema.fields = schema.fields.map((field) => {
-    if (!field.description) {
+    const typedField = field as { key: string; label: string; type: string; description?: string };
+    if (!typedField.description) {
       if (field.type === 'select') {
         return { ...field, description: 'Selecione uma opção adequada para este campo' };
       }
