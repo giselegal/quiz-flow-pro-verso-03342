@@ -1,21 +1,24 @@
 /**
- * 🚀 HYBRID CACHE STRATEGY - Memory + IndexedDB
+ * ⚠️ DEPRECATED: HYBRID CACHE STRATEGY
  * 
- * Estratégia híbrida de cache em 2 camadas:
- * - L1 (Memory): LRU cache rápido (UnifiedCacheService)
- * - L2 (Disk): IndexedDB persistente
+ * @deprecated Este cache foi parcialmente substituído por MultiLayerCacheStrategy.
+ * Use: import { multiLayerCache } from '@/services/core/MultiLayerCacheStrategy';
  * 
- * WORKFLOW:
- * 1. get() → busca L1 → se miss, busca L2 → se hit, promove para L1
- * 2. set() → grava L1 + L2 simultaneamente
- * 3. delete() → remove de ambos
+ * MultiLayerCacheStrategy oferece 3 camadas (L1 Memory, L2 SessionStorage, L3 IndexedDB)
+ * enquanto HybridCacheStrategy oferece apenas 2 (L1 Memory, L2 IndexedDB).
  * 
- * BENEFITS:
- * ✅ Latência ultra-baixa (L1 memory)
- * ✅ Persistência offline (L2 disk)
- * ✅ Auto-sync entre camadas
- * ✅ Fallback automático
- * ✅ TTL unificado
+ * MIGRAÇÃO:
+ * ```typescript
+ * // ❌ ANTES
+ * import { hybridCache } from '@/services/core/HybridCacheStrategy';
+ * await hybridCache.set('key', value, { memoryStore: 'templates' });
+ * 
+ * // ✅ DEPOIS
+ * import { multiLayerCache } from '@/services/core/MultiLayerCacheStrategy';
+ * await multiLayerCache.set('templates', 'key', value, 600000);
+ * ```
+ * 
+ * Mantido para compatibilidade. Use MultiLayerCacheStrategy para novos códigos.
  */
 
 import { UnifiedCacheService } from '../unified/UnifiedCacheService';

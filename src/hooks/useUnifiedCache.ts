@@ -133,18 +133,56 @@ export function useUnifiedCache(options?: UseUnifiedCacheOptions): UseUnifiedCac
 }
 
 /**
- * Hook para monitorar métricas de cache
+ * Hook para monitorar métricas de cache consolidado (L1+L2+L3)
  */
 export function useCacheMetrics(autoRefresh = true, refreshInterval = 3000) {
-  const { stats, hitRate } = useUnifiedCache({ autoRefresh, refreshInterval });
-  
+  const [metrics, setMetrics] = useState(() => {
+    try {
+      const { multiLayerCache } = require('@/services/core/MultiLayerCacheStrategy');
+      return multiLayerCache.getMetrics();
+    } catch {
+      return {
+        l1Hits: 0, l1Misses: 0, l2Hits: 0, l2Misses: 0,
+        l3Hits: 0, l3Misses: 0, promotions: 0, writes: 0,
+        l1HitRate: 0, l2HitRate: 0, l3HitRate: 0, totalHitRate: 0,
+        l2Items: 0, l2Size: 0,
+      };
+    }
+  });
+
+  useEffect(() => {
+    if (!autoRefresh) return;
+
+    const interval = setInterval(() => {
+      try {
+        const { multiLayerCache } = require('@/services/core/MultiLayerCacheStrategy');
+        setMetrics(multiLayerCache.getMetrics());
+      } catch {}
+    }, refreshInterval);
+
+    return () => clearInterval(interval);
+  }, [autoRefresh, refreshInterval]);
+
   return {
-    stats,
-    hitRate,
+    stats: {
+      totalEntries: metrics.l2Items || 0,
+      totalSize: metrics.l2Size || 0,
+      hitCount: metrics.l1Hits + metrics.l2Hits + metrics.l3Hits,
+      missCount: metrics.l1Misses,
+      hitRate: metrics.totalHitRate / 100,
+      evictionCount: 0,
+      byType: {} as Record<string, { count: number; size: number }>,
+    },
+    hitRate: metrics.totalHitRate / 100,
     performance: {
-      efficiency: hitRate * 100,
-      totalSize: stats.totalSize,
-      totalEntries: stats.totalEntries,
+      efficiency: metrics.totalHitRate,
+      totalSize: metrics.l2Size || 0,
+      totalEntries: metrics.l2Items || 0,
+      l1HitRate: metrics.l1HitRate,
+      l2HitRate: metrics.l2HitRate,
+      l3HitRate: metrics.l3HitRate,
+      promotions: metrics.promotions,
+      writes: metrics.writes,
     },
   };
 }
