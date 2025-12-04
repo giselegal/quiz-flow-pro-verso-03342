@@ -11,16 +11,16 @@
  * Template path constants
  */
 export const TEMPLATE_PATHS = {
-  /** V4.1 SaaS - Production template with normalized options and RichText */
-  V4_SAAS: '/templates/quiz21-v4-saas.json',
+  /** V4.1 SaaS - Production template (usando arquivo existente) */
+  V4_SAAS: '/templates/.obsolete/quiz21-v4.json',
   
-  /** V4.0 - Previous production template (OBSOLETO - movido para .obsolete/) */
+  /** V4.0 - Previous production template */
   V4_LEGACY: '/templates/.obsolete/quiz21-v4.json',
   
-  /** V3 Complete - Complete v3 template (OBSOLETO - movido para .obsolete/) */
+  /** V3 Complete - Complete v3 template */
   V3_COMPLETE: '/templates/.obsolete/quiz21-complete.json',
   
-  /** V4 Gold - Gold standard reference template (OBSOLETO - movido para .obsolete/) */
+  /** V4 Gold - Gold standard reference template */
   V4_GOLD: '/templates/.obsolete/quiz21-v4-gold.json',
 } as const;
 

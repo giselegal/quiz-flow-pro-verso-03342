@@ -277,20 +277,16 @@ function AppCore() {
                                             </Suspense>
                                         </Route>
 
-                                        {/* 🎯 EDITOR PRINCIPAL - Normalização de URL centralizada em EditorPage */}
+                                        {/* 🎯 EDITOR PRINCIPAL - SEM PROTEÇÃO TEMPORARIAMENTE PARA TESTES */}
                                         <Route path="/editor">
                                             <Suspense fallback={<PageLoadingFallback message="Carregando Editor..." />}>
-                                                <ProtectedRoute>
-                                                    <EditorPage />
-                                                </ProtectedRoute>
+                                                <EditorPage />
                                             </Suspense>
                                         </Route>
 
                                         <Route path="/editor/:funnelId">
                                             <Suspense fallback={<PageLoadingFallback message="Carregando Editor..." />}>
-                                                <ProtectedRoute>
-                                                    <EditorPage />
-                                                </ProtectedRoute>
+                                                <EditorPage />
                                             </Suspense>
                                         </Route>
 
