@@ -451,21 +451,30 @@ export class PersonalizationEngine {
     }
 
     private executeFormula(formula: string, context: any): any {
-        // Implementação segura de execução de fórmulas
-        // TODO: Usar biblioteca de sandboxing como vm2
+        // @security Using safe expression evaluator instead of new Function()
         try {
-            const func = new Function(...Object.keys(context), `return ${formula}`);
-            return func(...Object.values(context));
+            const { safeEvaluate, isExpressionSafe } = require('@/lib/utils/security/safeExpressionEvaluator');
+            
+            if (!isExpressionSafe(formula)) {
+                throw new Error('Unsafe formula blocked for security reasons');
+            }
+            
+            return safeEvaluate(formula, context);
         } catch (error) {
             throw new Error(`Formula execution failed: ${error instanceof Error ? error.message : String(error)}`);
         }
     }
 
     private safeEval(expression: string, context: any): boolean {
-        // Implementação segura de avaliação
+        // @security Using safe expression evaluator instead of new Function()
         try {
-            const func = new Function(...Object.keys(context), `return !!(${expression})`);
-            return func(...Object.values(context));
+            const { safeEvaluateCondition, isExpressionSafe } = require('@/lib/utils/security/safeExpressionEvaluator');
+            
+            if (!isExpressionSafe(expression)) {
+                return false;
+            }
+            
+            return safeEvaluateCondition(expression, context);
         } catch {
             return false;
         }

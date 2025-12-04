@@ -334,32 +334,21 @@ export class FlexibleResultCalculator {
   }
   
   /**
-   * Avalia uma fórmula (simplificado)
+   * Avalia uma fórmula usando avaliador seguro (sem eval)
+   * @security Replaced eval() with safe expression evaluator to prevent code injection
    */
   private evaluateFormula(formula: string, context: Record<string, any>): any {
-    // Implementação simplificada - em produção usar mathjs ou similar
     try {
-      // Substituir variáveis
-      let processedFormula = formula;
-      Object.entries(context).forEach(([key, value]) => {
-        processedFormula = processedFormula.replace(new RegExp(key, 'g'), String(value));
-      });
+      // Import safe evaluator dynamically to avoid circular dependencies
+      const { safeEvaluate, isExpressionSafe } = require('@/lib/utils/security/safeExpressionEvaluator');
       
-      // Avaliar operações simples
-      if (processedFormula.includes('sum(categories)')) {
-        const categories = context.categoryScores || {};
-        const sum = Object.values(categories).reduce((acc: number, cat: any) => acc + cat.score, 0);
-        processedFormula = processedFormula.replace('sum(categories)', String(sum));
+      // Validate expression safety first
+      if (!isExpressionSafe(formula)) {
+        appLogger.warn('Unsafe expression blocked:', { formula });
+        return 0;
       }
       
-      if (processedFormula.includes('count(categories)')) {
-        const categories = context.categoryScores || {};
-        const count = Object.keys(categories).length;
-        processedFormula = processedFormula.replace('count(categories)', String(count));
-      }
-      
-      // Avaliar expressão matemática simples
-      return eval(processedFormula);
+      return safeEvaluate(formula, context);
     } catch (error) {
       appLogger.error('Erro ao avaliar fórmula:', { data: [error] });
       return 0;

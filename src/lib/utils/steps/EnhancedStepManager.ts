@@ -877,17 +877,24 @@ export class EnhancedStepManager {
         sessionContext?: Record<string, any>,
     ): boolean {
         try {
-            // Criar contexto para avaliação
+            // @security Using safe expression evaluator instead of new Function()
+            const { safeEvaluateCondition, isExpressionSafe } = require('@/lib/utils/security/safeExpressionEvaluator');
+            
+            // Validate expression safety first
+            if (!isExpressionSafe(rule.condition)) {
+                this.logger.warn('Unsafe business rule condition blocked', { ruleId: rule.id });
+                return false;
+            }
+            
+            // Criar contexto para avaliação (flattened for safe evaluator)
             const evalContext = {
-                user: userContext.user,
-                session: userContext.session,
-                history: userContext.history,
-                custom: sessionContext || {},
+                ...userContext.user,
+                ...userContext.session,
+                ...userContext.history,
+                ...(sessionContext || {}),
             };
 
-            // Avaliar condição
-            const func = new Function(...Object.keys(evalContext), `return !!(${rule.condition})`);
-            return func(...Object.values(evalContext));
+            return safeEvaluateCondition(rule.condition, evalContext);
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : 'Unknown error';
             this.logger.warn('Business rule evaluation failed', { ruleId: rule.id, error: errorMessage });

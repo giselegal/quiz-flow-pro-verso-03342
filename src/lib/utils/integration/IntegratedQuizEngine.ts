@@ -645,10 +645,15 @@ export class IntegratedQuizEngine {
     }
 
     private calculateCustomFormula(formula: string, context: any): any {
-        // Implementação segura de cálculo personalizado
+        // @security Using safe expression evaluator instead of new Function()
         try {
-            const func = new Function(...Object.keys(context), `return ${formula}`);
-            return func(...Object.values(context));
+            const { safeEvaluate, isExpressionSafe } = require('@/lib/utils/security/safeExpressionEvaluator');
+            
+            if (!isExpressionSafe(formula)) {
+                throw new Error('Unsafe formula blocked for security reasons');
+            }
+            
+            return safeEvaluate(formula, context);
         } catch (error) {
             throw new Error(`Formula execution failed: ${(error as Error).message}`);
         }
