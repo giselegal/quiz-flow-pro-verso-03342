@@ -25,7 +25,7 @@ const AuthPage: React.FC = () => {
     const [mode, setMode] = useState<'login' | 'signup'>('login');
     const [showForgotPassword, setShowForgotPassword] = useState(false);
     const [, setLocation] = useLocation();
-    const { login, signUp, resetPassword, signInWithGoogle, isAuthenticated } = useAuthStorage();
+    const { login, signUp, resetPassword, signInWithGoogle, isAuthenticated, isLoading: authLoading } = useAuthStorage();
 
     // Auto-redirect quando autenticado
     useEffect(() => {
@@ -35,11 +35,6 @@ const AuthPage: React.FC = () => {
             setLocation(redirect);
         }
     }, [isAuthenticated, setLocation]);
-
-    const isSupabaseConfigured = Boolean(
-        import.meta.env.VITE_SUPABASE_URL && 
-        (import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || import.meta.env.VITE_SUPABASE_ANON_KEY)
-    );
 
     const handleForgotPassword = async () => {
         const normalizedEmail = email.trim().toLowerCase();
@@ -239,19 +234,13 @@ const AuthPage: React.FC = () => {
                     <Button
                         type="button"
                         onClick={handleGoogleLogin}
-                        disabled={loading || !isSupabaseConfigured}
+                        disabled={loading}
                         variant="outline"
                         className="w-full bg-white/5 border-white/20 hover:bg-white/10 text-white font-medium py-6 transition-all duration-300"
                     >
                         <Chrome className="h-5 w-5 mr-2" />
                         Continuar com Google
                     </Button>
-
-                    {!isSupabaseConfigured && (
-                        <p className="text-xs text-red-300 text-center mt-2">
-                            ⚠️ Google OAuth indisponível: configure SUPABASE_URL/KEY no .env ou use ?sbUrl=&sbKey=
-                        </p>
-                    )}
 
                     <div className="relative my-6">
                         <div className="absolute inset-0 flex items-center">
