@@ -25,10 +25,16 @@ export const EmptyCanvasInterface: React.FC<EmptyCanvasInterfaceProps> = ({
 
     const handleCreateFirstStep = async () => {
         try {
-            // Usa o método createFirstStep do editor canônico
-            if (editor.actions?.createFirstStep) {
-                await editor.actions.createFirstStep();
-            }
+            // Criar primeira etapa usando addBlock no step 1
+            const firstBlock = {
+                id: `block-${Date.now()}`,
+                type: 'headline' as const,
+                props: { text: 'Bem-vindo ao seu novo funil!' },
+                content: 'Bem-vindo ao seu novo funil!',
+                order: 0,
+            };
+            editor.actions.addBlock(1, firstBlock as any);
+            editor.actions.setCurrentStep(1);
             addNotification('✅ Primeira etapa criada! Comece editando seu funil.', 'success');
 
             // Callback opcional para componente pai

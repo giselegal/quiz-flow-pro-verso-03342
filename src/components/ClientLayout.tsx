@@ -41,30 +41,20 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           });
         }
       }}
-      fallback={(error, reset) => {
-        const isNetworkError = error?.message?.includes('Failed to fetch') ||
-          error?.message?.includes('ERR_NETWORK') ||
-          error?.message?.includes('dynamically imported module');
-
-        if (isNetworkError) {
-          return <NetworkErrorFallback error={error} resetErrorBoundary={reset} />;
-        }
-
-        return (
-          <div className="flex items-center justify-center min-h-screen bg-background">
-            <div className="text-center space-y-4 p-6 max-w-md">
-              <h2 className="text-xl font-bold text-destructive">Erro ao carregar aplicação</h2>
-              <p className="text-muted-foreground">{error?.message}</p>
-              <button
-                onClick={() => window.location.reload()}
-                className="px-4 py-2 bg-primary text-primary-foreground rounded-md"
-              >
-                Recarregar
-              </button>
-            </div>
+      fallback={
+        <div className="flex items-center justify-center min-h-screen bg-background">
+          <div className="text-center space-y-4 p-6 max-w-md">
+            <h2 className="text-xl font-bold text-destructive">Erro ao carregar aplicação</h2>
+            <p className="text-muted-foreground">Ocorreu um erro inesperado</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="px-4 py-2 bg-primary text-primary-foreground rounded-md"
+            >
+              Recarregar
+            </button>
           </div>
-        );
-      }}
+        </div>
+      }
     >
       <React.Suspense fallback={<div className="flex items-center justify-center min-h-screen">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>

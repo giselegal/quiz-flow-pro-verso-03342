@@ -503,56 +503,6 @@ export type Database = {
           },
         ]
       }
-      quiz_conversions: {
-        Row: {
-          affiliate_id: string | null
-          commission_rate: number | null
-          conversion_data: Json | null
-          conversion_type: string
-          conversion_value: number | null
-          converted_at: string | null
-          currency: string | null
-          id: string
-          product_id: string | null
-          product_name: string | null
-          session_id: string
-        }
-        Insert: {
-          affiliate_id?: string | null
-          commission_rate?: number | null
-          conversion_data?: Json | null
-          conversion_type: string
-          conversion_value?: number | null
-          converted_at?: string | null
-          currency?: string | null
-          id?: string
-          product_id?: string | null
-          product_name?: string | null
-          session_id: string
-        }
-        Update: {
-          affiliate_id?: string | null
-          commission_rate?: number | null
-          conversion_data?: Json | null
-          conversion_type?: string
-          conversion_value?: number | null
-          converted_at?: string | null
-          currency?: string | null
-          id?: string
-          product_id?: string | null
-          product_name?: string | null
-          session_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "quiz_conversions_session_id_fkey"
-            columns: ["session_id"]
-            isOneToOne: false
-            referencedRelation: "quiz_sessions"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       quiz_results: {
         Row: {
           created_at: string
@@ -766,68 +716,6 @@ export type Database = {
           utm_source?: string | null
         }
         Relationships: []
-      }
-      templates: {
-        Row: {
-          blocks: Json | null
-          category: string | null
-          created_at: string | null
-          description: string | null
-          funnel_id: string | null
-          id: string
-          last_validated_at: string | null
-          name: string
-          settings: Json | null
-          slug: string
-          status: string | null
-          steps: Json | null
-          updated_at: string | null
-          user_id: string | null
-          version: number | null
-        }
-        Insert: {
-          blocks?: Json | null
-          category?: string | null
-          created_at?: string | null
-          description?: string | null
-          funnel_id?: string | null
-          id?: string
-          last_validated_at?: string | null
-          name: string
-          settings?: Json | null
-          slug: string
-          status?: string | null
-          steps?: Json | null
-          updated_at?: string | null
-          user_id?: string | null
-          version?: number | null
-        }
-        Update: {
-          blocks?: Json | null
-          category?: string | null
-          created_at?: string | null
-          description?: string | null
-          funnel_id?: string | null
-          id?: string
-          last_validated_at?: string | null
-          name?: string
-          settings?: Json | null
-          slug?: string
-          status?: string | null
-          steps?: Json | null
-          updated_at?: string | null
-          user_id?: string | null
-          version?: number | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "templates_funnel_id_fkey"
-            columns: ["funnel_id"]
-            isOneToOne: false
-            referencedRelation: "funnels"
-            referencedColumns: ["id"]
-          },
-        ]
       }
       user_results: {
         Row: {
