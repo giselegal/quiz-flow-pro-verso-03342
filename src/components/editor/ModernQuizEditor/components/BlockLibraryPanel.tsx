@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Library, Search, Trash2, Plus, Tag, Globe, Lock } from 'lucide-react';
+import { Library, Search, Trash2, Plus, Tag, Globe, Lock, Copy, Pencil } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -16,17 +16,20 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { useBlockLibrary, LibraryBlock } from '../hooks/useBlockLibrary';
+import { EditBlockDialog } from './EditBlockDialog';
 import { cn } from '@/lib/utils';
+import { toast } from 'sonner';
 
 interface BlockLibraryPanelProps {
   onInsertBlock: (blockType: string, config: Record<string, any>) => void;
 }
 
 export function BlockLibraryPanel({ onInsertBlock }: BlockLibraryPanelProps) {
-  const { blocks, isLoading, deleteBlock, incrementUsage } = useBlockLibrary();
+  const { blocks, isLoading, deleteBlock, incrementUsage, saveBlock, refetch } = useBlockLibrary();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
+  const [editBlock, setEditBlock] = useState<LibraryBlock | null>(null);
 
   // Get unique tags
   const allTags = Array.from(new Set(blocks.flatMap(b => b.tags)));
@@ -48,11 +51,29 @@ export function BlockLibraryPanel({ onInsertBlock }: BlockLibraryPanelProps) {
     incrementUsage(block.id);
   };
 
+  const handleDuplicate = async (block: LibraryBlock) => {
+    const duplicated = await saveBlock({
+      name: `${block.name} (cópia)`,
+      description: block.description || undefined,
+      block_type: block.block_type,
+      block_config: block.block_config,
+      tags: block.tags,
+      is_public: false,
+    });
+    if (duplicated) {
+      toast.success('Bloco duplicado!');
+    }
+  };
+
   const handleDelete = async () => {
     if (deleteConfirm) {
       await deleteBlock(deleteConfirm);
       setDeleteConfirm(null);
     }
+  };
+
+  const handleBlockUpdated = (updated: LibraryBlock) => {
+    refetch();
   };
 
   if (isLoading) {
@@ -133,6 +154,8 @@ export function BlockLibraryPanel({ onInsertBlock }: BlockLibraryPanelProps) {
                 key={block.id}
                 block={block}
                 onInsert={() => handleInsert(block)}
+                onDuplicate={() => handleDuplicate(block)}
+                onEdit={() => setEditBlock(block)}
                 onDelete={() => setDeleteConfirm(block.id)}
               />
             ))
@@ -157,6 +180,14 @@ export function BlockLibraryPanel({ onInsertBlock }: BlockLibraryPanelProps) {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Edit Dialog */}
+      <EditBlockDialog
+        open={!!editBlock}
+        onOpenChange={(open) => !open && setEditBlock(null)}
+        block={editBlock}
+        onSaved={handleBlockUpdated}
+      />
     </div>
   );
 }
@@ -164,10 +195,12 @@ export function BlockLibraryPanel({ onInsertBlock }: BlockLibraryPanelProps) {
 interface LibraryBlockCardProps {
   block: LibraryBlock;
   onInsert: () => void;
+  onDuplicate: () => void;
+  onEdit: () => void;
   onDelete: () => void;
 }
 
-function LibraryBlockCard({ block, onInsert, onDelete }: LibraryBlockCardProps) {
+function LibraryBlockCard({ block, onInsert, onDuplicate, onEdit, onDelete }: LibraryBlockCardProps) {
   return (
     <div className={cn(
       "group relative p-3 rounded-lg border border-border bg-card",
@@ -228,6 +261,32 @@ function LibraryBlockCard({ block, onInsert, onDelete }: LibraryBlockCardProps) 
               </Button>
             </TooltipTrigger>
             <TooltipContent>Inserir no canvas</TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                size="icon"
+                variant="ghost"
+                className="h-7 w-7"
+                onClick={onDuplicate}
+              >
+                <Copy className="h-4 w-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Duplicar</TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                size="icon"
+                variant="ghost"
+                className="h-7 w-7"
+                onClick={onEdit}
+              >
+                <Pencil className="h-4 w-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Editar</TooltipContent>
           </Tooltip>
           <Tooltip>
             <TooltipTrigger asChild>
