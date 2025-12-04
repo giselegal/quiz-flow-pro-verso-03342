@@ -25,8 +25,8 @@
  * @phase FASE-2
  */
 
-// ✅ FASE 3: Usando providers consolidados
-import { useAuthStorage } from '@/contexts/consolidated/AuthStorageProvider';
+// ✅ FASE 4: Usando hook Zustand
+import { useAuthStorage } from '@/hooks/useAuth';
 import { useRealTime } from '@/contexts/consolidated/RealTimeProvider';
 import { useValidationResult } from '@/contexts/consolidated/ValidationResultProvider';
 import { useUX } from '@/contexts/consolidated/UXProvider';

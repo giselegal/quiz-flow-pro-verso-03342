@@ -1,15 +1,36 @@
 /**
  * 🎯 STORES INDEX - Central Exports
  * 
- * Exportações centralizadas de todas as stores Zustand
+ * Exportações centralizadas de todas as Zustand stores.
  * 
- * ARQUITETURA CONSOLIDADA:
+ * ARQUITETURA CONSOLIDADA (V4):
+ * - authStore: Autenticação e sessão
  * - editorStore: Estado do editor (blocos, steps, seleção)
  * - quizStore: Estado do quiz em execução (respostas, progresso)
+ * - funnelStore: Gerenciamento de funis
  * - uiStore: Estado de UI (painéis, modais, notificações)
+ * - themeStore: Dark/Light mode
  */
 
-// Editor Store
+// ============================================================================
+// AUTH STORE
+// ============================================================================
+
+export {
+  useAuthStore,
+  useUser,
+  useIsAuthenticated,
+  useAuthLoading,
+  useAuthError,
+  useAuthActions,
+} from './authStore';
+
+export type { User } from './authStore';
+
+// ============================================================================
+// EDITOR STORE
+// ============================================================================
+
 export {
   useEditorStore,
   useCurrentStep,
@@ -21,7 +42,10 @@ export {
 
 export type { EditorStep } from './editorStore';
 
-// Quiz Store
+// ============================================================================
+// QUIZ STORE
+// ============================================================================
+
 export {
   useQuizStore,
   useQuizProgress,
@@ -32,7 +56,25 @@ export {
 
 export type { QuizAnswer, QuizSession } from './quizStore';
 
-// UI Store
+// ============================================================================
+// FUNNEL STORE
+// ============================================================================
+
+export {
+  useFunnelStore,
+  useFunnelList,
+  useCurrentFunnel,
+  useFunnelLoading,
+  useFilteredFunnels,
+  useFunnelActions,
+} from './funnelStore';
+
+export type { Funnel, FunnelStep, FunnelConfig } from './funnelStore';
+
+// ============================================================================
+// UI STORE
+// ============================================================================
+
 export {
   useUIStore,
   usePanels,
@@ -43,7 +85,24 @@ export {
 
 export type { Notification, NotificationType, Modal } from './uiStore';
 
-// Re-export unified hooks
+// ============================================================================
+// THEME STORE
+// ============================================================================
+
+export {
+  useThemeStore,
+  useTheme,
+  useResolvedTheme,
+  useIsDarkMode,
+  useThemeActions,
+} from './themeStore';
+
+export type { Theme } from './themeStore';
+
+// ============================================================================
+// LEGACY COMPATIBILITY - Re-export unified hooks
+// ============================================================================
+
 export {
   useEditor,
   useQuiz,

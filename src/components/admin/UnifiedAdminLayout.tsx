@@ -34,7 +34,7 @@ import { useEditorContext } from '@/core';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { useUserName } from '@/hooks/useUserName';
 import { useLocation } from 'wouter';
-import { useAuthStorage } from '@/contexts/consolidated/AuthStorageProvider';
+import { useAuthStorage } from '@/hooks/useAuth';
 
 // Componentes lazy-loaded
 const ConsolidatedOverviewPage = React.lazy(() => import('@/pages/admin/ConsolidatedOverviewPage'));

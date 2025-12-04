@@ -15,7 +15,7 @@ import {
   Star,
   ArrowRight,
 } from 'lucide-react';
-import { useAuthStorage } from '@/contexts/consolidated/AuthStorageProvider';
+import { useAuthStorage } from '@/hooks/useAuth';
 import { appLogger } from '@/lib/utils/appLogger';
 import { Helmet } from 'react-helmet-async';
 import { Hero } from '@/components/marketing/Hero';
