@@ -258,7 +258,6 @@ export const Home: React.FC = () => {
           badge="QuizFlowPro"
           title="QuizFlowPro — quizzes que convertem"
           subtitle="Crie quizzes interativos para captar leads qualificados, segmentar seu público e aumentar conversões — rápido, intuitivo e integrado às suas ferramentas de marketing."
-          videoSrc="/videos/vsl-quizflowpro.mp4"
         >
           <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
             <MotionButton
