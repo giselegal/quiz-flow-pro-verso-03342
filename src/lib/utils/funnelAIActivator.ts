@@ -4,7 +4,7 @@
  * Script para ativar e configurar a IA do funil automaticamente
  */
 
-import { templateService } from '@/services/canonical/TemplateService';
+import { templateService } from '@/services';
 import { appLogger } from '@/lib/utils/appLogger';
 
 /**

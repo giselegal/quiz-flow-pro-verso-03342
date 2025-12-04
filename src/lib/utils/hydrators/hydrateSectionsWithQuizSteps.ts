@@ -1,4 +1,4 @@
-import { TemplateService } from '@/services/canonical/TemplateService';
+import { TemplateService } from '@/services';
 
 type Section = any;
 

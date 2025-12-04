@@ -7,7 +7,7 @@
 import { useEffect, useState, useCallback } from 'react';
 // REMOVIDO: HybridTemplateService – usar apenas templateService + IA canônica
 import { activateFunnelAI, checkFunnelAIStatus } from '../utils/funnelAIActivator';
-import { templateService } from '@/services/canonical/TemplateService';
+import { templateService } from '@/services';
 import { appLogger } from '@/lib/utils/appLogger';
 
 interface AIStatus {

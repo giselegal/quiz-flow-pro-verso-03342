@@ -8,7 +8,7 @@
  *    para reduzir bundle em ~75KB
  */
 
-import { templateService } from '@/services/canonical/TemplateService';
+import { templateService } from '@/services';
 import { appLogger } from '@/lib/utils/appLogger';
 
 // Flag para controlar se o serviço já foi inicializado

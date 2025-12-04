@@ -1,6 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
-import { canonicalFunnelService } from '@/services/funnel/CanonicalFunnelService';
-import type { CreateFunnelInput, UpdateFunnelInput, FunnelMetadata } from '@/types/funnel';
+import { funnelService as canonicalFunnelService, type CreateFunnelInput, type UpdateFunnelInput, type FunnelMetadata } from '@/services';
 
 type ActionState = { loading: boolean; error: string | null };
 

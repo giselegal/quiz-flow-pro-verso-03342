@@ -22,7 +22,7 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 
 // Imports dados
-import { templateService } from '@/services/canonical/TemplateService';
+import { templateService } from '@/services';
 import { styleConfigGisele } from '@/services/data/styles';
 
 // Imports ícones

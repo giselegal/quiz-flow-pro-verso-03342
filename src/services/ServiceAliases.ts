@@ -81,8 +81,8 @@ export const TemplateFunnelService = createDeprecatedAlias(
 // ============================================================================
 
 // 🎯 FASE 2: Use canonical TemplateService as the single source of truth
-import { templateService } from './canonical/TemplateService';
-export { templateService } from './canonical/TemplateService';
+import { templateService } from '@/services';
+export { templateService } from '@/services';
 
 /** @deprecated Use templateService from '@/services/canonical/TemplateService' */
 export const UnifiedTemplateService = createDeprecatedAlias(

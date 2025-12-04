@@ -22,7 +22,7 @@
  * - Normaliza ids de estilo via `resolveStyleId` para garantir acentos corretos quando possível.
  */
 
-import { templateService } from '@/services/canonical/TemplateService';
+import { templateService } from '@/services';
 import type { QuizStepV3 as QuizStep } from '@/types/quiz';
 import { styleMapping } from '@/services/data/styles';
 import { toUnaccentedStyleId } from '@/lib/utils/styleIds';

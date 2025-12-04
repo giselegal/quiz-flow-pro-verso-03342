@@ -16,7 +16,7 @@ import type { Block } from '@/types/editor';
 import ModularTransitionStep from '@/components/editor/quiz-estilo/ModularTransitionStep';
 import ModularResultStep from '@/components/editor/quiz-estilo/ModularResultStep';
 import { useUnifiedStepNavigation } from '@/hooks/useUnifiedStepNavigation';
-import { templateService } from '@/services/canonical/TemplateService';
+import { templateService } from '@/services';
 
 export interface UnifiedStepContentProps {
     step: EditableQuizStep;

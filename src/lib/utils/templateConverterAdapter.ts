@@ -13,7 +13,7 @@
 
 import { BlockComponent } from '@/components/editor/quiz/types';
 import { Block, BlockType } from '@/types/editor';
-import { templateService } from '@/services/canonical/TemplateService';
+import { templateService } from '@/services';
 import { appLogger } from '@/lib/utils/appLogger';
 
 /**

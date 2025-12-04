@@ -1,5 +1,5 @@
 import { supabase } from '@/services/integrations/supabase/client';
-import { templateService } from '@/services/canonical/TemplateService';
+import { templateService } from '@/services';
 import { appLogger } from '@/lib/utils/appLogger';
 
 /**

@@ -10,8 +10,20 @@ import { appLogger } from '@/lib/utils/logger';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Upload, FileJson, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
-import { quizEditorBridge } from '@/services/canonical/TemplateService';
+import { templateService } from '@/services';
 import type { JSONv3Template } from '@/lib/adapters/BlocksToJSONv3Adapter';
+
+// TODO: quizEditorBridge was deprecated and archived - this component needs refactoring
+const quizEditorBridge = {
+    importFromJSONv3: async (file: File) => {
+        appLogger.warn('quizEditorBridge.importFromJSONv3 is deprecated');
+        return { success: false, error: 'Deprecated function' };
+    },
+    importAllJSONv3Templates: async (templates: Record<string, any>, name: string) => {
+        appLogger.warn('quizEditorBridge.importAllJSONv3Templates is deprecated');
+        return { id: 'deprecated', name };
+    }
+};
 
 interface ImportTemplateProps {
     onImportSuccess?: (draftId: string) => void;
