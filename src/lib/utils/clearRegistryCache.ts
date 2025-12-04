@@ -5,7 +5,7 @@
  * Útil após alterações no código de normalização
  */
 
-import { templateService } from '@/services/canonical/TemplateService';
+import { templateService } from '@/services';
 import { appLogger } from '@/lib/utils/appLogger';
 
 /**

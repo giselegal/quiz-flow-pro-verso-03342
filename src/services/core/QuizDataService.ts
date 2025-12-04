@@ -1,5 +1,5 @@
 // 📊 QUIZ DATA SERVICE (migrado para templateService canônico com cache síncrono)
-import { templateService } from '@/services/canonical/TemplateService';
+import { templateService } from '@/services';
 
 // Cache síncrono para manter API compatível
 let __cachedSteps: Record<string, any[]> = {};
@@ -8,10 +8,10 @@ let __warmupStarted = false;
 async function __warmupCache() {
   try {
     const result = await templateService.getTemplate('quiz21StepsComplete');
-    const full = result.success ? result.data : null;
+    const full = result.success ? (result.data as any) : null;
     if (full?.steps?.length) {
       const map: Record<string, any[]> = {};
-      for (const s of full.steps) {
+      for (const s of (full.steps as any[])) {
         map[`step-${s.stepNumber}`] = s.blocks || [];
       }
       __cachedSteps = map;

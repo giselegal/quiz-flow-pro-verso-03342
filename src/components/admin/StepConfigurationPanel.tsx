@@ -30,7 +30,7 @@ import {
     Zap,
     Shield,
 } from 'lucide-react';
-import { templateService } from '@/services/canonical/TemplateService';
+import { templateService } from '@/services';
 import { appLogger } from '@/lib/utils/appLogger';
 
 interface StepBehaviorConfig {

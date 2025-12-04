@@ -13,7 +13,7 @@
 import { useState, useCallback, useMemo, useEffect } from 'react';
 import { styleMapping, type StyleId } from '@/services/data/styles';
 import { resolveStyleId } from '@/lib/utils/styleIds';
-import { templateService } from '@/services/canonical/TemplateService';
+import { templateService } from '@/services';
 import { computeResult } from '@/lib/utils/result/computeResult';
 import { applyRuntimeBonuses } from '@/lib/utils/result/applyRuntimeBonuses';
 import { useMasterRuntime } from '@/hooks/useMasterRuntime';

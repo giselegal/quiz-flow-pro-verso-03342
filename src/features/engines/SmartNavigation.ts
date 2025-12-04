@@ -10,7 +10,7 @@
  */
 
 import { unifiedQuizStorage } from '@/services/core/UnifiedQuizStorage';
-import { templateService } from '@/services/canonical/TemplateService';
+import { templateService } from '@/services';
 import { isScoringPhase, isStrategicPhase } from '@/lib/quiz/selectionRules';
 import { appLogger } from '@/lib/utils/appLogger';
 

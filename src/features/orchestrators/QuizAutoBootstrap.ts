@@ -12,7 +12,7 @@
 import { quizOrchestrator } from './QuizOrchestrator';
 import { quizDataPipeline } from './QuizDataPipeline';
 import { unifiedQuizStorage } from '@/services/core/UnifiedQuizStorage';
-import { templateService } from '@/services/canonical/TemplateService';
+import { templateService } from '@/services';
 import { styleCalculationEngine } from '@/features/engines/StyleCalculationEngine';
 import { appLogger } from '@/lib/utils/appLogger';
 

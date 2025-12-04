@@ -12,7 +12,7 @@
  * - Pré-carregamento inteligente de steps adjacentes
  */
 
-import { TemplateService } from '@/services/canonical/TemplateService';
+import { TemplateService } from '@/services';
 import type { QuizStepV3 as QuizStep } from '@/types/quiz';
 import { appLogger } from '@/lib/utils/appLogger';
 

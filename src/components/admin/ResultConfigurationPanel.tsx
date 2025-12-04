@@ -30,7 +30,7 @@ import {
     Award,
 } from 'lucide-react';
 import { styleConfig } from '@/config/styleConfig';
-import { templateService } from '@/services/canonical/TemplateService';
+import { templateService } from '@/services';
 import { appLogger } from '@/lib/utils/appLogger';
 
 interface ResultVariables {

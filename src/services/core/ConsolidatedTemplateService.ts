@@ -1,4 +1,4 @@
-import { templateService } from '@/services/canonical/TemplateService';
+import { templateService } from '@/services';
 import { BaseUnifiedService } from './UnifiedServiceManager';
 
 /**

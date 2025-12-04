@@ -26,7 +26,7 @@ import { unifiedCacheService } from '@/services/unified/UnifiedCacheService';
 import { masterTemplateKey, stepBlocksKey, masterBlocksKey, templateKey } from '@/lib/utils/cacheKeys';
 import { TEMPLATE_SOURCES } from '@/config/templateSources';
 import blockAliasMap from '@/config/block-aliases.json';
-import { templateService } from '@/services/canonical/TemplateService';
+import { templateService } from '@/services';
 import { funnelComponentsService } from '@/services/funnelComponentsService';
 
 // Alias para compatibilidade

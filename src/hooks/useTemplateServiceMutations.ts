@@ -9,7 +9,7 @@
  */
 
 import { useQuery, useMutation, useQueryClient, type UseQueryOptions } from '@tanstack/react-query';
-import { templateService } from '@/services/canonical/TemplateService';
+import { templateService } from '@/services';
 import type { Block } from '@/types/editor';
 import type { ServiceResult } from '@/services/canonical/types';
 

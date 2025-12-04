@@ -6,7 +6,7 @@
 
 import { useEffect, useState } from 'react';
 import { UnifiedQuizStep, UnifiedQuizStepAdapter } from '@/lib/adapters/UnifiedQuizStepAdapter';
-import { templateService } from '@/services/canonical/TemplateService';
+import { templateService } from '@/services';
 
 export function useUnifiedQuiz(stepId?: string) {
   const [step, setStep] = useState<UnifiedQuizStep | null>(null);

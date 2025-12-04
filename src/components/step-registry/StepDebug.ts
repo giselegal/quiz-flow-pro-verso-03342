@@ -9,7 +9,7 @@
 import { stepRegistry } from './StepRegistry';
 import type { QuizStepV3 as QuizStep } from '@/types/quiz';
 import { getStepTemplate } from '@/templates/imports';
-import { TemplateService } from '@/services/canonical/TemplateService';
+import { TemplateService } from '@/services';
 import { appLogger } from '@/lib/utils/appLogger';
 
 type Row = {

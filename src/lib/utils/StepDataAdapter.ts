@@ -15,7 +15,7 @@
 
 import { EditableQuizStep, StepType } from '@/components/editor/quiz/types';
 import type { QuizStepV3 as QuizStep } from '@/types/quiz';
-import { templateService } from '@/services/canonical/TemplateService';
+import { templateService } from '@/services';
 import { appLogger } from '@/lib/utils/appLogger';
 
 /**

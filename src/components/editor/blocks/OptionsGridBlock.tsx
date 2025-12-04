@@ -6,7 +6,7 @@ import { useEditor } from '@/core/contexts/EditorContext/EditorStateProvider';
 import { unifiedQuizStorage } from '@/services/core/UnifiedQuizStorage';
 import { StorageService } from '@/services/core/StorageService';
 import { safePlaceholder } from '@/lib/utils/placeholder';
-import { templateService } from '@/services/canonical/TemplateService';
+import { templateService } from '@/services';
 import { useStepConfig } from '@/hooks/useStepConfig'; // ✅ USAR HOOK DE CONFIGURAÇÃO
 import { appLogger } from '@/lib/utils/appLogger';
 

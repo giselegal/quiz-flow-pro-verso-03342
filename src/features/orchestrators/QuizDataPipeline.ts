@@ -8,7 +8,7 @@
 import { Block } from '@/types/editor';
 import { unifiedQuizStorage } from '@/services/core/UnifiedQuizStorage';
 // Migrado: usar TemplateService canônico via adapter, evitando HybridTemplateService
-import { TemplateService } from '@/services/canonical/TemplateService';
+import { TemplateService } from '@/services';
 import { appLogger } from '@/lib/utils/appLogger';
 
 export interface DataPipelineStage {
