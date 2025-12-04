@@ -1,41 +1,143 @@
-// Services Index
-// Legacy services - will be migrated to feature-specific locations
+/**
+ * 🎯 SERVICES INDEX - FASE 4 CONSOLIDATION
+ * 
+ * Ponto de entrada único para todos os serviços da aplicação.
+ * 
+ * ARQUITETURA CONSOLIDADA:
+ * ========================
+ * 
+ * 12 Serviços Canônicos (src/services/canonical/):
+ * - CacheService      → Cache multi-camada (L1+L2+L3)
+ * - TemplateService   → Carregamento e gestão de templates
+ * - FunnelService     → CRUD de funnels e componentes
+ * - DataService       → Operações de dados genéricas
+ * - ValidationService → Validação de dados e schemas
+ * - AnalyticsService  → Métricas e analytics
+ * - AuthService       → Autenticação
+ * - StorageService    → Persistência (local, Supabase)
+ * - ConfigService     → Configurações
+ * - HistoryService    → Undo/Redo
+ * - MonitoringService → Observability
+ * - EditorService     → Estado do editor
+ * 
+ * USO RECOMENDADO:
+ * ```typescript
+ * // ✅ CORRETO - Importar de @/services
+ * import { templateService, funnelService, cacheService } from '@/services';
+ * 
+ * // ❌ EVITAR - Importar de caminhos profundos
+ * import { templateService } from '@/services/canonical/TemplateService';
+ * ```
+ * 
+ * @version 5.0.0 - Phase 4 Consolidation
+ */
 
-export * from './funnelService';
-// quizService moved to deprecated - use quizDataService or quizSupabaseService instead
-export * from './templateService';
+// =============================================================================
+// CANONICAL SERVICES (PRIMARY EXPORTS)
+// =============================================================================
 
-// TODO: Migrate remaining services to appropriate features
+// Cache
+export { cacheService, CacheService } from './canonical/CacheService';
+export type { CacheStore, CacheStats, CacheSetOptions } from './canonical/CacheService';
 
-// ============================================================================
-// Canonical Services Aliases (Temporary - Phase 4 Migration)
-// ============================================================================
-// These aliases provide backward compatibility during incremental migration
-// TODO: Remove after all imports migrated to @/services/canonical
+// Templates
+export { templateService, TemplateService } from './canonical/TemplateService';
 
-export { analyticsService } from './canonical/AnalyticsService';
-export { analyticsService as AnalyticsService } from './canonical/AnalyticsService';
+// Funnels
+export { 
+  funnelService, 
+  CanonicalFunnelService,
+  type FunnelMetadata,
+  type CreateFunnelInput,
+  type UpdateFunnelInput,
+  type ComponentInstance,
+  type FunnelWithComponents
+} from './canonical/FunnelService';
 
-// ============================================================================
-// Unified Services (Phase 1 - Consolidation)
-// ============================================================================
+// Data
+export { dataService, DataService } from './canonical/DataService';
 
-// Template & Block Services
-// NavigationService moved to canonical - use: import { navigationService } from '@/services/canonical/NavigationService';
+// Validation
+export { validationService, ValidationService } from './canonical/ValidationService';
+
+// Analytics
+export { analyticsService, AnalyticsService } from './canonical/AnalyticsService';
+
+// Auth
+export { authService, AuthService } from './canonical/AuthService';
+
+// Storage
+export { StorageService } from './canonical/StorageService';
+
+// Config
+export { ConfigService } from './canonical/ConfigService';
+
+// History
+export { HistoryService } from './canonical/HistoryService';
+
+// Monitoring
+export { monitoringService, MonitoringService } from './canonical/MonitoringService';
+
+// Editor
+export { EditorService } from './canonical/EditorService';
+
+// Navigation
+export { navigationService, NavigationService } from './canonical/NavigationService';
+
+// Notification
+export { NotificationService } from './canonical/NotificationService';
+
+// =============================================================================
+// TYPES
+// =============================================================================
+
+export type { 
+  ServiceResult, 
+  ServiceOptions, 
+  UnifiedFunnelData 
+} from './canonical/types';
+
+// =============================================================================
+// CACHE LAYER (Multi-Layer Strategy)
+// =============================================================================
+
+export { multiLayerCache, MultiLayerCacheStrategy } from './core/MultiLayerCacheStrategy';
+export { indexedDBCache } from './core/IndexedDBCache';
+
+// =============================================================================
+// COMPATIBILITY ALIASES (DEPRECATED - use canonical exports above)
+// =============================================================================
+
+/** @deprecated Use templateService */
+export { unifiedCacheService, unifiedCache } from './unified/UnifiedCacheService';
+
+/** @deprecated Use funnelService */
+export { default as ConsolidatedFunnelService } from './core/ConsolidatedFunnelService';
+
+/** @deprecated Use templateService */
+export { default as ConsolidatedTemplateService } from './core/ConsolidatedTemplateService';
+
+/** @deprecated Use templateService */
+export { default as MasterTemplateService } from './templates/MasterTemplateService';
+
+// Quiz Services
+export { quizDataService } from './quizDataService';
+export { quizSupabaseService } from './quizSupabaseService';
+
+// Validation (legacy)
+export { funnelValidationService } from './funnelValidationService';
+
+// Configuration (legacy)
+export { ConfigurationService } from './ConfigurationService';
+export { ConfigurationService as ConfigurationAPI } from './ConfigurationService';
+
+// Template Registry
 export { TemplateRegistry } from './TemplateRegistry';
-// UnifiedTemplateRegistry removido - use templateService from @/services/canonical/TemplateService
 
-// Cache Services
-export { UnifiedCacheService } from './UnifiedCacheService';
+// =============================================================================
+// QUIZ NAVIGATION CONFIG
+// =============================================================================
 
-// Storage Services
-// UnifiedStorageService removed - use canonical/StorageService instead
-
-// Configuration Services
-// STUB: Legacy import - needs refactoring
-// export { SupabaseConfigurationStorage } from './SupabaseConfigurationStorage';
-
-// Quiz Navigation Configuration
 export {
   QUIZ_NAV_CONFIG,
   QUIZ_STRUCTURE,
@@ -45,8 +147,10 @@ export {
   isStepEnabled,
 } from '../config/quizNavigation';
 
-// Types
-// NavigationService types moved to canonical
+// =============================================================================
+// NAVIGATION TYPES
+// =============================================================================
+
 export type {
   StepNavigationInfo,
   NavigationMap,
