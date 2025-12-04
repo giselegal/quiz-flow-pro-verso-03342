@@ -71,11 +71,10 @@ export const FUNNEL_TEMPLATE_MAP: Record<string, string> = {
   'quiz21-v4': TEMPLATE_PATHS.V4_SAAS, // Redirect v4 → v4-saas
   'quiz-estilo-21-steps': TEMPLATE_PATHS.V4_SAAS, // Nome amigável
   
-  // Legacy templates (OBSOLETOS - arquivos em /templates/.obsolete/)
-  // ⚠️ Mantidos apenas para compatibilidade com drafts antigos
-  'quiz21-complete': TEMPLATE_PATHS.V3_COMPLETE,
-  'quiz21-v4-gold': TEMPLATE_PATHS.V4_GOLD,
-  'quiz21-v4-legacy': TEMPLATE_PATHS.V4_LEGACY,
+  // Legacy IDs redirecionam para o template principal
+  'quiz21-complete': TEMPLATE_PATHS.V4_SAAS,
+  'quiz21-v4-gold': TEMPLATE_PATHS.V4_SAAS,
+  'quiz21-v4-legacy': TEMPLATE_PATHS.V4_SAAS,
   
   // 🚀 ADICIONAR NOVOS FUNIS AQUI:
   // Exemplo: 'meu-funil-custom': '/templates/funnels/meu-funil/master.json',
