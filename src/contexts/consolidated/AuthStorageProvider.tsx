@@ -22,7 +22,8 @@
  */
 
 import React, { createContext, useContext, useState, useCallback, useEffect, useMemo, ReactNode } from 'react';
-import { supabase } from '@/services/integrations/supabase/customClient';
+// ✅ Usando cliente Supabase CANÔNICO
+import { supabase } from '@/integrations/supabase/client';
 import { appLogger } from '@/lib/utils/appLogger';
 
 // ============================================================================
