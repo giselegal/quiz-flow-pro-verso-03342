@@ -97,8 +97,9 @@ export class FunnelExportService {
         throw new Error(`Funil não encontrado: ${funnelId}`);
       }
       
-      // 2. Extrair steps do settings JSONB
-      const settings = funnel.settings || {};
+      // 2. Extrair steps do config JSONB (usando any para flexibilidade)
+      const funnelData = funnel as any;
+      const settings = funnelData.settings || funnelData.config || {};
       const steps = settings.steps || {};
       const stepIds = Object.keys(steps).sort();
       
@@ -118,7 +119,7 @@ export class FunnelExportService {
           id: funnel.id,
           name: funnel.name,
           description: funnel.description,
-          template_id: funnel.template_id,
+          template_id: funnelData.template_id || null,
           created_from: settings.created_from || 'template',
           totalSteps: stepIds.length
         },

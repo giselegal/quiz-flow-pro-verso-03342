@@ -408,19 +408,18 @@ export class FunnelImportService {
    * Cria novo funil no banco
    */
   private static async createFunnel(meta: any, steps: Record<string, any>): Promise<string> {
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
       .from('funnels')
       .insert({
         name: meta.funnel.name,
         description: meta.funnel.description,
-        template_id: meta.funnel.template_id,
-        is_template: false,
-        settings: {
+        config: {
           created_from: 'import',
           totalSteps: Object.keys(steps).length,
           steps,
           ...meta.globalConfig
-        }
+        },
+        user_id: '',
       })
       .select('id')
       .single();
@@ -438,15 +437,15 @@ export class FunnelImportService {
     replaceSteps?: number[]
   ): Promise<string> {
     // Buscar funil atual
-    const { data: funnel, error: fetchError } = await supabase
+    const { data: funnel, error: fetchError } = await (supabase as any)
       .from('funnels')
-      .select('settings')
+      .select('config')
       .eq('id', funnelId)
       .single();
     
     if (fetchError) throw fetchError;
     
-    const currentSettings = funnel.settings || {};
+    const currentSettings = (funnel as any)?.config || {};
     const currentSteps = currentSettings.steps || {};
     
     // Merge steps
@@ -467,10 +466,10 @@ export class FunnelImportService {
     }
     
     // Atualizar funil
-    const { error: updateError } = await supabase
+    const { error: updateError } = await (supabase as any)
       .from('funnels')
       .update({
-        settings: {
+        config: {
           ...currentSettings,
           steps: mergedSteps,
           totalSteps: Object.keys(mergedSteps).length

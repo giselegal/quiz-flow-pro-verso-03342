@@ -429,7 +429,7 @@ export const quizSupabaseService = {
         conversion_data: conversionData.conversionData,
       };
 
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('quiz_conversions')
         .insert([insertData])
         .select('id')
