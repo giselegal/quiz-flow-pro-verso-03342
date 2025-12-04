@@ -95,7 +95,7 @@ export interface Funnel {
 export interface LoadFunnelResult {
   funnel: Funnel;
   resolved: ResolvedFunnel;
-  source: 'supabase' | 'template' | 'cache';
+  source: 'supabase' | 'template' | 'cache' | 'blank';
 }
 
 /**
@@ -132,7 +132,23 @@ export class FunnelService {
     // 1. Resolve funnel path
     const resolved = resolveFunnel(identifier);
 
-    // 2. Try loading from Supabase first (if not explicitly template-only)
+    // 2. Handle blank canvas strategy (no funnel specified)
+    if (resolved.strategy === 'blank') {
+      appLogger.info('🗺️ [FunnelService] Blank canvas mode - returning empty quiz');
+      const emptyQuiz = this.createBlankQuiz();
+      return {
+        funnel: {
+          id: 'new-funnel',
+          templateId: '',
+          quiz: emptyQuiz,
+          version: 1,
+        },
+        resolved,
+        source: 'blank',
+      };
+    }
+
+    // 3. Try loading from Supabase first (if not explicitly template-only)
     if (!identifier.templateId || identifier.draftId) {
       const draftResult = await this.loadDraftFromSupabase(resolved.funnelId, identifier.draftId);
 
@@ -156,7 +172,7 @@ export class FunnelService {
       }
     }
 
-    // 3. Load from template file
+    // 4. Load from template file
     const quiz = await this.loadTemplateFromFile(resolved.templatePath);
 
     const funnel: Funnel = {
@@ -562,6 +578,96 @@ export class FunnelService {
       appLogger.error('❌ [FunnelService] List error', { error });
       return [];
     }
+  }
+
+  /**
+   * Create a blank quiz for new funnels
+   */
+  private createBlankQuiz(): QuizSchema {
+    const now = new Date().toISOString();
+    return {
+      version: '4.1.0',
+      schemaVersion: '4.1',
+      metadata: {
+        id: 'new-quiz',
+        name: 'Novo Quiz',
+        description: 'Quiz criado do zero',
+        author: 'QuizFlow',
+        createdAt: now,
+        updatedAt: now,
+        tags: [],
+      },
+      theme: {
+        colors: {
+          primary: '#3B82F6',
+          secondary: '#6B7280',
+          background: '#FFFFFF',
+          text: '#1F2937',
+          border: '#E5E7EB',
+        },
+        fonts: {
+          heading: 'Inter',
+          body: 'Inter',
+        },
+        spacing: {
+          xs: 4,
+          sm: 8,
+          md: 16,
+          lg: 24,
+          xl: 32,
+        },
+        borderRadius: {
+          sm: 4,
+          md: 8,
+          lg: 12,
+          xl: 16,
+        },
+      },
+      settings: {
+        scoring: {
+          enabled: false,
+          method: 'sum',
+        },
+        navigation: {
+          allowBack: true,
+          showProgress: true,
+          autoAdvance: false,
+        },
+        validation: {
+          required: false,
+          strictMode: false,
+        },
+      },
+      steps: [
+        {
+          id: 'step-1',
+          type: 'intro',
+          title: 'Bem-vindo',
+          version: 1,
+          blocks: [
+            {
+              id: 'block-1',
+              type: 'intro-title',
+              order: 0,
+              properties: {
+                text: 'Bem-vindo ao seu novo quiz!',
+              },
+              content: {},
+              metadata: {
+                editable: true,
+                reorderable: true,
+                reusable: true,
+                deletable: true,
+              },
+            },
+          ],
+          navigation: {
+            nextStep: null,
+          },
+          order: 1,
+        },
+      ],
+    };
   }
 }
 
