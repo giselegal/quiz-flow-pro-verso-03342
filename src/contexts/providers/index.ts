@@ -1,21 +1,19 @@
 import { appLogger } from '@/lib/utils/appLogger';
 /**
- * 🏗️ PROVIDERS INDEX - FASE 2.1 + FASE 3 LIMPEZA
+ * 🏗️ PROVIDERS INDEX - FASE 4 CONSOLIDADA
  *
- * Exportações centralizadas dos providers APÓS remoção dos legados.
+ * Exportações centralizadas dos providers após consolidação.
  *
- * ✅ NOVO (FASE 2.1): ComposedProviders - Arquitetura flat para reduzir re-renders
- * ✅ CANÔNICO: UnifiedAppProvider (use este para apps existentes!)
- * 🔧 INTERNOS: SuperUnifiedProvider (camadas base - 12 nested providers)
- * ❌ REMOVIDOS: ConsolidatedProvider, FunnelMasterProvider, OptimizedProviderStack
+ * ✅ CANÔNICO: SuperUnifiedProviderV4 (minimal + Zustand)
+ * ✅ ALIASES: UnifiedAppProvider, SuperUnifiedProvider (apontam para V4)
+ * ✅ FLAT: ComposedProviders para novos componentes
  *
- * MIGRAÇÃO:
- * - NOVO: Use ComposedProviders para novos componentes (melhor performance)
- * - LEGADO: UnifiedAppProvider mantido para compatibilidade
- * - Hooks antigos (useFunnels, useQuiz21Steps, etc) agora vivem em contextos unificados
+ * MIGRAÇÃO COMPLETA:
+ * - V2 e V3 foram REMOVIDOS
+ * - Use SuperUnifiedProviderV4 ou aliases
  */
 
-// 🎯 FASE 2.1 - NOVA ARQUITETURA FLAT (RECOMENDADO PARA NOVOS COMPONENTES)
+// 🎯 FASE 2.1 - ARQUITETURA FLAT (RECOMENDADO PARA NOVOS COMPONENTES)
 export {
   ComposedProviders,
   FEATURE_GROUPS,
@@ -33,19 +31,16 @@ export {
   useComposedVersioning,
 } from './ComposedProviders';
 
-// ✅ PROVIDER CANÔNICO - MANTIDO PARA COMPATIBILIDADE
+// ✅ PROVIDER CANÔNICO - V4 (minimal + Zustand)
 export {
   UnifiedAppProvider,
   default as UnifiedAppProviderDefault,
 } from './UnifiedAppProvider';
 
-// 🔧 INTERNO: Usado internamente por UnifiedAppProvider (exposto apenas para testes e extensão avançada)
-export { SuperUnifiedProvider } from './SuperUnifiedProviderV2';
+// ✅ ALIAS: SuperUnifiedProvider aponta para V4
+export { SuperUnifiedProvider } from './SuperUnifiedProvider';
 
-// ✅ FASE 3.1: Provider otimizado com memoização (LEGACY)
-export { SuperUnifiedProviderV3, default as SuperUnifiedProviderV3Default } from './SuperUnifiedProviderV3';
-
-// 🚀 FASE 4: Provider minimalista com Zustand (RECOMENDADO)
+// 🚀 FASE 4: Provider minimalista com Zustand (CANÔNICO)
 export { SuperUnifiedProviderV4, default as SuperUnifiedProviderV4Default } from './SuperUnifiedProviderV4';
 
 // 🎥 FEATURE: Live preview via WebSocket (usado em editor avançado)
@@ -57,12 +52,11 @@ export { EditorRuntimeProviders } from '@/contexts';
 // ✅ REEXPORT CANÔNICO DE HOOK PRINCIPAL
 export { useUnifiedApp, useUnifiedAppSelector } from './UnifiedAppProvider';
 
-// 🚨 FAIL-SAFE: Throw helper para detectar uso indevido de legados em runtime (opcional futuramente)
+// 🚨 FAIL-SAFE: Throw helper para detectar uso indevido de legados em runtime
 export const assertNoLegacyProvidersRuntime = () => {
   if (process.env.NODE_ENV !== 'production') {
     const legacyDetected = (globalThis as any).__LEGACY_PROVIDER_USED__;
     if (legacyDetected) {
-      // eslint-disable-next-line no-console
       appLogger.error('❌ Legacy provider foi utilizado após fase de limpeza:', { data: [legacyDetected] });
     }
   }

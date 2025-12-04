@@ -2,7 +2,7 @@
 import React from 'react';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, waitFor } from '@testing-library/react';
-import { SuperUnifiedProvider } from '@/contexts/providers/SuperUnifiedProviderV2';
+import { SuperUnifiedProviderV4 as SuperUnifiedProvider } from '@/contexts/providers/SuperUnifiedProviderV4';
 import UnifiedEditorCore from '@/components/editor/UnifiedEditorCore';
 import { useEditor } from '@/core/hooks/useEditor';
 import { templateService } from '@/services/canonical/TemplateService';

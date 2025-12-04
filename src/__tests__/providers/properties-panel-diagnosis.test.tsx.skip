@@ -6,7 +6,7 @@
 
 import { describe, it, expect } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
-import { SuperUnifiedProvider } from '@/contexts/providers/SuperUnifiedProviderV2';
+import { SuperUnifiedProviderV4 as SuperUnifiedProvider } from '@/contexts/providers/SuperUnifiedProviderV4';
 import { UIProvider, useUI } from '@/contexts/providers/UIProvider';
 import { useEditorContext } from '@/core/hooks/useEditorContext';
 import type { Block } from '@/types/editor';

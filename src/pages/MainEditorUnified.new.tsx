@@ -1,10 +1,8 @@
 import React from 'react';
 import { useLocation, useParams } from 'wouter';
 import { ErrorBoundary } from '../components/editor/ErrorBoundary';
-import { SuperUnifiedProviderV3 } from '@/contexts/providers/SuperUnifiedProviderV3';
+import { SuperUnifiedProviderV4 } from '@/contexts/providers/SuperUnifiedProviderV4';
 import { FunnelContext } from '@/core/contexts/FunnelContext';
-// Migrado: usar SuperUnifiedProvider em vez do provider canônico deprecated
-import { SuperUnifiedProvider as EditorProvider } from '@/contexts/providers/SuperUnifiedProviderV2';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { useFunnelContext } from '@/hooks/useFunnelLoader';
 import FunnelFallback from '@/components/editor/FunnelFallback';
@@ -12,7 +10,7 @@ import EditorFallback from '@/components/editor/EditorFallback';
 import { appLogger } from '@/lib/utils/appLogger';
 
 /**
- * 🎯 MAIN EDITOR UNIFICADO - VERSÃO SIMPLIFICADA E ROBUSTA ✅ FASE 2.3 ATUALIZADO
+ * 🎯 MAIN EDITOR UNIFICADO - VERSÃO SIMPLIFICADA E ROBUSTA ✅ FASE 4 ATUALIZADO
  *
  * Editor principal com foco em estabilidade e prevenção de loading infinito:
  * - Timeout automático de 10 segundos
@@ -20,7 +18,7 @@ import { appLogger } from '@/lib/utils/appLogger';
  * - Validação de parâmetros
  * - Recovery automático de erros
  * - Logs detalhados para debug
- * - ✅ FASE 2.3: Removido LegacyCompatibilityWrapper (compatibilidade via hook)
+ * - ✅ FASE 4: Usando SuperUnifiedProviderV4 (minimal + Zustand)
  */
 const MainEditorUnified: React.FC = () => {
     const [location] = useLocation();
@@ -67,22 +65,20 @@ const MainEditorUnified: React.FC = () => {
 
     return (
         <ErrorBoundary>
-            <SuperUnifiedProviderV3>
-                <EditorProvider>
-                    {sanitizedParams.funnelId ? (
-                        <FunnelValidatedEditor
-                            templateId={sanitizedParams.templateId}
-                            funnelId={sanitizedParams.funnelId}
-                            debugMode={debugMode}
-                        />
-                    ) : (
-                        <EditorFallback
-                            templateId={sanitizedParams.templateId}
-                            funnelId={sanitizedParams.funnelId}
-                        />
-                    )}
-                </EditorProvider>
-            </SuperUnifiedProviderV3>
+            <SuperUnifiedProviderV4>
+                {sanitizedParams.funnelId ? (
+                    <FunnelValidatedEditor
+                        templateId={sanitizedParams.templateId}
+                        funnelId={sanitizedParams.funnelId}
+                        debugMode={debugMode}
+                    />
+                ) : (
+                    <EditorFallback
+                        templateId={sanitizedParams.templateId}
+                        funnelId={sanitizedParams.funnelId}
+                    />
+                )}
+            </SuperUnifiedProviderV4>
         </ErrorBoundary>
     );
 };

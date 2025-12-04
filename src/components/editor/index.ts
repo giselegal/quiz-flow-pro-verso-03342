@@ -2,11 +2,9 @@
  * Editor Components Index
  * Exportações centralizadas dos componentes do editor
  * 
- * 🎯 FASE 2.0 - MIGRAÇÃO PARA SUPERUNIFIEDPROVIDER CONCLUÍDA:
- * ✅ SuperUnifiedProvider (OFFICIAL - único provider recomendado)
- * ❌ EditorProviderCanonical - REMOVIDO (migrado para SuperUnifiedProvider)
- * ❌ OptimizedEditorProvider - REMOVIDO
- * ❌ PureBuilderProvider - REMOVIDO
+ * 🎯 FASE 4 - MIGRAÇÃO COMPLETA PARA V4:
+ * ✅ SuperUnifiedProviderV4 (OFFICIAL - único provider recomendado)
+ * ❌ V2 e V3 - REMOVIDOS
  */
 
 // ============================================================================
@@ -16,16 +14,12 @@
 import { appLogger } from '@/lib/utils/appLogger';
 
 // ⚠️ DEPRECATED - Aliases de compatibilidade (serão removidos)
-/** @deprecated Use SuperUnifiedProvider from @/contexts/providers/SuperUnifiedProviderV2 */
-export { SuperUnifiedProvider as EditorProviderUnified } from '@/contexts/providers/SuperUnifiedProviderV2';
+/** @deprecated Use SuperUnifiedProviderV4 from @/contexts/providers/SuperUnifiedProviderV4 */
+export { SuperUnifiedProvider as EditorProviderUnified } from '@/contexts/providers/SuperUnifiedProvider';
 
 /** @deprecated Use useEditor from @/core/exports */
 // Removido: export { useEditor as useEditorOptional } from '@/hooks/useEditor';
 // Use: import { useEditor } from '@/core/exports';
-
-// ❌ REMOVIDO: EditorProviderCanonical - Use SuperUnifiedProvider
-
-// 🆕 FASE 3: Compatibility hooks
 
 // ============================================================================
 // COMPONENTES ORIGINAIS
@@ -73,10 +67,6 @@ export type {
     MainImageSectionProps,
     ModularResultHeaderProps,
 } from './modules';
-
-// Reexport helpers para uso lazy (ex: const ModularResultEditor = React.lazy(LazyModularResultEditor))
-// REMOVIDO: LazyModularResultEditor, LazyResponsivePreview - use ModernQuizEditor
-// export { LazyModularResultEditor, LazyResponsivePreview } from './modules';
 
 // ============================================================================
 // CONFIGURAÇÕES E CONSTANTES
