@@ -23,28 +23,17 @@
 
 import React, { createContext, useContext, useState, useCallback, useEffect, useMemo, ReactNode } from 'react';
 import { appLogger } from '@/lib/utils/appLogger';
-import { useNavigate as useNavigateRouter, useLocation as useLocationRouter } from 'react-router-dom';
+import { useLocation as useWouterLocation } from 'wouter';
 
-// Hook seguro que funciona com ou sem Router
+// Hook seguro usando wouter
 const useSafeNavigate = () => {
-    try {
-        return useNavigateRouter();
-    } catch {
-        // Fallback quando Router não está disponível
-        return (path: string) => {
-            appLogger.warn('[UXProvider] navigate chamado sem Router, usando window.location');
-            window.location.href = path;
-        };
-    }
+    const [, setLocation] = useWouterLocation();
+    return (path: string) => setLocation(path);
 };
 
 const useSafeLocation = () => {
-    try {
-        return useLocationRouter();
-    } catch {
-        // Fallback quando Router não está disponível
-        return { pathname: window.location.pathname, search: window.location.search };
-    }
+    const [location] = useWouterLocation();
+    return { pathname: location, search: window.location.search };
 };
 
 // ============================================================================
@@ -268,12 +257,12 @@ export const UXProvider: React.FC<UXProviderProps> = ({ children }) => {
     }, [navigateHook]);
 
     const goBack = useCallback(() => {
-        (navigateHook as any)(-1);
-    }, [navigateHook]);
+        window.history.back();
+    }, []);
 
     const goForward = useCallback(() => {
-        (navigateHook as any)(1);
-    }, [navigateHook]);
+        window.history.forward();
+    }, []);
 
     // ============================================================================
     // COMPUTED VALUES

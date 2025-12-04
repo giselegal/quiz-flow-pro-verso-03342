@@ -7,7 +7,7 @@
  */
 
 import { useEffect, useCallback, useRef } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'wouter';
 import * as Sentry from '@sentry/react';
 import { businessMetrics } from '@/lib/monitoring/businessMetrics';
 import { addSentryBreadcrumb } from '@/config/sentry.config';
@@ -16,27 +16,27 @@ import { addSentryBreadcrumb } from '@/config/sentry.config';
  * Hook para rastrear pageviews automaticamente
  */
 export function useSentryPageTracking() {
-  const location = useLocation();
+  const [location] = useLocation();
 
   useEffect(() => {
     // Rastrear navegação
     addSentryBreadcrumb({
       category: 'navigation',
-      message: `Navigated to ${location.pathname}`,
+      message: `Navigated to ${location}`,
       level: 'info',
       data: {
-        pathname: location.pathname,
-        search: location.search,
+        pathname: location,
+        search: window.location.search,
       },
     });
 
     // Atualizar tag
-    Sentry.setTag('current_page', location.pathname);
+    Sentry.setTag('current_page', location);
 
     // Transaction para performance
     Sentry.startSpan(
       {
-        name: `pageview.${location.pathname}`,
+        name: `pageview.${location}`,
         op: 'navigation',
       },
       () => {}

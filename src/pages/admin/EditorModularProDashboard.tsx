@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { RefreshCw } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link } from 'wouter';
 import useDashboard from '../../hooks/useDashboard';
 
 function StatCard({ label, value }: { label: string; value: React.ReactNode }) {
