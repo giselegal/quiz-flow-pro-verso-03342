@@ -294,31 +294,56 @@ export class FunnelService {
     return {
       version: '4.0',
       schemaVersion: '4.0',
-      theme: { primaryColor: '#B89B7A', backgroundColor: '#FAF9F7', textColor: '#1F2937' },
+      theme: {
+        colors: {
+          primary: '#B89B7A',
+          primaryHover: '#A68B6A',
+          primaryLight: '#F3E8D3',
+          secondary: '#432818',
+          background: '#FAF9F7',
+          text: '#1F2937',
+          border: '#E5E7EB',
+        },
+        fonts: {
+          heading: 'Playfair Display, serif',
+          body: 'Inter, system-ui, sans-serif',
+        },
+        spacing: { sm: 8, md: 16, lg: 24, xl: 32 },
+        borderRadius: { sm: 4, md: 8, lg: 12, xl: 16 },
+      },
       metadata: {
         id: 'quiz21StepsComplete',
         name: 'Quiz 21 Steps Complete',
         description: 'Template completo de quiz com 21 etapas',
         author: 'Quiz Flow Pro',
-        category: 'quiz',
-        tags: ['quiz', 'estilo'],
         createdAt: '2025-01-13T00:00:00.000Z',
         updatedAt: '2025-12-05T00:00:00.000Z',
+        tags: ['quiz', 'estilo'],
       },
       settings: {
-        progressBar: true,
-        showStepNumbers: true,
-        allowBackNavigation: true,
-        autoAdvance: false,
-        theme: { primaryColor: '#B89B7A', backgroundColor: '#FAF9F7', textColor: '#1F2937' },
+        scoring: {
+          enabled: true,
+          method: 'category-points' as const,
+        },
+        navigation: {
+          allowBack: true,
+          autoAdvance: false,
+          showProgress: true,
+        },
+        validation: {
+          required: false,
+          strictMode: false,
+        },
       },
       steps: [
         {
           id: 'step-1',
           title: 'Bem-vindo ao Quiz',
-          type: 'intro',
+          type: 'intro' as const,
+          order: 0,
           version: 1,
           lastModified: '2025-12-05T00:00:00.000Z',
+          navigation: { nextStep: 'step-2' },
           blocks: [
             { id: 'block-intro-header', type: 'header', order: 0, properties: { title: 'Descubra Seu Estilo', subtitle: 'Responda às perguntas' }, content: {} },
             { id: 'block-intro-cta', type: 'button', order: 1, properties: { text: 'Começar Quiz', variant: 'primary', action: 'next' }, content: {} },
@@ -327,9 +352,11 @@ export class FunnelService {
         {
           id: 'step-2',
           title: 'Estilo de Vida',
-          type: 'question',
+          type: 'question' as const,
+          order: 1,
           version: 1,
           lastModified: '2025-12-05T00:00:00.000Z',
+          navigation: { nextStep: 'step-3' },
           blocks: [
             { id: 'block-q1-header', type: 'header', order: 0, properties: { title: 'Pergunta 1', subtitle: 'Como você descreveria seu estilo de vida?' }, content: {} },
             { id: 'block-q1-options', type: 'quiz-option', order: 1, properties: { options: [
@@ -342,9 +369,11 @@ export class FunnelService {
         {
           id: 'step-3',
           title: 'Resultado',
-          type: 'result',
+          type: 'result' as const,
+          order: 2,
           version: 1,
           lastModified: '2025-12-05T00:00:00.000Z',
+          navigation: { nextStep: null },
           blocks: [
             { id: 'block-result-header', type: 'header', order: 0, properties: { title: 'Seu Resultado', subtitle: 'Descobrimos seu estilo!' }, content: {} },
             { id: 'block-result-cta', type: 'button', order: 1, properties: { text: 'Ver Recomendações', variant: 'primary', action: 'url', url: 'https://pay.kiwify.com.br/DkYC1Aj' }, content: {} },
@@ -352,11 +381,8 @@ export class FunnelService {
         },
       ],
       results: {
-        calculation: 'score-based',
-        outcomes: [
-          { id: 'classic', title: 'Estilo Clássico', description: 'Elegância atemporal', minScore: 0, maxScore: 100 },
-          { id: 'modern', title: 'Estilo Moderno', description: 'Tendências atuais', minScore: 0, maxScore: 100 },
-        ],
+        classic: { id: 'classic', name: 'Estilo Clássico', title: 'Estilo Clássico', description: 'Elegância atemporal', category: 'style' },
+        modern: { id: 'modern', name: 'Estilo Moderno', title: 'Estilo Moderno', description: 'Tendências atuais', category: 'style' },
       },
     } as QuizSchema;
   }
