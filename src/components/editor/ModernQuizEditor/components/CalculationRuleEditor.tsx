@@ -52,7 +52,7 @@ export default function CalculationRuleEditor({ block, onChange }: CalculationRu
                     {hasOptions && (
                         <div className="space-y-2">
                             <label className="text-xs font-medium text-gray-700">Pontos por Opção</label>
-                            {(block.properties.options as any[]).map((opt: any, idx: number) => {
+                            {((block.properties ?? block.content ?? {}).options as any[] ?? []).map((opt: any, idx: number) => {
                                 const val = opt.value ?? `opt_${idx + 1}`;
                                 const pts = rule.pointsMap?.[val] ?? 0;
                                 return (

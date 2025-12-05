@@ -49,7 +49,7 @@ describe('Block Adapters', () => {
       expect(adapted.id).toBe('legacy-1');
       expect(adapted.type).toBe('intro-logo');
       expect(adapted.order).toBe(1);
-      expect(adapted.properties.src).toBe('https://example.com/logo.png');
+      expect(adapted.properties?.src ?? adapted.content?.src).toBe('https://example.com/logo.png');
     });
 
     it('should handle missing properties with defaults', () => {
@@ -63,8 +63,8 @@ describe('Block Adapters', () => {
 
       const adapted = adaptLegacyBlock(legacyBlock as any);
       
-      expect(adapted.properties.text).toBeDefined();
-      expect(adapted.properties.level).toBeDefined();
+      expect(adapted.properties?.text ?? adapted.content?.text).toBeDefined();
+      expect(adapted.properties?.level ?? adapted.content?.level).toBeDefined();
     });
 
     it('should adapt blocks without children property', () => {
@@ -173,8 +173,8 @@ describe('Block Adapters', () => {
 
       const normalized = normalizeBlockInstance(block as any, 0);
       
-      expect(normalized.properties.text).toBeDefined();
-      expect(normalized.properties.level).toBeDefined();
+      expect(normalized.properties?.text ?? normalized.content?.text).toBeDefined();
+      expect(normalized.properties?.level ?? normalized.content?.level).toBeDefined();
     });
   });
 

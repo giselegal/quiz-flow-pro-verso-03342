@@ -287,11 +287,11 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
           <div className="flex items-center justify-between">
             <h3 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Properties</h3>
             <Badge variant="outline" className="text-xs">
-              {Object.keys(localBlock.properties).length} campos
+              {Object.keys(localBlock.properties ?? localBlock.content ?? {}).length} campos
             </Badge>
           </div>
 
-          {Object.entries(localBlock.properties).map(([key, value]) => (
+          {Object.entries(localBlock.properties ?? localBlock.content ?? {}).map(([key, value]) => (
             <div key={`prop-${key}`} className="space-y-2">
               <Label htmlFor={`prop-${key}`} className="text-xs font-medium text-gray-700">
                 {key}
