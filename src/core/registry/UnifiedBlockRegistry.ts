@@ -231,6 +231,42 @@ const lazyImports: Record<string, () => Promise<{ default: React.ComponentType<a
 
   // Result blocks - Step 20 (adicionais)
   'result-display': () => import('@/components/blocks/inline/ResultDisplayBlock'),
+
+  // =====================================================
+  // ALIASES LEGADOS (quiz21StepsComplete.json compatibility)
+  // =====================================================
+  
+  // Intro aliases
+  'quiz-intro-header': () => import('@/components/editor/blocks/atomic/IntroLogoHeaderBlock'),
+  'intro-title': () => import('@/components/editor/blocks/atomic/QuestionTitleBlock'),
+  'intro-image': () => import('@/components/editor/blocks/atomic/ResultImageBlock'),
+  'intro-subtitle': () => import('@/components/editor/blocks/atomic/IntroDescriptionBlock'),
+  'intro-name-input': () => import('@/components/editor/blocks/LeadFormBlock'),
+
+  // Question aliases
+  'quiz-progress-bar': () => import('@/components/editor/blocks/atomic/QuestionProgressBlock'),
+  'quiz-question-header': () => import('@/components/editor/blocks/atomic/QuestionTitleBlock'),
+  'quiz-options': () => import('@/components/editor/blocks/atomic/OptionsGridBlock'),
+  'question-description': () => import('@/components/editor/blocks/atomic/IntroDescriptionBlock'),
+  'question-image': () => import('@/components/editor/blocks/atomic/ResultImageBlock'),
+
+  // Transition aliases
+  'transition-progress': () => import('@/components/editor/blocks/atomic/QuestionProgressBlock'),
+  'transition-image': () => import('@/components/editor/blocks/atomic/ResultImageBlock'),
+  'transition-button': () => import('@/components/editor/blocks/atomic/CTAButtonBlock'),
+
+  // Result aliases
+  'result-title': () => import('@/components/editor/blocks/atomic/ResultHeaderBlock'),
+  'result-style': () => import('@/components/blocks/inline/ResultDisplayBlock'),
+
+  // Offer aliases
+  'offer-title': () => import('@/components/editor/blocks/atomic/ResultHeaderBlock'),
+  'offer-description': () => import('@/components/editor/blocks/atomic/IntroDescriptionBlock'),
+  'offer-image': () => import('@/components/editor/blocks/atomic/ResultImageBlock'),
+  'offer-price': () => import('@/components/editor/blocks/atomic/OfferHeroBlock'),
+  'offer-button': () => import('@/components/editor/blocks/atomic/CTAButtonBlock'),
+  'offer-guarantee': () => import('@/components/editor/blocks/GuaranteeBlock'),
+  'offer-testimonials': () => import('@/components/editor/blocks/BenefitsListBlock'),
 };
 
 // ============================================================================
