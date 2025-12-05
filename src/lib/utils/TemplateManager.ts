@@ -28,9 +28,31 @@ export class TemplateManager {
   private static cache = new Map<string, Block[]>();
   private static PUBLISH_PREFIX = 'quiz_published_blocks_';
 
-  static async loadStepBlocks(stepId: string, funnelId?: string): Promise<Block[]> {
-    // Note: canonical TemplateService doesn't support funnelId parameter yet
-    const result = await templateService.getStep(stepId);
+  /**
+   * Carrega blocos de um step
+   * @param stepId - ID do step
+   * @param signalOrFunnelId - AbortSignal para cancelamento OU funnelId (legacy)
+   */
+  static async loadStepBlocks(
+    stepId: string,
+    signalOrFunnelId?: AbortSignal | string
+  ): Promise<Block[]> {
+    // Determinar se é AbortSignal ou funnelId (legacy)
+    const signal = signalOrFunnelId instanceof AbortSignal ? signalOrFunnelId : undefined;
+    
+    // Verificar se já foi abortado
+    if (signal?.aborted) {
+      throw new DOMException('Request aborted', 'AbortError');
+    }
+
+    // Note: canonical TemplateService supports signal via options
+    const result = await templateService.getStep(stepId, undefined, { signal });
+    
+    // Verificar abort após await
+    if (signal?.aborted) {
+      throw new DOMException('Request aborted', 'AbortError');
+    }
+
     if (!result.success || !result.data) {
       appLogger.warn(`[TemplateManager] Failed to load ${stepId}:`, { data: [result.success ? 'No data' : 'Error'] });
       return [];
