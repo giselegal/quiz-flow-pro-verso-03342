@@ -319,10 +319,12 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
     }
   }, [isPreviewMode, multipleSelectionCompat, previewSelections, selectedOptions, block?.id, currentStepFromEditor]);
 
-  // 🎯 CONFIGURAÇÃO DE STEP USANDO O HOOK
+  // 🎯 CONFIGURAÇÃO DE STEP USANDO O HOOK - SEM funnelId hardcoded
+  // O funnelId deve vir do contexto do editor ou da URL
+  const funnelIdFromBlock = (block?.properties as any)?.funnelId;
   const { config: stepConfig, isLoading: stepConfigLoading } = useStepConfig({
-    funnelId: 'quiz21steps', // Usando o ID padrão
-    stepNumber: currentStepFromEditor || 1, // Usar 1 como fallback se for null
+    funnelId: funnelIdFromBlock, // 🎯 CORREÇÃO: Usar funnelId do bloco ou undefined
+    stepNumber: currentStepFromEditor || 1,
   });
 
   // 🎯 CONFIGURAÇÃO HÍBRIDA POR ETAPA (Agora usando o hook)

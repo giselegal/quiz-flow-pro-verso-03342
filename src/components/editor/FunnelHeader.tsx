@@ -48,9 +48,9 @@ export const FunnelHeader: React.FC<FunnelHeaderProps> = ({
   const [loading, setLoading] = useState(true);
   const [currentFunnelId, setCurrentFunnelId] = useState<string>('');
 
-  // 🎯 Determinar funil atual
+  // 🎯 Determinar funil atual - SEM fallback hardcoded
   useEffect(() => {
-    const activeFunnelId = funnelId || getFunnelIdFromEnvOrStorage() || 'quiz-estilo-completo';
+    const activeFunnelId = funnelId || getFunnelIdFromEnvOrStorage() || '';
     setCurrentFunnelId(activeFunnelId);
   }, [funnelId]);
 
@@ -63,22 +63,8 @@ export const FunnelHeader: React.FC<FunnelHeaderProps> = ({
         setLoading(true);
         appLogger.debug('📋 Carregando informações do funil:', currentFunnelId);
 
-        // Para funis do template, usar informações hardcoded
-        if (currentFunnelId === 'quiz-estilo-completo') {
-          setCurrentFunnel({
-            id: currentFunnelId,
-            name: 'Quiz de Estilo Completo',
-            description: 'Template padrão com 21 etapas pré-configuradas',
-            pages: [],
-            theme: 'default',
-            isPublished: true,
-            version: 1,
-            config: {},
-            createdAt: new Date('2024-01-01'),
-            lastModified: new Date(),
-            userId: 'template',
-          });
-        } else {
+        // 🎯 CORREÇÃO: Buscar funil dinamicamente sem fallback hardcoded
+        {
           // Para funis personalizados, buscar no Supabase
           const funnelData = await canonicalFunnelService.getFunnel(currentFunnelId);
           if (funnelData) {
@@ -162,11 +148,7 @@ export const FunnelHeader: React.FC<FunnelHeaderProps> = ({
                   PUBLISHED
                 </span>
               )}
-              {currentFunnelId === 'quiz-estilo-completo' && (
-                <span className="bg-brand-brightBlue/20 text-brand-brightBlue text-xs px-2 py-1 rounded-full border border-brand-brightBlue/30">
-                  TEMPLATE
-                </span>
-              )}
+              {/* 🎯 CORREÇÃO: Tag de template removida - sem referência hardcoded */}
               <span className="bg-gray-800/50 text-gray-400 text-xs px-2 py-1 rounded-full font-mono border border-gray-700/50">
                 {currentFunnelId}
               </span>
