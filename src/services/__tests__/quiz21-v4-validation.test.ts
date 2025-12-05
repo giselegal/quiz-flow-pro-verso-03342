@@ -8,7 +8,7 @@ import { describe, expect, it } from 'vitest';
 import { QuizSchemaZ, getSchemaErrors, type QuizStep, type QuizBlock } from '@/schemas/quiz-schema.zod';
 
 // Importar o template JSON diretamente
-import template from '../../../public/templates/quiz21-v4.json';
+import template from '@/data/templates/quiz21-v4.json';
 
 describe('quiz21-v4.json Schema Validation', () => {
   it('should pass QuizSchemaZ validation', () => {
