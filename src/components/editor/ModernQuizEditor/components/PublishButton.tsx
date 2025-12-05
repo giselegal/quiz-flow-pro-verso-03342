@@ -1,6 +1,8 @@
 /**
  * 🚀 PublishButton - Botão para publicar quiz
  * 
+ * FASE 4: Corrigido para validar UUID e buscar draft_id correto
+ * 
  * Integra com:
  * - Supabase RPC publish_quiz_draft()
  * - Validação completa do quiz
@@ -27,6 +29,16 @@ interface PublishButtonProps {
   draftId?: string;
   onPublishSuccess?: (productionId: string) => void;
   className?: string;
+}
+
+// Regex para validar UUID v4
+const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[4][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+/**
+ * Verifica se uma string é um UUID válido
+ */
+function isValidUUID(id: string): boolean {
+  return UUID_REGEX.test(id);
 }
 
 export function PublishButton({ 
@@ -61,13 +73,41 @@ export function PublishButton({
     setPublishResult(null);
     
     try {
-      const effectiveDraftId = draftId || quiz.metadata?.id;
+      let effectiveDraftId = draftId || quiz.metadata?.id;
       
       if (!effectiveDraftId) {
         throw new Error('ID do draft não encontrado. Salve o quiz primeiro.');
       }
       
-      // Chamar RPC do Supabase
+      // FASE 4: Se não for UUID válido, buscar o draft_id real pelo funnel_id
+      if (!isValidUUID(effectiveDraftId)) {
+        console.log('📝 ID não é UUID, buscando draft por funnel_id:', effectiveDraftId);
+        
+        const { data: draftRecord, error: fetchError } = await supabase
+          .from('quiz_drafts')
+          .select('id')
+          .eq('funnel_id', effectiveDraftId)
+          .order('version', { ascending: false })
+          .limit(1)
+          .maybeSingle();
+        
+        if (fetchError) {
+          console.error('❌ Erro ao buscar draft:', fetchError);
+          throw new Error(`Erro ao buscar draft: ${fetchError.message}`);
+        }
+        
+        if (!draftRecord) {
+          throw new Error(
+            'Draft não encontrado no banco de dados. ' +
+            'Salve o quiz primeiro clicando em "Salvar" antes de publicar.'
+          );
+        }
+        
+        effectiveDraftId = draftRecord.id;
+        console.log('✅ Draft encontrado:', effectiveDraftId);
+      }
+      
+      // Chamar RPC do Supabase com UUID válido
       const { data, error } = await supabase.rpc('publish_quiz_draft', {
         draft_id: effectiveDraftId,
       });
@@ -143,6 +183,12 @@ export function PublishButton({
                   <span className="text-sm font-medium">Steps:</span>
                   <span className="text-sm">{quiz.steps?.length || 0}</span>
                 </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium">Draft ID:</span>
+                  <span className="text-xs font-mono text-muted-foreground truncate max-w-[150px]">
+                    {draftId || quiz.metadata?.id || 'Não salvo'}
+                  </span>
+                </div>
               </div>
             )}
             
@@ -196,8 +242,8 @@ export function PublishButton({
                     </p>
                   </div>
                 ) : (
-                  <div className="flex items-center gap-2">
-                    <AlertCircle className="w-5 h-5 text-red-600" />
+                  <div className="flex items-start gap-2">
+                    <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
                     <span className="text-sm text-red-700">{publishResult.error}</span>
                   </div>
                 )}

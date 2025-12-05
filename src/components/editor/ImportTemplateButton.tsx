@@ -3,6 +3,8 @@
  * 
  * Permite upload de arquivos JSON e importação direta no editor
  * Valida com Zod e carrega no quizStore
+ * 
+ * FASE 2: Sanitiza IDs para garantir formato nanoid
  */
 
 import { useState, useRef } from 'react';
@@ -12,11 +14,55 @@ import { Upload, FileJson, CheckCircle, XCircle, AlertCircle } from 'lucide-reac
 import { useQuizStore } from './ModernQuizEditor/store/quizStore';
 import { QuizSchemaZ, getSchemaErrors, type QuizSchema } from '@/schemas/quiz-schema.zod';
 import { useToast } from '@/hooks/use-toast';
+import { generateBlockId, generateStepId, ensureUniqueBlockIds } from '@/lib/utils/generateId';
 
 interface ImportTemplateProps {
     onImportSuccess?: (quiz: QuizSchema) => void;
     onImportError?: (error: Error) => void;
     compact?: boolean;
+}
+
+/**
+ * Sanitiza um quiz importado para garantir IDs únicos no formato nanoid
+ */
+function sanitizeImportedQuiz(quiz: QuizSchema): QuizSchema {
+    return {
+        ...quiz,
+        steps: quiz.steps.map((step, index) => {
+            // Regenerar step ID se não estiver no formato nanoid
+            const needsNewStepId = !step.id || 
+                !step.id.startsWith('step-') || 
+                step.id.length < 10;
+            
+            const sanitizedStepId = needsNewStepId ? generateStepId() : step.id;
+            
+            // Sanitizar blocos
+            const sanitizedBlocks = ensureUniqueBlockIds(
+                (step.blocks || []).map(block => {
+                    // Verificar se precisa de novo ID
+                    const needsNewBlockId = !block.id || 
+                        block.id.length < 10 ||
+                        !block.id.includes('-');
+                    
+                    if (needsNewBlockId) {
+                        return {
+                            ...block,
+                            id: generateBlockId(block.type || 'block'),
+                        };
+                    }
+                    return block;
+                })
+            );
+            
+            return {
+                ...step,
+                id: sanitizedStepId,
+                order: step.order || index + 1,
+                version: step.version || 1,
+                blocks: sanitizedBlocks,
+            };
+        }),
+    };
 }
 
 export function ImportTemplateButton({ 
@@ -74,11 +120,15 @@ export function ImportTemplateButton({
                 });
             }
 
-            // Carregar no store
-            const quizData = validationResult.success 
+            // Pegar dados do quiz (validados ou raw)
+            const rawQuizData = validationResult.success 
                 ? validationResult.data 
                 : json as QuizSchema;
             
+            // FASE 2: Sanitizar IDs para formato nanoid
+            const quizData = sanitizeImportedQuiz(rawQuizData);
+            
+            // Carregar no store
             loadQuiz(quizData);
 
             setStatus('success');
@@ -86,7 +136,7 @@ export function ImportTemplateButton({
 
             toast({
                 title: 'Quiz importado',
-                description: `${quizData.steps?.length || 0} steps carregados.`,
+                description: `${quizData.steps?.length || 0} steps carregados com IDs sanitizados.`,
             });
 
             if (onImportSuccess) {
@@ -158,6 +208,7 @@ export function ImportTemplateButton({
 
                 <p className="text-sm text-muted-foreground">
                     Faça upload de um arquivo JSON v4.0 para carregar no editor.
+                    IDs serão automaticamente convertidos para formato nanoid.
                 </p>
 
                 <div className="flex flex-col gap-3">
@@ -218,7 +269,7 @@ export function ImportTemplateButton({
                             <ul className="list-disc list-inside space-y-1 text-xs">
                                 <li>JSON v4.0 com version e schemaVersion</li>
                                 <li>Deve conter: metadata, theme, settings, steps</li>
-                                <li>Validação automática com schema Zod</li>
+                                <li>IDs são automaticamente convertidos para nanoid</li>
                             </ul>
                         </div>
                     </div>
