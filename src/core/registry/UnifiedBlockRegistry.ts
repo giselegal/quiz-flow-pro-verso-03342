@@ -101,9 +101,10 @@ const lazyImports: Record<string, () => Promise<{ default: React.ComponentType<a
   'quiz-score-header': () => import('@/components/quiz/blocks/QuizScoreDisplay'),
   'score-display': () => import('@/components/quiz/blocks/QuizScoreDisplay'),
 
-  // Intro blocks - Step 1 (7 blocos)
-  // (REMOVIDO: blocos intro atômicos já importados estaticamente em BlockTypeRenderer)
-  'quiz-intro': () => import('@/components/editor/blocks/QuizIntroHeaderBlock'), // Alias
+  // Intro blocks - Step 1
+  'quiz-intro': () => import('@/components/editor/blocks/QuizIntroHeaderBlock'),
+  'intro-logo-header': () => import('@/components/editor/blocks/atomic/IntroLogoHeaderBlock'),
+  'intro-button': () => import('@/components/editor/blocks/atomic/CTAButtonBlock'),
 
   // Decorative/UI (3 blocos)
   // (REMOVIDO: decorativos já resolvidos diretamente pelo renderer)
@@ -222,6 +223,11 @@ const lazyImports: Record<string, () => Promise<{ default: React.ComponentType<a
 
   // Accessibility
   'accessibility-skip-link': () => import('@/components/editor/blocks/AccessibilitySkipLinkBlock'),
+
+  // Offer blocks - Step 21 (adicionais)
+  'urgency-timer': () => import('@/components/editor/blocks/UrgencyTimerInlineBlock'),
+  'benefits-list': () => import('@/components/editor/blocks/BenefitsListBlock'),
+  'guarantee': () => import('@/components/editor/blocks/GuaranteeBlock'),
 };
 
 // ============================================================================
