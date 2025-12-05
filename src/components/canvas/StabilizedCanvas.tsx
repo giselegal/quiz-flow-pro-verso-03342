@@ -53,7 +53,7 @@ const StabilizedCanvas: React.FC<StabilizedCanvasProps> = ({
   onStepChange,
   onReorderBlocks,
   className = '',
-  funnelId = 'quiz-estilo-21-steps',
+  funnelId, // 🎯 CORREÇÃO: Sem default hardcoded - deve ser passado via props
 }) => {
   // 🔒 REFS ESTÁVEIS - Evitam re-criação desnecessária
   const canvasRef = useRef<HTMLDivElement>(null);
@@ -71,16 +71,17 @@ const StabilizedCanvas: React.FC<StabilizedCanvasProps> = ({
         blocksCount: blocks.length,
         selectedBlockId: selectedBlock?.id,
       }] });
-  // Resolver funnelId de forma flexível: prop tem prioridade, depois query (?funnelId ou ?funnel)
+  // 🎯 CORREÇÃO: Resolver funnelId de forma flexível SEM fallback hardcoded
+  // prop tem prioridade, depois query (?funnelId ou ?funnel), vazio se nenhum
   const effectiveFunnelId = useMemo(() => {
     if (funnelId) return funnelId;
     try {
       const sp = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
       const q1 = sp?.get('funnelId');
       const q2 = sp?.get('funnel');
-      return q1 || q2 || 'quiz-estilo-21-steps';
+      return q1 || q2 || ''; // 🎯 Sem fallback hardcoded
     } catch {
-      return 'quiz-estilo-21-steps';
+      return ''; // 🎯 Sem fallback hardcoded
     }
   }, [funnelId]);
 

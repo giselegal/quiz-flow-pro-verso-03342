@@ -32,7 +32,7 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
   selectedBlockId,
   actions,
   isDragging,
-  funnelId = 'quiz-estilo-21-steps', // Fallback alinhado ao runtime
+  funnelId, // 🎯 CORREÇÃO: Sem default hardcoded - deve ser passado via props
 }) => {
   // Hook para aplicar estilos dinâmicos
   useCanvasContainerStyles();
