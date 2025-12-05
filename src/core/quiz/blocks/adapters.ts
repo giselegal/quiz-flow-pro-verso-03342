@@ -133,7 +133,7 @@ export class BlockV4ToV3Adapter {
 
         // Separa properties em properties e content baseado na definição
         const { properties, content } = this.splitPropertiesAndContent(
-            v4Block.properties,
+            v4Block.properties ?? v4Block.content ?? {},
             definition?.properties || []
         );
 

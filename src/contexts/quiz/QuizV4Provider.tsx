@@ -293,7 +293,7 @@ export function QuizV4Provider({
     }, [currentStep, quiz, steps, goToStep]);
 
     const canGoBack = useCallback((): boolean => {
-        if (!quiz?.settings.navigation.allowBack) return false;
+        if (!quiz?.settings?.navigation?.allowBack) return false;
         return currentStep?.order ? currentStep.order > 1 : false;
     }, [currentStep, quiz]);
 

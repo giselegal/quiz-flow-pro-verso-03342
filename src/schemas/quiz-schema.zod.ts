@@ -37,8 +37,8 @@ export const QuizBorderRadiusSchemaZ = z.record(z.number().int().min(0));
 export const QuizThemeSchemaZ = z.object({
   colors: QuizColorSchemaZ,
   fonts: QuizFontSchemaZ,
-  spacing: QuizSpacingSchemaZ,
-  borderRadius: QuizBorderRadiusSchemaZ
+  spacing: QuizSpacingSchemaZ.optional(),
+  borderRadius: QuizBorderRadiusSchemaZ.optional()
 });
 
 // ============================================================================
@@ -142,12 +142,15 @@ export const QuizBlockSchemaZ = z.object({
   id: z.string().min(1, 'Block ID é obrigatório'),
   type: BlockTypeZ,
   order: z.number().min(0, 'Order deve be >= 0'),
-  properties: z.record(z.any()),
+  properties: z.record(z.any()).optional(),
   content: z.record(z.any()).optional(),
   parentId: z.string().nullable().optional(),
   metadata: BlockMetadataZ,
   calculationRule: CalculationRuleZ
-});
+}).refine(
+  (block) => block.properties !== undefined || block.content !== undefined,
+  { message: 'Block deve ter properties ou content' }
+);
 
 // ============================================================================
 // NAVIGATION SCHEMAS
@@ -167,8 +170,10 @@ export const NavigationConditionZ = z.object({
 });
 
 export const NavigationConfigZ = z.object({
-  nextStep: z.string().nullable(),
-  conditions: z.array(NavigationConditionZ).optional()
+  nextStep: z.string().nullable().optional(),
+  conditions: z.array(NavigationConditionZ).optional(),
+  autoAdvance: z.boolean().optional(),
+  autoAdvanceDelay: z.number().optional()
 });
 
 // ============================================================================
@@ -214,7 +219,7 @@ export const QuizStepSchemaZ = z.object({
   order: z.number().int().min(1).max(50, 'Order deve estar entre 1 e 50'),
   title: z.string().optional(),
   blocks: z.array(QuizBlockSchemaZ).min(1, 'Step deve ter pelo menos 1 block'),
-  navigation: NavigationConfigZ,
+  navigation: NavigationConfigZ.optional().default({}),
   validation: ValidationSchemaZ.optional(),
   // 🔒 P1: Optimistic Locking - versionamento para detectar conflitos
   version: z.number().int().min(1).default(1),
@@ -272,17 +277,21 @@ export const QuizMetadataZ = z.object({
 // ============================================================================
 
 export const ResultStyleZ = z.object({
-  id: z.string(),
+  id: z.string().optional(),
   name: z.string(),
   title: z.string().optional(),
   description: z.string().optional(),
   image: z.string().url().optional(),
   guideImage: z.string().url().optional(),
   category: z.string().optional(),
+  keywords: z.array(z.string()).optional(),
   blocks: z.array(QuizBlockSchemaZ).optional()
 });
 
-export const ResultsConfigZ = z.record(ResultStyleZ);
+export const ResultsConfigZ = z.union([
+  z.record(ResultStyleZ),
+  z.object({ categories: z.record(ResultStyleZ) })
+]);
 
 // ============================================================================
 // BLOCK LIBRARY SCHEMA
@@ -305,12 +314,20 @@ export const BlockLibraryZ = z.record(BlockLibraryItemZ);
 // MAIN QUIZ SCHEMA
 // ============================================================================
 
+export const ScoringConfigZ = z.object({
+  method: z.enum(['sum', 'weighted', 'majority', 'category-points']),
+  categories: z.array(z.string()).optional(),
+  weights: z.record(z.number()).optional(),
+  tieBreak: z.enum(['alphabetical', 'first', 'natural-first', 'random']).optional()
+});
+
 export const QuizSchemaZ = z.object({
-  version: z.string().regex(/^\d+\.\d+\.\d+$/, 'Versão deve ser semver (x.y.z)'),
+  version: z.string().regex(/^\d+\.\d+\.\d+$/, 'Versão deve ser semver (x.y.z)').optional(),
   schemaVersion: z.string().regex(/^\d+\.\d+$/, 'Schema version deve ser x.y'),
   metadata: QuizMetadataZ,
   theme: QuizThemeSchemaZ,
-  settings: QuizSettingsZ,
+  settings: QuizSettingsZ.optional(),
+  scoring: ScoringConfigZ.optional(),
   steps: z.array(QuizStepSchemaZ).min(1, 'Quiz deve ter pelo menos 1 step').max(50, 'Máximo de 50 steps'),
   results: ResultsConfigZ.optional(),
   blockLibrary: BlockLibraryZ.optional()
@@ -382,4 +399,47 @@ export function getSchemaErrors(data: unknown): string[] {
   return result.error.errors.map(err => 
     `${err.path.join('.')}: ${err.message}`
   );
+}
+
+// ============================================================================
+// SCORING CONFIG TYPE
+// ============================================================================
+
+export type ScoringConfig = z.infer<typeof ScoringConfigZ>;
+
+// ============================================================================
+// BLOCK NORMALIZER
+// ============================================================================
+
+/**
+ * Normaliza um bloco para garantir que properties sempre existe
+ * Usa content como fallback se properties estiver undefined
+ */
+export function normalizeBlock<T extends { properties?: Record<string, any>; content?: Record<string, any> }>(
+  block: T
+): T & { properties: Record<string, any> } {
+  return {
+    ...block,
+    properties: block.properties ?? block.content ?? {},
+  };
+}
+
+/**
+ * Normaliza todos os blocos de um step
+ */
+export function normalizeStepBlocks(step: QuizStep): QuizStep {
+  return {
+    ...step,
+    blocks: step.blocks.map(normalizeBlock),
+  };
+}
+
+/**
+ * Normaliza todos os steps de um quiz
+ */
+export function normalizeQuizBlocks(quiz: QuizSchema): QuizSchema {
+  return {
+    ...quiz,
+    steps: quiz.steps.map(normalizeStepBlocks),
+  };
 }

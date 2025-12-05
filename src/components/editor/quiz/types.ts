@@ -66,8 +66,8 @@ export interface BlockComponent {
   /** Ordem de exibição do bloco */
   order: number;
   
-  /** Propriedades específicas do bloco */
-  properties: Record<string, any>;
+  /** Propriedades específicas do bloco (opcional, pode usar content) */
+  properties?: Record<string, any>;
   
   /** Conteúdo do bloco (opcional, usado em alguns tipos) */
   content?: Record<string, any>;
