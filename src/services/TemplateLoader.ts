@@ -1,25 +1,29 @@
 /**
- * 🎯 TEMPLATE LOADER - Sistema de Templates Externos JSON
- * @legacy DEPRECATED - Migrar para o sistema oficial em src/core/quiz/
+ * 🔄 TEMPLATE LOADER - FACADE DE COMPATIBILIDADE
+ * @deprecated Use `templateService` de '@/services' ao invés deste arquivo
  * 
- * Carrega funils completos de arquivos JSON externos
- * Permite criar múltiplos funils sem duplicar código TSX
+ * Este arquivo foi convertido para facade que delega ao templateService canônico.
+ * Mantido apenas para compatibilidade com imports existentes.
+ * 
+ * MIGRAÇÃO:
+ * ```typescript
+ * // ❌ ANTES
+ * import { loadFunnelTemplate, clearTemplateCache } from '@/services/TemplateLoader';
+ * 
+ * // ✅ DEPOIS  
+ * import { templateService, cacheService } from '@/services';
+ * const template = await templateService.getTemplate('quiz21StepsComplete');
+ * cacheService.clearStore('templates');
+ * ```
  */
 
-import { appLogger } from '@/lib/utils/logger';
-import { supabase } from '@/services/integrations/supabase/client';
+import { templateService, cacheService } from '@/services';
+import { appLogger } from '@/lib/utils/appLogger';
 import type { Block } from '@/types/editor';
 
-/**
- * 🧩 Detecta se estamos em Template Mode (local, sem backend)
- */
-function isTemplateMode(): boolean {
-  if (typeof window === 'undefined') return false;
-  const params = new URLSearchParams(window.location.search);
-  const hasTemplate = !!params.get('template');
-  const hasFunnel = !!(params.get('funnelId') || params.get('funnel'));
-  return hasTemplate && !hasFunnel;
-}
+// ============================================================================
+// TIPOS LEGADOS (Mantidos para compatibilidade)
+// ============================================================================
 
 export interface FunnelTemplate {
   id: string;
@@ -43,198 +47,69 @@ export interface FunnelStep {
   };
 }
 
-// Cache global de templates
-const templateCache = new Map<string, FunnelTemplate>();
+// ============================================================================
+// FUNÇÕES LEGADAS (Delegam para templateService)
+// ============================================================================
 
 /**
- * Carrega template JSON do servidor com fallback Supabase → JSON
+ * @deprecated Use `templateService.getTemplate(templateId)` ou `templateService.loadV4Template()`
  */
 export async function loadFunnelTemplate(templateId: string): Promise<FunnelTemplate> {
-  // Check cache primeiro
-  if (templateCache.has(templateId)) {
-    appLogger.info(`✅ [TemplateLoader] Cache hit: ${templateId}`);
-    return templateCache.get(templateId)!;
-  }
-
-  appLogger.info(`🔍 [TemplateLoader] Loading template: ${templateId}`);
+  appLogger.warn('[DEPRECATED] loadFunnelTemplate() → use templateService.getTemplate()');
   
-  // 🧩 Se estamos em Template Mode, pular backend e ir direto para JSON local
-  const skipDB = isTemplateMode();
-  
-  // 1️⃣ Tentar Supabase primeiro (apenas se não for Template Mode)
-  if (!skipDB) {
-    try {
-      const { data, error } = await supabase
-        .from('quiz_production')
-        .select('content, name, metadata')
-        .eq('slug', templateId)
-        .eq('is_template', true)
-        .maybeSingle();
-
-    if (data?.content && !error) {
-      appLogger.info(`✅ [DB] Template carregado do Supabase: ${templateId}`);
+  try {
+    // Tentar carregar via templateService
+    const result = await templateService.loadV4Template();
+    
+    if (result.success && result.data) {
+      const v4Data = result.data;
       
-      // Type guards para dados do Supabase
-      const metadata = (data.metadata || {}) as Record<string, any>;
-      const content = data.content as any;
-      
+      // Converter formato v4 para FunnelTemplate legado
       const template: FunnelTemplate = {
         id: templateId,
-        name: data.name || templateId,
-        description: metadata.description || '',
-        version: metadata.version || '1.0',
-        author: metadata.author,
-        steps: content.steps || [],
-        metadata: metadata,
+        name: v4Data.name || templateId,
+        description: v4Data.description || '',
+        version: v4Data.version || '4.0.0',
+        author: v4Data.metadata?.author,
+        steps: v4Data.steps.map((step: any, index: number) => ({
+          key: step.id || `step-${String(index + 1).padStart(2, '0')}`,
+          label: step.name || `Step ${index + 1}`,
+          type: step.type || 'question',
+          blocks: step.blocks || [],
+          metadata: step.metadata || {},
+        })),
+        metadata: v4Data.metadata || {},
       };
       
-      // Validar estrutura básica
-      if (!template.steps || !Array.isArray(template.steps)) {
-        throw new Error('Template do DB inválido: steps não é array');
-      }
-      
-      templateCache.set(templateId, template);
-      appLogger.info(`✅ [DB] Template cached: ${template.name} (${template.steps.length} steps)`);
       return template;
     }
     
-      if (error) {
-        appLogger.warn(`⚠️ [DB] Erro ao consultar Supabase: ${error.message}`);
-      } else {
-        appLogger.warn(`⚠️ [DB] Template não encontrado no Supabase: ${templateId}`);
-      }
-    } catch (dbError) {
-      appLogger.warn(`⚠️ [DB] Fallback para JSON devido a erro:`, dbError);
-    }
-  } else {
-    appLogger.info('🧩 [TemplateLoader] Template mode: pulando backend, usando JSON local');
+    throw new Error(`Template '${templateId}' não encontrado`);
+  } catch (error) {
+    appLogger.error(`[TemplateLoader] Erro ao carregar template ${templateId}:`, error);
+    throw error;
   }
-
-  // 2️⃣ Fallback: JSON local com múltiplos caminhos
-  const paths = [
-    `/templates/funnels/${templateId}.json`,           // Flat file
-    `/templates/funnels/${templateId}/master.json`,    // Nested master
-    `/templates/funnels/${templateId}/index.json`,     // Nested index
-    `/templates/${templateId}.json`,                   // Root level (legacy)
-    `/config/templates/`,                              // 🆕 OPÇÃO A: Templates individuais
-  ];
-
-  for (const jsonUrl of paths) {
-    try {
-      appLogger.info(`🌐 [JSON] Tentando: ${jsonUrl}`);
-      
-      const response = await fetch(jsonUrl);
-      if (!response.ok) {
-        appLogger.warn(`⚠️ [JSON] ${jsonUrl} → HTTP ${response.status}`);
-        continue; // Tentar próximo caminho
-      }
-      
-      const rawData: any = await response.json();
-      
-      // 🔄 Adapter: Normalizar formato para FunnelTemplate
-      const template: FunnelTemplate = {
-        id: rawData.id || rawData.funnelId || templateId,
-        name: rawData.name || rawData.metadata?.name || 'Unnamed Template',
-        description: rawData.description || '',
-        version: rawData.version || '1.0.0',
-        steps: [],
-        metadata: rawData,
-      };
-      
-      // Converter steps de Object para Array se necessário
-      if (rawData.steps) {
-        if (Array.isArray(rawData.steps)) {
-          template.steps = rawData.steps;
-        } else if (typeof rawData.steps === 'object') {
-          // Converter object {1: {...}, 2: {...}} para array
-          template.steps = Object.entries(rawData.steps).map(([key, stepData]: [string, any]) => ({
-            key: `step-${key}`,
-            label: `Step ${key}`,
-            type: stepData.type || 'question',
-            blocks: stepData.blocks || [],
-            metadata: stepData,
-          }));
-        }
-      }
-      
-      // 🆕 OPÇÃO A: Detectar fallback de templates individuais
-      if (jsonUrl.includes('/config/templates/')) {
-        appLogger.info('📦 Carregando steps individuais de /config/templates/');
-        
-        // Carregar todos os 21 steps
-        const steps = [];
-        for (let i = 1; i <= 21; i++) {
-          try {
-            const stepId = `step-${i.toString().padStart(2, '0')}`;
-            const stepModule = await import(`@/config/templates/step-${i.toString().padStart(2, '0')}.json`);
-            
-            if (stepModule.default?.blocks) {
-              steps.push({
-                key: stepId,
-                label: stepModule.default.metadata?.name || `Step ${i}`,
-                type: stepModule.default.metadata?.type || 'question',
-                blocks: stepModule.default.blocks,
-                metadata: stepModule.default,
-              });
-            }
-          } catch (err) {
-            appLogger.warn(`⚠️ Falha ao carregar step-${i}:`, err);
-          }
-        }
-        
-        if (steps.length > 0) {
-          const finalTemplate: FunnelTemplate = {
-            id: templateId,
-            name: 'Quiz 21 Steps Complete',
-            description: 'Template completo com 21 steps',
-            version: '3.1.0',
-            steps,
-            metadata: {},
-          };
-          templateCache.set(templateId, finalTemplate);
-          appLogger.info(`✅ [LOCAL] Template carregado dos JSONs individuais (${steps.length} steps)`);
-          return finalTemplate;
-        }
-      }
-      
-      // Validar estrutura básica
-      if (!template.id || !template.name || template.steps.length === 0) {
-        appLogger.warn(`⚠️ [JSON] ${jsonUrl} → Estrutura inválida (id: ${template.id}, name: ${template.name}, steps: ${template.steps.length})`);
-        continue;
-      }
-      
-      // Cache template
-      templateCache.set(templateId, template);
-      
-      appLogger.info(`✅ [JSON] Template loaded: ${template.name} (${template.steps.length} steps)`);
-      return template;
-    } catch (err) {
-      appLogger.warn(`⚠️ [JSON] ${jsonUrl} → ${err instanceof Error ? err.message : 'Erro desconhecido'}`);
-      continue;
-    }
-  }
-
-  // Se chegou aqui, nenhum caminho funcionou
-  appLogger.error(`❌ [TemplateLoader] Template '${templateId}' não encontrado em nenhum caminho:`, paths);
-  throw new Error(`Template '${templateId}' não encontrado (tentados: ${paths.length} caminhos)`);
 }
 
 /**
- * Lista templates disponíveis
+ * @deprecated Use `cacheService.clearStore('templates')`
+ */
+export function clearTemplateCache(): void {
+  appLogger.warn('[DEPRECATED] clearTemplateCache() → use cacheService.clearStore("templates")');
+  cacheService.clearStore('templates');
+  templateService.clearCache();
+}
+
+/**
+ * @deprecated Lista templates disponíveis
  */
 export async function listAvailableTemplates(): Promise<string[]> {
-  // Para produção, esta lista poderia vir de uma API
-  // Por enquanto, retornamos lista hard-coded
-  return [
-    'quiz21StepsComplete',
-    'funil-emagrecimento',
-    'funil-moda',
-    'funil-imobiliario',
-  ];
+  appLogger.warn('[DEPRECATED] listAvailableTemplates() → use templateService.getAllSteps()');
+  return ['quiz21StepsComplete'];
 }
 
 /**
- * Obtém blocos de um step específico
+ * @deprecated Use `templateService.getStep(stepKey)`
  */
 export function getStepBlocks(template: FunnelTemplate, stepKey: string): Block[] {
   const step = template.steps.find(s => s.key === stepKey);
@@ -242,51 +117,33 @@ export function getStepBlocks(template: FunnelTemplate, stepKey: string): Block[
 }
 
 /**
- * Obtém todas as chaves de steps disponíveis
+ * @deprecated
  */
 export function getStepKeys(template: FunnelTemplate): string[] {
   return template.steps.map(s => s.key);
 }
 
 /**
- * Valida se um template é válido
+ * @deprecated
  */
 export function validateTemplate(template: any): template is FunnelTemplate {
   if (!template || typeof template !== 'object') return false;
   if (typeof template.id !== 'string') return false;
   if (typeof template.name !== 'string') return false;
   if (!Array.isArray(template.steps)) return false;
-  
-  // Validar cada step
-  for (const step of template.steps) {
-    if (typeof step.key !== 'string') return false;
-    if (typeof step.label !== 'string') return false;
-    if (!Array.isArray(step.blocks)) return false;
-  }
-  
   return true;
 }
 
 /**
- * Limpa cache de templates (útil para hot-reload em dev)
+ * @deprecated
  */
-export function clearTemplateCache(): void {
-  templateCache.clear();
-  appLogger.info('[TemplateLoader] Template cache cleared');
+export async function preloadTemplate(_templateId: string): Promise<void> {
+  appLogger.warn('[DEPRECATED] preloadTemplate()');
+  // No-op - preload handled internally by templateService
 }
 
 /**
- * Pré-carrega template (útil para performance)
- */
-export async function preloadTemplate(templateId: string): Promise<void> {
-  if (!templateCache.has(templateId)) {
-    await loadFunnelTemplate(templateId);
-  }
-}
-
-/**
- * Merge template externo com blocos internos
- * Útil para sobrescrever blocos específicos mantendo o resto do template
+ * @deprecated
  */
 export function mergeTemplateBlocks(
   template: FunnelTemplate,
@@ -310,7 +167,7 @@ export function mergeTemplateBlocks(
 }
 
 /**
- * Converte template para formato legado (backward compatibility)
+ * @deprecated
  */
 export function convertToLegacyFormat(template: FunnelTemplate): Record<string, Block[]> {
   return template.steps.reduce((acc, step) => {
