@@ -85,6 +85,27 @@ export {
   withFunnelId,
 } from './EditorFunnelContext';
 
+// 🎯 UNIFIED EDITOR CONTEXT - Contexto centralizado do editor
+export {
+  EditorProvider as UnifiedEditorProvider,
+  useEditorContext,
+  useEditorContextSafe,
+  useEditorState as useUnifiedEditorState,
+  useEditorActions,
+  useEditorFunnelId,
+  useEditorCurrentStep,
+  useSelectedBlock,
+  useCurrentStepBlocks,
+  useBlockSelection,
+  useStepNavigation,
+  useEditorHistory,
+  type EditorState,
+  type EditorActions,
+  type EditorContextValue,
+  type EditorMode,
+  type ViewportSize,
+} from './EditorContext';
+
 // 🎨 QUIZ
 export { QuizProvider, useQuiz, useQuizContext } from './quiz/QuizContext';
 export { QuizFlowProvider, useQuizFlow } from './quiz/QuizFlowProvider';
@@ -123,10 +144,10 @@ export { UIProvider, useUI } from './providers/UIProvider';
  * Estatísticas dos contextos (atualizado)
  */
 export const CONTEXTS_STATS = {
-  total: 23, // 19 originais + 4 adicionais (LivePreview, Performance, Security, UI)
+  total: 24, // 23 originais + 1 UnifiedEditorContext
   byCategory: {
     auth: 2,
-    editor: 3, // EditorDndContext removido
+    editor: 4, // +1 UnifiedEditorContext
     funnel: 2,
     quiz: 2,
     ui: 3,
