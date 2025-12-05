@@ -8,6 +8,7 @@ import React from 'react';
 import { appLogger } from '@/lib/utils/logger';
 import { StyleResult } from '@/types/quiz';
 import { Block } from '@/types/editor';
+import { useFunnelId } from '@/contexts/EditorFunnelContext';
 
 interface UnifiedPreviewEngineProps {
   blocks: Block[];
@@ -51,7 +52,7 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
   onBlockSelect,
   onBlockUpdate,
   onBlocksReordered,
-  funnelId, // 🎯 CORREÇÃO: Sem default hardcoded - deve ser passado via props
+  funnelId: propFunnelId, // 🎯 Props opcionais - contexto é preferido
   currentStep = 1,
   enableInteractions = true,
   mode = 'preview',
@@ -60,11 +61,17 @@ export const UnifiedPreviewEngine: React.FC<UnifiedPreviewEngineProps> = ({
   debugInfo = {},
   onError,
 }) => {
+  // 🎯 USAR CONTEXTO: funnelId vem do EditorFunnelContext, props como fallback
+  const contextFunnelId = useFunnelId();
+  const funnelId = propFunnelId || contextFunnelId;
+
   appLogger.debug('🎯 [DEBUG] UnifiedPreviewEngine recebeu props:', {
     mode,
     enableProductionMode,
     realTimeUpdate,
     funnelId,
+    contextFunnelId,
+    propFunnelId,
     currentStep,
     blocksCount: blocks.length,
     debugInfo,

@@ -13,6 +13,7 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { ValidationIndicator, ValidationBadge, ValidationState } from './ValidationIndicator';
 import { useMockData, useMockStepData } from './MockDataProvider';
 import { useStepValidation } from '@/hooks/useStepValidation';
+import { useFunnelId } from '@/contexts/EditorFunnelContext';
 
 export interface EnhancedBlockRendererProps {
   block: Block;
@@ -155,7 +156,7 @@ export const EnhancedBlockRenderer: React.FC<EnhancedBlockRendererProps> = ({
   isSelected = false,
   isPreview = false,
   currentStep = 1,
-  funnelId, // 🎯 CORREÇÃO: Sem default hardcoded - deve ser passado via props
+  funnelId: propFunnelId, // 🎯 Props opcionais - contexto é preferido
   onSelect,
   onUpdate,
   onValidationChange,
@@ -164,6 +165,10 @@ export const EnhancedBlockRenderer: React.FC<EnhancedBlockRendererProps> = ({
   enableAutoAdvance = true,
   realExperienceProps,
 }) => {
+  // 🎯 USAR CONTEXTO: funnelId vem do EditorFunnelContext, props como fallback
+  const contextFunnelId = useFunnelId();
+  const funnelId = propFunnelId || contextFunnelId;
+
   const Component = blockRegistry.getComponent(block.type);
   const { simulateValidation } = useMockData();
   const stepData = useMockStepData(currentStep, funnelId);

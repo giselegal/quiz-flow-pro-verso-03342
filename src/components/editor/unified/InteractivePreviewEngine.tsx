@@ -26,6 +26,7 @@ import { useDebounce } from '@/hooks/useDebounce';
 import { DndContext, closestCenter, PointerSensor, KeyboardSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { SortablePreviewBlockWrapper } from './SortablePreviewBlockWrapper';
+import { useFunnelId } from '@/contexts/EditorFunnelContext';
 
 export interface InteractivePreviewEngineProps {
   blocks: Block[];
@@ -71,7 +72,7 @@ export const InteractivePreviewEngine: React.FC<InteractivePreviewEngineProps> =
   onBlockSelect,
   onBlockUpdate,
   onBlocksReordered,
-  funnelId, // 🎯 CORREÇÃO: Sem default hardcoded - deve ser passado via props
+  funnelId: propFunnelId, // 🎯 Props opcionais - contexto é preferido
   currentStep: initialStep = 1,
   mode = 'preview',
   className = '',
@@ -79,11 +80,17 @@ export const InteractivePreviewEngine: React.FC<InteractivePreviewEngineProps> =
   enableRealExperience = false,
   realTimeUpdate = false, // 🎯 NOVO: Sistema de atualização em tempo real
 }) => {
+  // 🎯 USAR CONTEXTO: funnelId vem do EditorFunnelContext, props como fallback
+  const contextFunnelId = useFunnelId();
+  const funnelId = propFunnelId || contextFunnelId;
+
   appLogger.debug('🎯 [DEBUG] InteractivePreviewEngine inicializado:', {
     mode,
     enableRealExperience,
     realTimeUpdate,
     funnelId,
+    contextFunnelId,
+    propFunnelId,
     currentStep: initialStep,
     blocksCount: blocks.length,
   });

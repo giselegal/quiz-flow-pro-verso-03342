@@ -14,6 +14,7 @@ import Step20Result from '@/components/steps/Step20Result';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { EditableStep20Result } from '../result/EditableStep20Result';
 import { EnhancedBlockRenderer } from './EnhancedBlockRenderer';
+import { useFunnelId } from '@/contexts/EditorFunnelContext';
 
 export interface ProductionPreviewEngineProps {
   blocks: Block[];
@@ -41,12 +42,16 @@ export const ProductionPreviewEngine: React.FC<ProductionPreviewEngineProps> = (
   viewportSize = 'desktop',
   onBlockSelect,
   onBlockUpdate,
-  funnelId, // 🎯 CORREÇÃO: Sem default hardcoded - deve ser passado via props
+  funnelId: propFunnelId, // 🎯 Props opcionais - contexto é preferido
   currentStep = 1,
   mode = 'preview',
   className = '',
   enableInteractions = true,
 }) => {
+  // 🎯 USAR CONTEXTO: funnelId vem do EditorFunnelContext, props como fallback
+  const contextFunnelId = useFunnelId();
+  const funnelId = propFunnelId || contextFunnelId;
+
   const isProductionMode = mode === 'production';
   const isEditorMode = mode === 'editor';
 

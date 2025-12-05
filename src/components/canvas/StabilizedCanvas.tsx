@@ -24,6 +24,7 @@ import { useStepSelection } from '@/hooks/useStepSelection';
 import type { DragEndEvent } from '@dnd-kit/core';
 import ReactDndRuntimeBoundary from '@/components/editor/quiz/QuizModularEditor/components/SafeDndContext';
 import { appLogger } from '@/lib/utils/appLogger';
+import { useFunnelId } from '@/contexts/EditorFunnelContext';
 
 interface StabilizedCanvasProps {
   blocks: Block[];
@@ -53,8 +54,12 @@ const StabilizedCanvas: React.FC<StabilizedCanvasProps> = ({
   onStepChange,
   onReorderBlocks,
   className = '',
-  funnelId, // 🎯 CORREÇÃO: Sem default hardcoded - deve ser passado via props
+  funnelId: propFunnelId, // 🎯 Props opcionais - contexto é preferido
 }) => {
+  // 🎯 USAR CONTEXTO: funnelId vem do EditorFunnelContext, props como fallback
+  const contextFunnelId = useFunnelId();
+  const funnelId = propFunnelId || contextFunnelId;
+
   // 🔒 REFS ESTÁVEIS - Evitam re-criação desnecessária
   const canvasRef = useRef<HTMLDivElement>(null);
   const lastStepRef = useRef<number>(currentStep);
@@ -70,20 +75,11 @@ const StabilizedCanvas: React.FC<StabilizedCanvasProps> = ({
         isPreviewMode,
         blocksCount: blocks.length,
         selectedBlockId: selectedBlock?.id,
+        funnelId,
       }] });
-  // 🎯 CORREÇÃO: Resolver funnelId de forma flexível SEM fallback hardcoded
-  // prop tem prioridade, depois query (?funnelId ou ?funnel), vazio se nenhum
-  const effectiveFunnelId = useMemo(() => {
-    if (funnelId) return funnelId;
-    try {
-      const sp = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
-      const q1 = sp?.get('funnelId');
-      const q2 = sp?.get('funnel');
-      return q1 || q2 || ''; // 🎯 Sem fallback hardcoded
-    } catch {
-      return ''; // 🎯 Sem fallback hardcoded
-    }
-  }, [funnelId]);
+
+  // 🎯 Usar funnelId direto do contexto/props (já resolvido acima)
+  const effectiveFunnelId = funnelId;
 
   // Gate normalizado: refletir estado (env/query)
   const normalizedGateEnabled = useMemo(() => {
