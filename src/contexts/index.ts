@@ -76,6 +76,15 @@ export { EditorRuntimeProviders } from './editor/EditorRuntimeProviders';
 export { FunnelsProvider, useFunnels } from './funnel/FunnelsContext';
 export { UnifiedFunnelProvider, useUnifiedFunnel } from './funnel/UnifiedFunnelContext';
 
+// 🎯 EDITOR FUNNEL CONTEXT - Propagação global de funnelId
+export {
+  EditorFunnelProvider,
+  useEditorFunnel,
+  useEditorFunnelSafe,
+  useFunnelId,
+  withFunnelId,
+} from './EditorFunnelContext';
+
 // 🎨 QUIZ
 export { QuizProvider, useQuiz, useQuizContext } from './quiz/QuizContext';
 export { QuizFlowProvider, useQuizFlow } from './quiz/QuizFlowProvider';
