@@ -6,6 +6,7 @@ import { useCanvasContainerStyles } from '@/hooks/useCanvasContainerStyles';
 import StabilizedCanvas from '@/components/canvas/StabilizedCanvas';
 import PreviewModeRenderer from '@/components/editor/renderers/PreviewModeRenderer';
 import { useEditorCore } from '@/hooks/core/useEditorCore';
+import { useFunnelId } from '@/contexts/EditorFunnelContext';
 
 // Removido LazyScalableQuizRenderer: StabilizedCanvas já encapsula preview com lazy interno
 
@@ -32,8 +33,12 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
   selectedBlockId,
   actions,
   isDragging,
-  funnelId, // 🎯 CORREÇÃO: Sem default hardcoded - deve ser passado via props
+  funnelId: propFunnelId, // 🎯 Props opcionais - contexto é preferido
 }) => {
+  // 🎯 USAR CONTEXTO: funnelId vem do EditorFunnelContext, props como fallback
+  const contextFunnelId = useFunnelId();
+  const funnelId = propFunnelId || contextFunnelId;
+
   // Hook para aplicar estilos dinâmicos
   useCanvasContainerStyles();
   const editorCore = useEditorCore();
