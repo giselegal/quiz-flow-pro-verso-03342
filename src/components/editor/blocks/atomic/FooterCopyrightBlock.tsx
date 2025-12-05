@@ -18,7 +18,7 @@ export default function FooterCopyrightBlock({
   onOpenProperties,
 }: FooterCopyrightBlockProps) {
   // Suporta {currentYear} como token dinâmico
-  const textRaw = block.content?.text || block.properties?.text || '© {currentYear} Gisele Galvão - Todos os direitos reservados';
+  const textRaw = block.content?.text || block.properties?.text || '© {currentYear} - Todos os direitos reservados';
   const text = textRaw.replace(/\{currentYear\}/g, String(new Date().getFullYear()));
   
   const textAlign = block.properties?.textAlign || 'center';
