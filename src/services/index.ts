@@ -150,6 +150,41 @@ export { ConfigurationService as ConfigurationAPI } from './ConfigurationService
 export { TemplateRegistry } from './TemplateRegistry';
 
 // =============================================================================
+// TEMPLATE LOADERS (DEPRECATED - use templateService)
+// =============================================================================
+
+/** @deprecated Use templateService.getTemplate() ou templateService.loadV4Template() */
+export { 
+  loadFunnelTemplate, 
+  clearTemplateCache,
+  listAvailableTemplates,
+  getStepBlocks,
+  getStepKeys,
+  validateTemplate,
+  preloadTemplate,
+  type FunnelTemplate,
+  type FunnelStep,
+} from './TemplateLoader';
+
+/** @deprecated Use cacheService.templates */
+export { templateCache, TemplateCache } from './TemplateCache';
+
+/** @deprecated Use templateService.getStep() */
+export { 
+  TemplateLoader as EditorTemplateLoader,
+  type TemplateSource,
+  type LoadedTemplate,
+} from './editor/TemplateLoader';
+
+/** @deprecated Use templateService */
+export { 
+  UnifiedTemplateLoader,
+  unifiedTemplateLoader,
+  type LoadOptions,
+  type LoadResult,
+} from './templates/UnifiedTemplateLoader';
+
+// =============================================================================
 // QUIZ NAVIGATION CONFIG
 // =============================================================================
 

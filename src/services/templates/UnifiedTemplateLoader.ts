@@ -1,84 +1,71 @@
 /**
- * 🎯 UNIFIED TEMPLATE LOADER
+ * 🔄 UNIFIED TEMPLATE LOADER - FACADE DE COMPATIBILIDADE
+ * @deprecated Use `templateService` de '@/services' ao invés deste arquivo
  * 
- * Consolidação de todos os loaders de template em um único ponto de entrada.
- * Implementa hierarquia de fontes com fallback automático.
+ * Este arquivo foi convertido para facade que delega ao templateService canônico.
+ * Mantido apenas para compatibilidade com imports existentes.
  * 
- * HIERARQUIA DE PRIORIDADE:
- * 1. v4 JSON (quiz21-v4.json) - Formato canônico com validação Zod
- * 2. v3 Modular (step-XX-v3.json) - Steps individuais
- * 3. v3 Master (quiz21-complete.json) - Template consolidado v3
- * 4. HierarchicalTemplateSource - Sistema completo de prioridades
+ * MIGRAÇÃO:
+ * ```typescript
+ * // ❌ ANTES
+ * import { UnifiedTemplateLoader } from '@/services/templates/UnifiedTemplateLoader';
+ * const loader = UnifiedTemplateLoader.getInstance();
+ * const result = await loader.loadStep('step-01');
  * 
- * @version 4.0.0
- * @phase Fase 3 - Consolidação
+ * // ✅ DEPOIS
+ * import { templateService } from '@/services';
+ * const result = await templateService.getStep('step-01');
+ * ```
  */
 
+import { templateService, cacheService } from '@/services';
 import { appLogger } from '@/lib/utils/appLogger';
-import { cacheService } from '@/services/canonical';
-import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplateSourceMigration';
 import { validateQuizSchema, type QuizSchema } from '@/schemas/quiz-schema.zod';
 import type { Block } from '@/types/editor';
-import { getCanonicalTemplate } from '@/config/template-paths';
 
-/**
- * Opções de carregamento
- */
+// ============================================================================
+// TIPOS LEGADOS (Mantidos para compatibilidade)
+// ============================================================================
+
 export interface LoadOptions {
-  /** Usar cache (padrão: true) */
   useCache?: boolean;
-  /** Timeout em ms (padrão: 5000) */
   timeout?: number;
-  /** Signal para cancelamento */
   signal?: AbortSignal;
-  /** Forçar fonte específica */
   forceSource?: 'v4' | 'v3-modular' | 'v3-master' | 'hierarchical';
-  /** ID do funnel para HierarchicalSource */
   funnelId?: string;
 }
 
-/**
- * Resultado do carregamento com metadata
- */
 export interface LoadResult<T> {
-  /** Dados carregados */
   data: T;
-  /** Fonte usada */
   source: 'v4' | 'v3-modular' | 'v3-master' | 'hierarchical' | 'fallback';
-  /** Tempo de carregamento em ms */
   loadTime: number;
-  /** Se veio do cache */
   fromCache: boolean;
-  /** Warnings durante o carregamento */
   warnings?: string[];
 }
 
-/**
- * Validação de resultado
- */
 export interface ValidationResult {
   isValid: boolean;
   errors: Array<{ path: string; message: string }>;
   warnings: string[];
 }
 
+// ============================================================================
+// CLASSE LEGADA (Delega para templateService)
+// ============================================================================
+
 /**
- * Classe UnifiedTemplateLoader
- * Gerencia carregamento unificado de templates com hierarquia de fontes
+ * @deprecated Use `templateService` ao invés desta classe
  */
 export class UnifiedTemplateLoader {
   private static instance: UnifiedTemplateLoader;
 
-  // Cache de templates v4 completos
-  private v4Cache = new Map<string, QuizSchema>();
-
-  // Cache de steps individuais
-  private stepCache = new Map<string, Block[]>();
-
   private constructor() {
-    appLogger.info('🎯 UnifiedTemplateLoader inicializado');
+    appLogger.warn('[DEPRECATED] UnifiedTemplateLoader → use templateService');
   }
 
+  /**
+   * @deprecated Use `templateService` diretamente
+   */
   static getInstance(): UnifiedTemplateLoader {
     if (!UnifiedTemplateLoader.instance) {
       UnifiedTemplateLoader.instance = new UnifiedTemplateLoader();
@@ -87,220 +74,78 @@ export class UnifiedTemplateLoader {
   }
 
   /**
-   * Carregar step com hierarquia de fontes
-   * 
-   * @example
-   * ```typescript
-   * const result = await loader.loadStep('step-01', { useCache: true });
-   * console.log(`Loaded ${result.data.length} blocks from ${result.source}`);
-   * ```
+   * @deprecated Use `templateService.getStep(stepId)`
    */
   async loadStep(
     stepId: string,
     options: LoadOptions = {}
   ): Promise<LoadResult<Block[]>> {
     const startTime = performance.now();
-    const { useCache = true, timeout = 5000, signal, forceSource, funnelId } = options;
+    
+    appLogger.warn('[DEPRECATED] UnifiedTemplateLoader.loadStep() → use templateService.getStep()');
 
-    // Verificar cancelamento
-    if (signal?.aborted) {
-      throw new Error('Operation aborted');
-    }
+    try {
+      const result = await templateService.getStep(stepId, options.funnelId, {
+        signal: options.signal,
+      });
 
-    // ⚡ OTIMIZAÇÃO: Cache hit com early return
-    if (useCache) {
-      const cached = this.getCachedStep(stepId);
-      if (cached) {
-        const loadTime = performance.now() - startTime;
-        appLogger.debug(`✅ [UnifiedLoader] Cache hit: ${stepId} (${loadTime.toFixed(2)}ms)`);
-        // Early return - não precisamos tentar outras fontes
+      const loadTime = performance.now() - startTime;
+
+      if (result.success && result.data) {
         return {
-          data: cached,
-          source: 'hierarchical',
+          data: result.data,
+          source: 'v4',
           loadTime,
-          fromCache: true,
+          fromCache: false,
         };
       }
+
+      throw new Error(result.error?.message || 'Failed to load step');
+    } catch (error) {
+      const loadTime = performance.now() - startTime;
+      
+      return {
+        data: [],
+        source: 'fallback',
+        loadTime,
+        fromCache: false,
+        warnings: [(error as Error).message],
+      };
     }
-
-    const warnings: string[] = [];
-    let blocks: Block[] | null = null;
-    let source: LoadResult<Block[]>['source'] = 'fallback';
-
-    // ⚡ OTIMIZAÇÃO: Priorizar V4 e retornar imediatamente se bem-sucedido
-    // PRIORIDADE 1: v4 JSON (fonte canônica)
-    if (!forceSource || forceSource === 'v4') {
-      try {
-        const v4Result = await this.loadFromV4(stepId, { timeout, signal, funnelId });
-        if (v4Result && v4Result.length > 0) {
-          blocks = v4Result;
-          source = 'v4';
-
-          // ⚡ Early return após sucesso - V4 é a fonte canônica
-          if (useCache) {
-            this.cacheStep(stepId, blocks);
-          }
-
-          const loadTime = performance.now() - startTime;
-          appLogger.info(`✅ [UnifiedLoader] Loaded from v4: ${stepId} (${loadTime.toFixed(2)}ms)`);
-
-          return {
-            data: blocks,
-            source,
-            loadTime,
-            fromCache: false,
-          };
-        }
-      } catch (error) {
-        warnings.push(`v4 failed: ${(error as Error).message}`);
-        appLogger.debug(`⚠️ [UnifiedLoader] v4 failed for ${stepId}:`, error);
-      }
-    }
-
-    // PRIORIDADE 2: v3 Modular (fallback apenas se V4 falhar)
-    if (!forceSource || forceSource === 'v3-modular') {
-      try {
-        const v3Result = await this.loadFromV3Modular(stepId, { timeout, signal });
-        if (v3Result && v3Result.length > 0) {
-          blocks = v3Result;
-          source = 'v3-modular';
-
-          // ⚡ Early return após sucesso
-          if (useCache) {
-            this.cacheStep(stepId, blocks);
-          }
-
-          const loadTime = performance.now() - startTime;
-          appLogger.info(`✅ [UnifiedLoader] Loaded from v3-modular: ${stepId} (${loadTime.toFixed(2)}ms)`);
-
-          return {
-            data: blocks,
-            source,
-            loadTime,
-            fromCache: false,
-            warnings: warnings.length > 0 ? warnings : undefined,
-          };
-        }
-      } catch (error) {
-        warnings.push(`v3-modular failed: ${(error as Error).message}`);
-        appLogger.debug(`⚠️ [UnifiedLoader] v3-modular failed for ${stepId}:`, error);
-      }
-    }
-
-    // PRIORIDADE 3: HierarchicalTemplateSource (fallback final otimizado)
-    // ⚠️ REMOVIDO v3-master para reduzir redundância - HierarchicalSource já verifica isso
-    if (!forceSource || forceSource === 'hierarchical') {
-      try {
-        const hierarchicalResult = await hierarchicalTemplateSource.getPrimary(stepId, funnelId);
-        if (hierarchicalResult.data && hierarchicalResult.data.length > 0) {
-          blocks = hierarchicalResult.data;
-          source = 'hierarchical';
-          appLogger.info(`✅ [UnifiedLoader] Loaded from hierarchical: ${stepId}`);
-        }
-      } catch (error) {
-        warnings.push(`hierarchical failed: ${(error as Error).message}`);
-        appLogger.debug(`⚠️ [UnifiedLoader] hierarchical failed for ${stepId}:`, error);
-      }
-    }
-
-    // Falha total
-    if (!blocks) {
-      appLogger.error(`❌ [UnifiedLoader] Failed to load ${stepId} from all sources`);
-      throw new Error(`Failed to load step ${stepId}: ${warnings.join('; ')}`);
-    }
-
-    // Cache resultado
-    if (useCache) {
-      this.cacheStep(stepId, blocks);
-    }
-
-    const loadTime = performance.now() - startTime;
-    appLogger.debug(`✅ [UnifiedLoader] Loaded ${stepId} in ${loadTime.toFixed(2)}ms from ${source}`);
-
-    return {
-      data: blocks,
-      source,
-      loadTime,
-      fromCache: false,
-      warnings: warnings.length > 0 ? warnings : undefined,
-    };
   }
 
   /**
-   * Carregar template completo (v4)
-   * 
-   * @example
-   * ```typescript
-   * const result = await loader.loadFullTemplate('quiz21StepsComplete');
-   * console.log(`Template has ${result.data.steps.length} steps`);
-   * ```
+   * @deprecated Use `templateService.loadV4Template()`
    */
   async loadFullTemplate(
     templateId: string,
     options: LoadOptions = {}
   ): Promise<LoadResult<QuizSchema>> {
     const startTime = performance.now();
-    const { useCache = true } = options;
+    
+    appLogger.warn('[DEPRECATED] UnifiedTemplateLoader.loadFullTemplate() → use templateService.loadV4Template()');
 
-    // Verificar cache
-    if (useCache && this.v4Cache.has(templateId)) {
-      const cached = this.v4Cache.get(templateId)!;
-      appLogger.debug(`✅ [UnifiedLoader] Template cache hit: ${templateId}`);
-      return {
-        data: cached,
-        source: 'v4',
-        loadTime: performance.now() - startTime,
-        fromCache: true,
-      };
-    }
-
-    // 🆕 Carregar template bundled diretamente (sem HTTP fetch)
     try {
-      appLogger.info(`🔍 [UnifiedLoader] Loading bundled template: ${templateId}`);
+      const result = await templateService.loadV4Template();
+      const loadTime = performance.now() - startTime;
 
-      // Usar template bundled do import
-      const data = getCanonicalTemplate();
-
-      // Validar com Zod
-      const validationResult = validateQuizSchema(data);
-      if (!validationResult.success) {
-        throw new Error(
-          `Schema validation failed: ${validationResult.errors.errors
-            .map(e => `${e.path.join('.')}: ${e.message}`)
-            .join('; ')}`
-        );
+      if (result.success && result.data) {
+        return {
+          data: result.data as QuizSchema,
+          source: 'v4',
+          loadTime,
+          fromCache: false,
+        };
       }
 
-      const template = validationResult.data;
-
-      // Cache
-      if (useCache) {
-        this.v4Cache.set(templateId, template);
-
-        // Cache individual steps também (converter QuizBlock[] para Block[])
-        template.steps.forEach(step => {
-          // Type cast: QuizBlock[] from Zod schema is compatible with Block[] from editor types
-          const blocks = step.blocks as any as Block[];
-          this.stepCache.set(step.id, blocks);
-        });
-      }
-
-      appLogger.info(`✅ [UnifiedLoader] Template loaded: ${template.steps.length} steps`);
-
-      return {
-        data: template,
-        source: 'v4',
-        loadTime: performance.now() - startTime,
-        fromCache: false,
-      };
+      throw new Error(result.error?.message || 'Failed to load template');
     } catch (error) {
-      appLogger.error(`❌ [UnifiedLoader] Failed to load template ${templateId}:`, error);
       throw error;
     }
   }
 
   /**
-   * Validar template com Zod
+   * @deprecated Use `validateQuizSchema()` diretamente
    */
   async validateTemplate(data: unknown): Promise<ValidationResult> {
     const result = validateQuizSchema(data);
@@ -324,242 +169,27 @@ export class UnifiedTemplateLoader {
   }
 
   /**
-   * Limpar cache
+   * @deprecated Use `cacheService.clearStore('templates')`
    */
   clearCache(): void {
-    this.v4Cache.clear();
-    this.stepCache.clear();
-    appLogger.info('🧹 [UnifiedLoader] Cache cleared');
+    appLogger.warn('[DEPRECATED] UnifiedTemplateLoader.clearCache() → use cacheService.clearStore("templates")');
+    cacheService.clearStore('templates');
+    templateService.clearCache();
   }
 
   /**
-   * Invalidar step específico
+   * @deprecated Use `cacheService.templates.invalidate(stepId)`
    */
   invalidateStep(stepId: string): void {
-    this.stepCache.delete(stepId);
-    appLogger.debug(`🗑️ [UnifiedLoader] Invalidated: ${stepId}`);
-  }
-
-  // ==================== PRIVATE METHODS ====================
-
-  /**
-   * Carregar de v4 JSON (quiz21-v4.json)
-   */
-  private async loadFromV4(
-    stepId: string,
-    options: { timeout: number; signal?: AbortSignal; funnelId?: string }
-  ): Promise<Block[] | null> {
-    // Determinar qual arquivo v4 carregar (padrão ou gold) com base no funnelId
-    const templateKey = options.funnelId || 'quiz21-v4';
-
-    // Tentar carregar template completo v4 correspondente
-    const templateResult = await this.loadFullTemplate(templateKey, {
-      useCache: true,
-      timeout: options.timeout,
-      signal: options.signal,
-    });
-
-    const step = templateResult.data.steps.find(s => s.id === stepId);
-    // Type cast: QuizBlock[] from Zod schema is compatible with Block[] from editor types
-    return step ? (step.blocks as any as Block[]) : null;
-  }
-
-  /**
-   * Resolver caminho do JSON v4 a partir do templateId/funnelId
-   * Suporta 'quiz21-v4' (padrão), 'quiz21-v4-gold', e 'quiz21StepsComplete'.
-   */
-  private resolveV4Path(templateId?: string): string {
-    const id = (templateId || '').toLowerCase();
-
-    // Mapeamento de IDs legados para arquivos v4
-    if (id.includes('gold') || id === 'quiz21-v4-gold') {
-      return `/templates/quiz21-v4-gold.json`;
-    }
-
-    // 🔧 FIX: Mapear 'quiz21stepscomplete' (fallback padrão) para quiz21-v4.json
-    if (id === 'quiz21stepscomplete' || id === 'quiz21-steps-complete') {
-      return `/templates/quiz21-v4.json`;
-    }
-
-    // Padrão - path canônico
-    return `/templates/quiz21-v4.json`;
-  }
-
-  /**
-   * Carregar de v3 Modular (quiz21Steps/steps/step-XX.json)
-   * ✅ FASE 2 FIX: Corrigido path para arquivos que existem
-   */
-  private async loadFromV3Modular(
-    stepId: string,
-    options: { timeout: number; signal?: AbortSignal }
-  ): Promise<Block[] | null> {
-    // ✅ FIX: Path correto para steps existentes
-    const url = `/templates/quiz21Steps/steps/${stepId}.json`;
-
-    try {
-      const response = await this.fetchWithTimeout(url, options.timeout, options.signal);
-      const data = await response.json();
-
-      // Pode ser array direto ou {blocks: []}
-      if (Array.isArray(data)) {
-        return data as Block[];
-      }
-      if (data && Array.isArray(data.blocks)) {
-        return data.blocks as Block[];
-      }
-
-      return null;
-    } catch {
-      return null;
-    }
-  }
-
-  /**
-   * Carregar de v3 Master (quiz21-v4.json fallback)
-   * ✅ FASE 2 FIX: Path corrigido para arquivo que existe
-   */
-  private async loadFromV3Master(
-    stepId: string,
-    options: { timeout: number; signal?: AbortSignal }
-  ): Promise<Block[] | null> {
-    const url = `/templates/quiz21-v4.json`;
-
-    try {
-      const response = await this.fetchWithTimeout(url, options.timeout, options.signal);
-      const data = await response.json();
-
-      if (data && data.steps && data.steps[stepId]) {
-        const stepData = data.steps[stepId];
-
-        if (Array.isArray(stepData)) {
-          return stepData as Block[];
-        }
-        if (stepData && Array.isArray(stepData.blocks)) {
-          return stepData.blocks as Block[];
-        }
-      }
-
-      return null;
-    } catch {
-      return null;
-    }
-  }
-
-  /**
-   * Fetch com timeout
-   */
-  private async fetchWithTimeout(
-    url: string,
-    timeout: number,
-    signal?: AbortSignal
-  ): Promise<Response> {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), timeout);
-
-    try {
-      // Combinar signals
-      const combinedSignal = signal
-        ? this.combineAbortSignals(signal, controller.signal)
-        : controller.signal;
-
-      const response: any = await fetch(url, { signal: combinedSignal });
-
-      // Guardar contra mocks quebrados que retornam undefined/null
-      if (!response) {
-        appLogger.error(`❌ [UnifiedLoader] Fetch retornou resposta vazia para ${url}`);
-        throw new Error('Empty fetch response (undefined/null)');
-      }
-
-      // Alguns ambientes de teste podem retornar objeto parcial sem .ok
-      if (typeof response.ok === 'undefined') {
-        appLogger.error(`❌ [UnifiedLoader] Resposta sem propriedade .ok para ${url}`);
-        throw new Error('Malformed fetch response (missing .ok)');
-      }
-
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-      }
-
-      return response as Response;
-    } finally {
-      clearTimeout(timeoutId);
-    }
-  }
-
-  /**
-   * Combinar múltiplos AbortSignals
-   */
-  private combineAbortSignals(...signals: AbortSignal[]): AbortSignal {
-    const controller = new AbortController();
-
-    for (const signal of signals) {
-      if (signal.aborted) {
-        controller.abort();
-        break;
-      }
-      signal.addEventListener('abort', () => controller.abort(), { once: true });
-    }
-
-    return controller.signal;
-  }
-
-  /**
-   * Obter step do cache
-   */
-  private getCachedStep(stepId: string): Block[] | null {
-    // Tentar cache em memória
-    if (this.stepCache.has(stepId)) {
-      return this.stepCache.get(stepId)!;
-    }
-
-    // Tentar canonical cache service
-    const result = cacheService.templates.get<Block[]>(stepId);
-    if (result.success && result.data) {
-      return result.data;
-    }
-
-    return null;
-  }
-
-  /**
-   * Cache step em memória e canonical service
-   */
-  private cacheStep(stepId: string, blocks: Block[]): void {
-    // Cache em memória
-    this.stepCache.set(stepId, blocks);
-
-    // Cache no canonical service
-    cacheService.templates.set(stepId, blocks, 600000); // 10 min
+    cacheService.templates.invalidate(`template:${stepId}`);
   }
 }
 
-// ==================== SINGLETON EXPORT ====================
+// ============================================================================
+// SINGLETON EXPORT (Compatibilidade)
+// ============================================================================
 
-/**
- * Instância singleton do UnifiedTemplateLoader
- * 
- * @example
- * ```typescript
- * import { unifiedTemplateLoader } from '@/services/templates/UnifiedTemplateLoader';
- * 
- * // Carregar step
- * const result = await unifiedTemplateLoader.loadStep('step-01');
- * console.log(`Loaded ${result.data.length} blocks`);
- * 
- * // Carregar template completo
- * const template = await unifiedTemplateLoader.loadFullTemplate('quiz21StepsComplete');
- * console.log(`Template has ${template.data.steps.length} steps`);
- * 
- * // Validar dados
- * const validation = await unifiedTemplateLoader.validateTemplate(data);
- * if (!validation.isValid) {
- *   console.error('Validation errors:', validation.errors);
- * }
- * ```
- */
+/** @deprecated Use `templateService` */
 export const unifiedTemplateLoader = UnifiedTemplateLoader.getInstance();
 
-// Expor no window para debug
-if (typeof window !== 'undefined') {
-  (window as any).__unifiedTemplateLoader = unifiedTemplateLoader;
-}
+export default UnifiedTemplateLoader;
