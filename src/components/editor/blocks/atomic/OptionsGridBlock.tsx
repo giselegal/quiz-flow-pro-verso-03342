@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import type { Block } from '@/types/editor';
 import { SelectableBlock } from '@/components/editor/SelectableBlock';
 import { useResultOptional } from '@/contexts/ResultContext';
+import { useBlockData, useBlockOptions } from '@/hooks/useBlockData';
 
 interface OptionsGridBlockProps {
     block: Block;
@@ -14,24 +15,21 @@ interface OptionsGridBlockProps {
 
 const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({ block, isSelected, isEditable, onSelect, onOpenProperties, contextData }) => {
     const ensureArray = <T,>(val: unknown): T[] => Array.isArray(val) ? (val as T[]) : [];
-    const props = block?.properties || {};
-    const content = (block as any)?.content || {};
-    // Normalizar opções aceitando alias 'image' -> 'imageUrl'
-    const rawOptions = ensureArray<{ id: string; text: string; imageUrl?: string; image?: string; value?: string }>(props.options || content.options);
-    const options = rawOptions.map(opt => ({
-        ...opt,
-        imageUrl: opt.imageUrl || (opt as any).image || undefined,
-    }));
+    
+    // 🔄 Usar adapter unificado para acessar dados do bloco
+    const blockData = useBlockData(block);
+    const options = useBlockOptions(block);
+    
     const currentAnswers = ensureArray<string>(contextData?.currentAnswers);
     const onAnswersChange: ((answers: string[]) => void) | undefined = contextData?.onAnswersChange;
     const result = useResultOptional();
 
-    // Auto-advance configuration
-    const autoAdvance = content.autoAdvance === true;
-    const autoAdvanceDelay = content.autoAdvanceDelay || 1500;
-    const minSelections = content.minSelections || content.requiredSelections || 1;
-    const maxSelections = content.maxSelections || options.length;
-    const multipleSelection = content.multipleSelection !== false;
+    // Auto-advance configuration (usa adapter com fallbacks)
+    const autoAdvance = Boolean(blockData.get<boolean>('autoAdvance', false));
+    const autoAdvanceDelay = blockData.get<number>('autoAdvanceDelay', 1500);
+    const minSelections = blockData.get<number>('minSelections', blockData.get<number>('requiredSelections', 1));
+    const maxSelections = blockData.get<number>('maxSelections', options.length);
+    const multipleSelection = blockData.get<boolean>('multipleSelection', true) !== false;
 
     // Track if minimum selections are met
     const hasMinimumSelections = currentAnswers.length >= minSelections;

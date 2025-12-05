@@ -1,6 +1,7 @@
 import React from 'react';
 import { SelectableBlock } from '@/components/editor/SelectableBlock';
 import type { Block } from '@/types/editor';
+import { useBlockData, useBlockImage } from '@/hooks/useBlockData';
 
 interface IntroLogoHeaderBlockProps {
   block: Block;
@@ -17,14 +18,17 @@ export default function IntroLogoHeaderBlock({
   onSelect,
   onOpenProperties,
 }: IntroLogoHeaderBlockProps) {
-  const logoUrl = block.content?.logoUrl || block.properties?.logoUrl || block.properties?.title || '';
-  const logoAlt = block.content?.logoAlt || block.properties?.logoAlt || block.properties?.title || 'Logo';
-  const title = block.properties?.title || block.content?.title || '';
-  const subtitle = block.properties?.subtitle || block.content?.subtitle || '';
-  const logoWidth = block.properties?.logoWidth || 120;
-  const logoHeight = block.properties?.logoHeight || 50;
-  const lineColor = block.properties?.lineColor || '#B89B7A';
-  const lineWidth = block.properties?.lineWidth || 300;
+  // 🔄 Usar adapter unificado para acessar dados do bloco
+  const blockData = useBlockData(block);
+  const logoUrl = useBlockImage(block, ['logoUrl', 'src', 'image'], '');
+  
+  const logoAlt = blockData.get('logoAlt', blockData.get('title', 'Logo'));
+  const title = blockData.get('title', '');
+  const subtitle = blockData.get('subtitle', '');
+  const logoWidth = blockData.get('logoWidth', 120);
+  const logoHeight = blockData.get('logoHeight', 50);
+  const lineColor = blockData.get('lineColor', '#B89B7A');
+  const lineWidth = blockData.get('lineWidth', 300);
 
   return (
     <SelectableBlock
