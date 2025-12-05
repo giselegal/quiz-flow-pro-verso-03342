@@ -1,161 +1,376 @@
 /**
  * 🏭 Block Factory - Cria blocos com defaults apropriados
  * 
+ * FASE 3: Completado com todos os tipos de blocos do BlockTypeZ
+ * 
  * Garante que todos os blocos tenham:
  * - ID único via nanoid
  * - Propriedades padrão por tipo
+ * - Campo calculationRule
  * - Timestamps de criação
  */
 
 import { generateBlockId } from './generateId';
+import type { QuizBlock } from '@/schemas/quiz-schema.zod';
 
 export interface BlockDefaults {
   [key: string]: Record<string, any>;
 }
 
 /**
+ * Tipos de blocos válidos (alinhado com BlockTypeZ)
+ */
+export const VALID_BLOCK_TYPES = [
+  // Progress & Navigation
+  'question-progress',
+  'question-navigation',
+  
+  // Intro Blocks
+  'intro-logo',
+  'intro-logo-header',
+  'intro-title',
+  'intro-subtitle',
+  'intro-description',
+  'intro-image',
+  'intro-form',
+  'intro-button',
+  'quiz-intro-header',
+  
+  // Question Blocks
+  'question-title',
+  'question-description',
+  'options-grid',
+  'form-input',
+  'question-hero',
+  'transition-hero',
+  'CTAButton',
+  
+  // Transition Blocks
+  'transition-title',
+  'transition-text',
+  'transition-button',
+  'transition-image',
+  
+  // Result Blocks
+  'result-header',
+  'result-title',
+  'result-description',
+  'result-image',
+  'result-display',
+  'result-guide-image',
+  'result-congrats',
+  'quiz-score-display',
+  'result-main',
+  'result-progress-bars',
+  'result-secondary-styles',
+  'result-cta',
+  'result-share',
+  
+  // Offer Blocks
+  'offer-hero',
+  'quiz-offer-hero',
+  'offer-card',
+  'benefits-list',
+  'testimonials',
+  'pricing',
+  'guarantee',
+  'urgency-timer',
+  'value-anchoring',
+  'secure-purchase',
+  'cta-button',
+  
+  // Generic Content
+  'text',
+  'text-inline',
+  'heading',
+  'image',
+  'button',
+  
+  // Layout
+  'container',
+  'spacer',
+  'divider',
+  'footer-copyright',
+] as const;
+
+export type ValidBlockType = typeof VALID_BLOCK_TYPES[number];
+
+/**
  * Propriedades padrão por tipo de bloco
+ * Alinhado com BlockTypeZ do schema Zod
  */
 export const BLOCK_DEFAULTS: BlockDefaults = {
-  // Introdução
+  // ========== INTRODUÇÃO ==========
   'intro-logo-header': {
     title: 'Título Principal',
     subtitle: 'Subtítulo descritivo',
     showLogo: true,
     alignment: 'center',
+    logoUrl: '',
   },
-  'intro-headline': {
-    text: 'Seu título aqui',
-    size: 'lg',
+  'intro-logo': {
+    logoUrl: '',
     alignment: 'center',
   },
-  'intro-subheadline': {
-    text: 'Subtítulo ou descrição',
-    size: 'md',
+  'intro-title': {
+    text: 'Título',
     alignment: 'center',
   },
-  'intro-cta-button': {
-    text: 'Começar Agora',
+  'intro-subtitle': {
+    text: 'Subtítulo',
+    alignment: 'center',
+  },
+  'intro-description': {
+    text: 'Descrição aqui...',
+    alignment: 'center',
+  },
+  'intro-image': {
+    src: '',
+    alt: 'Imagem de introdução',
+  },
+  'intro-form': {
+    fields: [],
+    submitText: 'Continuar',
+  },
+  'intro-button': {
+    text: 'Começar',
     variant: 'primary',
-    size: 'lg',
+    action: 'next',
+  },
+  'quiz-intro-header': {
+    title: 'Quiz',
+    subtitle: '',
   },
   
-  // Conteúdo
-  'text-heading': {
-    text: 'Título da Seção',
-    level: 'h2',
-    alignment: 'left',
+  // ========== PERGUNTAS ==========
+  'question-title': {
+    title: 'Pergunta',
+    subtitle: '',
+    alignment: 'center',
   },
-  'text-paragraph': {
-    text: 'Digite seu texto aqui...',
-    alignment: 'left',
+  'question-description': {
+    text: 'Descrição da pergunta',
   },
-  'text-list': {
-    items: ['Item 1', 'Item 2', 'Item 3'],
-    style: 'bullet',
+  'question-progress': {
+    showPercentage: true,
+    showStepCount: true,
   },
-  'media-image': {
-    src: '',
-    alt: 'Descrição da imagem',
-    aspectRatio: '16:9',
+  'question-navigation': {
+    showBack: true,
+    showNext: true,
   },
-  'media-video': {
-    src: '',
-    autoplay: false,
-    controls: true,
+  'question-hero': {
+    title: 'Hero Question',
+    subtitle: '',
+    imageUrl: '',
   },
   
-  // Perguntas
-  'question-multiple-choice': {
-    question: 'Qual sua preferência?',
+  // ========== OPÇÕES ==========
+  'options-grid': {
     options: [
-      { label: 'Opção A', value: 'a', points: 1 },
-      { label: 'Opção B', value: 'b', points: 1 },
-      { label: 'Opção C', value: 'c', points: 1 },
+      { id: 'opt1', text: 'Opção 1', value: 'opt1' },
+      { id: 'opt2', text: 'Opção 2', value: 'opt2' },
     ],
-    allowMultiple: false,
+    columns: 2,
+    multiSelect: false,
   },
-  'question-single-choice': {
-    question: 'Escolha uma opção:',
-    options: [
-      { label: 'Sim', value: 'yes', points: 1 },
-      { label: 'Não', value: 'no', points: 0 },
-    ],
-  },
-  'question-text-input': {
-    question: 'Digite sua resposta:',
-    placeholder: 'Sua resposta...',
-    required: true,
-  },
-  'question-scale': {
-    question: 'Em uma escala de 1 a 10:',
-    min: 1,
-    max: 10,
-    step: 1,
+  'form-input': {
+    label: 'Campo',
+    placeholder: 'Digite aqui...',
+    type: 'text',
+    required: false,
   },
   
-  // Resultados
-  'result-score': {
+  // ========== TRANSIÇÃO ==========
+  'transition-title': {
+    text: 'Carregando...',
+    alignment: 'center',
+  },
+  'transition-text': {
+    text: 'Analisando suas respostas...',
+    alignment: 'center',
+  },
+  'transition-button': {
+    text: 'Continuar',
+    action: 'next',
+  },
+  'transition-image': {
+    src: '',
+    alt: 'Imagem de transição',
+  },
+  'transition-hero': {
+    title: 'Transição',
+    subtitle: '',
+    imageUrl: '',
+  },
+  
+  // ========== RESULTADOS ==========
+  'result-header': {
+    title: 'Seu Resultado',
+    subtitle: 'Parabéns!',
+    alignment: 'center',
+  },
+  'result-title': {
+    text: 'Resultado',
+    alignment: 'center',
+  },
+  'result-description': {
+    text: 'Baseado nas suas respostas...',
+    alignment: 'center',
+  },
+  'result-image': {
+    src: '',
+    alt: 'Imagem de resultado',
+  },
+  'result-display': {
+    showScore: true,
+    showPercentage: true,
+  },
+  'result-guide-image': {
+    src: '',
+    alt: 'Guia',
+  },
+  'result-congrats': {
+    title: 'Parabéns!',
+    message: 'Você completou o quiz!',
+  },
+  'quiz-score-display': {
     showScore: true,
     showPercentage: true,
     label: 'Sua pontuação:',
   },
-  'result-category': {
-    categories: [],
-    showCategory: true,
+  'result-main': {
+    title: 'Resultado Principal',
+    description: '',
   },
-  'result-recommendation': {
-    title: 'Sua Recomendação',
-    description: 'Baseado nas suas respostas...',
+  'result-progress-bars': {
+    bars: [],
+    showLabels: true,
   },
-  
-  // Ofertas
-  'offer-cta': {
-    headline: 'Aproveite esta oferta exclusiva!',
-    buttonText: 'Quero Aproveitar',
+  'result-secondary-styles': {
+    styles: [],
+  },
+  'result-cta': {
+    headline: 'Próximo passo',
+    buttonText: 'Ver mais',
     buttonUrl: '#',
   },
-  'offer-pricing': {
+  'result-share': {
+    platforms: ['whatsapp', 'facebook', 'twitter'],
+    message: 'Confira meu resultado!',
+  },
+  
+  // ========== OFERTAS ==========
+  'offer-hero': {
+    title: 'Oferta Especial',
+    subtitle: 'Aproveite agora!',
+    imageUrl: '',
+  },
+  'quiz-offer-hero': {
+    title: 'Sua Recomendação',
+    description: '',
+  },
+  'offer-card': {
+    title: 'Produto',
+    price: 97,
+    description: '',
+  },
+  'benefits-list': {
+    title: 'Benefícios',
+    items: ['Benefício 1', 'Benefício 2', 'Benefício 3'],
+  },
+  'testimonials': {
+    items: [],
+  },
+  'pricing': {
     originalPrice: 197,
     salePrice: 97,
     currency: 'BRL',
     showDiscount: true,
   },
-  'offer-guarantee': {
+  'guarantee': {
     days: 7,
     text: 'Garantia incondicional de 7 dias',
   },
+  'urgency-timer': {
+    duration: 600,
+    showHours: true,
+    showMinutes: true,
+    showSeconds: true,
+  },
+  'value-anchoring': {
+    originalValue: 997,
+    currentValue: 97,
+  },
+  'secure-purchase': {
+    badges: ['ssl', 'garantia', 'suporte'],
+  },
   
-  // Layout
-  'layout-container': {
+  // ========== CTA ==========
+  'cta-button': {
+    text: 'Clique Aqui',
+    variant: 'primary',
+    action: 'next',
+    url: '',
+  },
+  'CTAButton': {
+    text: 'Clique Aqui',
+    variant: 'primary',
+    action: 'next',
+    url: '',
+  },
+  
+  // ========== CONTEÚDO GENÉRICO ==========
+  'text': {
+    content: '',
+    alignment: 'left',
+  },
+  'text-inline': {
+    content: '',
+  },
+  'heading': {
+    text: 'Título',
+    level: 'h2',
+    alignment: 'left',
+  },
+  'image': {
+    src: '',
+    alt: 'Imagem',
+    aspectRatio: '16:9',
+  },
+  'button': {
+    text: 'Botão',
+    variant: 'primary',
+    action: 'next',
+  },
+  
+  // ========== LAYOUT ==========
+  'container': {
     direction: 'column',
     gap: 16,
     padding: 16,
   },
-  'layout-columns': {
-    columns: 2,
-    gap: 16,
+  'spacer': {
+    height: 24,
   },
-  
-  // Navegação
-  'navigation-button': {
-    text: 'Continuar',
-    action: 'next',
+  'divider': {
+    style: 'solid',
+    color: 'border',
   },
-  'navigation-progress': {
-    showPercentage: true,
-    showStepCount: true,
+  'footer-copyright': {
+    text: '© 2025 - Todos os direitos reservados',
   },
 };
 
 /**
  * Cria um novo bloco com ID único e propriedades padrão
+ * Retorna um bloco tipado compatível com QuizBlock
  */
 export function createBlock(
-  blockType: string,
+  blockType: ValidBlockType,
   overrides: Record<string, any> = {},
   order: number = 0
-): any {
+): QuizBlock {
   const defaults = BLOCK_DEFAULTS[blockType] || {};
   
   return {
@@ -168,9 +383,12 @@ export function createBlock(
     },
     content: {},
     parentId: null,
+    calculationRule: undefined,
     metadata: {
-      createdAt: new Date().toISOString(),
-      version: 1,
+      editable: true,
+      reorderable: true,
+      reusable: true,
+      deletable: true,
     },
   };
 }
@@ -178,16 +396,19 @@ export function createBlock(
 /**
  * Clona um bloco existente com novo ID único
  */
-export function cloneBlock(block: any, newOrder?: number): any {
+export function cloneBlock(block: QuizBlock, newOrder?: number): QuizBlock {
+  const cloned = JSON.parse(JSON.stringify(block));
+  
   return {
-    ...JSON.parse(JSON.stringify(block)),
+    ...cloned,
     id: generateBlockId(block.type || 'block'),
     order: newOrder ?? (block.order || 0) + 1,
     metadata: {
-      ...block.metadata,
-      clonedFrom: block.id,
-      clonedAt: new Date().toISOString(),
-      version: 1,
+      ...cloned.metadata,
+      editable: true,
+      reorderable: true,
+      reusable: true,
+      deletable: true,
     },
   };
 }
@@ -195,8 +416,8 @@ export function cloneBlock(block: any, newOrder?: number): any {
 /**
  * Lista todos os tipos de blocos disponíveis
  */
-export function getAvailableBlockTypes(): string[] {
-  return Object.keys(BLOCK_DEFAULTS);
+export function getAvailableBlockTypes(): ValidBlockType[] {
+  return [...VALID_BLOCK_TYPES];
 }
 
 /**
@@ -204,4 +425,27 @@ export function getAvailableBlockTypes(): string[] {
  */
 export function getBlockDefaults(blockType: string): Record<string, any> {
   return BLOCK_DEFAULTS[blockType] || {};
+}
+
+/**
+ * Verifica se um tipo de bloco é suportado
+ */
+export function isValidBlockType(blockType: string): blockType is ValidBlockType {
+  return VALID_BLOCK_TYPES.includes(blockType as ValidBlockType);
+}
+
+/**
+ * Obtém blocos agrupados por categoria
+ */
+export function getBlocksByCategory(): Record<string, ValidBlockType[]> {
+  return {
+    intro: ['intro-logo', 'intro-logo-header', 'intro-title', 'intro-subtitle', 'intro-description', 'intro-image', 'intro-form', 'intro-button', 'quiz-intro-header'],
+    question: ['question-title', 'question-description', 'question-progress', 'question-navigation', 'question-hero', 'options-grid', 'form-input'],
+    transition: ['transition-title', 'transition-text', 'transition-button', 'transition-image', 'transition-hero'],
+    result: ['result-header', 'result-title', 'result-description', 'result-image', 'result-display', 'result-guide-image', 'result-congrats', 'quiz-score-display', 'result-main', 'result-progress-bars', 'result-secondary-styles', 'result-cta', 'result-share'],
+    offer: ['offer-hero', 'quiz-offer-hero', 'offer-card', 'benefits-list', 'testimonials', 'pricing', 'guarantee', 'urgency-timer', 'value-anchoring', 'secure-purchase'],
+    cta: ['cta-button', 'CTAButton'],
+    content: ['text', 'text-inline', 'heading', 'image', 'button'],
+    layout: ['container', 'spacer', 'divider', 'footer-copyright'],
+  };
 }

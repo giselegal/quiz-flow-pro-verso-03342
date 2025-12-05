@@ -1,8 +1,8 @@
 /**
  * 🎯 EDGE FUNCTION: QUIZ SAVE
  * 
- * Responsável por salvar templates de quiz no Supabase
- * Resolve GARGALO #3: API backend inexistente
+ * Responsável por salvar drafts de quiz no Supabase
+ * CORRIGIDO: Usa quiz_drafts ao invés de quiz_templates (que não existe)
  */
 
 // @ts-ignore: Deno imports
@@ -83,6 +83,8 @@ serve(async (req: Request): Promise<Response> => {
     // Parse request body
     const body: SaveQuizRequest = await req.json();
     
+    console.log('📥 Recebido request para salvar quiz:', body.funnelId);
+    
     if (!body.funnelId || !body.quiz) {
       return new Response(
         JSON.stringify({ 
@@ -101,56 +103,110 @@ serve(async (req: Request): Promise<Response> => {
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // Verificar se já existe um template para este funnel
+    // Verificar se já existe um draft para este funnel
     const { data: existing, error: fetchError } = await supabase
-      .from('quiz_templates')
+      .from('quiz_drafts')
       .select('id, version')
       .eq('funnel_id', body.funnelId)
       .order('version', { ascending: false })
       .limit(1)
-      .single();
+      .maybeSingle();
 
-    if (fetchError && fetchError.code !== 'PGRST116') { // PGRST116 = no rows
-      console.error('❌ Erro ao verificar template existente:', fetchError);
+    if (fetchError) {
+      console.error('❌ Erro ao verificar draft existente:', fetchError);
       throw fetchError;
     }
 
     const nextVersion = existing ? existing.version + 1 : 1;
+    const now = new Date().toISOString();
 
-    // Preparar dados para inserção
-    const quizData = {
+    // Preparar dados para upsert
+    const draftData = {
       funnel_id: body.funnelId,
-      quiz_data: body.quiz,
+      name: body.quiz.metadata?.name || 'Quiz sem nome',
+      slug: body.funnelId,
+      content: body.quiz,
       version: nextVersion,
       user_id: body.metadata?.userId || null,
-      source: body.metadata?.source || 'editor',
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
+      status: 'draft',
+      updated_at: now,
+      metadata: {
+        source: body.metadata?.source || 'editor',
+        savedAt: now,
+      },
     };
 
-    // Inserir no banco
-    const { data: inserted, error: insertError } = await supabase
-      .from('quiz_templates')
-      .insert(quizData)
-      .select()
-      .single();
+    let result;
 
-    if (insertError) {
-      console.error('❌ Erro ao inserir template:', insertError);
-      throw insertError;
+    if (existing) {
+      // Atualizar draft existente
+      console.log(`📝 Atualizando draft existente: ${existing.id} (v${nextVersion})`);
+      
+      const { data: updated, error: updateError } = await supabase
+        .from('quiz_drafts')
+        .update({
+          content: draftData.content,
+          version: nextVersion,
+          updated_at: now,
+          metadata: draftData.metadata,
+        })
+        .eq('id', existing.id)
+        .select()
+        .single();
+
+      if (updateError) {
+        console.error('❌ Erro ao atualizar draft:', updateError);
+        throw updateError;
+      }
+      
+      result = updated;
+    } else {
+      // Criar novo draft - precisa de user_id válido
+      console.log(`🆕 Criando novo draft para: ${body.funnelId}`);
+      
+      // Se não tiver user_id, não podemos criar (RLS requer)
+      if (!body.metadata?.userId) {
+        return new Response(
+          JSON.stringify({ 
+            success: false, 
+            error: 'user_id é obrigatório para criar novo draft. Faça login primeiro.' 
+          }),
+          { 
+            status: 401, 
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+          }
+        );
+      }
+      
+      const { data: inserted, error: insertError } = await supabase
+        .from('quiz_drafts')
+        .insert({
+          ...draftData,
+          user_id: body.metadata.userId,
+          created_at: now,
+        })
+        .select()
+        .single();
+
+      if (insertError) {
+        console.error('❌ Erro ao inserir draft:', insertError);
+        throw insertError;
+      }
+      
+      result = inserted;
     }
 
-    console.log(`✅ Template salvo: ${body.funnelId} (v${nextVersion})`);
+    console.log(`✅ Draft salvo: ${body.funnelId} (v${nextVersion})`);
 
     // Retornar sucesso
     const response: SaveQuizResponse = {
       success: true,
       data: {
-        id: inserted.id,
+        id: result.id,
         funnelId: body.funnelId,
         version: nextVersion,
-        createdAt: inserted.created_at,
-        updatedAt: inserted.updated_at,
+        createdAt: result.created_at,
+        updatedAt: result.updated_at,
       },
     };
 

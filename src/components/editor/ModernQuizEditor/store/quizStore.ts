@@ -299,7 +299,8 @@ export const useQuizStore = create<QuizStore>()(
         if (stepIndex === -1) return;
         
         // 🆕 Usar BlockFactory para criar bloco com defaults
-        const newBlock = createBlock(blockType, {}, order);
+        // Cast para ValidBlockType - validação deve ocorrer antes de chamar addBlock
+        const newBlock = createBlock(blockType as any, {}, order);
         
         state.quiz.steps[stepIndex].blocks.push(newBlock as any);
         
