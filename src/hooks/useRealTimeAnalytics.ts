@@ -113,7 +113,7 @@ export interface UseRealTimeAnalyticsOptions {
 
 export function useRealTimeAnalytics(options: UseRealTimeAnalyticsOptions = {}) {
   const {
-    funnelId = 'quiz-21-steps-integrated',
+    funnelId, // 🎯 CORREÇÃO: Sem default hardcoded - deve ser passado via options
     dropoffThreshold = 30,
     aggregationInterval = 10000, // 10 segundos
     enableConversionNotifications = true,
@@ -152,6 +152,12 @@ export function useRealTimeAnalytics(options: UseRealTimeAnalyticsOptions = {}) 
   // ============================================================
 
   const calculateLiveActivity = useCallback(async () => {
+    // 🎯 Early return se funnelId não foi fornecido
+    if (!funnelId) {
+      appLogger.warn('useRealTimeAnalytics: funnelId não fornecido, pulando cálculo');
+      return;
+    }
+    
     try {
       const now = new Date();
       const fiveMinutesAgo = new Date(now.getTime() - 5 * 60 * 1000);
@@ -342,6 +348,12 @@ export function useRealTimeAnalytics(options: UseRealTimeAnalyticsOptions = {}) 
   // ============================================================
 
   useEffect(() => {
+    // 🎯 Early return se funnelId não foi fornecido
+    if (!funnelId) {
+      appLogger.warn('useRealTimeAnalytics: funnelId não fornecido, pulando setup');
+      return;
+    }
+    
     let mounted = true;
 
     const setupRealtime = async () => {

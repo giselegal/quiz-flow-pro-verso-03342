@@ -39,9 +39,19 @@ export const SpecializedStepAdapter: React.FC<SpecializedStepAdapterProps> = ({
     data,
     onNext,
     onBack,
-    funnelId = 'quiz21StepsComplete',
+    funnelId, // 🎯 CORREÇÃO: Sem default hardcoded - deve ser passado via props
 }) => {
     appLogger.info(`🔄 SpecializedStepAdapter: Adaptando step ${stepNumber} para UniversalQuizStep`);
+
+    // 🎯 Early return se funnelId não foi fornecido
+    if (!funnelId) {
+        appLogger.warn('SpecializedStepAdapter: funnelId não fornecido');
+        return (
+            <div className="p-4 text-center text-muted-foreground">
+                Erro: funnelId não fornecido
+            </div>
+        );
+    }
 
     return (
         <UniversalQuizStep

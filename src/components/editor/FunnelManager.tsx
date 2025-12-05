@@ -55,8 +55,8 @@ export const FunnelManager: React.FC<FunnelManagerProps> = ({
     saveFunnel: async (_funnel: any) => {},
   }; // placeholder
 
-  // 🔍 Determinar funil atual
-  const activeFunnelId = currentFunnelId || getFunnelIdFromEnvOrStorage() || 'quiz-estilo-completo';
+  // 🔍 Determinar funil atual - SEM fallback hardcoded
+  const activeFunnelId = currentFunnelId || getFunnelIdFromEnvOrStorage() || '';
 
   // 📋 Carregar lista de funis do contexto específico
   const loadFunnels = useCallback(async () => {
@@ -76,28 +76,8 @@ export const FunnelManager: React.FC<FunnelManagerProps> = ({
         isActive: funnel.id === activeFunnelId,
       }));
 
-      // 🎯 Adicionar funis do template apenas no contexto TEMPLATES ou se não há funis
-      if (context === FunnelContext.TEMPLATES || mappedFunnels.length === 0) {
-        const templateFunnels = [
-          {
-            id: 'quiz-estilo-completo',
-            name: 'Quiz de Estilo Completo (Template)',
-            description: 'Template padrão com 21 etapas pré-configuradas',
-            lastModified: new Date(),
-            isPublished: true,
-            isActive: activeFunnelId === 'quiz-estilo-completo',
-          },
-        ];
-
-        // Verificar se os templates já estão na lista contextual
-        const existingTemplates = mappedFunnels.filter(f =>
-          templateFunnels.some(t => t.id === f.id),
-        );
-
-        if (existingTemplates.length === 0) {
-          mappedFunnels.unshift(...templateFunnels);
-        }
-      }
+      // 🎯 CORREÇÃO: Templates devem ser carregados do Supabase, não hardcoded
+      // Os templates canônicos devem estar na tabela funnels com flag is_template=true
 
       setFunnels(mappedFunnels);
       appLogger.debug(`✅ Funis carregados do contexto ${context}:`, mappedFunnels.length);
