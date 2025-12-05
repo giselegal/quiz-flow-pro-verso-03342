@@ -7,12 +7,15 @@
  * @since v4.1.0
  */
 
+// Import template data directly for bundling
+import quiz21V4Template from '@/data/templates/quiz21-v4.json';
+
 /**
  * Template path constants
  */
 export const TEMPLATE_PATHS = {
   /** V4 SaaS - Production template (canonical) */
-  V4_SAAS: '/templates/quiz21-v4.json',
+  V4_SAAS: '@/data/templates/quiz21-v4.json',
 } as const;
 
 /**
@@ -54,3 +57,16 @@ export function isV4Template(templatePath: string): boolean {
 export function getTemplateVersion(templatePath: string): string {
   return 'v4.0';
 }
+
+/**
+ * Get the canonical quiz21-v4 template data directly
+ * This avoids HTTP fetching and uses bundled data
+ */
+export function getCanonicalTemplate() {
+  return quiz21V4Template;
+}
+
+/**
+ * Export the template data for direct import
+ */
+export { quiz21V4Template };
