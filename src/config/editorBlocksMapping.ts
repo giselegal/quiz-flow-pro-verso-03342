@@ -39,7 +39,7 @@ import UrgencyTimerInlineBlock from '../components/editor/blocks/UrgencyTimerInl
 import BenefitsListBlock from '../components/editor/blocks/BenefitsListBlock';
 import GuaranteeBlock from '../components/editor/blocks/GuaranteeBlock';
 
-// SISTEMA UNIFICADO - Mapeamento completo de blocos do template v4
+// SISTEMA UNIFICADO - Mapeamento completo de blocos do template v4 + aliases legados
 export const UNIFIED_BLOCK_MAP: Record<string, ComponentType<any>> = {
   // Blocos básicos
   header: HeaderBlock,
@@ -54,33 +54,72 @@ export const UNIFIED_BLOCK_MAP: Record<string, ComponentType<any>> = {
   // Quiz result
   'quiz-result-calculated': QuizResultCalculatedBlock,
 
-  // INTRO BLOCKS (Step 1)
+  // =====================================================
+  // INTRO BLOCKS (Step 1) - V4 + aliases legados
+  // =====================================================
   'intro-logo-header': IntroLogoHeaderBlock,
   'intro-description': IntroDescriptionBlock,
   'intro-button': CTAButtonBlock,
+  // Aliases legados (quiz21StepsComplete.json)
+  'quiz-intro-header': IntroLogoHeaderBlock,
+  'intro-title': QuestionTitleBlock,
+  'intro-image': ResultImageBlock,
+  'intro-subtitle': IntroDescriptionBlock,
+  'intro-name-input': LeadFormBlock,
 
-  // QUESTION BLOCKS (Steps 2-18)
+  // =====================================================
+  // QUESTION BLOCKS (Steps 2-18) - V4 + aliases legados
+  // =====================================================
   'question-progress': QuestionProgressBlock,
   'question-title': QuestionTitleBlock,
   'options-grid': OptionsGridBlock,
+  // Aliases legados
+  'quiz-progress-bar': QuestionProgressBlock,
+  'quiz-question-header': QuestionTitleBlock,
+  'quiz-options': OptionsGridBlock,
+  'question-description': IntroDescriptionBlock,
+  'question-image': ResultImageBlock,
 
-  // TRANSITION BLOCKS (Step 19)
+  // =====================================================
+  // TRANSITION BLOCKS (Step 19) - V4 + aliases legados
+  // =====================================================
   'transition-title': TransitionTitleBlock,
   'transition-text': TransitionTextBlock,
   'urgency-timer': UrgencyTimerInlineBlock,
+  // Aliases legados
+  'transition-progress': QuestionProgressBlock,
+  'transition-image': ResultImageBlock,
+  'transition-button': CTAButtonBlock,
 
-  // RESULT BLOCKS (Step 20)
+  // =====================================================
+  // RESULT BLOCKS (Step 20) - V4 + aliases legados
+  // =====================================================
   'result-header': ResultHeaderBlock,
   'result-description': ResultDescriptionBlock,
   'result-image': ResultImageBlock,
   'result-share': ResultShareBlock,
   'result-display': ResultDisplayBlock,
+  // Aliases legados
+  'result-title': ResultHeaderBlock,
+  'result-style': ResultDisplayBlock,
+  'result-cta': CTAButtonBlock,
+  'result-progress': QuestionProgressBlock,
 
-  // OFFER BLOCKS (Step 21)
+  // =====================================================
+  // OFFER BLOCKS (Step 21) - V4 + aliases legados
+  // =====================================================
   'offer-hero': OfferHeroBlock,
   'benefits-list': BenefitsListBlock,
   'cta-button': CTAButtonBlock,
   'guarantee': GuaranteeBlock,
+  // Aliases legados
+  'offer-title': ResultHeaderBlock,
+  'offer-description': IntroDescriptionBlock,
+  'offer-image': ResultImageBlock,
+  'offer-price': OfferHeroBlock,
+  'offer-button': CTAButtonBlock,
+  'offer-guarantee': GuaranteeBlock,
+  'offer-testimonials': BenefitsListBlock,
 };
 
 // FUNÇÃO PRINCIPAL - Busca no Unified Map
