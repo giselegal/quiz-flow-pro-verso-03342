@@ -243,16 +243,13 @@ const lazyImports: Record<string, () => Promise<{ default: React.ComponentType<a
   'intro-subtitle': () => import('@/components/editor/blocks/atomic/IntroDescriptionBlock'),
   'intro-name-input': () => import('@/components/editor/blocks/LeadFormBlock'),
 
-  // Question aliases
-  'quiz-progress-bar': () => import('@/components/editor/blocks/atomic/QuestionProgressBlock'),
-  'quiz-question-header': () => import('@/components/editor/blocks/atomic/QuestionTitleBlock'),
+  // Question aliases (sem duplicatas - quiz-progress-bar e quiz-question-header já definidos acima)
   'quiz-options': () => import('@/components/editor/blocks/atomic/OptionsGridBlock'),
   'question-description': () => import('@/components/editor/blocks/atomic/IntroDescriptionBlock'),
   'question-image': () => import('@/components/editor/blocks/atomic/ResultImageBlock'),
 
-  // Transition aliases
+  // Transition aliases (sem duplicatas - transition-image já definido acima)
   'transition-progress': () => import('@/components/editor/blocks/atomic/QuestionProgressBlock'),
-  'transition-image': () => import('@/components/editor/blocks/atomic/ResultImageBlock'),
   'transition-button': () => import('@/components/editor/blocks/atomic/CTAButtonBlock'),
 
   // Result aliases
