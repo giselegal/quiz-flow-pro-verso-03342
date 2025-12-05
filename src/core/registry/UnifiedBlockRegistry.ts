@@ -105,12 +105,26 @@ const lazyImports: Record<string, () => Promise<{ default: React.ComponentType<a
   'quiz-intro': () => import('@/components/editor/blocks/QuizIntroHeaderBlock'),
   'intro-logo-header': () => import('@/components/editor/blocks/atomic/IntroLogoHeaderBlock'),
   'intro-button': () => import('@/components/editor/blocks/atomic/CTAButtonBlock'),
+  'intro-description': () => import('@/components/editor/blocks/atomic/IntroDescriptionBlock'),
 
-  // Decorative/UI (3 blocos)
-  // (REMOVIDO: decorativos já resolvidos diretamente pelo renderer)
+  // Transition blocks - Steps 12, 19
+  'transition-title': () => import('@/components/editor/blocks/atomic/TransitionTitleBlock'),
+  'transition-text': () => import('@/components/editor/blocks/atomic/TransitionTextBlock'),
 
-  // Transition blocks - Steps 12, 19 (6 blocos)
-  // (REMOVIDO: blocos de transição atômicos já tratados em BlockTypeRenderer)
+  // Question blocks - Steps 2-18
+  'question-progress': () => import('@/components/editor/blocks/atomic/QuestionProgressBlock'),
+  'question-title': () => import('@/components/editor/blocks/atomic/QuestionTitleBlock'),
+  'options-grid': () => import('@/components/editor/blocks/atomic/OptionsGridBlock'),
+
+  // Result blocks - Step 20
+  'result-header': () => import('@/components/editor/blocks/atomic/ResultHeaderBlock'),
+  'result-description': () => import('@/components/editor/blocks/atomic/ResultDescriptionBlock'),
+  'result-image': () => import('@/components/editor/blocks/atomic/ResultImageBlock'),
+  'result-share': () => import('@/components/editor/blocks/atomic/ResultShareBlock'),
+
+  // Offer blocks - Step 21
+  'offer-hero': () => import('@/components/editor/blocks/OfferHeroBlock'),
+  'cta-button': () => import('@/components/editor/blocks/atomic/CTAButtonBlock'),
 
   // Quiz Components
   'quiz-logo': () => import('@/components/editor/blocks/QuizLogoBlock'),
