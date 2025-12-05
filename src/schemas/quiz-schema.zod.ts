@@ -59,13 +59,17 @@ export const BlockTypeZ = z.enum([
   'intro-image',
   'intro-form',
   'intro-button',
+  'intro-name-input',
+  'quiz-intro',
   'quiz-intro-header',
   
   // Question Blocks
   'question-title',
   'question-description',
+  'question-image',
   'options-grid',
   'form-input',
+  'quiz-options',
   // Compat: heróis e CTA em uso nos JSONs
   'question-hero',
   'transition-hero',
@@ -76,6 +80,9 @@ export const BlockTypeZ = z.enum([
   'transition-text',
   'transition-button',
   'transition-image',
+  'transition-progress',
+  'transition-subtitle',
+  'transition-description',
   
   // Result Blocks
   'result-header',
@@ -83,6 +90,7 @@ export const BlockTypeZ = z.enum([
   'result-description',
   'result-image',
   'result-display',
+  'result-style',
   'result-guide-image',
   // Compat: blocos de resultado usados no gold
   'result-congrats',
@@ -95,11 +103,18 @@ export const BlockTypeZ = z.enum([
   
   // Offer Blocks
   'offer-hero',
+  'offer-title',
+  'offer-description',
+  'offer-image',
+  'offer-price',
+  'offer-button',
+  'offer-guarantee',
   'quiz-offer-hero',
   'offer-card',
   'benefits-list',
   'testimonials',
   'pricing',
+  'pricing-inline',
   'guarantee',
   'urgency-timer',
   'value-anchoring',
@@ -110,14 +125,29 @@ export const BlockTypeZ = z.enum([
   'text',
   'text-inline',
   'heading',
+  'heading-inline',
+  'headline',
   'image',
+  'image-inline',
   'button',
+  'button-inline',
   
   // Layout
   'container',
+  'section',
+  'box',
   'spacer',
   'divider',
-  'footer-copyright'
+  'footer-copyright',
+  
+  // Strategic Question
+  'strategic-question',
+  
+  // Loading/Processing
+  'loading-animation',
+  'loader-inline',
+  'progress-bar',
+  'progress-inline'
 ]);
 
 export const BlockMetadataZ = z.object({
