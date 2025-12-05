@@ -19,7 +19,7 @@ export { AuthProvider as AuthProviderLegacy, useAuth as useAuthLegacy } from './
 // Core Providers
 export { AuthProvider, useAuth } from './auth/AuthProvider';
 export { ThemeProvider, useTheme } from './theme/ThemeProvider';
-export { EditorStateProvider, useEditorState } from './editor/EditorStateProvider';
+// EditorStateProvider movido para seção EDITOR abaixo (linha 60+)
 export { FunnelDataProvider, useFunnelData } from './funnel/FunnelDataProvider';
 
 // Extended Providers (Fase 2.1 - Wave 2)
@@ -58,17 +58,23 @@ export { SimpleAppProvider, useSimpleApp } from './providers/SimpleAppProvider';
 // 🆕 FASE 3: PureBuilder compatibility
 
 // ✏️ EDITOR
-// ⚠️ ATUALIZAÇÃO: EditorProvider duplicado removido de /contexts/providers/
-// Use apenas EditorProvider (EditorStateProvider) de /core/contexts/EditorContext/
-export { EditorProvider, useEditor } from './editor/EditorContext';
+// ⚠️ CONSOLIDAÇÃO FASE 1.2: Todos os EditorContexts agora apontam para @/core/contexts/EditorContext
+// Use apenas EditorStateProvider/useEditor de @/core/contexts/EditorContext
+export { 
+  EditorStateProvider,
+  EditorStateProvider as EditorProvider,
+  useEditorState,
+  useEditor,
+  type EditorState as CoreEditorState,
+  type EditorContextValue,
+  type ValidationError,
+} from '@/core/contexts/EditorContext';
+
+// Aliases de compatibilidade para imports legados
+export { useEditor as useUnifiedEditor } from '@/core/contexts/EditorContext';
+
+// Legacy context - re-exporta do canônico
 export { EditorContext } from './editor/EditorContext';
-// ❌ REMOVIDO: MigrationEditorProvider (use EditorProvider diretamente)
-// ❌ REMOVIDO: EditorProvider de /contexts/providers/ (duplicado - movido para archive)
-// Compat: reexporta useEditor como useUnifiedEditor para manter chamadas existentes funcionando
-// Use exports centralizados ao invés de criar aliases
-// import { useEditorContext } from '@/core/exports';
-export { useEditor as useUnifiedEditor } from './editor/EditorContext';
-// EditorDndContext.tsx está vazio - removido
 export { EditorQuizProvider, useEditorQuiz } from './editor/EditorQuizContext';
 export { EditorRuntimeProviders } from './editor/EditorRuntimeProviders';
 
@@ -85,12 +91,17 @@ export {
   withFunnelId,
 } from './EditorFunnelContext';
 
-// 🎯 UNIFIED EDITOR CONTEXT - Contexto centralizado do editor
+// 🎯 UNIFIED EDITOR CONTEXT - Re-exporta do canônico com aliases de compatibilidade
 export {
-  EditorProvider as UnifiedEditorProvider,
-  useEditorContext,
-  useEditorContextSafe,
+  EditorStateProvider as UnifiedEditorProvider,
+  useEditor as useEditorContext,
   useEditorState as useUnifiedEditorState,
+  // EditorContextValue já exportado acima
+} from '@/core/contexts/EditorContext';
+
+// Hooks auxiliares de compatibilidade
+export {
+  useEditorContextSafe,
   useEditorActions,
   useEditorFunnelId,
   useEditorCurrentStep,
@@ -99,11 +110,10 @@ export {
   useBlockSelection,
   useStepNavigation,
   useEditorHistory,
-  type EditorState,
-  type EditorActions,
-  type EditorContextValue,
   type EditorMode,
   type ViewportSize,
+  type EditorState_Legacy as EditorState,
+  type EditorActions_Legacy as EditorActions,
 } from './EditorContext';
 
 // 🎨 QUIZ
