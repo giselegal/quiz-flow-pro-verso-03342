@@ -11,7 +11,7 @@ import { ComponentType } from 'react';
 // Import the new LeadFormBlock for direct mapping
 import LeadFormBlock from '../components/editor/blocks/LeadFormBlock';
 
-// Blocos básicos consolidados (mais completos)
+// Blocos básicos consolidados
 import HeaderBlock from '../components/editor/blocks/HeaderBlock';
 import TextBlock from '../components/editor/blocks/TextBlock';
 import ImageBlock from '../components/editor/blocks/ImageBlock';
@@ -20,9 +20,27 @@ import RichTextBlock from '../components/editor/blocks/RichTextBlock';
 // Blocos de quiz (validados)
 import QuizResultCalculatedBlock from '../components/editor/blocks/QuizResultCalculatedBlock';
 
-// SISTEMA UNIFICADO - Prioriza EnhancedBlockRegistry + Fallbacks validados
+// Blocos atômicos do template v4
+import IntroLogoHeaderBlock from '../components/editor/blocks/atomic/IntroLogoHeaderBlock';
+import IntroDescriptionBlock from '../components/editor/blocks/atomic/IntroDescriptionBlock';
+import CTAButtonBlock from '../components/editor/blocks/atomic/CTAButtonBlock';
+import QuestionProgressBlock from '../components/editor/blocks/atomic/QuestionProgressBlock';
+import QuestionTitleBlock from '../components/editor/blocks/atomic/QuestionTitleBlock';
+import OptionsGridBlock from '../components/editor/blocks/atomic/OptionsGridBlock';
+import TransitionTitleBlock from '../components/editor/blocks/atomic/TransitionTitleBlock';
+import TransitionTextBlock from '../components/editor/blocks/atomic/TransitionTextBlock';
+import ResultHeaderBlock from '../components/editor/blocks/atomic/ResultHeaderBlock';
+import ResultDescriptionBlock from '../components/editor/blocks/atomic/ResultDescriptionBlock';
+import ResultImageBlock from '../components/editor/blocks/atomic/ResultImageBlock';
+import ResultShareBlock from '../components/editor/blocks/atomic/ResultShareBlock';
+import OfferHeroBlock from '../components/editor/blocks/atomic/OfferHeroBlock';
+import UrgencyTimerInlineBlock from '../components/editor/blocks/UrgencyTimerInlineBlock';
+import BenefitsListBlock from '../components/editor/blocks/BenefitsListBlock';
+import GuaranteeBlock from '../components/editor/blocks/GuaranteeBlock';
+
+// SISTEMA UNIFICADO - Mapeamento completo de blocos do template v4
 export const UNIFIED_BLOCK_MAP: Record<string, ComponentType<any>> = {
-  // Blocos básicos (versões mais completas)
+  // Blocos básicos
   header: HeaderBlock,
   heading: HeaderBlock,
   text: TextBlock,
@@ -30,11 +48,37 @@ export const UNIFIED_BLOCK_MAP: Record<string, ComponentType<any>> = {
   'rich-text': RichTextBlock,
 
   // Form Components
-  'lead-form': LeadFormBlock, // ✅ Multi-field form component
+  'lead-form': LeadFormBlock,
 
-  // Blocos de quiz e resultado (funcionais)
+  // Quiz result
   'quiz-result-calculated': QuizResultCalculatedBlock,
-  QuizResultCalculatedBlock,
+
+  // INTRO BLOCKS (Step 1)
+  'intro-logo-header': IntroLogoHeaderBlock,
+  'intro-description': IntroDescriptionBlock,
+  'intro-button': CTAButtonBlock,
+
+  // QUESTION BLOCKS (Steps 2-18)
+  'question-progress': QuestionProgressBlock,
+  'question-title': QuestionTitleBlock,
+  'options-grid': OptionsGridBlock,
+
+  // TRANSITION BLOCKS (Step 19)
+  'transition-title': TransitionTitleBlock,
+  'transition-text': TransitionTextBlock,
+  'urgency-timer': UrgencyTimerInlineBlock,
+
+  // RESULT BLOCKS (Step 20)
+  'result-header': ResultHeaderBlock,
+  'result-description': ResultDescriptionBlock,
+  'result-image': ResultImageBlock,
+  'result-share': ResultShareBlock,
+
+  // OFFER BLOCKS (Step 21)
+  'offer-hero': OfferHeroBlock,
+  'benefits-list': BenefitsListBlock,
+  'cta-button': CTAButtonBlock,
+  'guarantee': GuaranteeBlock,
 };
 
 // FUNÇÃO PRINCIPAL - Busca no Unified Map
