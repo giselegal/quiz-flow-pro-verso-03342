@@ -45,6 +45,16 @@ export const BLOCK_COMPLEXITY_MAP: Record<string, BlockComplexityConfig> = {
     reason: 'Componente React com lazy loading e error handling',
     component: '@/components/editor/blocks/atomic/IntroImageBlock',
   },
+  'intro-logo-header': {
+    complexity: 'COMPLEX',
+    reason: 'Componente React combinando logo e header com lógica de fallback',
+    component: '@/components/editor/blocks/atomic/IntroLogoHeaderBlock',
+  },
+  'intro-button': {
+    complexity: 'COMPLEX',
+    reason: 'Botão CTA do intro com navegação e tracking',
+    component: '@/components/editor/blocks/atomic/CTAButtonBlock',
+  },
   
   // Text Blocks (Universal)
   'text': {
@@ -359,6 +369,21 @@ export const BLOCK_COMPLEXITY_MAP: Record<string, BlockComplexityConfig> = {
     complexity: 'COMPLEX',
     reason: 'Timer com countdown, localStorage',
     component: '@/components/editor/blocks/UrgencyTimerInlineBlock',
+  },
+  'urgency-timer': {
+    complexity: 'COMPLEX',
+    reason: 'Alias de urgency-timer-inline',
+    component: '@/components/editor/blocks/UrgencyTimerInlineBlock',
+  },
+  'benefits-list': {
+    complexity: 'COMPLEX',
+    reason: 'Lista de benefícios com ícones e formatação dinâmica',
+    component: '@/components/editor/blocks/BenefitsListBlock',
+  },
+  'guarantee': {
+    complexity: 'COMPLEX',
+    reason: 'Badge de garantia com ícone e texto',
+    component: '@/components/editor/blocks/GuaranteeBlock',
   },
   'offer-pricing': {
     complexity: 'COMPLEX',
