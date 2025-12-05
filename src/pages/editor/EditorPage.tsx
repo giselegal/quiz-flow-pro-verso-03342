@@ -32,6 +32,7 @@ import type { QuizSchema } from '@/schemas/quiz-schema.zod';
 import { ServiceRegistry } from '@/services/ServiceRegistry';
 import { parseFunnelFromURL } from '@/services';
 import { createBlankQuiz } from '@/components/editor/ModernQuizEditor/utils/createBlankQuiz';
+import { EditorFunnelProvider } from '@/contexts/EditorFunnelContext';
 
 // ✅ Novo editor moderno com arquitetura limpa
 const ModernQuizEditor = React.lazy(() =>
@@ -230,53 +231,61 @@ export default function EditorPage() {
     });
 
     return (
-        <ErrorBoundary
-            onError={(error, errorInfo) => {
-                appLogger.error('🔴 ModernQuizEditor crashed:', {
-                    error: error.message,
-                    stack: error.stack,
-                    componentStack: errorInfo.componentStack,
-                });
+        <EditorFunnelProvider 
+            funnelId={funnelId}
+            onFunnelChange={(newFunnelId) => {
+                appLogger.debug('🎯 EditorFunnelProvider: funnelId alterado', { newFunnelId });
+                setFunnelId(newFunnelId);
             }}
         >
-            <Suspense fallback={<PageLoadingFallback message="Carregando editor moderno..." />}>
-                {isLoadingQuiz ? (
-                    <PageLoadingFallback message={`Carregando ${funnelId}...`} />
-                ) : loadError ? (
-                    <div className="h-screen flex items-center justify-center bg-background">
-                        <div className="text-center max-w-md">
-                            <div className="text-6xl mb-4">⚠️</div>
-                            <h2 className="text-xl font-semibold text-foreground mb-2">
-                                Erro ao carregar quiz
-                            </h2>
-                            <p className="text-muted-foreground mb-4">{loadError}</p>
-                            <button
-                                onClick={() => window.location.reload()}
-                                className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90"
-                            >
-                                Tentar novamente
-                            </button>
+            <ErrorBoundary
+                onError={(error, errorInfo) => {
+                    appLogger.error('🔴 ModernQuizEditor crashed:', {
+                        error: error.message,
+                        stack: error.stack,
+                        componentStack: errorInfo.componentStack,
+                    });
+                }}
+            >
+                <Suspense fallback={<PageLoadingFallback message="Carregando editor moderno..." />}>
+                    {isLoadingQuiz ? (
+                        <PageLoadingFallback message={`Carregando ${funnelId}...`} />
+                    ) : loadError ? (
+                        <div className="h-screen flex items-center justify-center bg-background">
+                            <div className="text-center max-w-md">
+                                <div className="text-6xl mb-4">⚠️</div>
+                                <h2 className="text-xl font-semibold text-foreground mb-2">
+                                    Erro ao carregar quiz
+                                </h2>
+                                <p className="text-muted-foreground mb-4">{loadError}</p>
+                                <button
+                                    onClick={() => window.location.reload()}
+                                    className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90"
+                                >
+                                    Tentar novamente
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                ) : quiz ? (
-                    <>
-                        {appLogger.info('🎯 Renderizando ModernQuizEditor com quiz:', {
-                            name: quiz.metadata?.name,
-                            steps: quiz.steps?.length,
-                            version: quiz.version,
-                            quizId
-                        })}
-                        <ModernQuizEditor
-                            initialQuiz={quiz}
-                            quizId={quizId}
-                            onSave={handleSave}
-                            onError={handleError}
-                        />
-                    </>
-                ) : (
-                    <PageLoadingFallback message="Preparando editor..." />
-                )}
-            </Suspense>
-        </ErrorBoundary>
+                    ) : quiz ? (
+                        <>
+                            {appLogger.info('🎯 Renderizando ModernQuizEditor com quiz:', {
+                                name: quiz.metadata?.name,
+                                steps: quiz.steps?.length,
+                                version: quiz.version,
+                                quizId
+                            })}
+                            <ModernQuizEditor
+                                initialQuiz={quiz}
+                                quizId={quizId}
+                                onSave={handleSave}
+                                onError={handleError}
+                            />
+                        </>
+                    ) : (
+                        <PageLoadingFallback message="Preparando editor..." />
+                    )}
+                </Suspense>
+            </ErrorBoundary>
+        </EditorFunnelProvider>
     );
 }
