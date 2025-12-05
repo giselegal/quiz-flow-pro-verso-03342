@@ -112,6 +112,11 @@ interface EditorStore {
   toggleSplitPreview: () => void;
   
   /**
+   * Set split preview enabled state
+   */
+  setSplitPreviewEnabled: (enabled: boolean) => void;
+  
+  /**
    * Set library tab
    */
   setLibraryTab: (tab: LibraryTab) => void;
@@ -241,6 +246,12 @@ export const useEditorStore = create<EditorStore>()(
     toggleSplitPreview: () => {
       set((state) => {
         state.splitPreviewEnabled = !state.splitPreviewEnabled;
+      });
+    },
+    
+    setSplitPreviewEnabled: (enabled) => {
+      set((state) => {
+        state.splitPreviewEnabled = enabled;
       });
     },
     

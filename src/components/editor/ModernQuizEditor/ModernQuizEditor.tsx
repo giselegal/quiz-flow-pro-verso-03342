@@ -79,10 +79,19 @@ export function ModernQuizEditor({
     const selectedStepId = useEditorStore((s) => s.selectedStepId);
     const splitPreviewEnabled = useEditorStore((s) => s.splitPreviewEnabled);
     const toggleSplitPreview = useEditorStore((s) => s.toggleSplitPreview);
+    const setSplitPreviewEnabled = useEditorStore((s) => s.setSplitPreviewEnabled);
     const saveToLibraryDialog = useEditorStore((s) => s.saveToLibraryDialog);
     const closeSaveToLibrary = useEditorStore((s) => s.closeSaveToLibrary);
     const isCommandPaletteOpen = useEditorStore((s) => s.isCommandPaletteOpen);
     const setCommandPaletteOpen = useEditorStore((s) => s.setCommandPaletteOpen);
+
+    // 🆕 Auto-enable split preview from URL param
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('splitPreview') === 'true' && !splitPreviewEnabled) {
+            setSplitPreviewEnabled(true);
+        }
+    }, []);
     
     // 🆕 PHASE 3: Get current user for collaboration
     const { user } = useAuthStore();
