@@ -33,6 +33,7 @@ import ResultHeaderBlock from '../components/editor/blocks/atomic/ResultHeaderBl
 import ResultDescriptionBlock from '../components/editor/blocks/atomic/ResultDescriptionBlock';
 import ResultImageBlock from '../components/editor/blocks/atomic/ResultImageBlock';
 import ResultShareBlock from '../components/editor/blocks/atomic/ResultShareBlock';
+import ResultDisplayBlock from '../components/blocks/inline/ResultDisplayBlock';
 import OfferHeroBlock from '../components/editor/blocks/atomic/OfferHeroBlock';
 import UrgencyTimerInlineBlock from '../components/editor/blocks/UrgencyTimerInlineBlock';
 import BenefitsListBlock from '../components/editor/blocks/BenefitsListBlock';
@@ -73,6 +74,7 @@ export const UNIFIED_BLOCK_MAP: Record<string, ComponentType<any>> = {
   'result-description': ResultDescriptionBlock,
   'result-image': ResultImageBlock,
   'result-share': ResultShareBlock,
+  'result-display': ResultDisplayBlock,
 
   // OFFER BLOCKS (Step 21)
   'offer-hero': OfferHeroBlock,

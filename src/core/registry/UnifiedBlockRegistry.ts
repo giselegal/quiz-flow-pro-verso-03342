@@ -228,6 +228,9 @@ const lazyImports: Record<string, () => Promise<{ default: React.ComponentType<a
   'urgency-timer': () => import('@/components/editor/blocks/UrgencyTimerInlineBlock'),
   'benefits-list': () => import('@/components/editor/blocks/BenefitsListBlock'),
   'guarantee': () => import('@/components/editor/blocks/GuaranteeBlock'),
+
+  // Result blocks - Step 20 (adicionais)
+  'result-display': () => import('@/components/blocks/inline/ResultDisplayBlock'),
 };
 
 // ============================================================================
