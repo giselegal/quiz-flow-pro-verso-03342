@@ -104,8 +104,13 @@ const lazyImports: Record<string, () => Promise<{ default: React.ComponentType<a
   // Intro blocks - Step 1
   'quiz-intro': () => import('@/components/editor/blocks/QuizIntroHeaderBlock'),
   'intro-logo-header': () => import('@/components/editor/blocks/atomic/IntroLogoHeaderBlock'),
+  'intro-logo': () => import('@/components/editor/blocks/atomic/IntroLogoBlock'),
   'intro-button': () => import('@/components/editor/blocks/atomic/CTAButtonBlock'),
   'intro-description': () => import('@/components/editor/blocks/atomic/IntroDescriptionBlock'),
+  'intro-form': () => import('@/components/editor/blocks/LeadFormBlock'),
+  'intro-image': () => import('@/components/editor/blocks/atomic/ResultImageBlock'),
+  'intro-title': () => import('@/components/editor/blocks/atomic/QuestionTitleBlock'),
+  'intro-subtitle': () => import('@/components/editor/blocks/atomic/IntroDescriptionBlock'),
 
   // Transition blocks - Steps 12, 19
   'transition-title': () => import('@/components/editor/blocks/atomic/TransitionTitleBlock'),
@@ -242,6 +247,12 @@ const lazyImports: Record<string, () => Promise<{ default: React.ComponentType<a
   'urgency-timer': () => import('@/components/editor/blocks/UrgencyTimerInlineBlock'),
   'benefits-list': () => import('@/components/editor/blocks/BenefitsListBlock'),
   'guarantee': () => import('@/components/editor/blocks/GuaranteeBlock'),
+  'pricing': () => import('@/components/editor/blocks/PricingBlock'),
+  'pricing-inline': () => import('@/components/editor/blocks/PricingBlock'),
+  'offer-card': () => import('@/components/editor/blocks/OfferHeroBlock'),
+  'testimonials': () => import('@/components/editor/blocks/BenefitsListBlock'),
+  'value-anchoring': () => import('@/components/editor/blocks/OfferHeroBlock'),
+  'secure-purchase': () => import('@/components/editor/blocks/GuaranteeBlock'),
 
   // Result blocks - Step 20 (adicionais)
   'result-display': () => import('@/components/blocks/inline/ResultDisplayBlock'),
@@ -250,11 +261,8 @@ const lazyImports: Record<string, () => Promise<{ default: React.ComponentType<a
   // ALIASES LEGADOS (quiz21StepsComplete.json compatibility)
   // =====================================================
   
-  // Intro aliases
+  // Intro aliases (sem duplicatas - intro-title, intro-image, intro-subtitle já definidos acima)
   'quiz-intro-header': () => import('@/components/editor/blocks/atomic/IntroLogoHeaderBlock'),
-  'intro-title': () => import('@/components/editor/blocks/atomic/QuestionTitleBlock'),
-  'intro-image': () => import('@/components/editor/blocks/atomic/ResultImageBlock'),
-  'intro-subtitle': () => import('@/components/editor/blocks/atomic/IntroDescriptionBlock'),
   'intro-name-input': () => import('@/components/editor/blocks/LeadFormBlock'),
 
   // Question aliases (sem duplicatas - quiz-progress-bar e quiz-question-header já definidos acima)
