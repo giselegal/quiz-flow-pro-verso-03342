@@ -71,7 +71,7 @@ export const InteractivePreviewEngine: React.FC<InteractivePreviewEngineProps> =
   onBlockSelect,
   onBlockUpdate,
   onBlocksReordered,
-  funnelId = 'quiz21StepsComplete',
+  funnelId, // 🎯 CORREÇÃO: Sem default hardcoded - deve ser passado via props
   currentStep: initialStep = 1,
   mode = 'preview',
   className = '',

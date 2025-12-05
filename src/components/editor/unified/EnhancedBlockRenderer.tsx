@@ -155,7 +155,7 @@ export const EnhancedBlockRenderer: React.FC<EnhancedBlockRendererProps> = ({
   isSelected = false,
   isPreview = false,
   currentStep = 1,
-  funnelId = 'quiz21StepsComplete',
+  funnelId, // 🎯 CORREÇÃO: Sem default hardcoded - deve ser passado via props
   onSelect,
   onUpdate,
   onValidationChange,

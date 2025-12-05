@@ -41,7 +41,7 @@ export const ProductionPreviewEngine: React.FC<ProductionPreviewEngineProps> = (
   viewportSize = 'desktop',
   onBlockSelect,
   onBlockUpdate,
-  funnelId = 'quiz21StepsComplete',
+  funnelId, // 🎯 CORREÇÃO: Sem default hardcoded - deve ser passado via props
   currentStep = 1,
   mode = 'preview',
   className = '',
