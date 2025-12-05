@@ -1,5 +1,6 @@
 import QuizNavigation from '@/components/quiz/QuizNavigation';
 import { cn } from '@/lib/utils';
+import { appLogger } from '@/lib/utils/logger';
 import React from 'react';
 
 interface QuizNavigationBlockProps {
