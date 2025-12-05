@@ -1,7 +1,8 @@
 /**
  * 🔧 JSON TEMPLATE LOADER - Fase 5.1
+ * ✅ FASE 1.3: AbortController para eliminar race conditions
  * 
- * Carrega templates JSON v3.1 de forma assíncrona com cache
+ * Carrega templates JSON v3.1 de forma assíncrona com cache e cancelamento
  * Elimina dependência de TSX components
  */
 
@@ -15,29 +16,59 @@ interface TemplateCache {
 // Cache em memória para evitar múltiplas requisições
 const templateCache: TemplateCache = {};
 
-// Flag para controlar carregamento em progresso
-const loadingPromises: Record<string, Promise<TemplateV3 | null>> = {};
+// Flag para controlar carregamento em progresso (com AbortController)
+const loadingPromises: Record<string, { promise: Promise<TemplateV3 | null>; controller: AbortController }> = {};
 
 /**
  * Carrega template JSON do servidor/public folder
  * @param stepId - ID do step (ex: 'step-01', 'step-02')
+ * @param signal - AbortSignal opcional para cancelamento externo
  * @returns Template v3.1 ou null se não encontrado
  */
-export async function loadJsonTemplate(stepId: string): Promise<TemplateV3 | null> {
+export async function loadJsonTemplate(
+  stepId: string,
+  signal?: AbortSignal
+): Promise<TemplateV3 | null> {
   // 1. Verificar cache
   if (stepId in templateCache) {
     return templateCache[stepId];
   }
 
-  // 2. Verificar se já está carregando
-  if (stepId in loadingPromises) {
-    return loadingPromises[stepId];
+  // 2. Se signal externo já está abortado, retornar imediatamente
+  if (signal?.aborted) {
+    throw new DOMException('Request aborted', 'AbortError');
   }
 
-  // 3. Carregar do servidor
+  // 3. Verificar se já está carregando
+  if (stepId in loadingPromises) {
+    const existing = loadingPromises[stepId];
+    
+    // Se tiver signal externo, vincular ao abort
+    if (signal) {
+      signal.addEventListener('abort', () => {
+        // Não abortar a requisição existente, apenas ignorar o resultado
+      }, { once: true });
+    }
+    
+    return existing.promise;
+  }
+
+  // 4. Criar AbortController para esta requisição
+  const controller = new AbortController();
+  
+  // Vincular signal externo ao controller interno
+  if (signal) {
+    signal.addEventListener('abort', () => {
+      controller.abort();
+    }, { once: true });
+  }
+
+  // 5. Carregar do servidor com AbortController
   const loadPromise = (async () => {
     try {
-      const response = await fetch(`/templates/${stepId}-template.json`);
+      const response = await fetch(`/templates/${stepId}-template.json`, {
+        signal: controller.signal
+      });
       
       if (!response.ok) {
         appLogger.warn(`[loadJsonTemplate] Template não encontrado: ${stepId}`);
@@ -58,6 +89,12 @@ export async function loadJsonTemplate(stepId: string): Promise<TemplateV3 | nul
       templateCache[stepId] = json;
       return json;
     } catch (error) {
+      // Propagar AbortError para que chamadores possam tratar
+      if (error instanceof Error && error.name === 'AbortError') {
+        appLogger.info(`[loadJsonTemplate] Requisição cancelada para ${stepId}`);
+        throw error;
+      }
+      
       appLogger.error(`[loadJsonTemplate] Erro ao carregar ${stepId}:`, { data: [error] });
       templateCache[stepId] = null;
       return null;
@@ -67,10 +104,39 @@ export async function loadJsonTemplate(stepId: string): Promise<TemplateV3 | nul
     }
   })();
 
-  // Armazenar promise para evitar múltiplas requisições
-  loadingPromises[stepId] = loadPromise;
+  // Armazenar promise e controller
+  loadingPromises[stepId] = { promise: loadPromise, controller };
 
   return loadPromise;
+}
+
+/**
+ * 🆕 Cancela carregamento em progresso de um step específico
+ * @param stepId - ID do step para cancelar
+ */
+export function abortTemplateLoad(stepId: string): boolean {
+  if (stepId in loadingPromises) {
+    loadingPromises[stepId].controller.abort();
+    delete loadingPromises[stepId];
+    appLogger.info(`[loadJsonTemplate] Carregamento de ${stepId} abortado`);
+    return true;
+  }
+  return false;
+}
+
+/**
+ * 🆕 Cancela todos os carregamentos em progresso
+ */
+export function abortAllTemplateLoads(): number {
+  const count = Object.keys(loadingPromises).length;
+  Object.values(loadingPromises).forEach(({ controller }) => {
+    controller.abort();
+  });
+  Object.keys(loadingPromises).forEach(key => delete loadingPromises[key]);
+  if (count > 0) {
+    appLogger.info(`[loadJsonTemplate] ${count} carregamentos abortados`);
+  }
+  return count;
 }
 
 /**
