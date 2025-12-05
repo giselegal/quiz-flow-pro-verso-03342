@@ -19,6 +19,7 @@ import { cacheService } from '@/services/canonical';
 import { hierarchicalTemplateSource } from '@/services/core/HierarchicalTemplateSourceMigration';
 import { validateQuizSchema, type QuizSchema } from '@/schemas/quiz-schema.zod';
 import type { Block } from '@/types/editor';
+import { getCanonicalTemplate } from '@/config/template-paths';
 
 /**
  * Opções de carregamento
@@ -239,7 +240,7 @@ export class UnifiedTemplateLoader {
     options: LoadOptions = {}
   ): Promise<LoadResult<QuizSchema>> {
     const startTime = performance.now();
-    const { useCache = true, timeout = 10000, signal } = options;
+    const { useCache = true } = options;
 
     // Verificar cache
     if (useCache && this.v4Cache.has(templateId)) {
@@ -253,13 +254,12 @@ export class UnifiedTemplateLoader {
       };
     }
 
-    // Carregar v4 JSON
+    // 🆕 Carregar template bundled diretamente (sem HTTP fetch)
     try {
-      const templatePath = this.resolveV4Path(templateId);
-      appLogger.info(`🔍 [UnifiedLoader] Loading full template from: ${templatePath}`);
+      appLogger.info(`🔍 [UnifiedLoader] Loading bundled template: ${templateId}`);
 
-      const response = await this.fetchWithTimeout(templatePath, timeout, signal);
-      const data = await response.json();
+      // Usar template bundled do import
+      const data = getCanonicalTemplate();
 
       // Validar com Zod
       const validationResult = validateQuizSchema(data);

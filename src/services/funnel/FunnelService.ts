@@ -259,30 +259,22 @@ export class FunnelService {
   }
 
   /**
-   * Load template from file with TypeScript fallback
+   * Load template from file with bundled data fallback
    */
   private async loadTemplateFromFile(templatePath: string): Promise<QuizSchema> {
     try {
-      appLogger.info('📂 [FunnelService] Loading template from file', { templatePath });
+      appLogger.info('📂 [FunnelService] Loading template', { templatePath });
 
-      const normalizedPath = templatePath.startsWith('/') ? templatePath : `/${templatePath}`;
-
-      const response = await fetch(normalizedPath, {
-        method: 'GET',
-        headers: { 'Accept': 'application/json', 'Cache-Control': 'no-cache' },
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        const { QuizSchemaZ } = await import('@/schemas/quiz-schema.zod');
-        return QuizSchemaZ.parse(data);
-      }
-
-      // Fallback: use TypeScript template data
-      appLogger.warn('⚠️ [FunnelService] JSON file not found, using TypeScript fallback');
-      return this.getDefaultTemplateData();
+      // 🆕 Use bundled template data directly (no HTTP fetch needed)
+      const { getCanonicalTemplate } = await import('@/config/template-paths');
+      const { QuizSchemaZ } = await import('@/schemas/quiz-schema.zod');
+      
+      const bundledData = getCanonicalTemplate();
+      appLogger.info('✅ [FunnelService] Using bundled template data');
+      
+      return QuizSchemaZ.parse(bundledData);
     } catch (error) {
-      appLogger.warn('⚠️ [FunnelService] Template fetch failed, using fallback', { error });
+      appLogger.warn('⚠️ [FunnelService] Template load failed, using fallback', { error });
       return this.getDefaultTemplateData();
     }
   }
