@@ -69,6 +69,9 @@ export function useEditorAdapter(): EditorContextValue {
     
     // Validações (não existe no Zustand atual)
     validationErrors: [],
+    
+    // Propriedade isLoading (requerida pelo EditorState canônico)
+    isLoading: false,
   }), [store.selectedBlockId, store.isPreviewMode, store.isEditMode, store.isDirty, store.steps, currentStep]);
   
   // ========================================================================
@@ -228,6 +231,25 @@ export function useEditorAdapter(): EditorContextValue {
     // TODO: Implementar dirty tracking por step
     return store.isDirty;
   }, [store.isDirty]);
+
+  // Métodos adicionais para compatibilidade com EditorContextValue canônico
+  const loadStepBlocks = useCallback(async (_stepId: string): Promise<Block[] | null> => {
+    appLogger.debug('[useEditorZustandAdapter] loadStepBlocks não implementado');
+    return null;
+  }, []);
+
+  const setSelectedBlockId = useCallback((id: string | null) => {
+    store.setSelectedBlock(id);
+  }, [store.setSelectedBlock]);
+
+  const deleteBlock = useCallback((blockId: string) => {
+    const currentStepOrder = currentStep?.order ?? 1;
+    removeBlock(currentStepOrder, blockId);
+  }, [currentStep, removeBlock]);
+
+  const addBlockAtIndex = useCallback((step: number, block: Block, index: number) => {
+    addBlock(step, block, index);
+  }, [addBlock]);
   
   // ========================================================================
   // RETORNAR INTERFACE COMPATÍVEL COM CONTEXT
@@ -253,6 +275,11 @@ export function useEditorAdapter(): EditorContextValue {
     resetEditor,
     getStepBlocks,
     isStepDirty,
+    // Métodos adicionais para compatibilidade
+    loadStepBlocks,
+    setSelectedBlockId,
+    deleteBlock,
+    addBlockAtIndex,
   }), [
     setCurrentStep,
     selectBlock,

@@ -4,9 +4,9 @@ import React from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { InteractiveQuizCanvas } from '../InteractiveQuizCanvas';
 
-// Wrapper do provider
+// Wrapper do provider (removido funnelId que não é mais aceito pelo EditorProvider canônico)
 const TestWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <EditorProvider funnelId="test-funnel">{children}</EditorProvider>
+  <EditorProvider>{children}</EditorProvider>
 );
 
 describe('InteractiveQuizCanvas', () => {
@@ -303,7 +303,7 @@ describe('InteractiveQuizCanvas', () => {
 describe('InteractiveQuizCanvas - Integração', () => {
   it('deve funcionar com múltiplos tipos de bloco', () => {
     render(
-      <EditorProvider funnelId="test-complex-funnel">
+      <EditorProvider>
         <InteractiveQuizCanvas />
       </EditorProvider>,
     );
@@ -314,7 +314,7 @@ describe('InteractiveQuizCanvas - Integração', () => {
 
   it('deve lidar com quiz vazio graciosamente', () => {
     render(
-      <EditorProvider funnelId="test-empty-funnel">
+      <EditorProvider>
         <InteractiveQuizCanvas />
       </EditorProvider>,
     );
